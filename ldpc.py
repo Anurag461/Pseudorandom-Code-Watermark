@@ -62,8 +62,20 @@ def detect(P, vec: galois.FieldArray):
     threshold = (0.5 - (1/(r**4)))*r
     return wt < threshold
 
+def sample_vector(G, eta):
+    s = GF2(np.random.binomial(1, 0.5, G.shape[1]))
+    return add_error(G@s, eta)
 
-#def detect_rate()
+
+def sample(p,x):
+    if p < 0.5:
+        mod_p  = 2*x*p
+    else:
+        mod_p =  (1 - 2*(1 - x)*(1 - p))
+    print(f"p is {p}, x is {x}, new probability is {mod_p}")
+    t = np.random.binomial(1 , mod_p)
+    return t
+
 
 class LDPC_PRC:
     def __init__(self, n):
@@ -76,13 +88,15 @@ class LDPC_PRC:
         print(f"g is {self.g}")
         print(f"t is {self.t}")
         print(f"r is {self.r}")
-        P, G = generate_PG(n, self.t, self.r, self.g, seed=0)
+        self.P, self.G = generate_PG(n, self.t, self.r, self.g, seed=0)
+
+    
 
         
 
-if __name__ == "__main__":
+if True:
     n = 100
-    eta = 0.4
+    eta = 0.1
     t = int(np.log2(n))          # Θ(log n)
     g = int(np.log2(n) ** 2)     # Ω(log² n)
     r = n - g                    # or any r ≤ 0.99n
@@ -90,13 +104,13 @@ if __name__ == "__main__":
     print(f"g is {g}")
     print(f"t is {t}")
     print(f"r is {r}")
-    
-    P, G = generate_PG(n, t, r, g, seed=0)
+    #p = np.random.uniform(0,1,n)
+    P, G = generate_PG(n, t, r, g, seed=100)
     print(f"P: {P.shape}, row weights: {np.asarray(P).sum(axis=1)[:5]}... (all == {t})")
     print(f"G: {G.shape}")
     print(f"PG = 0 ? {not np.any(P @ G)}")
 
     s = GF2(np.random.binomial(1, 0.5, g))
-    x = add_error(G@s, 0.2)
+    x = add_error(G@s, eta)
     print(weight(P, x))
     print(detect(P,x))
