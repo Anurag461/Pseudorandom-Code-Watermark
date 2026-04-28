@@ -292,3 +292,9 @@ All with `num_traces_used=30`, `num_simulated_nulls=2000`, `z = Φ⁻¹(1−1e-9
 4. **Most of the entropy-fold benefit is at the observation level**, not the parity-check level. The "drop corrupted checks" framing captures only ~10% of the swing.
 5. **Empirical FPR is 0/30 everywhere** — the simulated-null Gaussian-tail extrapolation is conservative on this benchmark. With only 30 UW samples we can't certify FPR < ~3% empirically, only via the simulation.
 6. **Small n (128) is fundamentally signal-limited** — fewer parity checks cap test-statistic dynamic range regardless of how many codeword repeats are stacked.
+
+
+
+## References
+
+This implementation borrows heavily from the [PRC-Watermark](https://github.com/XuandongZhao/PRC-Watermark) repository provided by Xuandong Zhao, Sam Gunn, and Dawn Song. 
