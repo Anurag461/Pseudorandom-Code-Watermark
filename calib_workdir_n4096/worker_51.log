@@ -1,0 +1,7 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+Watermark Disabled
+[worker job=51 cuda=6] prompt=25 watermark=False tokens=16384 time=501.0s (32.7 tok/s) -> calib_workdir/result_51.pt
