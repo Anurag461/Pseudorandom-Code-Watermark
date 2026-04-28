@@ -1,3 +1,9 @@
+## Major TODOs
+1. The current implementation uses an entropy weighted fold for the parity checks, we need to also implement the feature to remove the parity check entirely if even one of its tokens is low-entropy.
+2. We use a bucketing approach to convert tokens to bits. We need to try a prefix-free encoding as well. This will lead to correlated errors but will massively decrease the output length for which this scheme works.
+3. Our implementation is not robust to deletions.
+4. Feel free to add more.
+
 # PRC watermark calibration — full experimental log
 
 End-to-end record of the PRC watermark calibration experiments on Qwen3-0.6B-Base.
