@@ -34,19 +34,6 @@ End-to-end record of the PRC watermark calibration experiments on Qwen3-0.6B-Bas
 - **Test statistic**: `Σ log_plus − ½ Σ (log_plus + log_minus)` over r parity checks where `Πᵢ = ∏ⱼ (1−2η)(1−2·OTPⱼ)·postⱼ` for the t slots in row i
 - **Threshold rule**: `threshold = null_mean + Φ⁻¹(1−FPR)·null_std`, null fit from 2000 simulated null draws (Bernoulli channel applied to uniform random codewords using actual watermarked p-traces)
 
----
-
-## The argmax → multinomial fix
-
-Initial generation used `argmax` after the partition mask. This deterministically picks the highest-logit token within whichever half the watermark bit `b` selects. **It destroys the watermark signal** because the conditional probability of each codeword bit collapses to {0, 1} independent of `b`.
-
-Result with argmax: TPR = 0/30, FPR = 0/30 at every threshold tested.
-
-**Fix** (in `watermark_expt.py:265-279`): sample from softmax of the masked logits with `torch.multinomial`. This restores the proper PRC sampling distribution.
-
-Result after fix: TPR jumps from 0% to 96.7% at FPR=1e-9 with n=4096, t=3.
-
-This is the single largest finding of the experimental work.
 
 ---
 
@@ -299,7 +286,19 @@ All with `num_traces_used=30`, `num_simulated_nulls=2000`, `z = Φ⁻¹(1−1e-9
 5. **Empirical FPR is 0/30 everywhere** — the simulated-null Gaussian-tail extrapolation is conservative on this benchmark. With only 30 UW samples we can't certify FPR < ~3% empirically, only via the simulation.
 6. **Small n (128) is fundamentally signal-limited** — fewer parity checks cap test-statistic dynamic range regardless of how many codeword repeats are stacked.
 
+---
 
+## The argmax → multinomial fix
+
+Initial generation used `argmax` after the partition mask. This deterministically picks the highest-logit token within whichever half the watermark bit `b` selects. **It destroys the watermark signal** because the conditional probability of each codeword bit collapses to {0, 1} independent of `b`.
+
+Result with argmax: TPR = 0/30, FPR = 0/30 at every threshold tested.
+
+**Fix** (in `watermark_expt.py:265-279`): sample from softmax of the masked logits with `torch.multinomial`. This restores the proper PRC sampling distribution.
+
+Result after fix: TPR jumps from 0% to 96.7% at FPR=1e-9 with n=4096, t=3.
+
+---
 
 ## References
 
