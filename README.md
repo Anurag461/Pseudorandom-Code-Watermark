@@ -81,7 +81,7 @@ Phase 2 (calibration) and Phase 3 (detection) are pure NumPy and run on CPU; no 
 
 ---
 
-## Differences from the PRC paper
+## Important Implementation Details
 
 These are the implementation choices that diverge from the PRC paper and matter for reproduction.
 
@@ -104,16 +104,9 @@ Practical consequences:
 - The detector observes one bit per token, not one bit per encoded sub-step.
 - The watermark signal at each step is bounded by `H₂(p1)`, the binary entropy of the partition split — not by full token entropy. Low-entropy steps (one half is near-impossible) carry near-zero signal regardless of the LM's overall token entropy. This is what motivates the entropy fold below.
 
-### 2. The argmax → multinomial fix (largest single bug)
 
-Low temperature sampling or `argmax` on the masked logits to pick the next token does not work. This deterministically picks the most-probable token in whichever half `b` selected, which collapses the per-step bit posterior to {0, 1} **independent of `b`** — destroying the watermark signal.
 
-- TPR with argmax sampling: 0/30 at every threshold tested.
-- TPR after switching to multinomial (`watermark_expt.py:280`): 96.7% at FPR=1e-9 with n=4096, t=3.
-
-If you fork the code, **do not "optimize" sampling back to argmax**. Multinomial is load-bearing.
-
-### 3. Entropy-weighted fold ("entropy fold")
+### 2. Entropy-weighted fold ("entropy fold")
 
 The paper's detector aggregates per-slot observations uniformly. Because some slots will be sampled at near-zero `H₂(p1)` (one half ≈ impossible — common in real LMs), the per-slot posterior gets dragged toward random ±1 by individual deterministic observations.
 
@@ -129,6 +122,15 @@ Effects, both visible in the data:
 - Clean up surviving checks at the *observation* level (bigger, ~90% of swing): even within a slot, individual deterministic observations are downweighted toward zero so the slot's posterior is dominated by informative observations.
 
 Both `fold_entropy_weighted` and the equal-weight `fold_naive` are available; pick via the `fold` field on the threshold state (`fit_calibration(..., fold="entropy"|"naive")`).
+
+### 3. argmax → multinomial sampling
+
+Low temperature sampling or `argmax` on the masked logits to pick the next token does not work. This deterministically picks the most-probable token in whichever half `b` selected, which collapses the per-step bit posterior to {0, 1} **independent of `b`** — destroying the watermark signal.
+
+- TPR with argmax sampling: 0/30 at every threshold tested.
+- TPR after switching to multinomial (`watermark_expt.py:280`): 96.7% at FPR=1e-9 with n=4096, t=3.
+
+If you fork the code, **do not "optimize" sampling back to argmax**. Multinomial is load-bearing.
 
 ### 4. Block-OR semantics for syndrome detection
 
