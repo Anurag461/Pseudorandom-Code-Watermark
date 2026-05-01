@@ -4,6 +4,8 @@ End-to-end instructions for reproducing the PRC watermark calibration experiment
 
 Results live in `results_summary.csv` (one row per `(target FPR, n, t, η)` config).
 
+This implementation borrows heavily from the [PRC-Watermark](https://github.com/XuandongZhao/PRC-Watermark) implementation by Sam Gunn, Xuandong Zhao, and Dawn Song.
+
 ## Contents
 
 1. [Workspace setup](#workspace-setup)
