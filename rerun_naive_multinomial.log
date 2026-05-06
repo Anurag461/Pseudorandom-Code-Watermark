@@ -1,0 +1,81 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+loaded watermarked=30 unwatermarked=30
+
+=== Fit threshold (fold_naive) ===
+  threshold = 199.0017  null_mean = -0.2848  null_std  = 33.2266  traces_used = 30
+
+=== TPR (watermarked) ===
+  prompt  0: detected=True  stat=1508.06  sigmas=45.40
+  prompt  1: detected=True  stat=1528.12  sigmas=46.00
+  prompt  2: detected=True  stat=635.49  sigmas=19.13
+  prompt  3: detected=True  stat=1330.72  sigmas=40.06
+  prompt  4: detected=True  stat=1545.47  sigmas=46.52
+  prompt  5: detected=True  stat=810.81  sigmas=24.41
+  prompt  6: detected=True  stat=1856.95  sigmas=55.90
+  prompt  7: detected=True  stat=1016.59  sigmas=30.60
+  prompt  8: detected=False  stat=148.15  sigmas=4.47
+  prompt  9: detected=True  stat=419.14  sigmas=12.62
+  prompt 10: detected=True  stat=567.64  sigmas=17.09
+  prompt 11: detected=False  stat=67.75  sigmas=2.05
+  prompt 12: detected=False  stat=189.00  sigmas=5.70
+  prompt 13: detected=False  stat=9.81  sigmas=0.30
+  prompt 14: detected=True  stat=1448.26  sigmas=43.60
+  prompt 15: detected=True  stat=900.39  sigmas=27.11
+  prompt 16: detected=True  stat=1224.29  sigmas=36.86
+  prompt 17: detected=True  stat=1307.03  sigmas=39.35
+  prompt 18: detected=True  stat=600.85  sigmas=18.09
+  prompt 19: detected=True  stat=1449.30  sigmas=43.63
+  prompt 20: detected=True  stat=1576.17  sigmas=47.45
+  prompt 21: detected=True  stat=1623.57  sigmas=48.87
+  prompt 22: detected=True  stat=860.37  sigmas=25.90
+  prompt 23: detected=True  stat=1262.79  sigmas=38.01
+  prompt 24: detected=True  stat=1215.57  sigmas=36.59
+  prompt 25: detected=True  stat=1282.80  sigmas=38.62
+  prompt 26: detected=True  stat=1853.00  sigmas=55.78
+  prompt 27: detected=True  stat=1578.39  sigmas=47.51
+  prompt 28: detected=True  stat=1650.93  sigmas=49.70
+  prompt 29: detected=True  stat=1394.14  sigmas=41.97
+
+=== FPR (unwatermarked) ===
+  prompt  0: detected=False  stat=3.79  sigmas=0.12
+  prompt  1: detected=False  stat=-2.56  sigmas=-0.07
+  prompt  2: detected=False  stat=17.35  sigmas=0.53
+  prompt  3: detected=False  stat=0.37  sigmas=0.02
+  prompt  4: detected=False  stat=1.97  sigmas=0.07
+  prompt  5: detected=False  stat=-9.31  sigmas=-0.27
+  prompt  6: detected=False  stat=-9.33  sigmas=-0.27
+  prompt  7: detected=False  stat=4.22  sigmas=0.14
+  prompt  8: detected=False  stat=-5.59  sigmas=-0.16
+  prompt  9: detected=False  stat=4.30  sigmas=0.14
+  prompt 10: detected=False  stat=-2.67  sigmas=-0.07
+  prompt 11: detected=False  stat=-5.49  sigmas=-0.16
+  prompt 12: detected=False  stat=8.16  sigmas=0.25
+  prompt 13: detected=False  stat=12.59  sigmas=0.39
+  prompt 14: detected=False  stat=0.92  sigmas=0.04
+  prompt 15: detected=False  stat=-2.93  sigmas=-0.08
+  prompt 16: detected=False  stat=7.99  sigmas=0.25
+  prompt 17: detected=False  stat=-0.41  sigmas=-0.00
+  prompt 18: detected=False  stat=-7.79  sigmas=-0.23
+  prompt 19: detected=False  stat=-8.63  sigmas=-0.25
+  prompt 20: detected=False  stat=-4.84  sigmas=-0.14
+  prompt 21: detected=False  stat=-1.28  sigmas=-0.03
+  prompt 22: detected=False  stat=14.72  sigmas=0.45
+  prompt 23: detected=False  stat=-0.85  sigmas=-0.02
+  prompt 24: detected=False  stat=4.97  sigmas=0.16
+  prompt 25: detected=False  stat=7.91  sigmas=0.25
+  prompt 26: detected=False  stat=3.86  sigmas=0.12
+  prompt 27: detected=False  stat=-2.13  sigmas=-0.06
+  prompt 28: detected=False  stat=-6.85  sigmas=-0.20
+  prompt 29: detected=False  stat=5.95  sigmas=0.19
+
+=== Summary (fold_naive) ===
+  TPR: 26/30  (86.7%)
+  FPR: 0/30  (0.0%)
+  threshold (FPR=1e-09): 199.0017
+  watermarked  stat: mean=+1095.38 std=536.20 min=+9.81 max=+1856.95
+  unwatermarked stat: mean=+0.95 std=6.93 min=-9.33 max=+17.35
+  mean(WM) - mean(UW) = +1094.44  Welch t = +10.99

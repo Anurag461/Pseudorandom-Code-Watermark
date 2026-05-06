@@ -1,0 +1,4 @@
+model,watermark,attack_active,alpha,n_prompts,refusal_rate,prc_detect_rate,kgw_detect_rate,mean_prc_stat,mean_kgw_z,workdir
+0.6B,kgw,0,2.0,100,0.93,0.0,0.03,-0.11119077988813274,0.9330103272079531,spoof_06b_kgw_atk0_alpha2
+0.6B,kgw,1,2.0,100,0.94,0.0,0.3,-2.6338533270559115,3.710074522937201,spoof_06b_kgw_atk1_alpha2
+0.6B,prc,1,2.0,100,0.89,0.0,0.03,-0.12287874882374411,0.7838674124498045,spoof_06b_prc_atk1_alpha2

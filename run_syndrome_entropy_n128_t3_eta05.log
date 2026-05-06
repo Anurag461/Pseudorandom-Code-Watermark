@@ -1,0 +1,81 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+[parent] visible GPUs: [0, 1, 2, 3, 4, 5, 6, 7]
+[parent] loaded existing artifacts.pt with n_jobs=60 n=128
+
+=== Phase 1 SKIPPED: reusing 60 existing results in calib_workdir ===
+[parent] watermarked=30 unwatermarked=30
+
+=== Phase 2 SKIPPED: syndrome_entropy uses analytical threshold ===
+
+=== Phase 3a: detection on watermarked runs (TPR) ===
+  prompt 0: detected=False  blocks_passed=0/4  weights=[36/31/30/26]  thresholds=[13.3/15.3/13.0/14.3]  r_eff=[80/88/79/84]  (tokens=512)
+  prompt 1: detected=False  blocks_passed=0/4  weights=[22/30/25/24]  thresholds=[8.2/11.3/12.8/13.8]  r_eff=[59/72/78/82]  (tokens=512)
+  prompt 2: detected=False  blocks_passed=0/4  weights=[22/6/16/28]  thresholds=[5.1/0.0/4.3/12.0]  r_eff=[45/16/41/75]  (tokens=512)
+  prompt 3: detected=False  blocks_passed=0/4  weights=[45/32/22/32]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 4: detected=False  blocks_passed=0/4  weights=[27/41/25/35]  thresholds=[11.5/14.5/14.5/16.0]  r_eff=[73/85/85/91]  (tokens=512)
+  prompt 5: detected=False  blocks_passed=0/4  weights=[41/36/25/29]  thresholds=[10.3/15.0/12.8/14.3]  r_eff=[68/87/78/84]  (tokens=512)
+  prompt 6: detected=False  blocks_passed=0/4  weights=[29/38/32/33]  thresholds=[11.5/11.0/13.0/15.0]  r_eff=[73/71/79/87]  (tokens=512)
+  prompt 7: detected=False  blocks_passed=0/4  weights=[37/38/25/30]  thresholds=[15.0/16.0/14.8/12.5]  r_eff=[87/91/86/77]  (tokens=512)
+  prompt 8: detected=False  blocks_passed=0/4  weights=[35/32/30/18]  thresholds=[15.5/16.0/16.0/16.0]  r_eff=[89/91/91/91]  (tokens=512)
+  prompt 9: detected=True  blocks_passed=1/4  weights=[13/22/32/24]  thresholds=[13.5/16.0/16.0/15.0]  r_eff=[81/91/91/87]  (tokens=512)
+  prompt 10: detected=False  blocks_passed=0/4  weights=[16/22/13/17]  thresholds=[2.0/3.5/1.2/3.3]  r_eff=[29/37/24/36]  (tokens=512)
+  prompt 11: detected=False  blocks_passed=0/4  weights=[27/25/26/32]  thresholds=[9.8/6.4/13.0/12.8]  r_eff=[66/51/79/78]  (tokens=512)
+  prompt 12: detected=False  blocks_passed=0/4  weights=[29/31/21/21]  thresholds=[9.6/13.3/16.0/16.0]  r_eff=[65/80/91/91]  (tokens=512)
+  prompt 13: detected=False  blocks_passed=0/4  weights=[25/26/34/17]  thresholds=[7.1/16.0/15.8/3.7]  r_eff=[54/91/90/38]  (tokens=512)
+  prompt 14: detected=False  blocks_passed=0/4  weights=[32/22/29/19]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 15: detected=False  blocks_passed=0/4  weights=[34/19/29/24]  thresholds=[12.3/16.0/16.0/16.0]  r_eff=[76/91/91/91]  (tokens=512)
+  prompt 16: detected=False  blocks_passed=0/4  weights=[31/32/28/26]  thresholds=[11.0/10.8/13.3/16.0]  r_eff=[71/70/80/91]  (tokens=512)
+  prompt 17: detected=True  blocks_passed=1/4  weights=[34/33/17/11]  thresholds=[14.3/16.0/16.0/15.8]  r_eff=[84/91/91/90]  (tokens=512)
+  prompt 18: detected=False  blocks_passed=0/4  weights=[13/23/34/12]  thresholds=[2.7/8.9/12.0/0.5]  r_eff=[33/62/75/20]  (tokens=512)
+  prompt 19: detected=False  blocks_passed=0/4  weights=[35/29/16/0]  thresholds=[11.0/14.3/13.8/0.0]  r_eff=[71/84/82/0]  (tokens=512)
+  prompt 20: detected=False  blocks_passed=0/4  weights=[5/2/6/2]  thresholds=[-0.6/-0.7/-0.1/-0.7]  r_eff=[10/2/15/2]  (tokens=512)
+  prompt 21: detected=False  blocks_passed=0/4  weights=[36/45/29/36]  thresholds=[15.8/16.0/15.3/15.3]  r_eff=[90/91/88/88]  (tokens=512)
+  prompt 22: detected=False  blocks_passed=0/4  weights=[28/31/27/35]  thresholds=[11.0/11.3/11.8/12.0]  r_eff=[71/72/74/75]  (tokens=512)
+  prompt 23: detected=True  blocks_passed=1/4  weights=[9/23/12/26]  thresholds=[2.4/16.0/16.0/11.5]  r_eff=[31/91/91/73]  (tokens=512)
+  prompt 24: detected=False  blocks_passed=0/4  weights=[39/23/27/32]  thresholds=[14.3/15.0/13.5/11.3]  r_eff=[84/87/81/72]  (tokens=512)
+  prompt 25: detected=False  blocks_passed=0/4  weights=[36/33/39/33]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 26: detected=False  blocks_passed=0/4  weights=[27/32/23/20]  thresholds=[14.5/8.9/14.3/9.8]  r_eff=[85/62/84/66]  (tokens=512)
+  prompt 27: detected=False  blocks_passed=0/4  weights=[39/26/28/35]  thresholds=[12.8/12.3/15.0/13.5]  r_eff=[78/76/87/81]  (tokens=512)
+  prompt 28: detected=False  blocks_passed=0/4  weights=[20/26/35/37]  thresholds=[13.5/12.5/16.0/9.6]  r_eff=[81/77/91/65]  (tokens=512)
+  prompt 29: detected=False  blocks_passed=0/4  weights=[30/22/20/24]  thresholds=[12.8/12.0/12.0/13.0]  r_eff=[78/75/75/79]  (tokens=512)
+
+=== Phase 3b: detection on UNwatermarked runs (FPR) ===
+  prompt 0: detected=False  blocks_passed=0/4  weights=[35/48/40/52]  thresholds=[12.8/16.0/13.8/15.8]  r_eff=[78/91/82/90]  (tokens=512)
+  prompt 1: detected=False  blocks_passed=0/4  weights=[47/42/42/53]  thresholds=[15.5/14.5/14.0/16.0]  r_eff=[89/85/83/91]  (tokens=512)
+  prompt 2: detected=False  blocks_passed=0/4  weights=[3/29/25/12]  thresholds=[-0.3/4.1/3.9/2.0]  r_eff=[13/40/39/29]  (tokens=512)
+  prompt 3: detected=False  blocks_passed=0/4  weights=[42/32/41/35]  thresholds=[9.6/9.8/14.8/14.0]  r_eff=[65/66/86/83]  (tokens=512)
+  prompt 4: detected=False  blocks_passed=0/4  weights=[32/53/50/47]  thresholds=[14.5/16.0/16.0/16.0]  r_eff=[85/91/91/91]  (tokens=512)
+  prompt 5: detected=False  blocks_passed=0/4  weights=[38/31/30/44]  thresholds=[10.8/10.1/7.3/15.3]  r_eff=[70/67/55/88]  (tokens=512)
+  prompt 6: detected=False  blocks_passed=0/4  weights=[21/9/19/27]  thresholds=[4.3/2.2/3.5/7.3]  r_eff=[41/30/37/55]  (tokens=512)
+  prompt 7: detected=False  blocks_passed=0/4  weights=[49/42/40/35]  thresholds=[16.0/12.3/10.6/8.7]  r_eff=[91/76/69/61]  (tokens=512)
+  prompt 8: detected=False  blocks_passed=0/4  weights=[47/46/46/30]  thresholds=[14.5/16.0/12.5/7.8]  r_eff=[85/91/77/57]  (tokens=512)
+  prompt 9: detected=False  blocks_passed=0/4  weights=[12/20/20/28]  thresholds=[1.5/3.1/4.1/7.8]  r_eff=[26/35/40/57]  (tokens=512)
+  prompt 10: detected=False  blocks_passed=0/4  weights=[29/29/40/44]  thresholds=[6.4/7.5/13.8/14.8]  r_eff=[51/56/82/86]  (tokens=512)
+  prompt 11: detected=False  blocks_passed=0/4  weights=[48/48/54/30]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 12: detected=False  blocks_passed=0/4  weights=[35/41/22/28]  thresholds=[10.6/12.0/5.8/8.2]  r_eff=[69/75/48/59]  (tokens=512)
+  prompt 13: detected=False  blocks_passed=0/4  weights=[15/17/3/12]  thresholds=[2.5/3.9/-0.8/0.4]  r_eff=[32/39/5/19]  (tokens=512)
+  prompt 14: detected=False  blocks_passed=0/4  weights=[17/1/12/25]  thresholds=[3.1/-0.8/0.5/7.8]  r_eff=[35/6/20/57]  (tokens=512)
+  prompt 15: detected=False  blocks_passed=0/4  weights=[28/27/23/26]  thresholds=[8.9/7.5/4.3/6.6]  r_eff=[62/56/41/52]  (tokens=512)
+  prompt 16: detected=False  blocks_passed=0/4  weights=[29/16/28/14]  thresholds=[6.9/1.3/6.0/1.5]  r_eff=[53/25/49/26]  (tokens=512)
+  prompt 17: detected=False  blocks_passed=0/4  weights=[36/23/30/30]  thresholds=[10.1/6.9/8.9/6.9]  r_eff=[67/53/62/53]  (tokens=512)
+  prompt 18: detected=False  blocks_passed=0/4  weights=[47/49/48/53]  thresholds=[14.5/16.0/16.0/16.0]  r_eff=[85/91/91/91]  (tokens=512)
+  prompt 19: detected=False  blocks_passed=0/4  weights=[50/30/21/28]  thresholds=[16.0/6.4/7.5/8.2]  r_eff=[91/51/56/59]  (tokens=512)
+  prompt 20: detected=False  blocks_passed=0/4  weights=[25/14/15/16]  thresholds=[4.7/2.7/2.7/1.5]  r_eff=[43/33/33/26]  (tokens=512)
+  prompt 21: detected=False  blocks_passed=0/4  weights=[3/3/3/3]  thresholds=[-0.8/-0.4/-0.8/-0.8]  r_eff=[8/12/8/4]  (tokens=512)
+  prompt 22: detected=False  blocks_passed=0/4  weights=[42/31/25/20]  thresholds=[11.3/10.3/6.6/5.8]  r_eff=[72/68/52/48]  (tokens=512)
+  prompt 23: detected=False  blocks_passed=0/4  weights=[45/51/49/50]  thresholds=[15.8/16.0/16.0/16.0]  r_eff=[90/91/91/91]  (tokens=512)
+  prompt 24: detected=False  blocks_passed=0/4  weights=[23/47/49/40]  thresholds=[5.8/15.3/15.8/15.0]  r_eff=[48/88/90/87]  (tokens=512)
+  prompt 25: detected=False  blocks_passed=0/4  weights=[0/24/45/47]  thresholds=[0.0/8.2/14.8/15.8]  r_eff=[0/59/86/90]  (tokens=512)
+  prompt 26: detected=False  blocks_passed=0/4  weights=[41/47/40/47]  thresholds=[15.3/15.5/10.6/16.0]  r_eff=[88/89/69/91]  (tokens=512)
+  prompt 27: detected=False  blocks_passed=0/4  weights=[45/45/48/41]  thresholds=[15.0/15.8/15.5/16.0]  r_eff=[87/90/89/91]  (tokens=512)
+  prompt 28: detected=False  blocks_passed=0/4  weights=[35/32/44/50]  thresholds=[11.8/6.9/13.3/15.5]  r_eff=[74/53/80/89]  (tokens=512)
+  prompt 29: detected=False  blocks_passed=0/4  weights=[39/42/45/42]  thresholds=[15.0/16.0/15.8/15.3]  r_eff=[87/91/90/88]  (tokens=512)
+
+=== Summary ===
+  method: syndrome_entropy
+  TPR: 3/30  (10.0%)
+  FPR: 0/30  (0.0%)

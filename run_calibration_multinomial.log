@@ -1,0 +1,204 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+[parent] visible GPUs: [0, 1, 2, 3, 4, 5, 6, 7]
+[parent] saved 60 jobs to calib_workdir/artifacts.pt
+
+=== Phase 1: 60 generations across 8 GPUs ===
+[parent] launch job=0 gpu=0 prompt=0 watermark=True pid=90606
+[parent] launch job=1 gpu=1 prompt=0 watermark=False pid=90607
+[parent] launch job=2 gpu=2 prompt=1 watermark=True pid=90608
+[parent] launch job=3 gpu=3 prompt=1 watermark=False pid=90609
+[parent] launch job=4 gpu=4 prompt=2 watermark=True pid=90610
+[parent] launch job=5 gpu=5 prompt=2 watermark=False pid=90611
+[parent] launch job=6 gpu=6 prompt=3 watermark=True pid=90612
+[parent] launch job=7 gpu=7 prompt=3 watermark=False pid=90613
+[parent] done   job=0 gpu=0 (1/60 done, 519s elapsed)
+[parent] done   job=4 gpu=4 (2/60 done, 519s elapsed)
+[parent] launch job=8 gpu=0 prompt=4 watermark=True pid=92668
+[parent] launch job=9 gpu=4 prompt=4 watermark=False pid=92669
+[parent] done   job=1 gpu=1 (3/60 done, 523s elapsed)
+[parent] launch job=10 gpu=1 prompt=5 watermark=True pid=93070
+[parent] done   job=6 gpu=6 (4/60 done, 527s elapsed)
+[parent] launch job=11 gpu=6 prompt=5 watermark=False pid=93229
+[parent] done   job=3 gpu=3 (5/60 done, 529s elapsed)
+[parent] launch job=12 gpu=3 prompt=6 watermark=True pid=93386
+[parent] done   job=5 gpu=5 (6/60 done, 537s elapsed)
+[parent] launch job=13 gpu=5 prompt=6 watermark=False pid=93838
+[parent] done   job=7 gpu=7 (7/60 done, 541s elapsed)
+[parent] launch job=14 gpu=7 prompt=7 watermark=True pid=94191
+[parent] done   job=2 gpu=2 (8/60 done, 549s elapsed)
+[parent] launch job=15 gpu=2 prompt=7 watermark=False pid=94447
+[parent] done   job=8 gpu=0 (9/60 done, 1039s elapsed)
+[parent] launch job=16 gpu=0 prompt=8 watermark=True pid=94832
+[parent] done   job=10 gpu=1 (10/60 done, 1045s elapsed)
+[parent] launch job=17 gpu=1 prompt=8 watermark=False pid=94989
+[parent] done   job=9 gpu=4 (11/60 done, 1049s elapsed)
+[parent] launch job=18 gpu=4 prompt=9 watermark=True pid=95146
+[parent] done   job=12 gpu=3 (12/60 done, 1055s elapsed)
+[parent] done   job=13 gpu=5 (13/60 done, 1055s elapsed)
+[parent] launch job=19 gpu=3 prompt=9 watermark=False pid=95396
+[parent] launch job=20 gpu=5 prompt=10 watermark=True pid=95397
+[parent] done   job=15 gpu=2 (14/60 done, 1067s elapsed)
+[parent] launch job=21 gpu=2 prompt=10 watermark=False pid=96099
+[parent] done   job=11 gpu=6 (15/60 done, 1077s elapsed)
+[parent] launch job=22 gpu=6 prompt=11 watermark=True pid=96418
+[parent] done   job=14 gpu=7 (16/60 done, 1085s elapsed)
+[parent] launch job=23 gpu=7 prompt=11 watermark=False pid=96676
+[parent] done   job=19 gpu=3 (17/60 done, 1568s elapsed)
+[parent] launch job=24 gpu=3 prompt=12 watermark=True pid=97061
+[parent] done   job=16 gpu=0 (18/60 done, 1572s elapsed)
+[parent] launch job=25 gpu=0 prompt=12 watermark=False pid=97216
+[parent] done   job=17 gpu=1 (19/60 done, 1582s elapsed)
+[parent] launch job=26 gpu=1 prompt=13 watermark=True pid=97472
+[parent] done   job=22 gpu=6 (20/60 done, 1590s elapsed)
+[parent] launch job=27 gpu=6 prompt=13 watermark=False pid=97728
+[parent] done   job=18 gpu=4 (21/60 done, 1594s elapsed)
+[parent] done   job=21 gpu=2 (22/60 done, 1594s elapsed)
+[parent] launch job=28 gpu=4 prompt=14 watermark=True pid=97982
+[parent] launch job=29 gpu=2 prompt=14 watermark=False pid=97983
+[parent] done   job=20 gpu=5 (23/60 done, 1604s elapsed)
+[parent] launch job=30 gpu=5 prompt=15 watermark=True pid=98554
+[parent] done   job=23 gpu=7 (24/60 done, 1644s elapsed)
+[parent] launch job=31 gpu=7 prompt=15 watermark=False pid=99006
+[parent] done   job=25 gpu=0 (25/60 done, 2094s elapsed)
+[parent] launch job=32 gpu=0 prompt=16 watermark=True pid=99274
+[parent] done   job=27 gpu=6 (26/60 done, 2104s elapsed)
+[parent] launch job=33 gpu=6 prompt=16 watermark=False pid=99451
+[parent] done   job=26 gpu=1 (27/60 done, 2110s elapsed)
+[parent] launch job=34 gpu=1 prompt=17 watermark=True pid=99782
+[parent] done   job=24 gpu=3 (28/60 done, 2120s elapsed)
+[parent] launch job=35 gpu=3 prompt=17 watermark=False pid=100197
+[parent] done   job=30 gpu=5 (29/60 done, 2126s elapsed)
+[parent] launch job=36 gpu=5 prompt=18 watermark=True pid=100451
+[parent] done   job=28 gpu=4 (30/60 done, 2128s elapsed)
+[parent] launch job=37 gpu=4 prompt=18 watermark=False pid=100578
+[parent] done   job=29 gpu=2 (31/60 done, 2148s elapsed)
+[parent] launch job=38 gpu=2 prompt=19 watermark=True pid=101084
+[parent] done   job=31 gpu=7 (32/60 done, 2186s elapsed)
+[parent] launch job=39 gpu=7 prompt=19 watermark=False pid=101338
+[parent] done   job=32 gpu=0 (33/60 done, 2623s elapsed)
+[parent] launch job=40 gpu=0 prompt=20 watermark=True pid=101610
+[parent] done   job=37 gpu=4 (34/60 done, 2635s elapsed)
+[parent] launch job=41 gpu=4 prompt=20 watermark=False pid=101866
+[parent] done   job=35 gpu=3 (35/60 done, 2641s elapsed)
+[parent] launch job=42 gpu=3 prompt=21 watermark=True pid=102027
+[parent] done   job=33 gpu=6 (36/60 done, 2649s elapsed)
+[parent] launch job=43 gpu=6 prompt=21 watermark=False pid=102277
+[parent] done   job=36 gpu=5 (37/60 done, 2657s elapsed)
+[parent] launch job=44 gpu=5 prompt=22 watermark=True pid=102531
+[parent] done   job=34 gpu=1 (38/60 done, 2661s elapsed)
+[parent] launch job=45 gpu=1 prompt=22 watermark=False pid=102783
+[parent] done   job=38 gpu=2 (39/60 done, 2671s elapsed)
+[parent] launch job=46 gpu=2 prompt=23 watermark=True pid=103079
+[parent] done   job=39 gpu=7 (40/60 done, 2705s elapsed)
+[parent] launch job=47 gpu=7 prompt=23 watermark=False pid=103448
+[parent] done   job=40 gpu=0 (41/60 done, 3147s elapsed)
+[parent] launch job=48 gpu=0 prompt=24 watermark=True pid=103712
+[parent] done   job=41 gpu=4 (42/60 done, 3161s elapsed)
+[parent] launch job=49 gpu=4 prompt=24 watermark=False pid=103964
+[parent] done   job=42 gpu=3 (43/60 done, 3163s elapsed)
+[parent] launch job=50 gpu=3 prompt=25 watermark=True pid=104117
+[parent] done   job=43 gpu=6 (44/60 done, 3175s elapsed)
+[parent] launch job=51 gpu=6 prompt=25 watermark=False pid=104633
+[parent] done   job=44 gpu=5 (45/60 done, 3181s elapsed)
+[parent] launch job=52 gpu=5 prompt=26 watermark=True pid=104784
+[parent] done   job=45 gpu=1 (46/60 done, 3185s elapsed)
+[parent] launch job=53 gpu=1 prompt=26 watermark=False pid=104937
+[parent] done   job=46 gpu=2 (47/60 done, 3197s elapsed)
+[parent] launch job=54 gpu=2 prompt=27 watermark=True pid=105385
+[parent] done   job=47 gpu=7 (48/60 done, 3250s elapsed)
+[parent] launch job=55 gpu=7 prompt=27 watermark=False pid=105647
+[parent] done   job=48 gpu=0 (49/60 done, 3672s elapsed)
+[parent] launch job=56 gpu=0 prompt=28 watermark=True pid=105930
+[parent] done   job=49 gpu=4 (50/60 done, 3692s elapsed)
+[parent] done   job=51 gpu=6 (51/60 done, 3692s elapsed)
+[parent] launch job=57 gpu=4 prompt=28 watermark=False pid=106180
+[parent] launch job=58 gpu=6 prompt=29 watermark=True pid=106181
+[parent] done   job=50 gpu=3 (52/60 done, 3698s elapsed)
+[parent] launch job=59 gpu=3 prompt=29 watermark=False pid=106496
+[parent] done   job=53 gpu=1 (53/60 done, 3708s elapsed)
+[parent] done   job=52 gpu=5 (54/60 done, 3714s elapsed)
+[parent] done   job=54 gpu=2 (55/60 done, 3720s elapsed)
+[parent] done   job=55 gpu=7 (56/60 done, 3788s elapsed)
+[parent] done   job=56 gpu=0 (57/60 done, 4211s elapsed)
+[parent] done   job=57 gpu=4 (58/60 done, 4217s elapsed)
+[parent] done   job=58 gpu=6 (59/60 done, 4229s elapsed)
+[parent] done   job=59 gpu=3 (60/60 done, 4253s elapsed)
+[parent] all generations done in 4252.6s
+[parent] watermarked=30 unwatermarked=30
+
+=== Phase 2: fit threshold ===
+  threshold = 249.5216  null_mean = 0.2660  null_std  = 41.5578  traces_used = 30
+  saved -> qwen_threshold.json
+
+=== Phase 3a: detection on watermarked runs (TPR) ===
+  prompt 0: detected=True  stat=1588.40  sigmas=38.2  (tokens=16384)
+  prompt 1: detected=True  stat=1606.99  sigmas=38.7  (tokens=16384)
+  prompt 2: detected=True  stat=1133.09  sigmas=27.3  (tokens=16384)
+  prompt 3: detected=True  stat=1630.03  sigmas=39.2  (tokens=16384)
+  prompt 4: detected=True  stat=1677.05  sigmas=40.3  (tokens=16384)
+  prompt 5: detected=True  stat=1409.98  sigmas=33.9  (tokens=16384)
+  prompt 6: detected=True  stat=1914.22  sigmas=46.1  (tokens=16384)
+  prompt 7: detected=True  stat=1331.78  sigmas=32.0  (tokens=16384)
+  prompt 8: detected=True  stat=652.63  sigmas=15.7  (tokens=16384)
+  prompt 9: detected=True  stat=974.57  sigmas=23.4  (tokens=16384)
+  prompt 10: detected=True  stat=1935.68  sigmas=46.6  (tokens=16384)
+  prompt 11: detected=True  stat=1236.49  sigmas=29.7  (tokens=16384)
+  prompt 12: detected=True  stat=1936.99  sigmas=46.6  (tokens=16384)
+  prompt 13: detected=False  stat=208.68  sigmas=5.0  (tokens=16384)
+  prompt 14: detected=True  stat=1680.04  sigmas=40.4  (tokens=16384)
+  prompt 15: detected=True  stat=1263.95  sigmas=30.4  (tokens=16384)
+  prompt 16: detected=True  stat=1515.76  sigmas=36.5  (tokens=16384)
+  prompt 17: detected=True  stat=1742.62  sigmas=41.9  (tokens=16384)
+  prompt 18: detected=True  stat=1385.32  sigmas=33.3  (tokens=16384)
+  prompt 19: detected=True  stat=1851.44  sigmas=44.5  (tokens=16384)
+  prompt 20: detected=True  stat=1773.41  sigmas=42.7  (tokens=16384)
+  prompt 21: detected=True  stat=2036.21  sigmas=49.0  (tokens=16384)
+  prompt 22: detected=True  stat=1557.52  sigmas=37.5  (tokens=16384)
+  prompt 23: detected=True  stat=1470.02  sigmas=35.4  (tokens=16384)
+  prompt 24: detected=True  stat=1788.18  sigmas=43.0  (tokens=16384)
+  prompt 25: detected=True  stat=1834.93  sigmas=44.1  (tokens=16384)
+  prompt 26: detected=True  stat=1917.90  sigmas=46.1  (tokens=16384)
+  prompt 27: detected=True  stat=1629.78  sigmas=39.2  (tokens=16384)
+  prompt 28: detected=True  stat=1753.98  sigmas=42.2  (tokens=16384)
+  prompt 29: detected=True  stat=1603.81  sigmas=38.6  (tokens=16384)
+
+=== Phase 3b: detection on UNwatermarked runs (FPR) ===
+  prompt 0: detected=False  stat=-17.72  sigmas=-0.4  (tokens=16384)
+  prompt 1: detected=False  stat=-4.77  sigmas=-0.1  (tokens=16384)
+  prompt 2: detected=False  stat=12.21  sigmas=0.3  (tokens=16384)
+  prompt 3: detected=False  stat=-1.59  sigmas=-0.0  (tokens=16384)
+  prompt 4: detected=False  stat=-6.01  sigmas=-0.2  (tokens=16384)
+  prompt 5: detected=False  stat=-10.22  sigmas=-0.3  (tokens=16384)
+  prompt 6: detected=False  stat=-14.01  sigmas=-0.3  (tokens=16384)
+  prompt 7: detected=False  stat=32.51  sigmas=0.8  (tokens=16384)
+  prompt 8: detected=False  stat=21.69  sigmas=0.5  (tokens=16384)
+  prompt 9: detected=False  stat=-11.66  sigmas=-0.3  (tokens=16384)
+  prompt 10: detected=False  stat=-31.07  sigmas=-0.8  (tokens=16384)
+  prompt 11: detected=False  stat=-6.04  sigmas=-0.2  (tokens=16384)
+  prompt 12: detected=False  stat=6.58  sigmas=0.2  (tokens=16384)
+  prompt 13: detected=False  stat=5.68  sigmas=0.1  (tokens=16384)
+  prompt 14: detected=False  stat=-31.56  sigmas=-0.8  (tokens=16384)
+  prompt 15: detected=False  stat=-3.15  sigmas=-0.1  (tokens=16384)
+  prompt 16: detected=False  stat=9.44  sigmas=0.2  (tokens=16384)
+  prompt 17: detected=False  stat=0.71  sigmas=0.0  (tokens=16384)
+  prompt 18: detected=False  stat=-3.16  sigmas=-0.1  (tokens=16384)
+  prompt 19: detected=False  stat=-10.11  sigmas=-0.2  (tokens=16384)
+  prompt 20: detected=False  stat=20.26  sigmas=0.5  (tokens=16384)
+  prompt 21: detected=False  stat=-8.27  sigmas=-0.2  (tokens=16384)
+  prompt 22: detected=False  stat=-25.43  sigmas=-0.6  (tokens=16384)
+  prompt 23: detected=False  stat=2.24  sigmas=0.0  (tokens=16384)
+  prompt 24: detected=False  stat=8.12  sigmas=0.2  (tokens=16384)
+  prompt 25: detected=False  stat=8.92  sigmas=0.2  (tokens=16384)
+  prompt 26: detected=False  stat=-0.66  sigmas=-0.0  (tokens=16384)
+  prompt 27: detected=False  stat=-1.96  sigmas=-0.1  (tokens=16384)
+  prompt 28: detected=False  stat=-9.55  sigmas=-0.2  (tokens=16384)
+  prompt 29: detected=False  stat=5.66  sigmas=0.1  (tokens=16384)
+
+=== Summary ===
+  TPR: 29/30  (96.7%)
+  FPR: 0/30  (0.0%)
+  threshold (FPR target 1e-9): 249.5216

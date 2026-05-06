@@ -1,0 +1,40 @@
+.venv/
+__pycache__/
+*.pyc
+dev-ignore/
+report.md
+eval_bundle/
+
+# Secrets
+.env
+
+# Local setup
+CLAUDE.md
+wandb/
+
+# Watermark experiment outputs (large binary artifacts)
+*.pt
+*.bin
+*.safetensors
+
+# Local model caches (do not commit upstream model weights)
+Qwen3-*/
+.cache/
+huggingface/
+
+# Notebook scratch
+.ipynb_checkpoints/
+Untitled.ipynb
+
+# Auto-handoff / harness state
+auto_handoff*.log
+auto_handoff*.json
+
+# Runtime worker logs (noisy, large; not reproduction-relevant)
+*/worker_*.log
+*/phase_e_worker_*.log
+*/extract.log
+*/analyze.log
+
+# Claude harness (do not redistribute)
+.claude/

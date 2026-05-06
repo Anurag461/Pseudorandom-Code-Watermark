@@ -25,16 +25,17 @@ pkgs = [
 for p in pkgs:
     print(f"{p} version: {version(p)}")
 
-USE_BASE_MODEL = True
-USE_REASONING_MODEL = False
-USE_INSTRUCT_MODEL = False
+_variant = os.environ.get("PRC_MODEL_VARIANT", "base")
+USE_BASE_MODEL = _variant == "base"
+USE_REASONING_MODEL = _variant == "reasoning"
+USE_INSTRUCT_MODEL = _variant == "instruct"
 
 if (USE_BASE_MODEL + USE_REASONING_MODEL
     + USE_INSTRUCT_MODEL) != 1:
     raise AttributeError("Only one of the options above can be True.")
 
 
-CHOOSE_MODEL = "0.6B"
+CHOOSE_MODEL = os.environ.get("PRC_MODEL_SIZE", "0.6B")
 QWEN3_CONFIG = return_qwen_config(CHOOSE_MODEL)
 
 model = Qwen3Model(QWEN3_CONFIG)
@@ -81,7 +82,7 @@ del weights_dict
 tok = AutoTokenizer.from_pretrained('Qwen/Qwen3-0.6B')
 
 
-if USE_REASONING_MODEL:
+if USE_REASONING_MODEL or USE_INSTRUCT_MODEL:
     tokenizer_file_path = f"Qwen3-{CHOOSE_MODEL}/tokenizer.json"
 else:
     tokenizer_file_path = f"Qwen3-{CHOOSE_MODEL}-Base/tokenizer.json"
@@ -501,6 +502,16 @@ def generate_and_collect(generator):
     return tokens, p_trace
 
 
+def _fold_naive_uniform(bits, p_arr, n):
+    return fold_naive(bits, n)
+
+
+FOLD_FNS = {
+    "entropy": fold_entropy_weighted,
+    "naive": _fold_naive_uniform,
+}
+
+
 def fit_calibration(
     decoding_key,
     calibration_p_traces,
@@ -508,11 +519,13 @@ def fit_calibration(
     num_simulated_nulls=2000,
     min_trace_length=None,
     seed=1234,
+    fold="entropy",
 ):
     """Fit a single detection threshold from a batch of p-traces."""
     n = decoding_key[0].shape[0]
     if min_trace_length is None:
         min_trace_length = n
+    fold_fn = FOLD_FNS[fold]
 
     traces = [np.asarray(p, dtype=np.float64)
               for p in calibration_p_traces
@@ -535,7 +548,7 @@ def fit_calibration(
                           1 - 2 * (1 - xi) * (1 - p_arr))
         bern_p = np.clip(bern_p, 0.0, 1.0)
         observed = rng.binomial(1, bern_p)
-        post = fold_entropy_weighted(observed, p_arr, n)
+        post = fold_fn(observed, p_arr, n)
         null_stats[i] = _test_statistic(post, decoding_key)
 
     null_mean = float(null_stats.mean())
@@ -553,6 +566,7 @@ def fit_calibration(
         "n": n,
         "num_traces_used": len(traces),
         "num_simulated_nulls": num_simulated_nulls,
+        "fold": fold,
     }
 
 
@@ -581,6 +595,7 @@ def detect_with_threshold(
             f"Calibration was for n={threshold_state['n']}, but key has n={n}."
         )
 
+    fold_fn = FOLD_FNS[threshold_state.get("fold", "entropy")]
     bits = tokens_to_bits(generated_token_ids, partition_map)
     p_arr = np.asarray(partition_probs, dtype=np.float64)
     if bits.shape != p_arr.shape:
@@ -588,7 +603,7 @@ def detect_with_threshold(
             f"tokens length {bits.shape[0]} != p_trace length {p_arr.shape[0]}"
         )
 
-    posteriors = fold_entropy_weighted(bits, p_arr, n)
+    posteriors = fold_fn(bits, p_arr, n)
     statistic = _test_statistic(posteriors, decoding_key)
     decision = bool(statistic > threshold_state["threshold"])
 
@@ -601,5 +616,91 @@ def detect_with_threshold(
             "threshold": threshold_state["threshold"],
             "sigmas_above_null": sigmas,
         }
+    return decision
+
+
+# -----------------------------------------------------------------------------
+# Syndrome-weight detector (PRC paper threshold, Theorem 1)
+# -----------------------------------------------------------------------------
+#
+# Per-block, hard-bit detector: no fold, no entropy weighting, no calibration.
+# Generated text is split into consecutive non-overlapping blocks of length n;
+# each block gets its own syndrome check. Document is declared watermarked iff
+# *any* block passes.  Trailing tokens with T % n != 0 are ignored.
+#
+# Per-block threshold:  (1/2 - r_eff^{-1/4}) * r_eff   = r_eff/2 - r_eff^{3/4}
+# Per-block decision:   weight < threshold
+# Document decision:    OR over blocks
+#
+# entropy_threshold (in bits, H_2), evaluated per block:
+#   - None: r_eff = r (use every parity check).
+#   - float: drop any check whose t token positions include any token with
+#            H_2(p1) < entropy_threshold within that block.
+
+def _syndrome_block(block_bits, block_p, indices, z_rowsum, entropy_threshold):
+    syndrome = ((block_bits[indices].sum(axis=1) + z_rowsum) % 2).astype(np.int64)
+    if entropy_threshold is None:
+        keep = np.ones(syndrome.shape[0], dtype=bool)
+    else:
+        ent_bits = binary_entropy(block_p) / np.log(2)
+        unreliable_pos = ent_bits < entropy_threshold
+        keep = ~unreliable_pos[indices].any(axis=1)
+    r_eff = int(keep.sum())
+    if r_eff == 0:
+        return False, 0, 0.0, 0
+    weight = int(syndrome[keep].sum())
+    threshold = (0.5 - r_eff ** -0.25) * r_eff
+    return bool(weight < threshold), weight, float(threshold), r_eff
+
+
+def detect_syndrome(
+    decoding_key,
+    generated_token_ids,
+    partition_probs,
+    partition_map,
+    entropy_threshold=None,
+    return_info=False,
+):
+    (_, parity_check_matrix, one_time_pad, _, _, _, _, _, t) = decoding_key
+    r, n = parity_check_matrix.shape
+
+    bits = tokens_to_bits(generated_token_ids, partition_map)
+    p_arr = np.asarray(partition_probs, dtype=np.float64)
+    if bits.shape != p_arr.shape:
+        raise ValueError(
+            f"tokens length {bits.shape[0]} != p_trace length {p_arr.shape[0]}"
+        )
+
+    T = bits.shape[0]
+    n_blocks = T // n
+    if n_blocks == 0:
+        raise ValueError(f"detect_syndrome needs at least n={n} tokens, got T={T}")
+
+    z = np.asarray(one_time_pad, dtype=np.int64)
+    indices = parity_check_matrix.indices.reshape(r, t)
+    z_rowsum = z[indices].sum(axis=1)
+
+    blocks = []
+    decision = False
+    for b in range(n_blocks):
+        sl = slice(b * n, (b + 1) * n)
+        d, w, thr, r_eff = _syndrome_block(
+            bits[sl], p_arr[sl], indices, z_rowsum, entropy_threshold
+        )
+        blocks.append({"block": b, "weight": w, "threshold": thr,
+                       "r_eff": r_eff, "passed": d})
+        if d:
+            decision = True
+
+    if return_info:
+        info = {
+            "method": "syndrome",
+            "entropy_threshold": entropy_threshold,
+            "r": int(r),
+            "n_blocks": n_blocks,
+            "blocks_passed": sum(b["passed"] for b in blocks),
+            "blocks": blocks,
+        }
+        return decision, info
     return decision
 

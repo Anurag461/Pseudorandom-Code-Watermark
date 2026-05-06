@@ -1,0 +1,10 @@
+=== run_spoof_attack phase=D model=0.6B variant=instruct watermark=prc attack_active=0 alpha=2.0 ===
+[phaseD] PRC threshold 48.371 (fold=entropy, FPR=2e-05)
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Qwen3-0.6B/tokenizer.json
+[phaseD] spoof_06b_kgw_atk0_alpha2: refusal=93.0% prc_detect=0.0% kgw_detect=3.0%
+[phaseD] spoof_06b_kgw_atk1_alpha2: refusal=94.0% prc_detect=0.0% kgw_detect=30.0%
+[phaseD] spoof_06b_prc_atk1_alpha2: refusal=89.0% prc_detect=0.0% kgw_detect=3.0%
+[phaseD] results appended to attack_results.csv

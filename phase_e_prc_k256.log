@@ -1,0 +1,19 @@
+[phase_e_drive] PRC phase_e_workdir/prc_AB_k256: total=256 pending=256
+[phase_e_drive] gpu=1 -> 64 jobs
+[phase_e_drive] gpu=2 -> 64 jobs
+[phase_e_drive] gpu=3 -> 64 jobs
+[phase_e_drive] gpu=7 -> 64 jobs
+[phase_e_drive] launched gpu=1 pid=3199
+[phase_e_drive] launched gpu=2 pid=3200
+[phase_e_drive] launched gpu=3 pid=3201
+[phase_e_drive] launched gpu=7 pid=3202
+[phase_e_drive] progress: 0/256 done, 30s elapsed
+[phase_e_drive] progress: 44/256 done, 330s elapsed
+[phase_e_drive] progress: 100/256 done, 631s elapsed
+[phase_e_drive] progress: 155/256 done, 931s elapsed
+[phase_e_drive] progress: 211/256 done, 1231s elapsed
+[phase_e_drive] DONE gpu=1
+[phase_e_drive] DONE gpu=2
+[phase_e_drive] DONE gpu=3
+[phase_e_drive] DONE gpu=7
+[phase_e_drive] all done in 1502s. final pending = 0

@@ -1,0 +1,81 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+[parent] visible GPUs: [0, 1, 2, 3, 4, 5, 6, 7]
+[parent] loaded existing artifacts.pt with n_jobs=60 n=4096
+
+=== Phase 1 SKIPPED: reusing 60 existing results in calib_workdir ===
+[parent] watermarked=30 unwatermarked=30
+
+=== Phase 2 SKIPPED: syndrome_entropy uses analytical threshold ===
+
+=== Phase 3a: detection on watermarked runs (TPR) ===
+  prompt 0: detected=False  blocks_passed=0/4  weights=[1555/1644/1641/1679]  thresholds=[1384.1/1442.3/1448.8/1367.1]  r_eff=[3721/3865/3881/3679]  (tokens=16384)
+  prompt 1: detected=False  blocks_passed=0/4  weights=[1493/1673/1201/963]  thresholds=[1277.7/1399.8/920.9/797.9]  r_eff=[3457/3760/2562/2249]  (tokens=16384)
+  prompt 2: detected=False  blocks_passed=0/4  weights=[197/1061/1228/1218]  thresholds=[115.6/887.0/1124.6/1145.3]  r_eff=[415/2476/3075/3127]  (tokens=16384)
+  prompt 3: detected=True  blocks_passed=1/4  weights=[1082/1388/3/454]  thresholds=[911.0/1451.2/-0.8/406.2]  r_eff=[2537/3887/8/1227]  (tokens=16384)
+  prompt 4: detected=True  blocks_passed=2/4  weights=[1096/1466/1339/1444]  thresholds=[850.8/1452.0/1452.0/1445.1]  r_eff=[2384/3889/3889/3872]  (tokens=16384)
+  prompt 5: detected=True  blocks_passed=1/4  weights=[1449/1481/1394/1325]  thresholds=[1190.2/1327.6/1382.5/1340.9]  r_eff=[3239/3581/3717/3614]  (tokens=16384)
+  prompt 6: detected=False  blocks_passed=0/4  weights=[955/1600/485/766]  thresholds=[743.7/1431.4/374.9/619.0]  r_eff=[2110/3838/1143/1788]  (tokens=16384)
+  prompt 7: detected=True  blocks_passed=2/4  weights=[1153/1264/1338/1409]  thresholds=[1131.0/1265.6/1420.9/1400.2]  r_eff=[3091/3427/3812/3761]  (tokens=16384)
+  prompt 8: detected=False  blocks_passed=0/4  weights=[15/230/1717/1477]  thresholds=[2.2/150.4/1437.9/1260.0]  r_eff=[30/518/3854/3413]  (tokens=16384)
+  prompt 9: detected=False  blocks_passed=0/4  weights=[1076/1530/409/197]  thresholds=[838.3/1372.8/338.0/152.5]  r_eff=[2352/3693/1043/524]  (tokens=16384)
+  prompt 10: detected=False  blocks_passed=0/4  weights=[762/1032/1360/1514]  thresholds=[537.1/809.3/1206.2/1406.7]  r_eff=[1574/2278/3279/3777]  (tokens=16384)
+  prompt 11: detected=True  blocks_passed=3/4  weights=[1206/1278/1272/1192]  thresholds=[1172.5/1452.0/1452.0/1449.2]  r_eff=[3195/3889/3889/3882]  (tokens=16384)
+  prompt 12: detected=False  blocks_passed=0/4  weights=[1666/1642/424/99]  thresholds=[1281.3/1352.2/289.3/51.4]  r_eff=[3466/3642/910/215]  (tokens=16384)
+  prompt 13: detected=False  blocks_passed=0/4  weights=[415/1443/1800/0]  thresholds=[289.7/1273.6/1413.6/0.0]  r_eff=[911/3447/3794/0]  (tokens=16384)
+  prompt 14: detected=True  blocks_passed=2/4  weights=[1335/1527/1380/1404]  thresholds=[1029.8/1412.4/1394.2/1437.9]  r_eff=[2837/3791/3746/3854]  (tokens=16384)
+  prompt 15: detected=False  blocks_passed=0/4  weights=[1570/0/0/0]  thresholds=[1384.1/0.0/0.0/0.0]  r_eff=[3721/0/0/0]  (tokens=16384)
+  prompt 16: detected=False  blocks_passed=0/4  weights=[1469/1133/1577/1557]  thresholds=[1217.8/924.8/1416.0/1447.2]  r_eff=[3308/2572/3800/3877]  (tokens=16384)
+  prompt 17: detected=False  blocks_passed=0/4  weights=[439/542/886/878]  thresholds=[268.7/535.6/747.6/753.4]  r_eff=[853/1570/2120/2135]  (tokens=16384)
+  prompt 18: detected=False  blocks_passed=0/4  weights=[1471/1398/1472/1642]  thresholds=[1433.0/1395.4/1433.8/1376.0]  r_eff=[3842/3749/3844/3701]  (tokens=16384)
+  prompt 19: detected=False  blocks_passed=0/4  weights=[1307/1552/1000/1768]  thresholds=[988.9/1278.1/819.4/1452.0]  r_eff=[2734/3458/2304/3889]  (tokens=16384)
+  prompt 20: detected=False  blocks_passed=0/4  weights=[1359/1395/1700/1803]  thresholds=[1095.0/1275.2/1435.4/1441.1]  r_eff=[3001/3451/3848/3862]  (tokens=16384)
+  prompt 21: detected=False  blocks_passed=0/4  weights=[1140/826/945/201]  thresholds=[840.2/611.7/753.0/131.3]  r_eff=[2357/1769/2134/462]  (tokens=16384)
+  prompt 22: detected=False  blocks_passed=0/4  weights=[428/13/0/0]  thresholds=[306.8/1.3/0.0/0.0]  r_eff=[958/25/0/0]  (tokens=16384)
+  prompt 23: detected=True  blocks_passed=4/4  weights=[1264/1335/1250/1194]  thresholds=[1445.6/1446.8/1452.0/1451.2]  r_eff=[3873/3876/3889/3887]  (tokens=16384)
+  prompt 24: detected=False  blocks_passed=0/4  weights=[726/1223/678/141]  thresholds=[595.2/1222.2/572.6/86.0]  r_eff=[1726/3319/1667/325]  (tokens=16384)
+  prompt 25: detected=False  blocks_passed=0/4  weights=[1472/93/0/0]  thresholds=[1217.0/47.7/0.0/0.0]  r_eff=[3306/203/0/0]  (tokens=16384)
+  prompt 26: detected=False  blocks_passed=0/4  weights=[249/225/1094/1088]  thresholds=[140.5/152.1/853.6/800.7]  r_eff=[489/523/2391/2256]  (tokens=16384)
+  prompt 27: detected=True  blocks_passed=2/4  weights=[1407/1264/1534/1182]  thresholds=[1426.9/1452.0/1452.0/1088.7]  r_eff=[3827/3889/3889/2985]  (tokens=16384)
+  prompt 28: detected=False  blocks_passed=0/4  weights=[1049/789/473/118]  thresholds=[852.4/696.7/328.0/61.5]  r_eff=[2388/1989/1016/248]  (tokens=16384)
+  prompt 29: detected=False  blocks_passed=0/4  weights=[1433/1503/1401/1426]  thresholds=[1176.9/1172.1/1140.5/1390.5]  r_eff=[3206/3194/3115/3737]  (tokens=16384)
+
+=== Phase 3b: detection on UNwatermarked runs (FPR) ===
+  prompt 0: detected=False  blocks_passed=0/4  weights=[1662/1900/1896/1642]  thresholds=[1253.9/1435.4/1432.6/1200.6]  r_eff=[3398/3848/3841/3265]  (tokens=16384)
+  prompt 1: detected=False  blocks_passed=0/4  weights=[1768/1645/1889/1865]  thresholds=[1337.3/1212.2/1451.6/1441.9]  r_eff=[3605/3294/3888/3864]  (tokens=16384)
+  prompt 2: detected=False  blocks_passed=0/4  weights=[517/1749/1309/1956]  thresholds=[344.6/1321.1/931.9/1444.3]  r_eff=[1061/3565/2590/3870]  (tokens=16384)
+  prompt 3: detected=False  blocks_passed=0/4  weights=[447/1939/1907/1932]  thresholds=[299.5/1435.0/1443.9/1452.0]  r_eff=[938/3847/3869/3889]  (tokens=16384)
+  prompt 4: detected=False  blocks_passed=0/4  weights=[10/0/1417/1968]  thresholds=[0.4/0.0/1031.0/1444.3]  r_eff=[19/0/2840/3870]  (tokens=16384)
+  prompt 5: detected=False  blocks_passed=0/4  weights=[1473/1283/1982/1965]  thresholds=[1066.8/937.1/1436.6/1433.4]  r_eff=[2930/2603/3851/3843]  (tokens=16384)
+  prompt 6: detected=False  blocks_passed=0/4  weights=[1976/1917/1910/1879]  thresholds=[1429.0/1441.5/1438.3/1427.3]  r_eff=[3832/3863/3855/3828]  (tokens=16384)
+  prompt 7: detected=False  blocks_passed=0/4  weights=[1715/931/784/1995]  thresholds=[1247.5/658.4/531.4/1450.8]  r_eff=[3382/1890/1559/3886]  (tokens=16384)
+  prompt 8: detected=False  blocks_passed=0/4  weights=[60/1668/1822/1688]  thresholds=[20.5/1258.8/1317.1/1235.9]  r_eff=[108/3410/3555/3353]  (tokens=16384)
+  prompt 9: detected=False  blocks_passed=0/4  weights=[1570/1861/1954/1977]  thresholds=[1166.9/1384.9/1452.0/1452.0]  r_eff=[3181/3723/3889/3889]  (tokens=16384)
+  prompt 10: detected=False  blocks_passed=0/4  weights=[1309/1887/1979/1918]  thresholds=[942.6/1433.8/1450.4/1432.6]  r_eff=[2617/3844/3885/3841]  (tokens=16384)
+  prompt 11: detected=False  blocks_passed=0/4  weights=[1034/1872/1962/1917]  thresholds=[736.7/1399.4/1432.6/1423.7]  r_eff=[2092/3759/3841/3819]  (tokens=16384)
+  prompt 12: detected=False  blocks_passed=0/4  weights=[250/1572/1315/800]  thresholds=[135.8/1166.5/966.3/539.4]  r_eff=[475/3180/2677/1580]  (tokens=16384)
+  prompt 13: detected=False  blocks_passed=0/4  weights=[913/343/169/82]  thresholds=[651.0/198.7/86.3/33.6]  r_eff=[1871/657/326/155]  (tokens=16384)
+  prompt 14: detected=False  blocks_passed=0/4  weights=[1837/1911/1920/1895]  thresholds=[1343.3/1449.2/1439.1/1418.0]  r_eff=[3620/3882/3857/3805]  (tokens=16384)
+  prompt 15: detected=False  blocks_passed=0/4  weights=[30/0/32/1927]  thresholds=[9.4/0.0/8.9/1446.4]  r_eff=[64/0/62/3875]  (tokens=16384)
+  prompt 16: detected=False  blocks_passed=0/4  weights=[1650/1928/1937/1934]  thresholds=[1224.2/1422.1/1439.1/1435.8]  r_eff=[3324/3815/3857/3849]  (tokens=16384)
+  prompt 17: detected=False  blocks_passed=0/4  weights=[0/233/711/0]  thresholds=[0.0/135.4/480.2/0.0]  r_eff=[0/474/1424/0]  (tokens=16384)
+  prompt 18: detected=False  blocks_passed=0/4  weights=[1626/1866/3/0]  thresholds=[1191.0/1412.8/-0.7/0.0]  r_eff=[3241/3792/9/0]  (tokens=16384)
+  prompt 19: detected=False  blocks_passed=0/4  weights=[1536/1854/1910/1942]  thresholds=[1121.4/1412.8/1431.4/1426.9]  r_eff=[3067/3792/3838/3827]  (tokens=16384)
+  prompt 20: detected=False  blocks_passed=0/4  weights=[0/406/1800/1011]  thresholds=[0.0/255.0/1301.4/716.8]  r_eff=[0/815/3516/2041]  (tokens=16384)
+  prompt 21: detected=False  blocks_passed=0/4  weights=[1074/1059/1732/1487]  thresholds=[770.2/735.9/1292.9/1083.1]  r_eff=[2178/2090/3495/2971]  (tokens=16384)
+  prompt 22: detected=False  blocks_passed=0/4  weights=[192/1703/1891/1913]  thresholds=[111.6/1278.5/1422.9/1415.6]  r_eff=[403/3459/3817/3799]  (tokens=16384)
+  prompt 23: detected=False  blocks_passed=0/4  weights=[1866/934/0/0]  thresholds=[1396.2/651.4/0.0/0.0]  r_eff=[3751/1872/0/0]  (tokens=16384)
+  prompt 24: detected=False  blocks_passed=0/4  weights=[70/1859/1700/1914]  thresholds=[26.5/1366.7/1274.8/1449.6]  r_eff=[130/3678/3450/3883]  (tokens=16384)
+  prompt 25: detected=False  blocks_passed=0/4  weights=[1513/1891/1968/1968]  thresholds=[1058.0/1425.7/1431.8/1430.2]  r_eff=[2908/3824/3839/3835]  (tokens=16384)
+  prompt 26: detected=False  blocks_passed=0/4  weights=[1648/1985/1928/1940]  thresholds=[1251.9/1449.6/1439.9/1446.0]  r_eff=[3393/3883/3859/3874]  (tokens=16384)
+  prompt 27: detected=False  blocks_passed=0/4  weights=[1692/1908/1931/1694]  thresholds=[1251.9/1423.7/1419.2/1252.3]  r_eff=[3393/3819/3808/3394]  (tokens=16384)
+  prompt 28: detected=False  blocks_passed=0/4  weights=[1944/1945/1890/1684]  thresholds=[1407.5/1440.3/1446.0/1225.4]  r_eff=[3779/3860/3874/3327]  (tokens=16384)
+  prompt 29: detected=False  blocks_passed=0/4  weights=[1904/1926/1877/1929]  thresholds=[1424.5/1447.2/1449.2/1440.7]  r_eff=[3821/3877/3882/3861]  (tokens=16384)
+
+=== Summary ===
+  method: syndrome_entropy
+  TPR: 8/30  (26.7%)
+  FPR: 0/30  (0.0%)

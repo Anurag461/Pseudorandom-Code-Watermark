@@ -1,0 +1,31 @@
+{
+  "kgw_bias_vs_kgw_key": {
+    "n_green": 967068,
+    "n_total": 1468398,
+    "rate": 0.6585871133030691
+  },
+  "prc_bias_vs_kgw_key": {
+    "n_green": 365430,
+    "n_total": 1469993,
+    "rate": 0.24859302051098203
+  },
+  "prc_bias_vs_prc_partition": {
+    "n_one": 682283,
+    "n_total": 1469993,
+    "rate": 0.4641403054300259
+  },
+  "kgw_bias_vs_prc_partition": {
+    "n_one": 693911,
+    "n_total": 1468398,
+    "rate": 0.472563296871829
+  },
+  "meta": {
+    "prc_results": 9966,
+    "kgw_results": 9966,
+    "context_size": 2,
+    "top_k": 64,
+    "gamma": 0.25,
+    "n_prc_contexts": 347830,
+    "n_kgw_contexts": 333365
+  }
+}

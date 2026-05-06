@@ -1,0 +1,16 @@
+[phase_e_drive] PRC phase_e_workdir/prc_AB_k16384: total=16384 pending=16128
+[phase_e_drive] gpu=1 -> 2304 jobs
+[phase_e_drive] gpu=2 -> 2304 jobs
+[phase_e_drive] gpu=3 -> 2304 jobs
+[phase_e_drive] gpu=4 -> 2304 jobs
+[phase_e_drive] gpu=5 -> 2304 jobs
+[phase_e_drive] gpu=6 -> 2304 jobs
+[phase_e_drive] gpu=7 -> 2304 jobs
+[phase_e_drive] launched gpu=1 pid=12057
+[phase_e_drive] launched gpu=2 pid=12058
+[phase_e_drive] launched gpu=3 pid=12059
+[phase_e_drive] launched gpu=4 pid=12060
+[phase_e_drive] launched gpu=5 pid=12061
+[phase_e_drive] launched gpu=6 pid=12062
+[phase_e_drive] launched gpu=7 pid=12063
+[phase_e_drive] progress: 256/16384 done, 30s elapsed

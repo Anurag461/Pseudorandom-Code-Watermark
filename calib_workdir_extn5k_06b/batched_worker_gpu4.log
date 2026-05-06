@@ -1,0 +1,1335 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+[batched_worker prc cuda=4] starting 1277 jobs
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 25/1277 done  elapsed=617s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 50/1277 done  elapsed=1233s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 75/1277 done  elapsed=1851s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 100/1277 done  elapsed=2470s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 125/1277 done  elapsed=3091s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 150/1277 done  elapsed=3714s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 175/1277 done  elapsed=4337s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 200/1277 done  elapsed=4966s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 225/1277 done  elapsed=5594s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 250/1277 done  elapsed=6223s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 275/1277 done  elapsed=6846s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 300/1277 done  elapsed=7456s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 325/1277 done  elapsed=8076s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 350/1277 done  elapsed=8702s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 375/1277 done  elapsed=9326s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 400/1277 done  elapsed=9951s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 425/1277 done  elapsed=10577s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 450/1277 done  elapsed=11202s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 475/1277 done  elapsed=11827s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 500/1277 done  elapsed=12452s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 525/1277 done  elapsed=13063s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 550/1277 done  elapsed=13682s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 575/1277 done  elapsed=14304s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 600/1277 done  elapsed=14926s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 625/1277 done  elapsed=15568s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 650/1277 done  elapsed=16198s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 675/1277 done  elapsed=16822s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 700/1277 done  elapsed=17446s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 725/1277 done  elapsed=18067s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 750/1277 done  elapsed=18688s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 775/1277 done  elapsed=19312s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 800/1277 done  elapsed=19940s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 825/1277 done  elapsed=20561s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 850/1277 done  elapsed=21172s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 875/1277 done  elapsed=21784s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 900/1277 done  elapsed=22405s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 925/1277 done  elapsed=23023s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 950/1277 done  elapsed=23641s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 975/1277 done  elapsed=24259s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 1000/1277 done  elapsed=24877s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 1025/1277 done  elapsed=25493s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 1050/1277 done  elapsed=26110s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 1075/1277 done  elapsed=26733s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 1100/1277 done  elapsed=27360s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 1125/1277 done  elapsed=27982s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 1150/1277 done  elapsed=28606s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 1175/1277 done  elapsed=29218s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 1200/1277 done  elapsed=29829s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 1225/1277 done  elapsed=30438s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+[batched_worker prc cuda=4] 1250/1277 done  elapsed=31048s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 1275/1277 done  elapsed=31659s  rate=0.04 jobs/s
+Watermark Enabled (PRC)
+Watermark Disabled
+[batched_worker prc cuda=4] 1277/1277 done  elapsed=31708s  rate=0.04 jobs/s

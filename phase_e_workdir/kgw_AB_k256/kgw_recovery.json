@@ -1,0 +1,118 @@
+{
+  "K_sweep": [
+    16,
+    32,
+    64,
+    128,
+    256
+  ],
+  "n_observed_pairs": 6,
+  "n_green_pairs": 2,
+  "truth": {
+    "425_362": true,
+    "362_425": false,
+    "362_362": false,
+    "425_425": false,
+    "32_425": false,
+    "32_362": true
+  },
+  "sweep": [
+    {
+      "k": 16,
+      "n_correct": 3,
+      "n_classified": 6,
+      "n_pairs_total": 6,
+      "accuracy": 0.5,
+      "n_green_correct": 1,
+      "n_green_total": 2,
+      "n_red_correct": 2,
+      "n_red_total": 4,
+      "counts": {
+        "425_362": 3921,
+        "362_425": 3915,
+        "362_362": 270,
+        "425_425": 32,
+        "32_425": 16,
+        "32_362": 0
+      }
+    },
+    {
+      "k": 32,
+      "n_correct": 3,
+      "n_classified": 6,
+      "n_pairs_total": 6,
+      "accuracy": 0.5,
+      "n_green_correct": 1,
+      "n_green_total": 2,
+      "n_red_correct": 2,
+      "n_red_total": 4,
+      "counts": {
+        "425_362": 7595,
+        "362_425": 7587,
+        "362_362": 841,
+        "425_425": 253,
+        "32_425": 29,
+        "32_362": 3
+      }
+    },
+    {
+      "k": 64,
+      "n_correct": 3,
+      "n_classified": 6,
+      "n_pairs_total": 6,
+      "accuracy": 0.5,
+      "n_green_correct": 1,
+      "n_green_total": 2,
+      "n_red_correct": 2,
+      "n_red_total": 4,
+      "counts": {
+        "425_362": 14970,
+        "362_425": 14962,
+        "362_362": 2246,
+        "425_425": 378,
+        "32_425": 52,
+        "32_362": 12
+      }
+    },
+    {
+      "k": 128,
+      "n_correct": 3,
+      "n_classified": 6,
+      "n_pairs_total": 6,
+      "accuracy": 0.5,
+      "n_green_correct": 1,
+      "n_green_total": 2,
+      "n_red_correct": 2,
+      "n_red_total": 4,
+      "counts": {
+        "425_362": 29997,
+        "362_425": 29981,
+        "362_362": 4162,
+        "425_425": 948,
+        "32_425": 104,
+        "32_362": 24
+      }
+    },
+    {
+      "k": 256,
+      "n_correct": 3,
+      "n_classified": 6,
+      "n_pairs_total": 6,
+      "accuracy": 0.5,
+      "n_green_correct": 1,
+      "n_green_total": 2,
+      "n_red_correct": 2,
+      "n_red_total": 4,
+      "counts": {
+        "425_362": 60046,
+        "362_425": 60023,
+        "362_362": 7953,
+        "425_425": 1836,
+        "32_425": 206,
+        "32_362": 51
+      }
+    }
+  ],
+  "kgw_key": "0x6e6125e3098e04fc",
+  "gamma": 0.25
+}

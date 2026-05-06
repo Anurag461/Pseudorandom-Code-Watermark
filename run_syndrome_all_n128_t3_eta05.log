@@ -1,0 +1,204 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+[parent] visible GPUs: [0, 1, 2, 3, 4, 5, 6, 7]
+[parent] PRC params: n=128 t=3 g=18 r=91 noise_rate=0.0500
+[parent] detect method: syndrome_all
+[parent] saved 60 jobs to calib_workdir/artifacts.pt
+
+=== Phase 1: 60 generations across 8 GPUs ===
+[parent] launch job=0 gpu=0 prompt=0 watermark=True pid=183632
+[parent] launch job=1 gpu=1 prompt=0 watermark=False pid=183633
+[parent] launch job=2 gpu=2 prompt=1 watermark=True pid=183634
+[parent] launch job=3 gpu=3 prompt=1 watermark=False pid=183635
+[parent] launch job=4 gpu=4 prompt=2 watermark=True pid=183636
+[parent] launch job=5 gpu=5 prompt=2 watermark=False pid=183637
+[parent] launch job=6 gpu=6 prompt=3 watermark=True pid=183638
+[parent] launch job=7 gpu=7 prompt=3 watermark=False pid=183639
+[parent] done   job=0 gpu=0 (1/60 done, 36s elapsed)
+[parent] done   job=1 gpu=1 (2/60 done, 36s elapsed)
+[parent] done   job=2 gpu=2 (3/60 done, 36s elapsed)
+[parent] done   job=3 gpu=3 (4/60 done, 36s elapsed)
+[parent] done   job=4 gpu=4 (5/60 done, 36s elapsed)
+[parent] done   job=5 gpu=5 (6/60 done, 36s elapsed)
+[parent] done   job=6 gpu=6 (7/60 done, 36s elapsed)
+[parent] done   job=7 gpu=7 (8/60 done, 36s elapsed)
+[parent] launch job=8 gpu=0 prompt=4 watermark=True pid=185682
+[parent] launch job=9 gpu=1 prompt=4 watermark=False pid=185683
+[parent] launch job=10 gpu=2 prompt=5 watermark=True pid=185684
+[parent] launch job=11 gpu=3 prompt=5 watermark=False pid=185685
+[parent] launch job=12 gpu=4 prompt=6 watermark=True pid=185686
+[parent] launch job=13 gpu=5 prompt=6 watermark=False pid=185687
+[parent] launch job=14 gpu=6 prompt=7 watermark=True pid=185688
+[parent] launch job=15 gpu=7 prompt=7 watermark=False pid=185689
+[parent] done   job=8 gpu=0 (9/60 done, 72s elapsed)
+[parent] done   job=9 gpu=1 (10/60 done, 72s elapsed)
+[parent] done   job=10 gpu=2 (11/60 done, 72s elapsed)
+[parent] done   job=11 gpu=3 (12/60 done, 72s elapsed)
+[parent] done   job=12 gpu=4 (13/60 done, 72s elapsed)
+[parent] done   job=13 gpu=5 (14/60 done, 72s elapsed)
+[parent] done   job=14 gpu=6 (15/60 done, 72s elapsed)
+[parent] done   job=15 gpu=7 (16/60 done, 72s elapsed)
+[parent] launch job=16 gpu=0 prompt=8 watermark=True pid=187702
+[parent] launch job=17 gpu=1 prompt=8 watermark=False pid=187703
+[parent] launch job=18 gpu=2 prompt=9 watermark=True pid=187704
+[parent] launch job=19 gpu=3 prompt=9 watermark=False pid=187705
+[parent] launch job=20 gpu=4 prompt=10 watermark=True pid=187706
+[parent] launch job=21 gpu=5 prompt=10 watermark=False pid=187707
+[parent] launch job=22 gpu=6 prompt=11 watermark=True pid=187708
+[parent] launch job=23 gpu=7 prompt=11 watermark=False pid=187709
+[parent] done   job=16 gpu=0 (17/60 done, 108s elapsed)
+[parent] done   job=17 gpu=1 (18/60 done, 108s elapsed)
+[parent] done   job=18 gpu=2 (19/60 done, 108s elapsed)
+[parent] done   job=19 gpu=3 (20/60 done, 108s elapsed)
+[parent] done   job=20 gpu=4 (21/60 done, 108s elapsed)
+[parent] done   job=21 gpu=5 (22/60 done, 108s elapsed)
+[parent] done   job=22 gpu=6 (23/60 done, 108s elapsed)
+[parent] done   job=23 gpu=7 (24/60 done, 108s elapsed)
+[parent] launch job=24 gpu=0 prompt=12 watermark=True pid=189907
+[parent] launch job=25 gpu=1 prompt=12 watermark=False pid=189908
+[parent] launch job=26 gpu=2 prompt=13 watermark=True pid=189909
+[parent] launch job=27 gpu=3 prompt=13 watermark=False pid=189910
+[parent] launch job=28 gpu=4 prompt=14 watermark=True pid=189911
+[parent] launch job=29 gpu=5 prompt=14 watermark=False pid=189912
+[parent] launch job=30 gpu=6 prompt=15 watermark=True pid=189913
+[parent] launch job=31 gpu=7 prompt=15 watermark=False pid=189914
+[parent] done   job=24 gpu=0 (25/60 done, 144s elapsed)
+[parent] done   job=25 gpu=1 (26/60 done, 144s elapsed)
+[parent] done   job=26 gpu=2 (27/60 done, 144s elapsed)
+[parent] done   job=27 gpu=3 (28/60 done, 144s elapsed)
+[parent] done   job=28 gpu=4 (29/60 done, 144s elapsed)
+[parent] done   job=29 gpu=5 (30/60 done, 144s elapsed)
+[parent] done   job=30 gpu=6 (31/60 done, 144s elapsed)
+[parent] done   job=31 gpu=7 (32/60 done, 144s elapsed)
+[parent] launch job=32 gpu=0 prompt=16 watermark=True pid=191947
+[parent] launch job=33 gpu=1 prompt=16 watermark=False pid=191948
+[parent] launch job=34 gpu=2 prompt=17 watermark=True pid=191949
+[parent] launch job=35 gpu=3 prompt=17 watermark=False pid=191950
+[parent] launch job=36 gpu=4 prompt=18 watermark=True pid=191951
+[parent] launch job=37 gpu=5 prompt=18 watermark=False pid=191952
+[parent] launch job=38 gpu=6 prompt=19 watermark=True pid=191953
+[parent] launch job=39 gpu=7 prompt=19 watermark=False pid=191954
+[parent] done   job=32 gpu=0 (33/60 done, 180s elapsed)
+[parent] done   job=33 gpu=1 (34/60 done, 180s elapsed)
+[parent] done   job=35 gpu=3 (35/60 done, 180s elapsed)
+[parent] done   job=36 gpu=4 (36/60 done, 180s elapsed)
+[parent] done   job=37 gpu=5 (37/60 done, 180s elapsed)
+[parent] done   job=38 gpu=6 (38/60 done, 180s elapsed)
+[parent] done   job=39 gpu=7 (39/60 done, 180s elapsed)
+[parent] launch job=40 gpu=0 prompt=20 watermark=True pid=193993
+[parent] launch job=41 gpu=1 prompt=20 watermark=False pid=193994
+[parent] launch job=42 gpu=3 prompt=21 watermark=True pid=193995
+[parent] launch job=43 gpu=4 prompt=21 watermark=False pid=193996
+[parent] launch job=44 gpu=5 prompt=22 watermark=True pid=193997
+[parent] launch job=45 gpu=6 prompt=22 watermark=False pid=193998
+[parent] launch job=46 gpu=7 prompt=23 watermark=True pid=193999
+[parent] done   job=34 gpu=2 (40/60 done, 182s elapsed)
+[parent] launch job=47 gpu=2 prompt=23 watermark=False pid=194882
+[parent] done   job=40 gpu=0 (41/60 done, 216s elapsed)
+[parent] done   job=41 gpu=1 (42/60 done, 216s elapsed)
+[parent] done   job=42 gpu=3 (43/60 done, 216s elapsed)
+[parent] done   job=43 gpu=4 (44/60 done, 216s elapsed)
+[parent] done   job=44 gpu=5 (45/60 done, 216s elapsed)
+[parent] done   job=45 gpu=6 (46/60 done, 216s elapsed)
+[parent] done   job=46 gpu=7 (47/60 done, 216s elapsed)
+[parent] launch job=48 gpu=0 prompt=24 watermark=True pid=196077
+[parent] launch job=49 gpu=1 prompt=24 watermark=False pid=196078
+[parent] launch job=50 gpu=3 prompt=25 watermark=True pid=196079
+[parent] launch job=51 gpu=4 prompt=25 watermark=False pid=196080
+[parent] launch job=52 gpu=5 prompt=26 watermark=True pid=196081
+[parent] launch job=53 gpu=6 prompt=26 watermark=False pid=196082
+[parent] launch job=54 gpu=7 prompt=27 watermark=True pid=196083
+[parent] done   job=47 gpu=2 (48/60 done, 218s elapsed)
+[parent] launch job=55 gpu=2 prompt=27 watermark=False pid=658
+[parent] done   job=48 gpu=0 (49/60 done, 252s elapsed)
+[parent] done   job=49 gpu=1 (50/60 done, 252s elapsed)
+[parent] done   job=50 gpu=3 (51/60 done, 252s elapsed)
+[parent] done   job=51 gpu=4 (52/60 done, 252s elapsed)
+[parent] done   job=52 gpu=5 (53/60 done, 252s elapsed)
+[parent] done   job=53 gpu=6 (54/60 done, 252s elapsed)
+[parent] done   job=54 gpu=7 (55/60 done, 252s elapsed)
+[parent] done   job=55 gpu=2 (56/60 done, 252s elapsed)
+[parent] launch job=56 gpu=0 prompt=28 watermark=True pid=1980
+[parent] launch job=57 gpu=1 prompt=28 watermark=False pid=1981
+[parent] launch job=58 gpu=3 prompt=29 watermark=True pid=1982
+[parent] launch job=59 gpu=4 prompt=29 watermark=False pid=1983
+[parent] done   job=56 gpu=0 (57/60 done, 286s elapsed)
+[parent] done   job=57 gpu=1 (58/60 done, 286s elapsed)
+[parent] done   job=58 gpu=3 (59/60 done, 286s elapsed)
+[parent] done   job=59 gpu=4 (60/60 done, 286s elapsed)
+[parent] all generations done in 286.4s
+[parent] watermarked=30 unwatermarked=30
+
+=== Phase 2 SKIPPED: syndrome_all uses analytical threshold ===
+
+=== Phase 3a: detection on watermarked runs (TPR) ===
+  prompt 0: detected=False  blocks_passed=0/4  weights=[41/31/36/31]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 1: detected=False  blocks_passed=0/4  weights=[41/41/29/28]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 2: detected=False  blocks_passed=0/4  weights=[43/40/37/40]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 3: detected=False  blocks_passed=0/4  weights=[45/32/22/32]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 4: detected=False  blocks_passed=0/4  weights=[35/43/28/35]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 5: detected=False  blocks_passed=0/4  weights=[52/40/31/34]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 6: detected=False  blocks_passed=0/4  weights=[40/48/40/35]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 7: detected=False  blocks_passed=0/4  weights=[40/38/28/37]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 8: detected=False  blocks_passed=0/4  weights=[36/32/30/18]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 9: detected=False  blocks_passed=0/4  weights=[22/22/32/27]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 10: detected=False  blocks_passed=0/4  weights=[48/55/49/51]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 11: detected=False  blocks_passed=0/4  weights=[38/47/33/39]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 12: detected=False  blocks_passed=0/4  weights=[43/38/21/21]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 13: detected=False  blocks_passed=0/4  weights=[42/26/34/46]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 14: detected=False  blocks_passed=0/4  weights=[32/22/29/19]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 15: detected=False  blocks_passed=0/4  weights=[43/19/29/24]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 16: detected=False  blocks_passed=0/4  weights=[39/47/31/26]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 17: detected=True  blocks_passed=1/4  weights=[37/33/17/11]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 18: detected=False  blocks_passed=0/4  weights=[41/37/40/51]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 19: detected=False  blocks_passed=0/4  weights=[41/31/19/44]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 20: detected=False  blocks_passed=0/4  weights=[48/49/44/40]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 21: detected=False  blocks_passed=0/4  weights=[36/45/30/37]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 22: detected=False  blocks_passed=0/4  weights=[34/45/35/45]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 23: detected=True  blocks_passed=1/4  weights=[36/23/12/34]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 24: detected=False  blocks_passed=0/4  weights=[40/24/33/44]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 25: detected=False  blocks_passed=0/4  weights=[36/33/39/33]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 26: detected=False  blocks_passed=0/4  weights=[28/50/29/35]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 27: detected=False  blocks_passed=0/4  weights=[41/34/30/38]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 28: detected=False  blocks_passed=0/4  weights=[24/34/35/48]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 29: detected=False  blocks_passed=0/4  weights=[35/28/27/26]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+
+=== Phase 3b: detection on UNwatermarked runs (FPR) ===
+  prompt 0: detected=False  blocks_passed=0/4  weights=[41/48/45/53]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 1: detected=False  blocks_passed=0/4  weights=[48/45/48/53]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 2: detected=False  blocks_passed=0/4  weights=[34/55/53/47]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 3: detected=False  blocks_passed=0/4  weights=[55/41/44/39]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 4: detected=False  blocks_passed=0/4  weights=[36/53/50/47]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 5: detected=False  blocks_passed=0/4  weights=[49/46/41/46]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 6: detected=False  blocks_passed=0/4  weights=[49/41/48/51]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 7: detected=False  blocks_passed=0/4  weights=[49/51/44/47]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 8: detected=False  blocks_passed=0/4  weights=[50/46/51/43]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 9: detected=False  blocks_passed=0/4  weights=[40/49/49/44]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 10: detected=False  blocks_passed=0/4  weights=[42/41/43/48]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 11: detected=False  blocks_passed=0/4  weights=[48/48/54/30]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 12: detected=False  blocks_passed=0/4  weights=[41/50/43/42]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 13: detected=False  blocks_passed=0/4  weights=[43/47/44/49]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 14: detected=False  blocks_passed=0/4  weights=[33/50/47/42]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 15: detected=False  blocks_passed=0/4  weights=[43/49/45/43]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 16: detected=False  blocks_passed=0/4  weights=[47/50/51/42]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 17: detected=False  blocks_passed=0/4  weights=[47/36/40/41]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 18: detected=False  blocks_passed=0/4  weights=[49/49/48/53]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 19: detected=False  blocks_passed=0/4  weights=[50/53/35/40]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 20: detected=False  blocks_passed=0/4  weights=[45/41/43/46]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 21: detected=False  blocks_passed=0/4  weights=[53/40/48/47]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 22: detected=False  blocks_passed=0/4  weights=[49/44/43/45]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 23: detected=False  blocks_passed=0/4  weights=[46/51/49/50]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 24: detected=False  blocks_passed=0/4  weights=[44/48/49/41]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 25: detected=False  blocks_passed=0/4  weights=[43/43/47/48]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 26: detected=False  blocks_passed=0/4  weights=[43/47/50/47]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 27: detected=False  blocks_passed=0/4  weights=[47/45/50/41]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 28: detected=False  blocks_passed=0/4  weights=[43/50/51/50]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+  prompt 29: detected=False  blocks_passed=0/4  weights=[42/42/45/43]  thresholds=[16.0/16.0/16.0/16.0]  r_eff=[91/91/91/91]  (tokens=512)
+
+=== Summary ===
+  method: syndrome_all
+  TPR: 2/30  (6.7%)
+  FPR: 0/30  (0.0%)

@@ -1,0 +1,172 @@
+[
+  {
+    "w1": "apple",
+    "w2": "banana",
+    "with_space": false,
+    "id1": 22377,
+    "id2": 87747,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc": true
+  },
+  {
+    "w1": "no",
+    "w2": "yes",
+    "with_space": true,
+    "id1": 902,
+    "id2": 9834,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc_swapped": true,
+    "swap": true
+  },
+  {
+    "w1": "A",
+    "w2": "B",
+    "with_space": true,
+    "id1": 362,
+    "id2": 425,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc": true
+  },
+  {
+    "w1": "A",
+    "w2": "B",
+    "with_space": false,
+    "id1": 32,
+    "id2": 33,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc": true
+  },
+  {
+    "w1": "dog",
+    "w2": "cat",
+    "with_space": true,
+    "id1": 5562,
+    "id2": 8251,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc_swapped": true,
+    "swap": true
+  },
+  {
+    "w1": "dog",
+    "w2": "cat",
+    "with_space": false,
+    "id1": 18457,
+    "id2": 4616,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc_swapped": true,
+    "swap": true
+  },
+  {
+    "w1": "down",
+    "w2": "up",
+    "with_space": false,
+    "id1": 2923,
+    "id2": 454,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc_swapped": true,
+    "swap": true
+  },
+  {
+    "w1": "off",
+    "w2": "on",
+    "with_space": true,
+    "id1": 1007,
+    "id2": 389,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc_swapped": true,
+    "swap": true
+  },
+  {
+    "w1": "blue",
+    "w2": "red",
+    "with_space": true,
+    "id1": 6303,
+    "id2": 2518,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc_swapped": true,
+    "swap": true
+  },
+  {
+    "w1": "right",
+    "w2": "left",
+    "with_space": true,
+    "id1": 1290,
+    "id2": 2115,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc_swapped": true,
+    "swap": true
+  },
+  {
+    "w1": "right",
+    "w2": "left",
+    "with_space": false,
+    "id1": 1291,
+    "id2": 2359,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc_swapped": true,
+    "swap": true
+  },
+  {
+    "w1": "good",
+    "w2": "bad",
+    "with_space": false,
+    "id1": 18536,
+    "id2": 13855,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc": true
+  },
+  {
+    "w1": "one",
+    "w2": "two",
+    "with_space": true,
+    "id1": 825,
+    "id2": 1378,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc": true
+  },
+  {
+    "w1": "beta",
+    "w2": "alpha",
+    "with_space": false,
+    "id1": 19127,
+    "id2": 7141,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc_swapped": true,
+    "swap": true
+  },
+  {
+    "w1": "bar",
+    "w2": "foo",
+    "with_space": true,
+    "id1": 3619,
+    "id2": 15229,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc_swapped": true,
+    "swap": true
+  },
+  {
+    "w1": "foo",
+    "w2": "bar",
+    "with_space": false,
+    "id1": 7975,
+    "id2": 2257,
+    "in_bucket1_w1": 1,
+    "in_bucket1_w2": 0,
+    "usable_for_prc": true
+  }
+]

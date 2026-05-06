@@ -1,0 +1,192 @@
+[phase_e_drive] PRC phase_e_workdir/prc_4B_AB_k16384: total=16384 pending=16384
+[phase_e_drive] gpu=1 -> 2341 jobs
+[phase_e_drive] gpu=2 -> 2341 jobs
+[phase_e_drive] gpu=3 -> 2341 jobs
+[phase_e_drive] gpu=4 -> 2341 jobs
+[phase_e_drive] gpu=5 -> 2340 jobs
+[phase_e_drive] gpu=6 -> 2340 jobs
+[phase_e_drive] gpu=7 -> 2340 jobs
+[phase_e_drive] launched gpu=1 pid=14436
+[phase_e_drive] launched gpu=2 pid=14437
+[phase_e_drive] launched gpu=3 pid=14438
+[phase_e_drive] launched gpu=4 pid=14439
+[phase_e_drive] launched gpu=5 pid=14440
+[phase_e_drive] launched gpu=6 pid=14441
+[phase_e_drive] launched gpu=7 pid=14442
+[phase_e_drive] progress: 0/16384 done, 30s elapsed
+[phase_e_drive] progress: 90/16384 done, 330s elapsed
+[phase_e_drive] progress: 193/16384 done, 631s elapsed
+[phase_e_drive] progress: 291/16384 done, 931s elapsed
+[phase_e_drive] progress: 392/16384 done, 1231s elapsed
+[phase_e_drive] progress: 495/16384 done, 1532s elapsed
+[phase_e_drive] progress: 596/16384 done, 1832s elapsed
+[phase_e_drive] progress: 698/16384 done, 2133s elapsed
+[phase_e_drive] progress: 798/16384 done, 2433s elapsed
+[phase_e_drive] progress: 900/16384 done, 2733s elapsed
+[phase_e_drive] progress: 1002/16384 done, 3034s elapsed
+[phase_e_drive] progress: 1102/16384 done, 3334s elapsed
+[phase_e_drive] progress: 1203/16384 done, 3634s elapsed
+[phase_e_drive] progress: 1303/16384 done, 3935s elapsed
+[phase_e_drive] progress: 1406/16384 done, 4235s elapsed
+[phase_e_drive] progress: 1507/16384 done, 4535s elapsed
+[phase_e_drive] progress: 1609/16384 done, 4836s elapsed
+[phase_e_drive] progress: 1709/16384 done, 5136s elapsed
+[phase_e_drive] progress: 1813/16384 done, 5436s elapsed
+[phase_e_drive] progress: 1912/16384 done, 5737s elapsed
+[phase_e_drive] progress: 2012/16384 done, 6037s elapsed
+[phase_e_drive] progress: 2114/16384 done, 6337s elapsed
+[phase_e_drive] progress: 2214/16384 done, 6638s elapsed
+[phase_e_drive] progress: 2317/16384 done, 6938s elapsed
+[phase_e_drive] progress: 2419/16384 done, 7238s elapsed
+[phase_e_drive] progress: 2518/16384 done, 7539s elapsed
+[phase_e_drive] progress: 2620/16384 done, 7839s elapsed
+[phase_e_drive] progress: 2721/16384 done, 8139s elapsed
+[phase_e_drive] progress: 2821/16384 done, 8440s elapsed
+[phase_e_drive] progress: 2923/16384 done, 8740s elapsed
+[phase_e_drive] progress: 3023/16384 done, 9040s elapsed
+[phase_e_drive] progress: 3123/16384 done, 9341s elapsed
+[phase_e_drive] progress: 3225/16384 done, 9641s elapsed
+[phase_e_drive] progress: 3324/16384 done, 9941s elapsed
+[phase_e_drive] progress: 3425/16384 done, 10242s elapsed
+[phase_e_drive] progress: 3525/16384 done, 10542s elapsed
+[phase_e_drive] progress: 3627/16384 done, 10843s elapsed
+[phase_e_drive] progress: 3726/16384 done, 11143s elapsed
+[phase_e_drive] progress: 3827/16384 done, 11443s elapsed
+[phase_e_drive] progress: 3926/16384 done, 11744s elapsed
+[phase_e_drive] progress: 4027/16384 done, 12044s elapsed
+[phase_e_drive] progress: 4127/16384 done, 12344s elapsed
+[phase_e_drive] progress: 4226/16384 done, 12645s elapsed
+[phase_e_drive] progress: 4326/16384 done, 12945s elapsed
+[phase_e_drive] progress: 4424/16384 done, 13245s elapsed
+[phase_e_drive] progress: 4527/16384 done, 13546s elapsed
+[phase_e_drive] progress: 4625/16384 done, 13846s elapsed
+[phase_e_drive] progress: 4725/16384 done, 14147s elapsed
+[phase_e_drive] progress: 4826/16384 done, 14447s elapsed
+[phase_e_drive] progress: 4926/16384 done, 14747s elapsed
+[phase_e_drive] progress: 5025/16384 done, 15048s elapsed
+[phase_e_drive] progress: 5127/16384 done, 15348s elapsed
+[phase_e_drive] progress: 5228/16384 done, 15648s elapsed
+[phase_e_drive] progress: 5328/16384 done, 15949s elapsed
+[phase_e_drive] progress: 5427/16384 done, 16249s elapsed
+[phase_e_drive] progress: 5527/16384 done, 16549s elapsed
+[phase_e_drive] progress: 5628/16384 done, 16850s elapsed
+[phase_e_drive] progress: 5730/16384 done, 17150s elapsed
+[phase_e_drive] progress: 5830/16384 done, 17450s elapsed
+[phase_e_drive] progress: 5932/16384 done, 17751s elapsed
+[phase_e_drive] progress: 6033/16384 done, 18051s elapsed
+[phase_e_drive] progress: 6133/16384 done, 18351s elapsed
+[phase_e_drive] progress: 6235/16384 done, 18652s elapsed
+[phase_e_drive] progress: 6336/16384 done, 18952s elapsed
+[phase_e_drive] progress: 6436/16384 done, 19252s elapsed
+[phase_e_drive] progress: 6537/16384 done, 19553s elapsed
+[phase_e_drive] progress: 6636/16384 done, 19853s elapsed
+[phase_e_drive] progress: 6737/16384 done, 20154s elapsed
+[phase_e_drive] progress: 6835/16384 done, 20454s elapsed
+[phase_e_drive] progress: 6937/16384 done, 20754s elapsed
+[phase_e_drive] progress: 7036/16384 done, 21055s elapsed
+[phase_e_drive] progress: 7136/16384 done, 21355s elapsed
+[phase_e_drive] progress: 7237/16384 done, 21655s elapsed
+[phase_e_drive] progress: 7338/16384 done, 21956s elapsed
+[phase_e_drive] progress: 7438/16384 done, 22256s elapsed
+[phase_e_drive] progress: 7539/16384 done, 22556s elapsed
+[phase_e_drive] progress: 7639/16384 done, 22857s elapsed
+[phase_e_drive] progress: 7741/16384 done, 23157s elapsed
+[phase_e_drive] progress: 7842/16384 done, 23458s elapsed
+[phase_e_drive] progress: 7940/16384 done, 23758s elapsed
+[phase_e_drive] progress: 8042/16384 done, 24058s elapsed
+[phase_e_drive] progress: 8142/16384 done, 24359s elapsed
+[phase_e_drive] progress: 8243/16384 done, 24659s elapsed
+[phase_e_drive] progress: 8341/16384 done, 24959s elapsed
+[phase_e_drive] progress: 8442/16384 done, 25260s elapsed
+[phase_e_drive] progress: 8542/16384 done, 25560s elapsed
+[phase_e_drive] progress: 8641/16384 done, 25860s elapsed
+[phase_e_drive] progress: 8743/16384 done, 26161s elapsed
+[phase_e_drive] progress: 8842/16384 done, 26461s elapsed
+[phase_e_drive] progress: 8942/16384 done, 26762s elapsed
+[phase_e_drive] progress: 9042/16384 done, 27062s elapsed
+[phase_e_drive] progress: 9142/16384 done, 27362s elapsed
+[phase_e_drive] progress: 9241/16384 done, 27663s elapsed
+[phase_e_drive] progress: 9341/16384 done, 27963s elapsed
+[phase_e_drive] progress: 9441/16384 done, 28263s elapsed
+[phase_e_drive] progress: 9542/16384 done, 28564s elapsed
+[phase_e_drive] progress: 9641/16384 done, 28864s elapsed
+[phase_e_drive] progress: 9739/16384 done, 29164s elapsed
+[phase_e_drive] progress: 9839/16384 done, 29465s elapsed
+[phase_e_drive] progress: 9938/16384 done, 29765s elapsed
+[phase_e_drive] progress: 10039/16384 done, 30065s elapsed
+[phase_e_drive] progress: 10136/16384 done, 30366s elapsed
+[phase_e_drive] progress: 10235/16384 done, 30666s elapsed
+[phase_e_drive] progress: 10335/16384 done, 30966s elapsed
+[phase_e_drive] progress: 10436/16384 done, 31267s elapsed
+[phase_e_drive] progress: 10535/16384 done, 31567s elapsed
+[phase_e_drive] progress: 10635/16384 done, 31867s elapsed
+[phase_e_drive] progress: 10736/16384 done, 32168s elapsed
+[phase_e_drive] progress: 10836/16384 done, 32468s elapsed
+[phase_e_drive] progress: 10936/16384 done, 32769s elapsed
+[phase_e_drive] progress: 11037/16384 done, 33069s elapsed
+[phase_e_drive] progress: 11138/16384 done, 33369s elapsed
+[phase_e_drive] progress: 11238/16384 done, 33670s elapsed
+[phase_e_drive] progress: 11338/16384 done, 33970s elapsed
+[phase_e_drive] progress: 11439/16384 done, 34270s elapsed
+[phase_e_drive] progress: 11541/16384 done, 34571s elapsed
+[phase_e_drive] progress: 11639/16384 done, 34871s elapsed
+[phase_e_drive] progress: 11742/16384 done, 35171s elapsed
+[phase_e_drive] progress: 11844/16384 done, 35472s elapsed
+[phase_e_drive] progress: 11944/16384 done, 35772s elapsed
+[phase_e_drive] progress: 12046/16384 done, 36072s elapsed
+[phase_e_drive] progress: 12146/16384 done, 36373s elapsed
+[phase_e_drive] progress: 12250/16384 done, 36673s elapsed
+[phase_e_drive] progress: 12349/16384 done, 36973s elapsed
+[phase_e_drive] progress: 12452/16384 done, 37274s elapsed
+[phase_e_drive] progress: 12552/16384 done, 37574s elapsed
+[phase_e_drive] progress: 12655/16384 done, 37875s elapsed
+[phase_e_drive] progress: 12753/16384 done, 38175s elapsed
+[phase_e_drive] progress: 12856/16384 done, 38475s elapsed
+[phase_e_drive] progress: 12956/16384 done, 38776s elapsed
+[phase_e_drive] progress: 13057/16384 done, 39076s elapsed
+[phase_e_drive] progress: 13159/16384 done, 39376s elapsed
+[phase_e_drive] progress: 13259/16384 done, 39677s elapsed
+[phase_e_drive] progress: 13359/16384 done, 39977s elapsed
+[phase_e_drive] progress: 13460/16384 done, 40277s elapsed
+[phase_e_drive] progress: 13561/16384 done, 40578s elapsed
+[phase_e_drive] progress: 13663/16384 done, 40878s elapsed
+[phase_e_drive] progress: 13762/16384 done, 41179s elapsed
+[phase_e_drive] progress: 13864/16384 done, 41479s elapsed
+[phase_e_drive] progress: 13966/16384 done, 41779s elapsed
+[phase_e_drive] progress: 14067/16384 done, 42080s elapsed
+[phase_e_drive] progress: 14166/16384 done, 42380s elapsed
+[phase_e_drive] progress: 14270/16384 done, 42680s elapsed
+[phase_e_drive] progress: 14369/16384 done, 42981s elapsed
+[phase_e_drive] progress: 14469/16384 done, 43281s elapsed
+[phase_e_drive] progress: 14570/16384 done, 43581s elapsed
+[phase_e_drive] progress: 14668/16384 done, 43882s elapsed
+[phase_e_drive] progress: 14770/16384 done, 44182s elapsed
+[phase_e_drive] progress: 14870/16384 done, 44482s elapsed
+[phase_e_drive] progress: 14972/16384 done, 44783s elapsed
+[phase_e_drive] progress: 15072/16384 done, 45083s elapsed
+[phase_e_drive] progress: 15172/16384 done, 45384s elapsed
+[phase_e_drive] progress: 15272/16384 done, 45684s elapsed
+[phase_e_drive] progress: 15374/16384 done, 45984s elapsed
+[phase_e_drive] progress: 15476/16384 done, 46285s elapsed
+[phase_e_drive] progress: 15576/16384 done, 46585s elapsed
+[phase_e_drive] progress: 15679/16384 done, 46885s elapsed
+[phase_e_drive] progress: 15778/16384 done, 47186s elapsed
+[phase_e_drive] progress: 15879/16384 done, 47486s elapsed
+[phase_e_drive] progress: 15982/16384 done, 47786s elapsed
+[phase_e_drive] progress: 16083/16384 done, 48087s elapsed
+[phase_e_drive] DONE gpu=6
+[phase_e_drive] progress: 16175/16384 done, 48387s elapsed
+[phase_e_drive] DONE gpu=3
+[phase_e_drive] DONE gpu=2
+[phase_e_drive] DONE gpu=7
+[phase_e_drive] progress: 16246/16384 done, 48687s elapsed
+[phase_e_drive] DONE gpu=1
+[phase_e_drive] progress: 16288/16384 done, 48988s elapsed
+[phase_e_drive] progress: 16316/16384 done, 49288s elapsed
+[phase_e_drive] DONE gpu=5
+[phase_e_drive] progress: 16335/16384 done, 49589s elapsed
+[phase_e_drive] progress: 16349/16384 done, 49889s elapsed
+[phase_e_drive] progress: 16363/16384 done, 50189s elapsed
+[phase_e_drive] progress: 16376/16384 done, 50490s elapsed
+[phase_e_drive] DONE gpu=4
+[phase_e_drive] all done in 50670s. final pending = 0

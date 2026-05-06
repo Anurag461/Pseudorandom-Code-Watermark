@@ -1,0 +1,29 @@
+{
+  "vanilla": {
+    "n": 100,
+    "refusal_rate": 0.93,
+    "kgw_detect_rate(z>4)": 0.03,
+    "mean_z": 0.9330103272079531,
+    "median_z": 0.8382063038733161,
+    "max_z": 4.76910483238266,
+    "mean_green_frac": 0.2702255639097745
+  },
+  "kgw_attack": {
+    "n": 100,
+    "refusal_rate": 0.94,
+    "kgw_detect_rate(z>4)": 0.3,
+    "mean_z": 3.710074522937201,
+    "median_z": 3.208306887239244,
+    "max_z": 32.86346784496415,
+    "mean_green_frac": 0.3304260651629072
+  },
+  "prc_attack": {
+    "n": 100,
+    "refusal_rate": 0.89,
+    "kgw_detect_rate(z>4)": 0.03,
+    "mean_z": 0.7838674124498045,
+    "median_z": 0.664784309968492,
+    "max_z": 5.115948820192308,
+    "mean_green_frac": 0.26699248120300756
+  }
+}

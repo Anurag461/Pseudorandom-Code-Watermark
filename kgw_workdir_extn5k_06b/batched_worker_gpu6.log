@@ -1,0 +1,1384 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+[batched_worker kgw cuda=6] starting 1325 jobs
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 25/1325 done  elapsed=662s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 50/1325 done  elapsed=1320s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 75/1325 done  elapsed=1979s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 100/1325 done  elapsed=2630s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 125/1325 done  elapsed=3274s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 150/1325 done  elapsed=3942s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 175/1325 done  elapsed=4593s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 200/1325 done  elapsed=5246s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 225/1325 done  elapsed=5884s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 250/1325 done  elapsed=6517s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 275/1325 done  elapsed=7158s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 300/1325 done  elapsed=7808s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 325/1325 done  elapsed=8457s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 350/1325 done  elapsed=9108s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 375/1325 done  elapsed=9758s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 400/1325 done  elapsed=10408s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 425/1325 done  elapsed=11056s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 450/1325 done  elapsed=11705s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 475/1325 done  elapsed=12355s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 500/1325 done  elapsed=12997s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 525/1325 done  elapsed=13620s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 550/1325 done  elapsed=14235s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 575/1325 done  elapsed=14856s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 600/1325 done  elapsed=15474s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 625/1325 done  elapsed=16088s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 650/1325 done  elapsed=16704s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 675/1325 done  elapsed=17324s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 700/1325 done  elapsed=17949s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 725/1325 done  elapsed=18561s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 750/1325 done  elapsed=19173s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 775/1325 done  elapsed=19829s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 800/1325 done  elapsed=20501s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 825/1325 done  elapsed=21132s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 850/1325 done  elapsed=21760s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 875/1325 done  elapsed=22392s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 900/1325 done  elapsed=23048s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 925/1325 done  elapsed=23703s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 950/1325 done  elapsed=24341s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 975/1325 done  elapsed=24979s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 1000/1325 done  elapsed=25617s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 1025/1325 done  elapsed=26254s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 1050/1325 done  elapsed=26893s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 1075/1325 done  elapsed=27531s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 1100/1325 done  elapsed=28169s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 1125/1325 done  elapsed=28808s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 1150/1325 done  elapsed=29449s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 1175/1325 done  elapsed=30105s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 1200/1325 done  elapsed=30740s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 1225/1325 done  elapsed=31390s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 1250/1325 done  elapsed=32040s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 1275/1325 done  elapsed=32690s  rate=0.04 jobs/s
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+[batched_worker kgw cuda=6] 1300/1325 done  elapsed=33341s  rate=0.04 jobs/s
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+Watermark Enabled (KGW-SelfHash gamma=0.25 delta=2.0)
+Watermark Disabled
+[batched_worker kgw cuda=6] 1325/1325 done  elapsed=33998s  rate=0.04 jobs/s

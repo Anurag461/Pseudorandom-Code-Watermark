@@ -1,0 +1,19 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+n = 4096
+null_mean = 0.4058  null_std = 12.8227 (naive fold, 2000 nulls)
+
+watermarked   stat: min=+0.07  max=+787.28  mean=+224.46
+unwatermarked stat: min=-0.99  max=+0.87  mean=+0.01
+
+  FPR target |   z   | threshold |  TPR   | empirical FPR
+  -----------+-------+-----------+--------+--------------
+      1e-09  | 5.998 |   77.3137 | 22/30 | 0/30
+      1e-06  | 4.753 |   61.3574 | 22/30 | 0/30
+      1e-03  | 3.090 |   40.0308 | 25/30 | 0/30
+      1e-02  | 2.326 |   30.2358 | 26/30 | 0/30
+      5e-02  | 1.645 |   21.4972 | 26/30 | 0/30
+      1e-01  | 1.282 |   16.8387 | 26/30 | 0/30

@@ -1,0 +1,15 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+
+=== Phase 1: calibration generations (4 prompts x 16384 tokens) ===
+  [calib 1/4]
+Watermark Enabled (PRC)
+    generated  2419 tokens in   76.5s ( 31.6 tok/s)
+  [calib 2/4]
+Watermark Enabled (PRC)
+    generated  1379 tokens in   43.4s ( 31.7 tok/s)
+  [calib 3/4]
+Watermark Enabled (PRC)

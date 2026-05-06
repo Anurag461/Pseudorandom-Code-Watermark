@@ -1,0 +1,21 @@
+Loading tokenizer: Qwen/Qwen3-0.6B
+Loading C4 RealNewsLike validation split (streaming)...
+  collected 100/500 prompts (scanned 272 docs, skipped 172)
+  collected 200/500 prompts (scanned 547 docs, skipped 347)
+  collected 300/500 prompts (scanned 804 docs, skipped 504)
+  collected 400/500 prompts (scanned 1136 docs, skipped 736)
+  collected 500/500 prompts (scanned 1463 docs, skipped 963)
+
+Done: 500 prompts from 1464 documents (963 skipped for being < 562 tokens)
+Saved to prompts.jsonl
+
+--- Prompt Statistics ---
+  Number of prompts: 500
+  Prompt length (tokens): 50 (fixed)
+  Document lengths: min=562, median=854, max=24659
+  Tokenizer: Qwen/Qwen3-0.6B
+  Vocab size: 151643
+
+--- Sample Prompt (index 0) ---
+  Cluster comprises IBM's Opteron-based eServer 325 server and systems management software and storage devices that can run Linux and Windows operating systems.
+IBM on Tuesday announced a prepackaged an...

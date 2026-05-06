@@ -1,0 +1,161 @@
++ export EXT_WATERMARK=kgw
++ EXT_WATERMARK=kgw
++ export EXT_MODEL_SIZE=0.6B
++ EXT_MODEL_SIZE=0.6B
++ export EXT_GPU_IDS=1,2,3,4,5,6,7
++ EXT_GPU_IDS=1,2,3,4,5,6,7
++ export EXT_PROMPTS_JSONL=prompts_10k.jsonl
++ EXT_PROMPTS_JSONL=prompts_10k.jsonl
++ export EXT_N_PROMPTS=4983
++ EXT_N_PROMPTS=4983
++ export EXT_BASE_WORKDIR=kgw_workdir_qwen06b_base
++ EXT_BASE_WORKDIR=kgw_workdir_qwen06b_base
++ export EXT_OUT_WORKDIR=kgw_workdir_extn5k_06b
++ EXT_OUT_WORKDIR=kgw_workdir_extn5k_06b
++ export EXT_MAX_NEW_TOKENS=800
++ EXT_MAX_NEW_TOKENS=800
++ export PRC_MODEL_SIZE=0.6B
++ PRC_MODEL_SIZE=0.6B
++ export PRC_MODEL_VARIANT=base
++ PRC_MODEL_VARIANT=base
++ cd /home/anurakas/nanochat
++ exec python3 -u extend_campaign_batched.py
+[ext_batched] reusing existing kgw_workdir_extn5k_06b/artifacts.pt
+[ext_batched] KGW 0.6B: total=9966 pending=9274
+[ext_batched] gpu=1 -> 1325 jobs
+[ext_batched] gpu=2 -> 1325 jobs
+[ext_batched] gpu=3 -> 1325 jobs
+[ext_batched] gpu=4 -> 1325 jobs
+[ext_batched] gpu=5 -> 1325 jobs
+[ext_batched] gpu=6 -> 1325 jobs
+[ext_batched] gpu=7 -> 1324 jobs
+[ext_batched] launched gpu=1 pid=96462
+[ext_batched] launched gpu=2 pid=96463
+[ext_batched] launched gpu=3 pid=96464
+[ext_batched] launched gpu=4 pid=96465
+[ext_batched] launched gpu=5 pid=96466
+[ext_batched] launched gpu=6 pid=96467
+[ext_batched] launched gpu=7 pid=96468
+[ext_batched] progress: 692/9966 done, 30s elapsed
+[ext_batched] progress: 774/9966 done, 330s elapsed
+[ext_batched] progress: 856/9966 done, 631s elapsed
+[ext_batched] progress: 937/9966 done, 931s elapsed
+[ext_batched] progress: 1020/9966 done, 1231s elapsed
+[ext_batched] progress: 1103/9966 done, 1532s elapsed
+[ext_batched] progress: 1185/9966 done, 1832s elapsed
+[ext_batched] progress: 1269/9966 done, 2132s elapsed
+[ext_batched] progress: 1352/9966 done, 2433s elapsed
+[ext_batched] progress: 1434/9966 done, 2733s elapsed
+[ext_batched] progress: 1516/9966 done, 3033s elapsed
+[ext_batched] progress: 1598/9966 done, 3334s elapsed
+[ext_batched] progress: 1679/9966 done, 3634s elapsed
+[ext_batched] progress: 1761/9966 done, 3934s elapsed
+[ext_batched] progress: 1840/9966 done, 4235s elapsed
+[ext_batched] progress: 1924/9966 done, 4535s elapsed
+[ext_batched] progress: 2005/9966 done, 4835s elapsed
+[ext_batched] progress: 2087/9966 done, 5136s elapsed
+[ext_batched] progress: 2168/9966 done, 5436s elapsed
+[ext_batched] progress: 2249/9966 done, 5736s elapsed
+[ext_batched] progress: 2333/9966 done, 6037s elapsed
+[ext_batched] progress: 2411/9966 done, 6337s elapsed
+[ext_batched] progress: 2493/9966 done, 6637s elapsed
+[ext_batched] progress: 2574/9966 done, 6938s elapsed
+[ext_batched] progress: 2658/9966 done, 7238s elapsed
+[ext_batched] progress: 2738/9966 done, 7538s elapsed
+[ext_batched] progress: 2822/9966 done, 7839s elapsed
+[ext_batched] progress: 2905/9966 done, 8139s elapsed
+[ext_batched] progress: 2988/9966 done, 8439s elapsed
+[ext_batched] progress: 3071/9966 done, 8740s elapsed
+[ext_batched] progress: 3156/9966 done, 9040s elapsed
+[ext_batched] progress: 3239/9966 done, 9340s elapsed
+[ext_batched] progress: 3323/9966 done, 9641s elapsed
+[ext_batched] progress: 3405/9966 done, 9941s elapsed
+[ext_batched] progress: 3489/9966 done, 10241s elapsed
+[ext_batched] progress: 3572/9966 done, 10542s elapsed
+[ext_batched] progress: 3657/9966 done, 10842s elapsed
+[ext_batched] progress: 3740/9966 done, 11142s elapsed
+[ext_batched] progress: 3824/9966 done, 11443s elapsed
+[ext_batched] progress: 3906/9966 done, 11743s elapsed
+[ext_batched] progress: 3990/9966 done, 12043s elapsed
+[ext_batched] progress: 4073/9966 done, 12344s elapsed
+[ext_batched] progress: 4156/9966 done, 12644s elapsed
+[ext_batched] progress: 4239/9966 done, 12944s elapsed
+[ext_batched] progress: 4325/9966 done, 13245s elapsed
+[ext_batched] progress: 4408/9966 done, 13545s elapsed
+[ext_batched] progress: 4493/9966 done, 13845s elapsed
+[ext_batched] progress: 4576/9966 done, 14146s elapsed
+[ext_batched] progress: 4660/9966 done, 14446s elapsed
+[ext_batched] progress: 4744/9966 done, 14746s elapsed
+[ext_batched] progress: 4828/9966 done, 15047s elapsed
+[ext_batched] progress: 4913/9966 done, 15347s elapsed
+[ext_batched] progress: 4995/9966 done, 15647s elapsed
+[ext_batched] progress: 5081/9966 done, 15948s elapsed
+[ext_batched] progress: 5164/9966 done, 16248s elapsed
+[ext_batched] progress: 5248/9966 done, 16548s elapsed
+[ext_batched] progress: 5333/9966 done, 16849s elapsed
+[ext_batched] progress: 5417/9966 done, 17149s elapsed
+[ext_batched] progress: 5501/9966 done, 17449s elapsed
+[ext_batched] progress: 5584/9966 done, 17750s elapsed
+[ext_batched] progress: 5669/9966 done, 18050s elapsed
+[ext_batched] progress: 5752/9966 done, 18350s elapsed
+[ext_batched] progress: 5837/9966 done, 18651s elapsed
+[ext_batched] progress: 5920/9966 done, 18951s elapsed
+[ext_batched] progress: 6004/9966 done, 19251s elapsed
+[ext_batched] progress: 6089/9966 done, 19552s elapsed
+[ext_batched] progress: 6171/9966 done, 19852s elapsed
+[ext_batched] progress: 6254/9966 done, 20152s elapsed
+[ext_batched] progress: 6338/9966 done, 20453s elapsed
+[ext_batched] progress: 6424/9966 done, 20753s elapsed
+[ext_batched] progress: 6508/9966 done, 21053s elapsed
+[ext_batched] progress: 6591/9966 done, 21354s elapsed
+[ext_batched] progress: 6677/9966 done, 21654s elapsed
+[ext_batched] progress: 6760/9966 done, 21954s elapsed
+[ext_batched] progress: 6845/9966 done, 22255s elapsed
+[ext_batched] progress: 6928/9966 done, 22555s elapsed
+[ext_batched] progress: 7011/9966 done, 22855s elapsed
+[ext_batched] progress: 7096/9966 done, 23156s elapsed
+[ext_batched] progress: 7179/9966 done, 23456s elapsed
+[ext_batched] progress: 7263/9966 done, 23757s elapsed
+[ext_batched] progress: 7347/9966 done, 24057s elapsed
+[ext_batched] progress: 7430/9966 done, 24357s elapsed
+[ext_batched] progress: 7514/9966 done, 24658s elapsed
+[ext_batched] progress: 7598/9966 done, 24958s elapsed
+[ext_batched] progress: 7682/9966 done, 25258s elapsed
+[ext_batched] progress: 7766/9966 done, 25559s elapsed
+[ext_batched] progress: 7851/9966 done, 25859s elapsed
+[ext_batched] progress: 7935/9966 done, 26159s elapsed
+[ext_batched] progress: 8019/9966 done, 26460s elapsed
+[ext_batched] progress: 8105/9966 done, 26760s elapsed
+[ext_batched] progress: 8188/9966 done, 27060s elapsed
+[ext_batched] progress: 8272/9966 done, 27360s elapsed
+[ext_batched] progress: 8356/9966 done, 27661s elapsed
+[ext_batched] progress: 8440/9966 done, 27961s elapsed
+[ext_batched] progress: 8525/9966 done, 28261s elapsed
+[ext_batched] progress: 8609/9966 done, 28562s elapsed
+[ext_batched] progress: 8694/9966 done, 28862s elapsed
+[ext_batched] progress: 8779/9966 done, 29162s elapsed
+[ext_batched] progress: 8863/9966 done, 29463s elapsed
+[ext_batched] progress: 8947/9966 done, 29763s elapsed
+[ext_batched] progress: 9031/9966 done, 30063s elapsed
+[ext_batched] progress: 9116/9966 done, 30364s elapsed
+[ext_batched] progress: 9200/9966 done, 30664s elapsed
+[ext_batched] progress: 9283/9966 done, 30964s elapsed
+[ext_batched] progress: 9367/9966 done, 31265s elapsed
+[ext_batched] progress: 9452/9966 done, 31565s elapsed
+[ext_batched] progress: 9536/9966 done, 31865s elapsed
+[ext_batched] progress: 9620/9966 done, 32166s elapsed
+[ext_batched] progress: 9704/9966 done, 32466s elapsed
+[ext_batched] DONE gpu=2
+[ext_batched] progress: 9787/9966 done, 32766s elapsed
+[ext_batched] DONE gpu=3
+[ext_batched] DONE gpu=5
+[ext_batched] progress: 9848/9966 done, 33067s elapsed
+[ext_batched] DONE gpu=4
+[ext_batched] progress: 9895/9966 done, 33367s elapsed
+[ext_batched] DONE gpu=1
+[ext_batched] progress: 9923/9966 done, 33667s elapsed
+[ext_batched] progress: 9946/9966 done, 33968s elapsed
+[ext_batched] DONE gpu=6
+[ext_batched] progress: 9960/9966 done, 34268s elapsed
+[ext_batched] DONE gpu=7
+[ext_batched] all done in 34418s. final pending = 0

@@ -1,0 +1,81 @@
+{
+  "K_sweep": [],
+  "n_true_checks": 353,
+  "sweep": [
+    {
+      "k": 16,
+      "z_bonf": 5.687726891212599,
+      "true_n_valid_mean": 15.98583569405099,
+      "true_n_valid_min": 15,
+      "true_bias_mean_abs": 0.1190745986779981,
+      "true_bias_max_abs": 0.375,
+      "true_recovery_rate": 0.0,
+      "true_recovered": 0,
+      "true_total": 353,
+      "neg_bias_mean_abs": 0.11619666666666667,
+      "neg_recovery_rate": 0.0,
+      "neg_recovered": 0,
+      "neg_total": 5000
+    },
+    {
+      "k": 32,
+      "z_bonf": 5.687726891212599,
+      "true_n_valid_mean": 31.98583569405099,
+      "true_n_valid_min": 31,
+      "true_bias_mean_abs": 0.08410056657223797,
+      "true_bias_max_abs": 0.3125,
+      "true_recovery_rate": 0.0,
+      "true_recovered": 0,
+      "true_total": 353,
+      "neg_bias_mean_abs": 0.08702358870967741,
+      "neg_recovery_rate": 0.0,
+      "neg_recovered": 0,
+      "neg_total": 5000
+    },
+    {
+      "k": 64,
+      "z_bonf": 5.687726891212599,
+      "true_n_valid_mean": 63.98583569405099,
+      "true_n_valid_min": 63,
+      "true_bias_mean_abs": 0.07545935631098522,
+      "true_bias_max_abs": 0.234375,
+      "true_recovery_rate": 0.0,
+      "true_recovered": 0,
+      "true_total": 353,
+      "neg_bias_mean_abs": 0.07950466269841269,
+      "neg_recovery_rate": 0.0,
+      "neg_recovered": 0,
+      "neg_total": 5000
+    },
+    {
+      "k": 128,
+      "z_bonf": 5.687726891212599,
+      "true_n_valid_mean": 127.98583569405099,
+      "true_n_valid_min": 127,
+      "true_bias_mean_abs": 0.056853272568089044,
+      "true_bias_max_abs": 0.1875,
+      "true_recovery_rate": 0.0,
+      "true_recovered": 0,
+      "true_total": 353,
+      "neg_bias_mean_abs": 0.05835973179133858,
+      "neg_recovery_rate": 0.0,
+      "neg_recovered": 0,
+      "neg_total": 5000
+    },
+    {
+      "k": 256,
+      "z_bonf": 5.687726891212599,
+      "true_n_valid_mean": 254.94617563739376,
+      "true_n_valid_min": 253,
+      "true_bias_mean_abs": 0.05832449819427684,
+      "true_bias_max_abs": 0.1588235294117647,
+      "true_recovery_rate": 0.0,
+      "true_recovered": 0,
+      "true_total": 353,
+      "neg_bias_mean_abs": 0.05820497381869168,
+      "neg_recovery_rate": 0.0,
+      "neg_recovered": 0,
+      "neg_total": 5000
+    }
+  ]
+}

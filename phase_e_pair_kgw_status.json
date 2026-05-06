@@ -1,0 +1,226 @@
+[
+  {
+    "w1": "off",
+    "w2": "on",
+    "with_space": true,
+    "id1": 1007,
+    "id2": 389,
+    "n_green_of_4": 3,
+    "statuses": {
+      "1007,1007": true,
+      "1007,389": true,
+      "389,1007": true,
+      "389,389": false
+    }
+  },
+  {
+    "w1": "no",
+    "w2": "yes",
+    "with_space": true,
+    "id1": 902,
+    "id2": 9834,
+    "n_green_of_4": 2,
+    "statuses": {
+      "902,902": true,
+      "902,9834": true,
+      "9834,902": false,
+      "9834,9834": false
+    }
+  },
+  {
+    "w1": "A",
+    "w2": "B",
+    "with_space": true,
+    "id1": 362,
+    "id2": 425,
+    "n_green_of_4": 1,
+    "statuses": {
+      "362,362": false,
+      "362,425": false,
+      "425,362": true,
+      "425,425": false
+    }
+  },
+  {
+    "w1": "dog",
+    "w2": "cat",
+    "with_space": false,
+    "id1": 18457,
+    "id2": 4616,
+    "n_green_of_4": 1,
+    "statuses": {
+      "18457,18457": true,
+      "18457,4616": false,
+      "4616,18457": false,
+      "4616,4616": false
+    }
+  },
+  {
+    "w1": "blue",
+    "w2": "red",
+    "with_space": true,
+    "id1": 6303,
+    "id2": 2518,
+    "n_green_of_4": 1,
+    "statuses": {
+      "6303,6303": false,
+      "6303,2518": true,
+      "2518,6303": false,
+      "2518,2518": false
+    }
+  },
+  {
+    "w1": "good",
+    "w2": "bad",
+    "with_space": false,
+    "id1": 18536,
+    "id2": 13855,
+    "n_green_of_4": 1,
+    "statuses": {
+      "18536,18536": false,
+      "18536,13855": false,
+      "13855,18536": false,
+      "13855,13855": true
+    }
+  },
+  {
+    "w1": "one",
+    "w2": "two",
+    "with_space": true,
+    "id1": 825,
+    "id2": 1378,
+    "n_green_of_4": 1,
+    "statuses": {
+      "825,825": false,
+      "825,1378": true,
+      "1378,825": false,
+      "1378,1378": false
+    }
+  },
+  {
+    "w1": "beta",
+    "w2": "alpha",
+    "with_space": false,
+    "id1": 19127,
+    "id2": 7141,
+    "n_green_of_4": 1,
+    "statuses": {
+      "19127,19127": true,
+      "19127,7141": false,
+      "7141,19127": false,
+      "7141,7141": false
+    }
+  },
+  {
+    "w1": "bar",
+    "w2": "foo",
+    "with_space": true,
+    "id1": 3619,
+    "id2": 15229,
+    "n_green_of_4": 1,
+    "statuses": {
+      "3619,3619": false,
+      "3619,15229": false,
+      "15229,3619": false,
+      "15229,15229": true
+    }
+  },
+  {
+    "w1": "apple",
+    "w2": "banana",
+    "with_space": false,
+    "id1": 22377,
+    "id2": 87747,
+    "n_green_of_4": 0,
+    "statuses": {
+      "22377,22377": false,
+      "22377,87747": false,
+      "87747,22377": false,
+      "87747,87747": false
+    }
+  },
+  {
+    "w1": "A",
+    "w2": "B",
+    "with_space": false,
+    "id1": 32,
+    "id2": 33,
+    "n_green_of_4": 0,
+    "statuses": {
+      "32,32": false,
+      "32,33": false,
+      "33,32": false,
+      "33,33": false
+    }
+  },
+  {
+    "w1": "dog",
+    "w2": "cat",
+    "with_space": true,
+    "id1": 5562,
+    "id2": 8251,
+    "n_green_of_4": 0,
+    "statuses": {
+      "5562,5562": false,
+      "5562,8251": false,
+      "8251,5562": false,
+      "8251,8251": false
+    }
+  },
+  {
+    "w1": "down",
+    "w2": "up",
+    "with_space": false,
+    "id1": 2923,
+    "id2": 454,
+    "n_green_of_4": 0,
+    "statuses": {
+      "2923,2923": false,
+      "2923,454": false,
+      "454,2923": false,
+      "454,454": false
+    }
+  },
+  {
+    "w1": "right",
+    "w2": "left",
+    "with_space": true,
+    "id1": 1290,
+    "id2": 2115,
+    "n_green_of_4": 0,
+    "statuses": {
+      "1290,1290": false,
+      "1290,2115": false,
+      "2115,1290": false,
+      "2115,2115": false
+    }
+  },
+  {
+    "w1": "right",
+    "w2": "left",
+    "with_space": false,
+    "id1": 1291,
+    "id2": 2359,
+    "n_green_of_4": 0,
+    "statuses": {
+      "1291,1291": false,
+      "1291,2359": false,
+      "2359,1291": false,
+      "2359,2359": false
+    }
+  },
+  {
+    "w1": "foo",
+    "w2": "bar",
+    "with_space": false,
+    "id1": 7975,
+    "id2": 2257,
+    "n_green_of_4": 0,
+    "statuses": {
+      "7975,7975": false,
+      "7975,2257": false,
+      "2257,7975": false,
+      "2257,2257": false
+    }
+  }
+]

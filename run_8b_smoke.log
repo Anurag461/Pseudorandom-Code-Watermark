@@ -1,0 +1,39 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Qwen3-8B-Base/tokenizer.json
+[parent] visible GPUs: [1]
+[parent] PRC params: n=400 t=3 g=23 r=353 noise_rate=0.0500
+[parent] detect method: entropy_fold
+[parent] loaded 2 prompts from prompts.jsonl (raw token continuation)
+[parent] saved 4 jobs to calib_workdir_n400_t3_eta05_8bsmoke/artifacts.pt
+
+=== Phase 1: 4 generations across 1 GPUs ===
+[parent] launch job=0 gpu=1 prompt=0 watermark=True pid=69148
+[parent] done   job=0 gpu=1 (1/4 done, 112s elapsed)
+[parent] launch job=1 gpu=1 prompt=0 watermark=False pid=85304
+[parent] done   job=1 gpu=1 (2/4 done, 226s elapsed)
+[parent] launch job=2 gpu=1 prompt=1 watermark=True pid=102139
+[parent] done   job=2 gpu=1 (3/4 done, 338s elapsed)
+[parent] launch job=3 gpu=1 prompt=1 watermark=False pid=118149
+[parent] done   job=3 gpu=1 (4/4 done, 450s elapsed)
+[parent] all generations done in 450.5s
+[parent] watermarked=2 unwatermarked=2
+
+=== Phase 2: fit threshold (fold=entropy, FPR target 2.0e-05) ===
+  threshold = 45.4701  null_mean = -0.3947  null_std  = 11.1662  traces_used = 2
+  saved -> qwen_threshold_8bsmoke.json
+
+=== Phase 3a: detection on watermarked runs (TPR) ===
+  prompt 0: detected=True  stat=59.79  sigmas=5.4  (tokens=800)
+  prompt 1: detected=True  stat=74.97  sigmas=6.7  (tokens=800)
+
+=== Phase 3b: detection on UNwatermarked runs (FPR) ===
+  prompt 0: detected=False  stat=-0.86  sigmas=-0.0  (tokens=800)
+  prompt 1: detected=False  stat=-9.19  sigmas=-0.8  (tokens=800)
+
+=== Summary ===
+  method: entropy_fold
+  TPR: 2/2  (100.0%)
+  FPR: 0/2  (0.0%)
+  threshold (FPR target 2.0e-05): 45.4701

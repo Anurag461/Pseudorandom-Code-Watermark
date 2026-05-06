@@ -1,0 +1,11 @@
+{
+  "threshold": 16.169768360199384,
+  "null_mean": -0.05807589361908508,
+  "null_std": 4.36347736485766,
+  "fpr": 0.0001,
+  "z": 3.719016485455709,
+  "n": 400,
+  "num_traces_used": 500,
+  "num_simulated_nulls": 2000,
+  "fold": "entropy"
+}
