@@ -32,3 +32,7 @@ Target FPR,n,t,eta,Entropy Aware TPR,Naive TPR,Hard Remove TPR,Syndrome No-Filte
 1e-03,400,3,0.05,445/500 (89.0%),378/500 (75.6%),,,0/500 (0.0%),"Qwen3-8B-Base; FPR sweep; entropy thr=35.62, naive thr=29.18."
 1e-03,400,3,0.10,349/500 (69.8%),261/500 (52.2%),,,0/500 (0.0%),"Qwen3-8B-Base; FPR sweep; entropy thr=21.43, naive thr=17.61."
 1e-03,400,3,0.15,217/500 (43.4%),154/500 (30.8%),,,0/500 (0.0%),"Qwen3-8B-Base; FPR sweep; entropy thr=13.43, naive thr=10.98."
+2e-05,1024,3,0.20,26/500 (5.2%),21/500 (4.2%),,,0/500 (0.0%),"Qwen3-0.6B-Base; 500 RealNewsLike prompts; T=n=1024 (1 codeword copy); g=27, r=969; entropy thr=27.61, naive thr=28.01; outputs shorter than n: 0/500."
+2e-05,2048,3,0.20,153/500 (30.6%),148/500 (29.6%),,,0/500 (0.0%),"Qwen3-0.6B-Base; 500 RealNewsLike prompts; T=n=2048 (1 codeword copy); g=30, r=1987; entropy thr=40.34, naive thr=40.61; outputs shorter than n: 0/500."
+2e-05,4096,3,0.20,425/500 (85.0%),418/500 (83.6%),,,0/500 (0.0%),"Qwen3-0.6B-Base; 500 RealNewsLike prompts; T=n=4096 (1 codeword copy); g=33, r=4029; entropy thr=56.10, naive thr=56.70; outputs shorter than n: 0/500."
+2e-05,8192,3,0.20,481/500 (96.2%),480/500 (96.0%),,,0/500 (0.0%),"Qwen3-0.6B-Base; 500 RealNewsLike prompts; T=n=8192 (1 codeword copy); g=36, r=8119; entropy thr=80.22, naive thr=81.06; outputs shorter than n: 0/500."
