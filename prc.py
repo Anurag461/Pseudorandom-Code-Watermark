@@ -1,8 +1,14 @@
 import numpy as np
-import torch
+try:
+    import torch
+except ImportError:
+    torch = None
 from scipy.sparse import csr_matrix
 from scipy.special import binom, lambertw
-from ldpc import bp_decoder
+try:
+    from ldpc import bp_decoder
+except (ImportError, AttributeError):
+    bp_decoder = None
 import sys
 import galois
 
@@ -115,10 +121,11 @@ def Encode(encoding_key, message=None):
     return 1 - 2 * torch.tensor(payload @ generator_matrix.T + one_time_pad + error, dtype=float)
 
 
-### Detector
+### Detector (Hoeffding-based with proven FPR guarantee)
 ## Inputs:
 # decoding_key - Decoding key output by KeyGen.
-# posteriors - The posterior expectations of sign(z) as a torch.tensor.
+# posteriors - Soft-tokens: posterior sign estimates as a torch.tensor in {-1, 1}^n
+# false_positive_rate - Target FPR (default: use the one from KeyGen)
 ## Returns:
 # True/False - Detection result.
 def Detect(decoding_key, posteriors, false_positive_rate=None):
@@ -128,18 +135,46 @@ def Detect(decoding_key, posteriors, false_positive_rate=None):
     else:
         fpr = false_positive_rate_key
 
-    posteriors = (1 - 2 * noise_rate) * (1 - 2 * np.array(one_time_pad, dtype=float)) * posteriors.numpy(force=True)
+    # Convert to numpy and extract signs (soft-tokens)
+    if isinstance(posteriors, torch.Tensor):
+        S = posteriors.numpy(force=True)
+    else:
+        S = np.array(posteriors, dtype=float)
 
+    n = len(S)
     r = parity_check_matrix.shape[0]
-    Pi = np.prod(posteriors[parity_check_matrix.indices.reshape(r, t)], axis=1)
-    log_plus = np.log((1 + Pi) / 2)
-    log_minus = np.log((1 - Pi) / 2)
-    log_prod = log_plus + log_minus
 
-    const = 0.5 * np.sum(np.power(log_plus, 2) + np.power(log_minus, 2) - 0.5 * np.power(log_prod, 2))
-    threshold = np.sqrt(2 * const * np.log(1 / fpr)) + 0.5 * log_prod.sum()
+    # Extract parity check indices from sparse matrix
+    parity_check_matrix_dense = parity_check_matrix.toarray()
 
-    return log_plus.sum() >= threshold
+    # Compute soft-values for each parity check: S_w = ∏_{j∈w} S_j
+    S_w = np.ones(r)
+    for w in range(r):
+        indices = np.where(parity_check_matrix_dense[w] == 1)[0]
+        S_w[w] = np.prod(S[indices])
+
+    # Compute parity of OTP for each check: a_w = ∏_{j∈w} (-1)^{Z_j}
+    otp_array = np.array(one_time_pad, dtype=int)
+    a_w = np.ones(r)
+    for w in range(r):
+        indices = np.where(parity_check_matrix_dense[w] == 1)[0]
+        a_w[w] = np.prod(1 - 2 * otp_array[indices])  # (-1)^{Z_j} = 1 - 2*Z_j
+
+    # Compute g_w(a_w) = a_w * S_w
+    g_plus = a_w * S_w  # g_w(1) ≈ S_w (when a_w = 1)
+    g_minus = -a_w * S_w  # g_w(-1) ≈ -S_w (when a_w = -1)
+
+    # Compute statistics
+    S_stat = np.sum(a_w * S_w)  # S = ∑_w g_w(a_w)
+    mu_0 = np.sum((g_plus + g_minus) / 2)  # μ_0 = ∑_w [g_w(1) + g_w(-1)] / 2
+    v_w = (g_plus - g_minus) / 2  # v_w = [g_w(1) - g_w(-1)] / 2
+    V = np.sum(v_w ** 2)  # V = ∑_w v_w^2
+
+    # Compute threshold using Hoeffding bound: τ = √(log(1/F) · 2V)
+    tau = np.sqrt(np.log(1 / fpr) * 2 * V)
+
+    # Detect: return True if S - μ_0 ≥ τ
+    return S_stat - mu_0 >= tau
 
 
 ### Decoder

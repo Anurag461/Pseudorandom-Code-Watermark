@@ -94,7 +94,7 @@ class LDPC_PRC:
 
         
 
-if True:
+if __name__ == "__main__":
     n = 100
     eta = 0.1
     t = int(np.log2(n))          # Θ(log n)
