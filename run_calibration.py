@@ -36,6 +36,7 @@ from watermark_expt import (
     load_threshold_state,
     detect_with_threshold,
     detect_syndrome,
+    detect_hoeffding,
     KeyGen,
     test_prompts,
 )
@@ -277,6 +278,9 @@ def have_complete_workdir(n_jobs):
 
 
 def fmt_detect_info(info):
+    if info.get("method") == "hoeffding":
+        return (f"stat={info['statistic']:.3f}  "
+                f"thr={info['threshold']:.3f}  V={info['V']:.3f}")
     if "statistic" in info:
         return (f"stat={info['statistic']:.2f}  "
                 f"sigmas={info['sigmas_above_null']:.1f}")
@@ -306,6 +310,16 @@ def run_detect(method, decoding_key, r, partition, threshold_state):
         return detect_syndrome(
             decoding_key, r["tokens"], r["p_trace"], partition,
             entropy_threshold=SYNDROME_ENTROPY_THRESHOLD, return_info=True,
+        )
+    if method == "hoeffding":
+        return detect_hoeffding(
+            decoding_key, r["tokens"], r["p_trace"], partition,
+            fpr=FPR_TARGET, entropy_weighted=True, return_info=True,
+        )
+    if method == "hoeffding_naive":
+        return detect_hoeffding(
+            decoding_key, r["tokens"], r["p_trace"], partition,
+            fpr=FPR_TARGET, entropy_weighted=False, return_info=True,
         )
     raise ValueError(f"unknown DETECT_METHOD={method}")
 

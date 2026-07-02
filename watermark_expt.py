@@ -196,6 +196,14 @@ import torch
 import numpy as np
 from scipy.stats import norm
 from prc import KeyGen, Encode, Detect
+from detectors import (
+    binary_entropy,
+    fold_naive,
+    fold_entropy_weighted,
+    fold_soft_token,
+    tokens_to_bits,
+    detect_hoeffding,
+)
 
 
 # -----------------------------------------------------------------------------
@@ -205,12 +213,6 @@ from prc import KeyGen, Encode, Detect
 def signed_to_bits(signed: torch.Tensor) -> torch.Tensor:
     """+/-1 -> {0,1}.  +1 -> 0,  -1 -> 1."""
     return ((1 - signed) / 2).long()
-
-
-def binary_entropy(p):
-    """H_2(p) in nats. Vectorized; safe at p=0 and p=1."""
-    p = np.clip(np.asarray(p, dtype=np.float64), 1e-12, 1.0 - 1e-12)
-    return -(p * np.log(p) + (1.0 - p) * np.log1p(-p))
 
 
 # -----------------------------------------------------------------------------
@@ -291,51 +293,6 @@ def generate_text_watermark_prc(
 # -----------------------------------------------------------------------------
 # Folding: equal-weight (legacy) and entropy-aware
 # -----------------------------------------------------------------------------
-
-def fold_naive(observed_bits: np.ndarray, n: int) -> np.ndarray:
-    """Cyclic fold averaging +/-1 signs at each codeword slot."""
-    signs = (1 - 2 * observed_bits.astype(np.int64)).astype(np.float64)
-    seq_len = signs.shape[0]
-    sums = np.zeros(n, dtype=np.float64)
-    counts = np.zeros(n, dtype=np.float64)
-    idx = np.arange(seq_len) % n
-    np.add.at(sums, idx, signs)
-    np.add.at(counts, idx, 1)
-    return sums / np.maximum(counts, 1.0)
-
-
-def fold_entropy_weighted(observed_bits: np.ndarray, p_array: np.ndarray,
-                          n: int) -> np.ndarray:
-    """
-    Entropy-weighted cyclic fold. Each observation contributes its sign
-    scaled by H_2(p)/log(2), so deterministic LM steps contribute ~0.
-
-    p_array gives the LM's P[partition 1] at each generation step.
-    """
-    signs = (1 - 2 * observed_bits.astype(np.int64)).astype(np.float64)
-    weights = binary_entropy(p_array) / np.log(2)         # in [0, 1]
-    seq_len = signs.shape[0]
-    sums = np.zeros(n, dtype=np.float64)
-    norms = np.zeros(n, dtype=np.float64)
-    idx = np.arange(seq_len) % n
-    np.add.at(sums, idx, weights * signs)
-    np.add.at(norms, idx, weights)
-    return sums / np.maximum(norms, 1e-9)
-
-
-# -----------------------------------------------------------------------------
-# Tokens -> bits (the per-step bit observed by the detector)
-# -----------------------------------------------------------------------------
-
-def tokens_to_bits(token_ids: torch.Tensor,
-                   partition_map: torch.Tensor) -> np.ndarray:
-    """Look up each token's partition (0 or 1) -> length-T int array."""
-    if token_ids.dim() != 1:
-        token_ids = token_ids.flatten()
-    bit_for_token = partition_map[1].long().to(token_ids.device)
-    bits = bit_for_token[token_ids].detach().cpu().numpy().astype(np.int64)
-    return bits
-
 
 # -----------------------------------------------------------------------------
 # Detector test statistic (matches the internals of Detect)
@@ -617,6 +574,18 @@ def detect_with_threshold(
             "sigmas_above_null": sigmas,
         }
     return decision
+
+
+# -----------------------------------------------------------------------------
+# Hoeffding detector (proven FPR, no calibration) -- prc_fpr_proof.pdf
+# -----------------------------------------------------------------------------
+#
+# Folds the observed tokens into length-n soft-tokens S_j = t_j * H_j (via
+# fold_soft_token, |S_j| <= 1) and calls prc.Detect, whose threshold
+# tau = sqrt(2V * log(1/F)) has a provable FPR <= F over the random OTP. No
+# null calibration is needed, so this can run directly on cached generations.
+# detect_hoeffding + the fold helpers now live in detectors.py (model-free) and
+# are imported at the top of this module.
 
 
 # -----------------------------------------------------------------------------

@@ -122,59 +122,61 @@ def Encode(encoding_key, message=None):
 
 
 ### Detector (Hoeffding-based with proven FPR guarantee)
+##
+## Implements the threshold from prc_fpr_proof.pdf. For each parity check w,
+## the soft-value is S_w = prod_{j in w} S_j where S_j is the soft-token at
+## position j (S_j = t_j * H_j in the current construction, |S_j| <= 1). The
+## OTP parity is a_w = prod_{j in w} (-1)^{Z_j} in {-1, +1}. With
+## g_w(a_w) = a_w * S_w we have g_w(1) = S_w, g_w(-1) = -S_w, so
+##     mu_0 = sum_w (g_w(1)+g_w(-1))/2 = 0,  v_w = (g_w(1)-g_w(-1))/2 = S_w,
+##     V    = sum_w v_w^2 = sum_w S_w^2,      S = sum_w a_w S_w.
+## Over the random OTP the X_w = a_w S_w are independent, mean-zero, bounded in
+## [-1, 1]; Hoeffding gives Pr[S - mu_0 >= tau] <= exp(-tau^2 / 2V). Setting
+## this to the target FPR F yields tau = sqrt(2V * log(1/F)).
+##
 ## Inputs:
 # decoding_key - Decoding key output by KeyGen.
-# posteriors - Soft-tokens: posterior sign estimates as a torch.tensor in {-1, 1}^n
-# false_positive_rate - Target FPR (default: use the one from KeyGen)
+# posteriors - Soft-tokens S_j as a torch.tensor / array in [-1, 1]^n.
+# false_positive_rate - Target FPR F (default: use the one from KeyGen).
+# return_info - If True, also return a dict with statistic / threshold / V.
 ## Returns:
-# True/False - Detection result.
-def Detect(decoding_key, posteriors, false_positive_rate=None):
+# bool decision, or (decision, info) if return_info=True.
+def Detect(decoding_key, posteriors, false_positive_rate=None, return_info=False):
     generator_matrix, parity_check_matrix, one_time_pad, false_positive_rate_key, noise_rate, test_bits, g, max_bp_iter, t = decoding_key
-    if false_positive_rate is not None:
-        fpr = false_positive_rate
-    else:
-        fpr = false_positive_rate_key
+    fpr = false_positive_rate if false_positive_rate is not None else false_positive_rate_key
 
-    # Convert to numpy and extract signs (soft-tokens)
-    if isinstance(posteriors, torch.Tensor):
-        S = posteriors.numpy(force=True)
+    # Convert soft-tokens to a numpy array.
+    if torch is not None and isinstance(posteriors, torch.Tensor):
+        S = posteriors.numpy(force=True).astype(np.float64)
     else:
-        S = np.array(posteriors, dtype=float)
+        S = np.asarray(posteriors, dtype=np.float64)
 
-    n = len(S)
     r = parity_check_matrix.shape[0]
+    # CSR stores each row's column indices contiguously; every check has exactly
+    # t nonzeros (see KeyGen), so this recovers the t positions per check.
+    idx = parity_check_matrix.indices.reshape(r, t)
 
-    # Extract parity check indices from sparse matrix
-    parity_check_matrix_dense = parity_check_matrix.toarray()
+    # Soft-value and OTP parity per check.
+    S_w = np.prod(S[idx], axis=1)                                # prod_{j in w} S_j
+    otp = np.asarray(one_time_pad, dtype=np.int64)
+    a_w = np.prod(1 - 2 * otp[idx], axis=1).astype(np.float64)   # (-1)^{Z_j} = 1 - 2 Z_j
 
-    # Compute soft-values for each parity check: S_w = ∏_{j∈w} S_j
-    S_w = np.ones(r)
-    for w in range(r):
-        indices = np.where(parity_check_matrix_dense[w] == 1)[0]
-        S_w[w] = np.prod(S[indices])
+    # Hoeffding statistic and threshold (mu_0 = 0, v_w = S_w).
+    S_stat = float(np.sum(a_w * S_w))
+    V = float(np.sum(S_w ** 2))
+    tau = float(np.sqrt(2 * V * np.log(1 / fpr)))
 
-    # Compute parity of OTP for each check: a_w = ∏_{j∈w} (-1)^{Z_j}
-    otp_array = np.array(one_time_pad, dtype=int)
-    a_w = np.ones(r)
-    for w in range(r):
-        indices = np.where(parity_check_matrix_dense[w] == 1)[0]
-        a_w[w] = np.prod(1 - 2 * otp_array[indices])  # (-1)^{Z_j} = 1 - 2*Z_j
-
-    # Compute g_w(a_w) = a_w * S_w
-    g_plus = a_w * S_w  # g_w(1) ≈ S_w (when a_w = 1)
-    g_minus = -a_w * S_w  # g_w(-1) ≈ -S_w (when a_w = -1)
-
-    # Compute statistics
-    S_stat = np.sum(a_w * S_w)  # S = ∑_w g_w(a_w)
-    mu_0 = np.sum((g_plus + g_minus) / 2)  # μ_0 = ∑_w [g_w(1) + g_w(-1)] / 2
-    v_w = (g_plus - g_minus) / 2  # v_w = [g_w(1) - g_w(-1)] / 2
-    V = np.sum(v_w ** 2)  # V = ∑_w v_w^2
-
-    # Compute threshold using Hoeffding bound: τ = √(log(1/F) · 2V)
-    tau = np.sqrt(np.log(1 / fpr) * 2 * V)
-
-    # Detect: return True if S - μ_0 ≥ τ
-    return S_stat - mu_0 >= tau
+    decision = bool(S_stat >= tau)
+    if return_info:
+        return decision, {
+            "method": "hoeffding",
+            "statistic": S_stat,
+            "threshold": tau,
+            "V": V,
+            "r": int(r),
+            "fpr": float(fpr),
+        }
+    return decision
 
 
 ### Decoder
