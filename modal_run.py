@@ -100,7 +100,8 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
     # key: build it once per (n,t,eta), persist to the Volume, and reuse it on
     # later runs. A rebuild (config change or fresh=True) invalidates the cache.
     config_sig = {"n": n, "t": t, "eta": eta, "T": max_new_tokens,
-                  "num_prompts": num_prompts}
+                  "num_prompts": num_prompts,
+                  "gen_scheme": "fresh_codeword_per_block"}
     data_vol.reload()
     if not fresh and os.path.exists(art_path):
         prev = torch.load(art_path, weights_only=False, map_location="cpu")

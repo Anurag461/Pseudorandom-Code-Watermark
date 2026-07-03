@@ -95,12 +95,20 @@ def detect_hoeffding(
     entropy_weighted=True,
     return_info=False,
 ):
-    """Proven-FPR Hoeffding detector.
+    """Proven-FPR Hoeffding detector, block-OR over length-n blocks.
+
+    The generated text is split into consecutive length-n blocks (each block is
+    an independent PRC codeword under the same key). Each block is scored on its
+    own soft-tokens and passed through prc.Detect; the document is declared
+    watermarked iff ANY block passes. Trailing tokens with T % n != 0 are
+    ignored (when T < n, the whole prefix is treated as one partial block).
+
+    To keep the overall false-positive rate <= F under the OR of B blocks, each
+    block is tested at F/B (union bound: B * (F/B) = F).
 
     entropy_weighted=True  -> soft-tokens S_j = t_j * H_j (fold_soft_token).
     entropy_weighted=False -> naive soft-tokens S_j = t_j  (fold_naive, H_j=1).
-    Both keep |S_j| <= 1, so the FPR <= F guarantee holds either way; the naive
-    variant is the equal-weight counterpart for a side-by-side comparison.
+    Both keep |S_j| <= 1, so the FPR <= F guarantee holds either way.
     """
     n = decoding_key[0].shape[0]
     bits = tokens_to_bits(generated_token_ids, partition_map)
@@ -110,9 +118,43 @@ def detect_hoeffding(
             f"tokens length {bits.shape[0]} != p_trace length {p_arr.shape[0]}"
         )
 
-    if entropy_weighted:
-        posteriors = fold_soft_token(bits, p_arr, n)
+    T = bits.shape[0]
+    if T >= n:
+        slices = [slice(b * n, (b + 1) * n) for b in range(T // n)]
     else:
-        posteriors = fold_naive(bits, n)
-    return Detect(decoding_key, posteriors, false_positive_rate=fpr,
-                  return_info=return_info)
+        slices = [slice(0, T)]              # short output: one partial block
+    num_blocks = len(slices)
+    block_fpr = fpr / num_blocks            # Bonferroni: keep overall FPR <= F
+
+    fold = fold_soft_token if entropy_weighted else (
+        lambda b, p, m: fold_naive(b, m))
+
+    decision = False
+    blocks_passed = 0
+    best = None                             # block with the largest margin
+    for b, sl in enumerate(slices):
+        post = fold(bits[sl], p_arr[sl], n)
+        dec, info = Detect(decoding_key, post, false_positive_rate=block_fpr,
+                           return_info=True)
+        margin = info["statistic"] - info["threshold"]
+        if dec:
+            decision = True
+            blocks_passed += 1
+        if best is None or margin > best[0]:
+            best = (margin, b, info)
+
+    if not return_info:
+        return decision
+
+    _, best_block, best_info = best
+    return decision, {
+        "method": "hoeffding_blockwise",
+        "statistic": best_info["statistic"],
+        "threshold": best_info["threshold"],
+        "V": best_info["V"],
+        "num_blocks": num_blocks,
+        "blocks_passed": blocks_passed,
+        "best_block": best_block,
+        "block_fpr": block_fpr,
+        "fpr": fpr,
+    }

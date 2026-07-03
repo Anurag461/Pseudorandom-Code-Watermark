@@ -245,13 +245,19 @@ def generate_text_watermark_prc(
 
     n = encoding_key[0].shape[0]                    # codeword length
 
-    if watermark:
-        print("Watermark Enabled (PRC)", flush=True)
-        signed = Encode(encoding_key)               # torch +/-1, length n
-        codeword = signed_to_bits(signed).to(device).float()
-    else:
-        print("Watermark Disabled", flush=True)
-        codeword = torch.bernoulli(torch.full((n,), 0.5)).to(device)
+    # Each length-n block gets its OWN fresh PRC codeword: when the output is
+    # longer than n we do NOT reuse the same codeword cyclically. Detection then
+    # checks each block independently (block-OR), so every block is an
+    # independent watermark under the same key.
+    def _fresh_codeword():
+        if watermark:
+            signed = Encode(encoding_key)           # torch +/-1, length n
+            return signed_to_bits(signed).to(device).float()
+        return torch.bernoulli(torch.full((n,), 0.5)).to(device)
+
+    print("Watermark Enabled (PRC)" if watermark else "Watermark Disabled",
+          flush=True)
+    codeword = _fresh_codeword()
 
     partition_map = partition_map.to(device)        # (2, vocab)
 
@@ -262,6 +268,10 @@ def generate_text_watermark_prc(
         logits = model(token_ids, cache=cache)[:, -1]                   # (batch, vocab)
 
         for pos in range(max_new_tokens):
+            # New block boundary -> sample a fresh PRC codeword for this block.
+            if pos > 0 and pos % n == 0:
+                codeword = _fresh_codeword()
+
             probs = torch.softmax(logits, dim=-1)
             p1 = (probs * partition_map[1].to(logits.device)).sum(dim=-1)  # (batch,)
 
