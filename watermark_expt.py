@@ -469,6 +469,84 @@ def generate_and_collect(generator):
     return tokens, p_trace
 
 
+def generate_batch_and_collect(
+    model,
+    prompt_ids_batch,
+    max_new_tokens,
+    encoding_key,
+    partition_map,
+    watermark=True,
+):
+    """Batched PRC generation over B equal-length prompts.
+
+    Args:
+        prompt_ids_batch: (B, L) long tensor; all prompts must share length L
+            (RealNews prefixes are all 50 tokens, so no padding is needed).
+        others: as in generate_text_watermark_prc.
+
+    Returns:
+        tokens   : (B, T) long tensor on CPU (T = max_new_tokens).
+        p_traces : (B, T) float64 numpy array of LM P[partition 1] per step.
+
+    Each sequence gets its OWN fresh PRC codeword per length-n block, so the B
+    generations are independent watermark instances under the same key -- byte
+    for byte the same channel the per-job path applies, just B at a time. At
+    B=1 this is identical to generate_text_watermark_prc + generate_and_collect.
+    """
+    model.eval()
+    B = prompt_ids_batch.shape[0]
+    n = encoding_key[0].shape[0]
+    pm = partition_map.to(device)                      # (2, vocab)
+    part1 = pm[1]                                       # (vocab,)
+
+    def _fresh_codewords():
+        # One independent PRC codeword per sequence -> (B, n) of {0.,1.}.
+        rows = [signed_to_bits(Encode(encoding_key)).to(device).float()
+                for _ in range(B)]
+        return torch.stack(rows, dim=0)
+
+    print(f"Watermark Enabled (PRC), batch={B}" if watermark
+          else f"Watermark Disabled, batch={B}", flush=True)
+    codeword = _fresh_codewords() if watermark else None
+
+    tok_steps, p_steps = [], []
+    with torch.no_grad():
+        cache = KVCache()
+        logits = model(prompt_ids_batch, cache=cache)[:, -1]        # (B, vocab)
+
+        for pos in range(max_new_tokens):
+            if watermark and pos > 0 and pos % n == 0:
+                codeword = _fresh_codewords()
+
+            probs = torch.softmax(logits, dim=-1)                   # (B, vocab)
+            p1 = (probs * part1.to(logits.device)).sum(dim=-1)      # (B,)
+
+            if watermark:
+                xi = codeword[:, pos % n]                           # (B,)
+                bern_p = torch.where(
+                    p1 <= 0.5,
+                    2 * xi * p1,
+                    1 - 2 * (1 - xi) * (1 - p1),
+                ).clamp(0.0, 1.0)
+                b = torch.bernoulli(bern_p).long()                 # (B,)
+                mask = pm[b].to(logits.device)                     # (B, vocab)
+                sample_logits = logits.masked_fill(mask == 0, float("-inf"))
+            else:
+                sample_logits = logits
+
+            sample_probs = torch.softmax(sample_logits.float(), dim=-1)
+            next_token = torch.multinomial(sample_probs, num_samples=1)  # (B,1)
+
+            tok_steps.append(next_token)
+            p_steps.append(p1.detach().cpu())
+
+            logits = model(next_token, cache=cache)[:, -1]         # (B, vocab)
+
+    tokens = torch.cat(tok_steps, dim=1).cpu()                     # (B, T)
+    p_traces = torch.stack(p_steps, dim=1).float().numpy().astype(np.float64)
+    return tokens, p_traces
+
+
 def _fold_naive_uniform(bits, p_arr, n):
     return fold_naive(bits, n)
 
