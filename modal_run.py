@@ -359,12 +359,16 @@ def detect_all(n: int, t: int, eta: float, fpr: float,
     partition = art["partition"]
 
     def _run(tokens, p_trace, wm_flag, idx):
+        dm, im = detect_hoeffding(decoding_key, tokens, p_trace, partition,
+                                  fpr=fpr, weight="map", return_info=True)
         de, ie = detect_hoeffding(decoding_key, tokens, p_trace, partition,
-                                  fpr=fpr, entropy_weighted=True, return_info=True)
+                                  fpr=fpr, weight="entropy", return_info=True)
         dn, ino = detect_hoeffding(decoding_key, tokens, p_trace, partition,
-                                   fpr=fpr, entropy_weighted=False, return_info=True)
+                                   fpr=fpr, weight="naive", return_info=True)
         return {
             "prompt_idx": idx, "watermark": wm_flag,
+            "decision_map": bool(dm), "stat_map": float(im["statistic"]),
+            "thr_map": float(im["threshold"]),
             "decision_entropy": bool(de), "stat_entropy": float(ie["statistic"]),
             "thr_entropy": float(ie["threshold"]),
             "decision_naive": bool(dn), "stat_naive": float(ino["statistic"]),
@@ -383,6 +387,71 @@ def detect_all(n: int, t: int, eta: float, fpr: float,
         # Truncate a (possibly longer) shared null to this config's T.
         tok, ptr = gn["tokens"][:T], gn["p_trace"][:T]
         out.append(_run(tok, ptr, False, i))
+    return out
+
+
+@app.function(volumes={"/data": data_vol}, timeout=1800)
+def detect_all_any(n: int, t: int, eta: float, fpr: float,
+                   num_prompts: int = 500) -> list:
+    """Re-detect a config with ALL weight kinds, auto-detecting the cache layout:
+      - NEW layout (config_tag/wm/wm_XXXX.pt + shared _nulls/T*) -> batched pipeline
+      - OLD layout (config_tag/gens/gen_XXXX.pt, watermark flag inside)
+    Free: model-free CPU detection over already-cached generations, no regen."""
+    import glob
+    import os
+    import torch
+    from detectors import detect_hoeffding, WEIGHT_KINDS
+
+    T = 2 * n
+    tag = config_tag(n, t, eta)
+    ap = f"/data/{tag}/artifacts.pt"
+    data_vol.reload()
+    art = torch.load(ap, weights_only=False, map_location="cpu")
+    decoding_key = art["decoding_key"]
+    partition = art["partition"]
+
+    def decisions(tokens, p_trace, wm_flag):
+        row = {"watermark": bool(wm_flag)}
+        for wname in WEIGHT_KINDS:
+            row[f"decision_{wname}"] = bool(detect_hoeffding(
+                decoding_key, tokens, p_trace, partition, fpr=fpr, weight=wname))
+        return row
+
+    wmd = f"/data/{tag}/wm"
+    new_layout = os.path.isdir(wmd) and glob.glob(os.path.join(wmd, "wm_*.pt"))
+
+    out = []
+    if new_layout:
+        # Find a shared null store T' >= T holding all prompts (reuse-by-truncate).
+        root = "/data/_nulls"
+        use_T = None
+        if os.path.isdir(root):
+            cands = []
+            for name in os.listdir(root):
+                if not name.startswith("T"):
+                    continue
+                try:
+                    Tp = int(name[1:])
+                except ValueError:
+                    continue
+                if Tp >= T and all(os.path.exists(
+                        os.path.join(root, name, f"null_{i:04d}.pt"))
+                        for i in range(num_prompts)):
+                    cands.append(Tp)
+            if cands:
+                use_T = min(cands)
+        for i in range(num_prompts):
+            gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
+                            weights_only=False, map_location="cpu")
+            out.append(decisions(gw["tokens"], gw["p_trace"], True))
+            if use_T is not None:
+                gn = torch.load(os.path.join(root, f"T{use_T}", f"null_{i:04d}.pt"),
+                                weights_only=False, map_location="cpu")
+                out.append(decisions(gn["tokens"][:T], gn["p_trace"][:T], False))
+    else:
+        for path in sorted(glob.glob(f"/data/{tag}/gens/gen_*.pt")):
+            g = torch.load(path, weights_only=False, map_location="cpu")
+            out.append(decisions(g["tokens"], g["p_trace"], bool(g["watermark"])))
     return out
 
 
@@ -426,6 +495,8 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
 
     wm = sorted([r for r in results if r["watermark"]], key=lambda r: r["prompt_idx"])
     nw = sorted([r for r in results if not r["watermark"]], key=lambda r: r["prompt_idx"])
+    tp_m = sum(r["decision_map"] for r in wm)
+    fp_m = sum(r["decision_map"] for r in nw)
     tp_e = sum(r["decision_entropy"] for r in wm)
     fp_e = sum(r["decision_entropy"] for r in nw)
     tp_n = sum(r["decision_naive"] for r in wm)
@@ -433,7 +504,77 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
     nwm, nnw = max(len(wm), 1), max(len(nw), 1)
     print("\n=== Summary (Hoeffding detector, proven FPR) ===", flush=True)
     print(f"  n={n} t={t} eta={eta} FPR_target={fpr:g}  T={2 * n}", flush=True)
+    print(f"  map (default):  TPR {tp_m}/{len(wm)} ({tp_m/nwm:.1%})   "
+          f"FPR {fp_m}/{len(nw)} ({fp_m/nnw:.1%})", flush=True)
     print(f"  entropy-aware:  TPR {tp_e}/{len(wm)} ({tp_e/nwm:.1%})   "
           f"FPR {fp_e}/{len(nw)} ({fp_e/nnw:.1%})", flush=True)
     print(f"  naive        :  TPR {tp_n}/{len(wm)} ({tp_n/nwm:.1%})   "
           f"FPR {fp_n}/{len(nw)} ({fp_n/nnw:.1%})", flush=True)
+
+
+# ---- re-detection sweep over all weight kinds (CPU-only, no regeneration) ---
+@app.local_entrypoint()
+def redetect(n: int = DEFAULT_N, t: int = DEFAULT_T, eta: float = DEFAULT_ETA,
+             fpr: float = DEFAULT_FPR, num_prompts: int = 500):
+    """Re-detect a config (either cache layout) with ALL weight kinds, ranked.
+    Free: model-free CPU detection over already-cached generations."""
+    from detectors import WEIGHT_KINDS
+
+    print(f"[redetect] {config_tag(n, t, eta)}  FPR_target={fpr:g} ...", flush=True)
+    results = detect_all_any.remote(n, t, eta, fpr, num_prompts)
+    wm = [r for r in results if r["watermark"]]
+    nw = [r for r in results if not r["watermark"]]
+    nwm, nnw = max(len(wm), 1), max(len(nw), 1)
+    print(f"\n=== Re-detect (Hoeffding, proven FPR) n={n} t={t} eta={eta} "
+          f"F={fpr:g}  T={2 * n} ===", flush=True)
+    rows = []
+    for name in WEIGHT_KINDS:
+        tp = sum(r[f"decision_{name}"] for r in wm)
+        fp = sum(r[f"decision_{name}"] for r in nw)
+        rows.append((tp, fp, name))
+    for tp, fp, name in sorted(rows, reverse=True):     # best TPR first
+        flag = "  <- baseline" if name == "entropy" else ""
+        print(f"  {name:8s}: TPR {tp}/{len(wm)} ({tp/nwm:.1%})   "
+              f"FPR {fp}/{len(nw)} ({fp/nnw:.1%}){flag}", flush=True)
+
+
+# ---- re-detect a whole set of configs in one Modal session ------------------
+# (n, t, eta) for every config we've generated so far. Both cache layouts.
+REDETECT_CONFIGS = [
+    (256, 3, 0.05), (400, 3, 0.05), (512, 3, 0.05), (1024, 3, 0.05),
+    (400, 3, 0.20),
+    (400, 5, 0.05), (512, 5, 0.05), (1024, 5, 0.05), (2048, 5, 0.05),
+]
+
+
+@app.local_entrypoint()
+def redetect_all(fpr: float = 1e-3, num_prompts: int = 500):
+    """Re-detect EVERY cached config with all weight kinds, one Modal session.
+    Prints a compact map-vs-entropy line per config plus each full leaderboard."""
+    from detectors import WEIGHT_KINDS
+
+    summary = []
+    for (n, t, eta) in REDETECT_CONFIGS:
+        print(f"\n########## n={n} t={t} eta={eta} ##########", flush=True)
+        results = detect_all_any.remote(n, t, eta, fpr, num_prompts)
+        wm = [r for r in results if r["watermark"]]
+        nw = [r for r in results if not r["watermark"]]
+        nwm, nnw = max(len(wm), 1), max(len(nw), 1)
+        rows = []
+        for name in WEIGHT_KINDS:
+            tp = sum(r[f"decision_{name}"] for r in wm)
+            fp = sum(r[f"decision_{name}"] for r in nw)
+            rows.append((tp, fp, name))
+        for tp, fp, name in sorted(rows, reverse=True):
+            flag = "  <- baseline" if name == "entropy" else ""
+            print(f"  {name:8s}: TPR {tp}/{len(wm)} ({tp/nwm:.1%})   "
+                  f"FPR {fp}/{len(nw)} ({fp/nnw:.1%}){flag}", flush=True)
+        by = {name: (tp, fp) for tp, fp, name in rows}
+        summary.append((n, t, eta, by["map"], by["entropy"], nwm, nnw))
+
+    print("\n================ map vs entropy (all configs) ================",
+          flush=True)
+    for n, t, eta, (mtp, mfp), (etp, efp), nwm, nnw in summary:
+        print(f"  n={n:>4} t={t} eta={eta:<4}: map {mtp/nwm:5.1%} vs entropy "
+              f"{etp/nwm:5.1%}  (+{(mtp-etp)/nwm:.1%})   FPR map {mfp}/{nnw} "
+              f"ent {efp}/{nnw}", flush=True)
