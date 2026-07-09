@@ -39,7 +39,7 @@ MODEL_SIZE = "0.6B"
 VOCAB = 151_936                 # Qwen3 vocab
 GPU = "A10G"
 DEFAULT_MAX_CONTAINERS = 5      # bound cost on the smoke test; raise for 500
-DEFAULT_BATCH = 25             # sequences per GPU forward pass
+DEFAULT_BATCH = 64             # sequences per GPU forward pass
 
 
 def config_tag(n, t, eta):
@@ -84,6 +84,9 @@ image = (
             "PRC_MODEL_SIZE": MODEL_SIZE,
             "PRC_MODEL_VARIANT": "base",
             "TOKENIZERS_PARALLELISM": "false",
+            # Reduce CUDA allocator fragmentation so large batches (KV cache
+            # grows with batch x length) don't OOM on the last few hundred MiB.
+            "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
         }
     )
     .add_local_file("prompts.jsonl", "/root/prompts.jsonl")
