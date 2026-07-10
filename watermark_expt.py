@@ -547,6 +547,49 @@ def generate_batch_and_collect(
     return tokens, p_traces
 
 
+def estimate_partition_trace_batch(
+    model,
+    prompt_ids_batch,
+    generated_tokens_batch,
+    partition_map,
+):
+    """Teacher-force generated tokens and estimate P[partition 1] per step.
+
+    This is used when detection estimates entropy with a model different from
+    the generator. It does not sample; it only replays cached generations and
+    records the detector model's probability mass on partition 1.
+    """
+    model.eval()
+    prompt_ids_batch = prompt_ids_batch.to(device)
+    generated_tokens_batch = generated_tokens_batch.to(device)
+    pm = partition_map.to(device)
+    part1 = pm[1]
+
+    p_steps = []
+    with torch.no_grad():
+        cache = KVCache()
+        logits = model(prompt_ids_batch, cache=cache)[:, -1]
+
+        for pos in range(generated_tokens_batch.shape[1]):
+            probs = torch.softmax(logits, dim=-1)
+            p1 = (probs * part1.to(logits.device)).sum(dim=-1)
+            p_steps.append(p1.detach().cpu())
+
+            next_token = generated_tokens_batch[:, pos:pos + 1]
+            logits = model(next_token, cache=cache)[:, -1]
+
+    return torch.stack(p_steps, dim=1).float().numpy().astype(np.float64)
+
+
+def estimate_partition_trace(model, prompt_ids, generated_tokens, partition_map):
+    """Single-sequence wrapper around estimate_partition_trace_batch."""
+    prompt_batch = torch.tensor([prompt_ids], dtype=torch.long, device=device)
+    token_batch = generated_tokens.reshape(1, -1).to(device)
+    return estimate_partition_trace_batch(
+        model, prompt_batch, token_batch, partition_map
+    )[0]
+
+
 def _fold_naive_uniform(bits, p_arr, n):
     return fold_naive(bits, n)
 
@@ -760,4 +803,3 @@ def detect_syndrome(
         }
         return decision, info
     return decision
-
