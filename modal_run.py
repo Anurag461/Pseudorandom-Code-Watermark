@@ -684,6 +684,13 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
     def _p_trace(source, idx, record):
         if use_generation_trace:
             return np.asarray(record["p_trace"][:T], dtype=np.float64)
+        legacy_path = os.path.join(
+            f"/data/{tag}/entropy/{entropy_model_tag(model_size)}",
+            f"gen_{idx:04d}.pt",
+        )
+        if os.path.exists(legacy_path):
+            est = torch.load(legacy_path, weights_only=False, map_location="cpu")
+            return np.asarray(est["p_trace"][:T], dtype=np.float64)
         if source == "wm":
             path = os.path.join(wm_entropy_dir(tag, model_size), f"wm_{idx:04d}.pt")
         else:
@@ -807,6 +814,13 @@ def detect_all_any(n: int, t: int, eta: float, fpr: float,
     def _p_trace(source, idx, record):
         if use_generation_trace:
             return np.asarray(record["p_trace"][:T], dtype=np.float64)
+        legacy_path = os.path.join(
+            f"/data/{tag}/entropy/{entropy_model_tag(model_size)}",
+            f"gen_{idx:04d}.pt",
+        )
+        if os.path.exists(legacy_path):
+            est = torch.load(legacy_path, weights_only=False, map_location="cpu")
+            return np.asarray(est["p_trace"][:T], dtype=np.float64)
         if source == "wm":
             path = os.path.join(wm_entropy_dir(tag, model_size), f"wm_{idx:04d}.pt")
         else:
@@ -865,6 +879,130 @@ def detect_all_any(n: int, t: int, eta: float, fpr: float,
             out.append(decisions(tokens, _p_trace("wm" if g["watermark"] else "null", idx, g),
                                  bool(g["watermark"]), idx))
     return out
+
+
+@app.function(volumes={"/data": data_vol}, timeout=1800)
+def detect_map_summary(n: int, t: int, eta: float, fpr: float,
+                       num_prompts: int = 500, r: int = 0,
+                       entropy_model_size: str = MODEL_SIZE) -> dict:
+    """CPU-only cache redetect for the CSV columns we need: map, entropy, naive."""
+    import glob
+    import os
+    import numpy as np
+    import torch
+    from detectors import detect_hoeffding
+
+    T = 2 * n
+    requested_r = int(r) if r else None
+    tag = config_tag(n, t, eta, requested_r)
+    model_size = normalize_model_size(entropy_model_size)
+    use_generation_trace = uses_cached_generation_trace(model_size)
+    data_vol.reload()
+    art = torch.load(f"/data/{tag}/artifacts.pt", weights_only=False,
+                     map_location="cpu")
+    decoding_key = art["decoding_key"]
+    partition = art["partition"]
+
+    def _p_trace(source, idx, record):
+        if use_generation_trace:
+            return np.asarray(record["p_trace"][:T], dtype=np.float64)
+        legacy_path = os.path.join(
+            f"/data/{tag}/entropy/{entropy_model_tag(model_size)}",
+            f"gen_{idx:04d}.pt",
+        )
+        if os.path.exists(legacy_path):
+            est = torch.load(legacy_path, weights_only=False, map_location="cpu")
+            return np.asarray(est["p_trace"][:T], dtype=np.float64)
+        if source == "wm":
+            path = os.path.join(wm_entropy_dir(tag, model_size), f"wm_{idx:04d}.pt")
+        else:
+            path = os.path.join(null_entropy_dir(T, model_size), f"null_{idx:04d}.pt")
+        est = torch.load(path, weights_only=False, map_location="cpu")
+        return np.asarray(est["p_trace"][:T], dtype=np.float64)
+
+    counts = {
+        "wm_total": 0,
+        "null_total": 0,
+        "map_tp": 0,
+        "map_fp": 0,
+        "entropy_tp": 0,
+        "entropy_fp": 0,
+        "naive_tp": None if not use_generation_trace else 0,
+        "naive_fp": None if not use_generation_trace else 0,
+    }
+
+    def _score(tokens, p_trace, watermark):
+        dm = detect_hoeffding(decoding_key, tokens, p_trace, partition,
+                              fpr=fpr, weight="map")
+        de = detect_hoeffding(decoding_key, tokens, p_trace, partition,
+                              fpr=fpr, weight="entropy")
+        dn = None
+        if use_generation_trace:
+            dn = detect_hoeffding(decoding_key, tokens, p_trace, partition,
+                                  fpr=fpr, weight="naive")
+        if watermark:
+            counts["wm_total"] += 1
+            counts["map_tp"] += int(dm)
+            counts["entropy_tp"] += int(de)
+            if dn is not None:
+                counts["naive_tp"] += int(dn)
+        else:
+            counts["null_total"] += 1
+            counts["map_fp"] += int(dm)
+            counts["entropy_fp"] += int(de)
+            if dn is not None:
+                counts["naive_fp"] += int(dn)
+
+    wmd = f"/data/{tag}/wm"
+    new_layout = os.path.isdir(wmd) and glob.glob(os.path.join(wmd, "wm_*.pt"))
+    if new_layout:
+        root = "/data/_nulls"
+        use_T = None
+        if os.path.isdir(root):
+            cands = []
+            for name in os.listdir(root):
+                if not name.startswith("T"):
+                    continue
+                try:
+                    Tp = int(name[1:])
+                except ValueError:
+                    continue
+                if Tp >= T and all(os.path.exists(
+                        os.path.join(root, name, f"null_{i:04d}.pt"))
+                        for i in range(num_prompts)):
+                    cands.append(Tp)
+            if cands:
+                use_T = min(cands)
+        if use_T is None:
+            raise FileNotFoundError(f"No shared null store found for T >= {T}")
+        for i in range(num_prompts):
+            gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
+                            weights_only=False, map_location="cpu")
+            wm_tokens = gw["tokens"][:T]
+            _score(wm_tokens, _p_trace("wm", i, gw), True)
+            gn = torch.load(os.path.join(root, f"T{use_T}", f"null_{i:04d}.pt"),
+                            weights_only=False, map_location="cpu")
+            null_tokens = gn["tokens"][:T]
+            _score(null_tokens, _p_trace("null", i, gn), False)
+    else:
+        for path in sorted(glob.glob(f"/data/{tag}/gens/gen_*.pt")):
+            g = torch.load(path, weights_only=False, map_location="cpu")
+            idx = int(os.path.basename(path).split("_")[-1].split(".")[0])
+            tokens = g["tokens"][:T]
+            watermark = bool(g["watermark"])
+            source = "wm" if watermark else "null"
+            _score(tokens, _p_trace(source, idx, g), watermark)
+
+    counts.update({
+        "n": n,
+        "t": t,
+        "eta": eta,
+        "T": T,
+        "r": requested_r,
+        "entropy_model": model_display(model_size),
+        "entropy_trace_source": entropy_trace_source(model_size),
+    })
+    return counts
 
 
 # ---- driver -----------------------------------------------------------------
@@ -1056,6 +1194,40 @@ def redetect(n: int = DEFAULT_N, t: int = DEFAULT_T, eta: float = DEFAULT_ETA,
         flag = "  <- baseline" if name == "entropy" else ""
         print(f"  {name:8s}: TPR {tp}/{len(wm)} ({tp/nwm:.1%})   "
               f"FPR {fp}/{len(nw)} ({fp/nnw:.1%}){flag}", flush=True)
+
+
+@app.local_entrypoint()
+def redetect_map(n: int = DEFAULT_N, t: int = DEFAULT_T, eta: float = DEFAULT_ETA,
+                 fpr: float = DEFAULT_FPR, num_prompts: int = 500,
+                 r: int = 0, r_frac: float = 0.0,
+                 entropy_model_size: str = MODEL_SIZE):
+    """CPU-only redetect for map/entropy/naive CSV summary columns."""
+    resolved_r = resolve_r(n, r, r_frac)
+    entropy_model_size = normalize_model_size(entropy_model_size)
+    tag = config_tag(n, t, eta, resolved_r)
+    print(f"[redetect_map] {tag} FPR_target={fpr:g} "
+          f"entropy_model={model_display(entropy_model_size)} ...", flush=True)
+    s = detect_map_summary.remote(n, t, eta, fpr, num_prompts,
+                                  resolved_r or 0, entropy_model_size)
+    wm_total = max(s["wm_total"], 1)
+    null_total = max(s["null_total"], 1)
+    print("\n=== Map Redetect Summary ===", flush=True)
+    print(f"  n={n} t={t} eta={eta} FPR_target={fpr:g} T={2 * n} r={resolved_r}",
+          flush=True)
+    print(f"  entropy model: {s['entropy_model']} ({s['entropy_trace_source']})",
+          flush=True)
+    print(f"  map    : TPR {s['map_tp']}/{s['wm_total']} "
+          f"({s['map_tp']/wm_total:.1%})   FPR {s['map_fp']}/{s['null_total']} "
+          f"({s['map_fp']/null_total:.1%})", flush=True)
+    print(f"  entropy: TPR {s['entropy_tp']}/{s['wm_total']} "
+          f"({s['entropy_tp']/wm_total:.1%})   FPR {s['entropy_fp']}/"
+          f"{s['null_total']} ({s['entropy_fp']/null_total:.1%})", flush=True)
+    if s["naive_tp"] is None:
+        print("  naive  : skipped", flush=True)
+    else:
+        print(f"  naive  : TPR {s['naive_tp']}/{s['wm_total']} "
+              f"({s['naive_tp']/wm_total:.1%})   FPR {s['naive_fp']}/"
+              f"{s['null_total']} ({s['naive_fp']/null_total:.1%})", flush=True)
 
 
 # ---- re-detect a whole set of configs in one Modal session ------------------
