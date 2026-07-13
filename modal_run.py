@@ -12,7 +12,8 @@ Cost-optimized pipeline:
 
 Null generations depend only on model + prompt + seed, not on the key
 (n, t, eta, r), so they live in a shared store keyed by length T and can be
-reused across configs. Detection truncates a longer null store when possible.
+reused across configs with the same exact T.
+Current eta=0.1 runs use T=n: one generated length-n code block per prompt.
 
 Usage:
     modal run modal_run.py
@@ -30,7 +31,8 @@ import modal
 DEFAULT_N = 400
 DEFAULT_T = 3
 DEFAULT_ETA = 0.05
-DEFAULT_FPR = 2e-5
+DEFAULT_FPR = 1e-3  # 0.1%
+DEFAULT_BLOCKS = 1
 SEED = 12345
 MODEL_SIZE = "0.6B"
 VOCAB = 151_936
@@ -115,22 +117,30 @@ def validate_r_for_keygen(n, t, r):
         )
 
 
-def config_tag(n, t, eta, r=None):
+def experiment_T(n):
+    """Generated-token length for new runs: one length-n PRC code block."""
+    return DEFAULT_BLOCKS * int(n)
+
+
+def config_tag(n, t, eta, r=None, T=None):
     """Per-config tag for key-dependent artifacts.
 
     FPR is excluded because it only affects detection. r is included only when
     explicitly requested so old default-r caches keep their original tags.
+    T is included for new runs so T=n caches cannot collide with old T=2n caches.
     """
     base = f"n{n}_t{t}_eta{eta:.2f}"
+    if T is not None:
+        base = f"{base}_T{int(T)}"
     return f"{base}_r{int(r)}" if r is not None else base
 
 
-def art_path(n, t, eta, r=None):
-    return f"/data/{config_tag(n, t, eta, r)}/artifacts.pt"
+def art_path(n, t, eta, r=None, T=None):
+    return f"/data/{config_tag(n, t, eta, r, T)}/artifacts.pt"
 
 
-def wm_dir(n, t, eta, r=None):
-    return f"/data/{config_tag(n, t, eta, r)}/wm"
+def wm_dir(n, t, eta, r=None, T=None):
+    return f"/data/{config_tag(n, t, eta, r, T)}/wm"
 
 
 def null_dir(T):
@@ -266,9 +276,9 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
 
     requested_r = int(r) if r else None
     validate_r_for_keygen(n, t, requested_r)
-    ap = art_path(n, t, eta, requested_r)
-    wmd = wm_dir(n, t, eta, requested_r)
-    max_new_tokens = 2 * n
+    max_new_tokens = experiment_T(n)
+    ap = art_path(n, t, eta, requested_r, max_new_tokens)
+    wmd = wm_dir(n, t, eta, requested_r, max_new_tokens)
     os.makedirs(os.path.dirname(ap), exist_ok=True)
 
     config_sig = {
@@ -276,8 +286,9 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
         "t": t,
         "eta": eta,
         "T": max_new_tokens,
+        "blocks": DEFAULT_BLOCKS,
         "num_prompts": num_prompts,
-        "gen_scheme": "fresh_codeword_per_block_batched",
+        "gen_scheme": "single_codeword_batched",
     }
     if requested_r is not None:
         config_sig["r"] = requested_r
@@ -343,6 +354,7 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
             "prompt_ids_list": prompt_ids_list,
             "num_prompts": num_prompts,
             "n": n,
+            "T": max_new_tokens,
             "seed": SEED,
             "config_sig": config_sig,
             "parity_check_rank_info": rank_info,
@@ -361,46 +373,19 @@ def plan_generation(n: int, t: int, eta: float, num_prompts: int,
     import os
 
     requested_r = int(r) if r else None
-    T = 2 * n
-    wmd = wm_dir(n, t, eta, requested_r)
+    T = experiment_T(n)
+    wmd = wm_dir(n, t, eta, requested_r, T)
     data_vol.reload()
 
     wm_missing = [i for i in range(num_prompts)
                   if not os.path.exists(os.path.join(wmd, f"wm_{i:04d}.pt"))]
 
-    root = "/data/_nulls"
-    use_T = None
-    if os.path.isdir(root):
-        avail = []
-        for name in os.listdir(root):
-            if not name.startswith("T"):
-                continue
-            try:
-                Tp = int(name[1:])
-            except ValueError:
-                continue
-            if Tp < T:
-                continue
-            d = os.path.join(root, name)
-            have_all = all(
-                os.path.exists(os.path.join(d, f"null_{i:04d}.pt"))
-                for i in range(num_prompts)
-            )
-            if have_all:
-                avail.append(Tp)
-        if avail:
-            use_T = min(avail)
-
-    if use_T is not None:
-        null_missing = []
-    else:
-        use_T = T
-        d = null_dir(T)
-        null_missing = [i for i in range(num_prompts)
-                        if not os.path.exists(os.path.join(d, f"null_{i:04d}.pt"))]
+    d = null_dir(T)
+    null_missing = [i for i in range(num_prompts)
+                    if not os.path.exists(os.path.join(d, f"null_{i:04d}.pt"))]
 
     return {"wm_missing": wm_missing, "null_missing": null_missing,
-            "null_T": use_T, "T": T}
+            "null_T": T, "T": T}
 
 
 @app.function(volumes={"/data": data_vol}, timeout=300)
@@ -445,7 +430,7 @@ class Model:
         self.encoding_key = art["encoding_key"]
         self.prompts = art["prompt_ids_list"]
         self.n = art["n"]
-        self.T = 2 * art["n"]
+        self.T = int(art.get("T", art.get("config_sig", {}).get("T", experiment_T(art["n"]))))
         we.partition = art["partition"].to(we.device)
         self.partition = we.partition
         hf_cache.commit()
@@ -663,13 +648,13 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
     from prc import parity_check_rank_info
 
     requested_r = int(r) if r else None
-    tag = config_tag(n, t, eta, requested_r)
+    T = experiment_T(n)
+    tag = config_tag(n, t, eta, requested_r, T)
     model_size = normalize_model_size(entropy_model_size)
     use_generation_trace = uses_cached_generation_trace(model_size)
     source_label = entropy_trace_source(model_size)
-    T = 2 * n
-    ap = art_path(n, t, eta, requested_r)
-    wmd = wm_dir(n, t, eta, requested_r)
+    ap = art_path(n, t, eta, requested_r, T)
+    wmd = wm_dir(n, t, eta, requested_r, T)
     nd = null_dir(null_T)
     data_vol.reload()
     art = torch.load(ap, weights_only=False, map_location="cpu")
@@ -800,12 +785,12 @@ def detect_all_any(n: int, t: int, eta: float, fpr: float,
     import torch
     from detectors import detect_hoeffding, WEIGHT_KINDS
 
-    T = 2 * n
+    T = experiment_T(n)
     requested_r = int(r) if r else None
-    tag = config_tag(n, t, eta, requested_r)
+    tag = config_tag(n, t, eta, requested_r, T)
     model_size = normalize_model_size(entropy_model_size)
     use_generation_trace = uses_cached_generation_trace(model_size)
-    ap = f"/data/{tag}/artifacts.pt"
+    ap = art_path(n, t, eta, requested_r, T)
     data_vol.reload()
     art = torch.load(ap, weights_only=False, map_location="cpu")
     decoding_key = art["decoding_key"]
@@ -843,34 +828,24 @@ def detect_all_any(n: int, t: int, eta: float, fpr: float,
 
     out = []
     if new_layout:
-        # Find a shared null store T' >= T holding all prompts (reuse-by-truncate).
+        # Find the exact-length shared null store for this T.
         root = "/data/_nulls"
-        use_T = None
-        if os.path.isdir(root):
-            cands = []
-            for name in os.listdir(root):
-                if not name.startswith("T"):
-                    continue
-                try:
-                    Tp = int(name[1:])
-                except ValueError:
-                    continue
-                if Tp >= T and all(os.path.exists(
-                        os.path.join(root, name, f"null_{i:04d}.pt"))
-                        for i in range(num_prompts)):
-                    cands.append(Tp)
-            if cands:
-                use_T = min(cands)
+        use_T = T
+        null_store = os.path.join(root, f"T{T}")
+        have_nulls = all(os.path.exists(
+            os.path.join(null_store, f"null_{i:04d}.pt"))
+            for i in range(num_prompts))
+        if not have_nulls:
+            raise FileNotFoundError(f"No exact shared null store found for T={T}")
         for i in range(num_prompts):
             gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
                             weights_only=False, map_location="cpu")
             wm_tokens = gw["tokens"][:T]
             out.append(decisions(wm_tokens, _p_trace("wm", i, gw), True, i))
-            if use_T is not None:
-                gn = torch.load(os.path.join(root, f"T{use_T}", f"null_{i:04d}.pt"),
-                                weights_only=False, map_location="cpu")
-                null_tokens = gn["tokens"][:T]
-                out.append(decisions(null_tokens, _p_trace("null", i, gn), False, i))
+            gn = torch.load(os.path.join(root, f"T{use_T}", f"null_{i:04d}.pt"),
+                            weights_only=False, map_location="cpu")
+            null_tokens = gn["tokens"][:T]
+            out.append(decisions(null_tokens, _p_trace("null", i, gn), False, i))
     else:
         for path in sorted(glob.glob(f"/data/{tag}/gens/gen_*.pt")):
             g = torch.load(path, weights_only=False, map_location="cpu")
@@ -892,13 +867,13 @@ def detect_map_summary(n: int, t: int, eta: float, fpr: float,
     import torch
     from detectors import detect_hoeffding
 
-    T = 2 * n
+    T = experiment_T(n)
     requested_r = int(r) if r else None
-    tag = config_tag(n, t, eta, requested_r)
+    tag = config_tag(n, t, eta, requested_r, T)
     model_size = normalize_model_size(entropy_model_size)
     use_generation_trace = uses_cached_generation_trace(model_size)
     data_vol.reload()
-    art = torch.load(f"/data/{tag}/artifacts.pt", weights_only=False,
+    art = torch.load(art_path(n, t, eta, requested_r, T), weights_only=False,
                      map_location="cpu")
     decoding_key = art["decoding_key"]
     partition = art["partition"]
@@ -957,24 +932,13 @@ def detect_map_summary(n: int, t: int, eta: float, fpr: float,
     new_layout = os.path.isdir(wmd) and glob.glob(os.path.join(wmd, "wm_*.pt"))
     if new_layout:
         root = "/data/_nulls"
-        use_T = None
-        if os.path.isdir(root):
-            cands = []
-            for name in os.listdir(root):
-                if not name.startswith("T"):
-                    continue
-                try:
-                    Tp = int(name[1:])
-                except ValueError:
-                    continue
-                if Tp >= T and all(os.path.exists(
-                        os.path.join(root, name, f"null_{i:04d}.pt"))
-                        for i in range(num_prompts)):
-                    cands.append(Tp)
-            if cands:
-                use_T = min(cands)
-        if use_T is None:
-            raise FileNotFoundError(f"No shared null store found for T >= {T}")
+        use_T = T
+        null_store = os.path.join(root, f"T{T}")
+        have_nulls = all(os.path.exists(
+            os.path.join(null_store, f"null_{i:04d}.pt"))
+            for i in range(num_prompts))
+        if not have_nulls:
+            raise FileNotFoundError(f"No exact shared null store found for T={T}")
         for i in range(num_prompts):
             gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
                             weights_only=False, map_location="cpu")
@@ -1018,8 +982,8 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
     resolved_r = resolve_r(n, r, r_frac)
     validate_r_for_keygen(n, t, resolved_r)
     entropy_model_size = normalize_model_size(entropy_model_size)
-    tag = config_tag(n, t, eta, resolved_r)
-    T = 2 * n
+    T = experiment_T(n)
+    tag = config_tag(n, t, eta, resolved_r, T)
     r_text = f"r={resolved_r}" if resolved_r is not None else "r=default"
     print(f"[main] config {tag}  FPR_target={fpr:g}  ({num_prompts} prompts, "
           f"batch={batch}, entropy_batch={entropy_batch}, {r_text}, "
@@ -1032,8 +996,8 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
     wm_missing, null_missing = plan["wm_missing"], plan["null_missing"]
     null_T = plan["null_T"]
     print(f"[main] to generate: {len(wm_missing)} watermarked, "
-          f"{len(null_missing)} null  (null store T={null_T}, reuse="
-          f"{null_T != plan['T']})", flush=True)
+          f"{len(null_missing)} null  (exact null store T={null_T})",
+          flush=True)
 
     if wm_missing or null_missing:
         model = Model.with_options(max_containers=max_containers)(tag=tag)
@@ -1132,9 +1096,9 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
         f"entropy model {model_display(entropy_model_size)}",
         entropy_trace_source(entropy_model_size),
         "map=Bayes-optimal soft-token S_j=E[c|observed bit,p]",
-        "batched Modal pipeline with shared null reuse",
-        "block-OR over T=2n with fresh PRC codeword per length-n block",
-        "Hoeffding threshold tau=sqrt(2V*log(1/F)) with Bonferroni F/B per block",
+        "batched Modal pipeline with exact-length null cache",
+        "single length-n code block (T=n)",
+        "Hoeffding threshold tau=sqrt(2V*log(1/F)); one block so block FPR equals target F",
         rank_note,
     ] if part)
 
@@ -1172,7 +1136,8 @@ def redetect(n: int = DEFAULT_N, t: int = DEFAULT_T, eta: float = DEFAULT_ETA,
 
     resolved_r = resolve_r(n, r, r_frac)
     entropy_model_size = normalize_model_size(entropy_model_size)
-    tag = config_tag(n, t, eta, resolved_r)
+    T = experiment_T(n)
+    tag = config_tag(n, t, eta, resolved_r, T)
     print(f"[redetect] {tag}  FPR_target={fpr:g}  "
           f"entropy_model={model_display(entropy_model_size)} ...", flush=True)
     results = detect_all_any.remote(n, t, eta, fpr, num_prompts,
@@ -1181,7 +1146,7 @@ def redetect(n: int = DEFAULT_N, t: int = DEFAULT_T, eta: float = DEFAULT_ETA,
     nw = [r for r in results if not r["watermark"]]
     nwm, nnw = max(len(wm), 1), max(len(nw), 1)
     print(f"\n=== Re-detect (Hoeffding, proven FPR) n={n} t={t} eta={eta} "
-          f"F={fpr:g}  T={2 * n} ===", flush=True)
+          f"F={fpr:g}  T={T} ===", flush=True)
     rows = []
     for name in WEIGHT_KINDS:
         key = f"decision_{name}"
@@ -1204,7 +1169,8 @@ def redetect_map(n: int = DEFAULT_N, t: int = DEFAULT_T, eta: float = DEFAULT_ET
     """CPU-only redetect for map/entropy/naive CSV summary columns."""
     resolved_r = resolve_r(n, r, r_frac)
     entropy_model_size = normalize_model_size(entropy_model_size)
-    tag = config_tag(n, t, eta, resolved_r)
+    T = experiment_T(n)
+    tag = config_tag(n, t, eta, resolved_r, T)
     print(f"[redetect_map] {tag} FPR_target={fpr:g} "
           f"entropy_model={model_display(entropy_model_size)} ...", flush=True)
     s = detect_map_summary.remote(n, t, eta, fpr, num_prompts,
@@ -1212,7 +1178,7 @@ def redetect_map(n: int = DEFAULT_N, t: int = DEFAULT_T, eta: float = DEFAULT_ET
     wm_total = max(s["wm_total"], 1)
     null_total = max(s["null_total"], 1)
     print("\n=== Map Redetect Summary ===", flush=True)
-    print(f"  n={n} t={t} eta={eta} FPR_target={fpr:g} T={2 * n} r={resolved_r}",
+    print(f"  n={n} t={t} eta={eta} FPR_target={fpr:g} T={T} r={resolved_r}",
           flush=True)
     print(f"  entropy model: {s['entropy_model']} ({s['entropy_trace_source']})",
           flush=True)
