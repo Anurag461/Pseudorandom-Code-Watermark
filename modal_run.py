@@ -969,6 +969,119 @@ def detect_map_summary(n: int, t: int, eta: float, fpr: float,
     return counts
 
 
+@app.function(volumes={"/data": data_vol}, timeout=1800)
+def detect_legacy_first_block_summary(n: int, t: int, eta: float, fpr: float,
+                                      num_prompts: int = 500, r: int = 0,
+                                      entropy_model_size: str = MODEL_SIZE,
+                                      legacy_token_length: int = 0) -> dict:
+    """Redetect old T=2n cache rows using only the first length-n block."""
+    import glob
+    import os
+
+    import numpy as np
+    import torch
+    from detectors import detect_hoeffding
+    from prc import parity_check_rank_info
+
+    score_T = experiment_T(n)
+    cache_T = (
+        int(legacy_token_length) if legacy_token_length else 2 * int(n)
+    )
+    requested_r = int(r) if r else None
+    tag = config_tag(n, t, eta, requested_r, None)
+    model_size = normalize_model_size(entropy_model_size)
+    use_generation_trace = uses_cached_generation_trace(model_size)
+
+    data_vol.reload()
+    art = torch.load(f"/data/{tag}/artifacts.pt", weights_only=False,
+                     map_location="cpu")
+    decoding_key = art["decoding_key"]
+    partition = art["partition"]
+    rank_info = art.get("parity_check_rank_info")
+    if rank_info is None:
+        rank_info = parity_check_rank_info(decoding_key[1])
+
+    def _p_trace(idx, record):
+        if use_generation_trace:
+            p_trace = np.asarray(record["p_trace"], dtype=np.float64)
+        else:
+            path = os.path.join(
+                f"/data/{tag}/entropy/{entropy_model_tag(model_size)}",
+                f"gen_{idx:04d}.pt",
+            )
+            est = torch.load(path, weights_only=False, map_location="cpu")
+            p_trace = np.asarray(est["p_trace"], dtype=np.float64)
+        if p_trace.shape[0] < score_T:
+            raise ValueError(
+                f"{tag} gen_{idx:04d} has p_trace length {p_trace.shape[0]}, "
+                f"need at least {score_T}"
+            )
+        return p_trace[:score_T]
+
+    counts = {
+        "wm_total": 0,
+        "null_total": 0,
+        "map_tp": 0,
+        "map_fp": 0,
+        "entropy_tp": 0,
+        "entropy_fp": 0,
+        "naive_tp": None if not use_generation_trace else 0,
+        "naive_fp": None if not use_generation_trace else 0,
+    }
+
+    def _score(tokens, p_trace, watermark):
+        dm = detect_hoeffding(decoding_key, tokens, p_trace, partition,
+                              fpr=fpr, weight="map")
+        de = detect_hoeffding(decoding_key, tokens, p_trace, partition,
+                              fpr=fpr, weight="entropy")
+        dn = None
+        if use_generation_trace:
+            dn = detect_hoeffding(decoding_key, tokens, p_trace, partition,
+                                  fpr=fpr, weight="naive")
+        if watermark:
+            counts["wm_total"] += 1
+            counts["map_tp"] += int(dm)
+            counts["entropy_tp"] += int(de)
+            if dn is not None:
+                counts["naive_tp"] += int(dn)
+        else:
+            counts["null_total"] += 1
+            counts["map_fp"] += int(dm)
+            counts["entropy_fp"] += int(de)
+            if dn is not None:
+                counts["naive_fp"] += int(dn)
+
+    for path in sorted(glob.glob(f"/data/{tag}/gens/gen_*.pt")):
+        g = torch.load(path, weights_only=False, map_location="cpu")
+        idx = int(os.path.basename(path).split("_")[-1].split(".")[0])
+        watermark = bool(g["watermark"])
+        if watermark and counts["wm_total"] >= num_prompts:
+            continue
+        if not watermark and counts["null_total"] >= num_prompts:
+            continue
+        tokens = g["tokens"][:score_T]
+        if tokens.numel() < score_T:
+            raise ValueError(
+                f"{tag} gen_{idx:04d} has token length {tokens.numel()}, "
+                f"need at least {score_T}"
+            )
+        _score(tokens, _p_trace(idx, g), watermark)
+
+    counts.update({
+        "n": n,
+        "t": t,
+        "eta": eta,
+        "T": score_T,
+        "legacy_T": cache_T,
+        "legacy_tag": tag,
+        "r": requested_r,
+        "entropy_model": model_display(model_size),
+        "entropy_trace_source": entropy_trace_source(model_size),
+        "parity_check_rank_info": rank_info,
+    })
+    return counts
+
+
 # ---- driver -----------------------------------------------------------------
 @app.local_entrypoint()
 def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
@@ -1122,6 +1235,104 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
     }
     _append_summary_row(csv_out, row)
     print(f"[main] appended summary row to {csv_out}", flush=True)
+
+
+@app.local_entrypoint()
+def legacy_first_block_redetect(n: int = DEFAULT_N, t: int = DEFAULT_T,
+                                eta: float = DEFAULT_ETA,
+                                fpr: float = DEFAULT_FPR,
+                                num_prompts: int = 500,
+                                r: int = 0, r_frac: float = 0.0,
+                                entropy_model_size: str = MODEL_SIZE,
+                                legacy_token_length: int = 0,
+                                csv_out: str = "hoeffding_results_summary.csv"):
+    """Append a T=n redetect row from legacy T=2n cached generations."""
+    resolved_r = resolve_r(n, r, r_frac)
+    entropy_model_size = normalize_model_size(entropy_model_size)
+    score_T = experiment_T(n)
+    cache_T = (
+        int(legacy_token_length) if legacy_token_length else 2 * int(n)
+    )
+    legacy_tag = config_tag(n, t, eta, resolved_r, None)
+    print(f"[legacy_first_block_redetect] cache={legacy_tag} cache_T={cache_T} "
+          f"score_T={score_T} FPR_target={fpr:g} "
+          f"entropy_model={model_display(entropy_model_size)} ...", flush=True)
+
+    s = detect_legacy_first_block_summary.remote(
+        n, t, eta, fpr, num_prompts, resolved_r or 0, entropy_model_size,
+        cache_T,
+    )
+
+    wm_total = max(s["wm_total"], 1)
+    null_total = max(s["null_total"], 1)
+    has_naive = s["naive_tp"] is not None
+    rank_info = s.get("parity_check_rank_info", {})
+
+    print("\n=== Legacy First-Block Redetect Summary ===", flush=True)
+    print(f"  n={n} t={t} eta={eta} FPR_target={fpr:g} "
+          f"T={score_T} legacy_T={cache_T} r={resolved_r}", flush=True)
+    if rank_info:
+        print(f"  parity rank: {rank_info.get('rank')}/{rank_info.get('rows')} "
+              f"full_rank={rank_info.get('full_rank')}", flush=True)
+    print(f"  entropy model: {s['entropy_model']} ({s['entropy_trace_source']})",
+          flush=True)
+    print(f"  map    : TPR {s['map_tp']}/{s['wm_total']} "
+          f"({s['map_tp']/wm_total:.1%})   FPR {s['map_fp']}/"
+          f"{s['null_total']} ({s['map_fp']/null_total:.1%})", flush=True)
+    print(f"  entropy: TPR {s['entropy_tp']}/{s['wm_total']} "
+          f"({s['entropy_tp']/wm_total:.1%})   FPR {s['entropy_fp']}/"
+          f"{s['null_total']} ({s['entropy_fp']/null_total:.1%})", flush=True)
+    if has_naive:
+        print(f"  naive  : TPR {s['naive_tp']}/{s['wm_total']} "
+              f"({s['naive_tp']/wm_total:.1%})   FPR {s['naive_fp']}/"
+              f"{s['null_total']} ({s['naive_fp']/null_total:.1%})", flush=True)
+    else:
+        print("  naive  : skipped", flush=True)
+
+    rank_note = ""
+    if rank_info:
+        rank_note = (
+            f"r={rank_info.get('rows')} rank={rank_info.get('rank')}/"
+            f"{rank_info.get('rows')} full_rank={rank_info.get('full_rank')}"
+        )
+        if not rank_info.get("full_rank", False):
+            rank_note += "; WARNING parity matrix was not full rank"
+
+    notes = "; ".join(part for part in [
+        "Qwen3-0.6B-Base generation",
+        f"entropy model {s['entropy_model']}",
+        s["entropy_trace_source"],
+        "map=Bayes-optimal soft-token S_j=E[c|observed bit,p]",
+        f"legacy redetect from {legacy_tag}",
+        f"used first n tokens from legacy T={cache_T} cached generations",
+        "appended as new T=n row; old T=2n row retained",
+        "Hoeffding threshold tau=sqrt(2V*log(1/F)); one block so block FPR equals target F",
+        rank_note,
+    ] if part)
+
+    row = {
+        "Target FPR": f"{fpr:.0e}",
+        "n": n,
+        "t": t,
+        "eta": eta,
+        "T": score_T,
+        "Map TPR": _format_rate(s["map_tp"], s["wm_total"]),
+        "Entropy Aware TPR": _format_rate(s["entropy_tp"], s["wm_total"]),
+        "Naive TPR": _format_rate(s["naive_tp"], s["wm_total"])
+        if has_naive else "skipped",
+        "Log Hoeffding TPR": "skipped",
+        "Map FPR": _format_rate(s["map_fp"], s["null_total"]),
+        "Entropy FPR": _format_rate(s["entropy_fp"], s["null_total"]),
+        "Naive FPR": _format_rate(s["naive_fp"], s["null_total"])
+        if has_naive else "skipped",
+        "Log Hoeffding FPR": "skipped",
+        "Entropy Model": s["entropy_model"],
+        "Entropy Trace Source": s["entropy_trace_source"],
+        "Notes": notes,
+    }
+    _append_summary_row(csv_out, row)
+    print(f"[legacy_first_block_redetect] appended summary row to {csv_out}",
+          flush=True)
 
 
 # ---- re-detection sweep over all weight kinds (CPU-only, no regeneration) ---
