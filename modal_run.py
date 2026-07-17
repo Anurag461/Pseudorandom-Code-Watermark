@@ -10,9 +10,9 @@ Cost-optimized pipeline:
     different Qwen3 model to estimate P[partition 1] for detection.
   - detect_all (CPU): Hoeffding detection over cached generations/traces.
 
-Null generations depend only on model + prompt + seed, not on the key
-(n, t, eta, r), so they live in a shared store keyed by length T and can be
-reused across configs with the same exact T.
+Null generations depend only on the model, prompt, and sampling setup, not on
+the key (n, t, eta, r). They live in shared stores keyed by generated length;
+any complete longer store can serve a shorter requested prefix.
 Current eta=0.1 runs use T=n: one generated length-n code block per prompt.
 
 Usage:
@@ -161,6 +161,35 @@ def wm_trace_dir(tag, entropy_model_size):
 
 def null_trace_dir(T, entropy_model_size):
     return f"/data/_null_detection_traces/{entropy_model_tag(entropy_model_size)}/T{T}"
+
+
+def find_complete_cache_T(root, min_T, num_prompts, prefix):
+    """Return the smallest complete T' >= min_T cache, or None.
+
+    Cache directories are named T{length} and contain one {prefix}_XXXX.pt
+    record per prompt.  A longer causal generation/trace can be truncated to
+    any requested prefix length, so exact-length caches are not required.
+    """
+    if not os.path.isdir(root):
+        return None
+
+    candidates = []
+    for name in os.listdir(root):
+        if not name.startswith("T"):
+            continue
+        try:
+            candidate_T = int(name[1:])
+        except ValueError:
+            continue
+        if candidate_T < int(min_T):
+            continue
+        cache_dir = os.path.join(root, name)
+        if all(os.path.exists(os.path.join(
+                cache_dir, f"{prefix}_{i:04d}.pt"))
+               for i in range(int(num_prompts))):
+            candidates.append(candidate_T)
+
+    return min(candidates) if candidates else None
 
 
 def _chunks(items, size):
@@ -370,8 +399,6 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
 @app.function(volumes={"/data": data_vol}, timeout=300)
 def plan_generation(n: int, t: int, eta: float, num_prompts: int,
                     r: int = 0) -> dict:
-    import os
-
     requested_r = int(r) if r else None
     T = experiment_T(n)
     wmd = wm_dir(n, t, eta, requested_r, T)
@@ -380,31 +407,51 @@ def plan_generation(n: int, t: int, eta: float, num_prompts: int,
     wm_missing = [i for i in range(num_prompts)
                   if not os.path.exists(os.path.join(wmd, f"wm_{i:04d}.pt"))]
 
-    d = null_dir(T)
-    null_missing = [i for i in range(num_prompts)
-                    if not os.path.exists(os.path.join(d, f"null_{i:04d}.pt"))]
+    null_root = "/data/_nulls"
+    null_T = find_complete_cache_T(null_root, T, num_prompts, "null")
+    if null_T is None:
+        null_T = T
+        d = null_dir(T)
+        null_missing = [
+            i for i in range(num_prompts)
+            if not os.path.exists(os.path.join(d, f"null_{i:04d}.pt"))
+        ]
+    else:
+        null_missing = []
 
     return {"wm_missing": wm_missing, "null_missing": null_missing,
-            "null_T": T, "T": T}
+            "null_T": null_T, "T": T}
 
 
 @app.function(volumes={"/data": data_vol}, timeout=300)
 def plan_entropy(tag: str, entropy_model_size: str, T: int, null_T: int,
                  num_prompts: int) -> dict:
-    import os
-
     if uses_cached_generation_trace(entropy_model_size):
-        return {"wm_missing": [], "null_missing": []}
+        return {"wm_missing": [], "null_missing": [],
+                "T": T, "null_T": null_T, "null_entropy_T": null_T}
 
     data_vol.reload()
     wdir = wm_entropy_dir(tag, entropy_model_size)
-    ndir = null_entropy_dir(T, entropy_model_size)
     wm_missing = [i for i in range(num_prompts)
                   if not os.path.exists(os.path.join(wdir, f"wm_{i:04d}.pt"))]
-    null_missing = [i for i in range(num_prompts)
-                    if not os.path.exists(os.path.join(ndir, f"null_{i:04d}.pt"))]
+
+    null_entropy_root = os.path.dirname(null_entropy_dir(T, entropy_model_size))
+    null_entropy_T = find_complete_cache_T(
+        null_entropy_root, T, num_prompts, "null"
+    )
+    if null_entropy_T is None:
+        null_entropy_T = T
+        ndir = null_entropy_dir(T, entropy_model_size)
+        null_missing = [
+            i for i in range(num_prompts)
+            if not os.path.exists(os.path.join(ndir, f"null_{i:04d}.pt"))
+        ]
+    else:
+        null_missing = []
+
     return {"wm_missing": wm_missing, "null_missing": null_missing,
-            "T": T, "null_T": null_T}
+            "T": T, "null_T": null_T,
+            "null_entropy_T": null_entropy_T}
 
 
 # ---- batched generation (GPU) -----------------------------------------------
@@ -602,6 +649,17 @@ class EntropyModel:
                        weights_only=False, map_location="cpu")
             for i in todo
         ]
+        for record, i in zip(records, todo):
+            if int(record.get("prompt_idx", i)) != i:
+                raise ValueError(
+                    f"{source} cache prompt mismatch for index {i}: "
+                    f"record has {record.get('prompt_idx')}"
+                )
+            if len(record["tokens"]) < self.T:
+                raise ValueError(
+                    f"{source} cache index {i} has {len(record['tokens'])} "
+                    f"tokens, need at least {self.T}"
+                )
         token_batch = torch.stack([rec["tokens"][:self.T].long() for rec in records])
         prompt_batch = self._prompt_batch(todo)
         p_traces = self.we.estimate_partition_trace_batch(
@@ -634,7 +692,8 @@ class EntropyModel:
 @app.function(volumes={"/data": data_vol}, timeout=1800)
 def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
                num_prompts: int, r: int = 0,
-               entropy_model_size: str = MODEL_SIZE) -> list:
+               entropy_model_size: str = MODEL_SIZE,
+               null_entropy_T: int = 0) -> list:
     import os
 
     import numpy as np
@@ -652,6 +711,7 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
     tag = config_tag(n, t, eta, requested_r, T)
     model_size = normalize_model_size(entropy_model_size)
     use_generation_trace = uses_cached_generation_trace(model_size)
+    null_entropy_T = int(null_entropy_T) if null_entropy_T else T
     source_label = entropy_trace_source(model_size)
     ap = art_path(n, t, eta, requested_r, T)
     wmd = wm_dir(n, t, eta, requested_r, T)
@@ -666,9 +726,20 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
 
     trace_saved = 0
 
+    def _prefix(values, source, idx, field):
+        if len(values) < T:
+            raise ValueError(
+                f"{source} cache index {idx} has {len(values)} {field} values, "
+                f"need at least {T}"
+            )
+        return values[:T]
+
     def _p_trace(source, idx, record):
         if use_generation_trace:
-            return np.asarray(record["p_trace"][:T], dtype=np.float64)
+            return np.asarray(
+                _prefix(record["p_trace"], source, idx, "p_trace"),
+                dtype=np.float64,
+            )
         legacy_path = os.path.join(
             f"/data/{tag}/entropy/{entropy_model_tag(model_size)}",
             f"gen_{idx:04d}.pt",
@@ -679,9 +750,15 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
         if source == "wm":
             path = os.path.join(wm_entropy_dir(tag, model_size), f"wm_{idx:04d}.pt")
         else:
-            path = os.path.join(null_entropy_dir(T, model_size), f"null_{idx:04d}.pt")
+            path = os.path.join(
+                null_entropy_dir(null_entropy_T, model_size),
+                f"null_{idx:04d}.pt",
+            )
         est = torch.load(path, weights_only=False, map_location="cpu")
-        return np.asarray(est["p_trace"][:T], dtype=np.float64)
+        return np.asarray(
+            _prefix(est["p_trace"], source, idx, "p_trace"),
+            dtype=np.float64,
+        )
 
     def _save_detection_trace(source, idx, tokens, p_trace):
         nonlocal trace_saved
@@ -754,14 +831,14 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
     for i in range(num_prompts):
         gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
                         weights_only=False, map_location="cpu")
-        wm_tokens = gw["tokens"][:T]
+        wm_tokens = _prefix(gw["tokens"], "wm", i, "token")
         wm_p = _p_trace("wm", i, gw)
         _save_detection_trace("wm", i, wm_tokens, wm_p)
         out.append(_run(wm_tokens, wm_p, True, i))
 
         gn = torch.load(os.path.join(nd, f"null_{i:04d}.pt"),
                         weights_only=False, map_location="cpu")
-        null_tokens = gn["tokens"][:T]
+        null_tokens = _prefix(gn["tokens"], "null", i, "token")
         null_p = _p_trace("null", i, gn)
         _save_detection_trace("null", i, null_tokens, null_p)
         out.append(_run(null_tokens, null_p, False, i))
@@ -795,10 +872,23 @@ def detect_all_any(n: int, t: int, eta: float, fpr: float,
     art = torch.load(ap, weights_only=False, map_location="cpu")
     decoding_key = art["decoding_key"]
     partition = art["partition"]
+    null_cache_T = T
+    null_entropy_cache_T = T
+
+    def _prefix(values, source, idx, field):
+        if len(values) < T:
+            raise ValueError(
+                f"{source} cache index {idx} has {len(values)} {field} values, "
+                f"need at least {T}"
+            )
+        return values[:T]
 
     def _p_trace(source, idx, record):
         if use_generation_trace:
-            return np.asarray(record["p_trace"][:T], dtype=np.float64)
+            return np.asarray(
+                _prefix(record["p_trace"], source, idx, "p_trace"),
+                dtype=np.float64,
+            )
         legacy_path = os.path.join(
             f"/data/{tag}/entropy/{entropy_model_tag(model_size)}",
             f"gen_{idx:04d}.pt",
@@ -809,9 +899,15 @@ def detect_all_any(n: int, t: int, eta: float, fpr: float,
         if source == "wm":
             path = os.path.join(wm_entropy_dir(tag, model_size), f"wm_{idx:04d}.pt")
         else:
-            path = os.path.join(null_entropy_dir(T, model_size), f"null_{idx:04d}.pt")
+            path = os.path.join(
+                null_entropy_dir(null_entropy_cache_T, model_size),
+                f"null_{idx:04d}.pt",
+            )
         est = torch.load(path, weights_only=False, map_location="cpu")
-        return np.asarray(est["p_trace"][:T], dtype=np.float64)
+        return np.asarray(
+            _prefix(est["p_trace"], source, idx, "p_trace"),
+            dtype=np.float64,
+        )
 
     def decisions(tokens, p_trace, wm_flag, idx):
         row = {"prompt_idx": idx, "watermark": bool(wm_flag)}
@@ -828,23 +924,31 @@ def detect_all_any(n: int, t: int, eta: float, fpr: float,
 
     out = []
     if new_layout:
-        # Find the exact-length shared null store for this T.
         root = "/data/_nulls"
-        use_T = T
-        null_store = os.path.join(root, f"T{T}")
-        have_nulls = all(os.path.exists(
-            os.path.join(null_store, f"null_{i:04d}.pt"))
-            for i in range(num_prompts))
-        if not have_nulls:
-            raise FileNotFoundError(f"No exact shared null store found for T={T}")
+        null_cache_T = find_complete_cache_T(root, T, num_prompts, "null")
+        if null_cache_T is None:
+            raise FileNotFoundError(
+                f"No complete shared null store found with T >= {T}"
+            )
+        if not use_generation_trace:
+            entropy_root = os.path.dirname(null_entropy_dir(T, model_size))
+            null_entropy_cache_T = find_complete_cache_T(
+                entropy_root, T, num_prompts, "null"
+            )
+            if null_entropy_cache_T is None:
+                raise FileNotFoundError(
+                    f"No complete {model_display(model_size)} null entropy "
+                    f"store found with T >= {T}"
+                )
         for i in range(num_prompts):
             gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
                             weights_only=False, map_location="cpu")
-            wm_tokens = gw["tokens"][:T]
+            wm_tokens = _prefix(gw["tokens"], "wm", i, "token")
             out.append(decisions(wm_tokens, _p_trace("wm", i, gw), True, i))
-            gn = torch.load(os.path.join(root, f"T{use_T}", f"null_{i:04d}.pt"),
+            gn = torch.load(os.path.join(
+                root, f"T{null_cache_T}", f"null_{i:04d}.pt"),
                             weights_only=False, map_location="cpu")
-            null_tokens = gn["tokens"][:T]
+            null_tokens = _prefix(gn["tokens"], "null", i, "token")
             out.append(decisions(null_tokens, _p_trace("null", i, gn), False, i))
     else:
         for path in sorted(glob.glob(f"/data/{tag}/gens/gen_*.pt")):
@@ -877,10 +981,23 @@ def detect_map_summary(n: int, t: int, eta: float, fpr: float,
                      map_location="cpu")
     decoding_key = art["decoding_key"]
     partition = art["partition"]
+    null_cache_T = T
+    null_entropy_cache_T = T
+
+    def _prefix(values, source, idx, field):
+        if len(values) < T:
+            raise ValueError(
+                f"{source} cache index {idx} has {len(values)} {field} values, "
+                f"need at least {T}"
+            )
+        return values[:T]
 
     def _p_trace(source, idx, record):
         if use_generation_trace:
-            return np.asarray(record["p_trace"][:T], dtype=np.float64)
+            return np.asarray(
+                _prefix(record["p_trace"], source, idx, "p_trace"),
+                dtype=np.float64,
+            )
         legacy_path = os.path.join(
             f"/data/{tag}/entropy/{entropy_model_tag(model_size)}",
             f"gen_{idx:04d}.pt",
@@ -891,9 +1008,15 @@ def detect_map_summary(n: int, t: int, eta: float, fpr: float,
         if source == "wm":
             path = os.path.join(wm_entropy_dir(tag, model_size), f"wm_{idx:04d}.pt")
         else:
-            path = os.path.join(null_entropy_dir(T, model_size), f"null_{idx:04d}.pt")
+            path = os.path.join(
+                null_entropy_dir(null_entropy_cache_T, model_size),
+                f"null_{idx:04d}.pt",
+            )
         est = torch.load(path, weights_only=False, map_location="cpu")
-        return np.asarray(est["p_trace"][:T], dtype=np.float64)
+        return np.asarray(
+            _prefix(est["p_trace"], source, idx, "p_trace"),
+            dtype=np.float64,
+        )
 
     counts = {
         "wm_total": 0,
@@ -932,21 +1055,30 @@ def detect_map_summary(n: int, t: int, eta: float, fpr: float,
     new_layout = os.path.isdir(wmd) and glob.glob(os.path.join(wmd, "wm_*.pt"))
     if new_layout:
         root = "/data/_nulls"
-        use_T = T
-        null_store = os.path.join(root, f"T{T}")
-        have_nulls = all(os.path.exists(
-            os.path.join(null_store, f"null_{i:04d}.pt"))
-            for i in range(num_prompts))
-        if not have_nulls:
-            raise FileNotFoundError(f"No exact shared null store found for T={T}")
+        null_cache_T = find_complete_cache_T(root, T, num_prompts, "null")
+        if null_cache_T is None:
+            raise FileNotFoundError(
+                f"No complete shared null store found with T >= {T}"
+            )
+        if not use_generation_trace:
+            entropy_root = os.path.dirname(null_entropy_dir(T, model_size))
+            null_entropy_cache_T = find_complete_cache_T(
+                entropy_root, T, num_prompts, "null"
+            )
+            if null_entropy_cache_T is None:
+                raise FileNotFoundError(
+                    f"No complete {model_display(model_size)} null entropy "
+                    f"store found with T >= {T}"
+                )
         for i in range(num_prompts):
             gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
                             weights_only=False, map_location="cpu")
-            wm_tokens = gw["tokens"][:T]
+            wm_tokens = _prefix(gw["tokens"], "wm", i, "token")
             _score(wm_tokens, _p_trace("wm", i, gw), True)
-            gn = torch.load(os.path.join(root, f"T{use_T}", f"null_{i:04d}.pt"),
+            gn = torch.load(os.path.join(
+                root, f"T{null_cache_T}", f"null_{i:04d}.pt"),
                             weights_only=False, map_location="cpu")
-            null_tokens = gn["tokens"][:T]
+            null_tokens = _prefix(gn["tokens"], "null", i, "token")
             _score(null_tokens, _p_trace("null", i, gn), False)
     else:
         for path in sorted(glob.glob(f"/data/{tag}/gens/gen_*.pt")):
@@ -1109,7 +1241,8 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
     wm_missing, null_missing = plan["wm_missing"], plan["null_missing"]
     null_T = plan["null_T"]
     print(f"[main] to generate: {len(wm_missing)} watermarked, "
-          f"{len(null_missing)} null  (exact null store T={null_T})",
+          f"{len(null_missing)} null  (selected null store T={null_T}; "
+          f"scoring prefix T={T})",
           flush=True)
 
     if wm_missing or null_missing:
@@ -1129,15 +1262,19 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
         print("[main] all generations cached -> skipping generation GPU fleet",
               flush=True)
 
+    null_entropy_T = null_T
     if uses_cached_generation_trace(entropy_model_size):
         print("[main] entropy trace: using cached generation p_trace", flush=True)
     else:
         eplan = plan_entropy.remote(tag, entropy_model_size, T, null_T, num_prompts)
         wm_e_missing = eplan["wm_missing"]
         null_e_missing = eplan["null_missing"]
+        null_entropy_T = eplan["null_entropy_T"]
         print(f"[main] entropy traces to estimate with "
               f"{model_display(entropy_model_size)}: "
-              f"{len(wm_e_missing)} watermarked, {len(null_e_missing)} null",
+              f"{len(wm_e_missing)} watermarked, {len(null_e_missing)} null "
+              f"(selected null entropy store T={null_entropy_T}; "
+              f"scoring prefix T={T})",
               flush=True)
         if wm_e_missing or null_e_missing:
             estimator = EntropyModel.with_options(
@@ -1162,7 +1299,8 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
         detect_label = "map + entropy-aware (naive/log skipped for alternate entropy)"
     print(f"[main] detecting ({detect_label}) ...", flush=True)
     results = detect_all.remote(n, t, eta, fpr, null_T, num_prompts,
-                                resolved_r or 0, entropy_model_size)
+                                resolved_r or 0, entropy_model_size,
+                                null_entropy_T)
 
     wm = sorted([r0 for r0 in results if r0["watermark"]],
                 key=lambda r0: r0["prompt_idx"])
@@ -1209,7 +1347,9 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
         f"entropy model {model_display(entropy_model_size)}",
         entropy_trace_source(entropy_model_size),
         "map=Bayes-optimal soft-token S_j=E[c|observed bit,p]",
-        "batched Modal pipeline with exact-length null cache",
+        f"batched Modal pipeline with null cache T={null_T} truncated to T={T}",
+        (f"alternate null entropy cache T={null_entropy_T} truncated to T={T}"
+         if not uses_cached_generation_trace(entropy_model_size) else ""),
         "single length-n code block (T=n)",
         "Hoeffding threshold tau=sqrt(2V*log(1/F)); one block so block FPR equals target F",
         rank_note,
