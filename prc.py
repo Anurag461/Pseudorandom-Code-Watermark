@@ -7,12 +7,43 @@ from scipy.sparse import csr_matrix
 from scipy.special import binom, lambertw
 try:
     from ldpc import bp_decoder
-except (ImportError, AttributeError):
+except (ImportError, AttributeError, RuntimeError):
     bp_decoder = None
 import sys
 import galois
 
 GF = galois.GF(2)
+
+
+def parity_check_rank_info(parity_check_matrix):
+    """Return GF(2) row-rank metadata for a sparse parity-check matrix."""
+    rows, cols = parity_check_matrix.shape
+    dense = np.asarray(parity_check_matrix.toarray(), dtype=np.uint8) % 2
+    try:
+        rank = int(np.linalg.matrix_rank(GF(dense)))
+    except Exception:
+        A = dense.copy()
+        rank = 0
+        for col in range(cols):
+            pivot = np.flatnonzero(A[rank:, col])
+            if pivot.size == 0:
+                continue
+            pivot_row = rank + int(pivot[0])
+            if pivot_row != rank:
+                A[[rank, pivot_row]] = A[[pivot_row, rank]]
+            for row in np.flatnonzero(A[:, col]):
+                if row != rank:
+                    A[row] ^= A[rank]
+            rank += 1
+            if rank == rows:
+                break
+    return {
+        "rank": rank,
+        "rows": int(rows),
+        "cols": int(cols),
+        "full_rank": bool(rank == rows),
+    }
+
 
 def apply_channel_probs(x, channel_probs):
     e = GF(np.random.binomial(1, channel_probs))
