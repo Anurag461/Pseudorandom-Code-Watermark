@@ -1,0 +1,15 @@
+﻿eta,n (block length),Target FPR,T setting,T value,t,r setting,r value,Entropy Estimator,Entropy Model,Generation Model,Map TPR,Entropy TPR,Naive TPR,Map FPR,Modal App(s)
+0.05,256,1.00E-03,n,256,3,0.99n,253,SAME (0.6B),Qwen3-0.6B-Base,Qwen3-0.6B-Base,334/500 (66.8%),237/500 (47.4%),126/500 (25.2%),0/500 (0.0%),ap-GRkmRtydesgFtVIrttGNhf
+0.05,256,1.00E-03,n,256,3,0.99n,253,DIFFERENT (4B),Qwen3-4B-Base,Qwen3-0.6B-Base,285/500 (57.0%),213/500 (42.6%),126/500 (25.2%),0/500 (0.0%),ap-l6OuuXgU3IYMttCoBMDgND
+0.05,400,1.00E-03,n,400,3,0.99n,396,SAME (0.6B),Qwen3-0.6B-Base,Qwen3-0.6B-Base,446/500 (89.2%),365/500 (73.0%),260/500 (52.0%),0/500 (0.0%),
+0.05,400,1.00E-03,n,400,3,0.99n,396,DIFFERENT (4B),Qwen3-4B-Base,Qwen3-0.6B-Base,418/500 (83.6%),354/500 (70.8%),260/500 (52.0%),0/500 (0.0%),
+0.05,512,1.00E-03,n,512,3,0.99n,507,SAME (0.6B),Qwen3-0.6B-Base,Qwen3-0.6B-Base,479/500 (95.8%),423/500 (84.6%),344/500 (68.8%),0/500 (0.0%),
+0.05,512,1.00E-03,n,512,3,0.99n,507,DIFFERENT (4B),Qwen3-4B-Base,Qwen3-0.6B-Base,463/500 (92.6%),421/500 (84.2%),344/500 (68.8%),0/500 (0.0%),
+0.05,1024,1.00E-03,n,1024,3,0.99n,1014,SAME (0.6B),Qwen3-0.6B-Base,Qwen3-0.6B-Base,496/500 (99.2%),490/500 (98.0%),463/500 (92.6%),0/500 (0.0%),
+0.05,1024,1.00E-03,n,1024,3,0.99n,1014,DIFFERENT (4B),Qwen3-4B-Base,Qwen3-0.6B-Base,494/500 (98.8%),488/500 (97.6%),463/500 (92.6%),0/500 (0.0%),ap-EoFJ5YXyLjzF7WQS1aejeB
+0.05,2048,1.00E-03,n,2048,3,0.99n,2028,SAME (0.6B),Qwen3-0.6B-Base,Qwen3-0.6B-Base,498/500 (99.6%),497/500 (99.4%),495/500 (99.0%),0/500 (0.0%),
+0.05,2048,1.00E-03,n,2048,3,0.99n,2028,DIFFERENT (4B),Qwen3-4B-Base,Qwen3-0.6B-Base,497/500 (99.4%),497/500 (99.4%),495/500 (99.0%),0/500 (0.0%),ap-Vw4pdcg5FXSuvz0jLf08pq
+0.05,4096,1.00E-03,n,4096,3,0.99n,4055,SAME (0.6B),Qwen3-0.6B-Base,Qwen3-0.6B-Base,,,,,
+0.05,4096,1.00E-03,n,4096,3,0.99n,4055,DIFFERENT (4B),Qwen3-4B-Base,Qwen3-0.6B-Base,,,,,
+0.05,8192,1.00E-03,n,8192,3,0.99n,8110,SAME (0.6B),Qwen3-0.6B-Base,Qwen3-0.6B-Base,,,,,
+0.05,8192,1.00E-03,n,8192,3,0.99n,8110,DIFFERENT (4B),Qwen3-4B-Base,Qwen3-0.6B-Base,,,,,
