@@ -1875,7 +1875,6 @@ def _aggregate_shard_payloads(payloads,
         raise ValueError("shard canonical prompt count does not match aggregation")
 
     by_source = {"wm": {}, "null": {}}
-    workspaces = []
     shard_descriptors = []
     for shard_number, payload in enumerate(payloads):
         if payload.get("schema_version") != SHARD_RESULT_SCHEMA_VERSION:
@@ -1935,7 +1934,6 @@ def _aggregate_shard_payloads(payloads,
             )
 
         workspace = str(payload.get("workspace_label", "unknown"))
-        workspaces.append(workspace)
         shard_descriptors.append({
             "workspace_label": workspace,
             "prompt_indices": indices,
@@ -1975,7 +1973,6 @@ def _aggregate_shard_payloads(payloads,
     config = reference_config
     notes = "; ".join([
         "four-workspace prompt-shard aggregation",
-        f"workspaces={','.join(sorted(set(workspaces)))}",
         "validated exact global prompt coverage with no gaps or duplicates",
         f"artifact_fingerprint={reference_artifact}",
         f"code_fingerprint={reference_code.get('sha256', '')}",

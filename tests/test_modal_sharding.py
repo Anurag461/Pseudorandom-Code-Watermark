@@ -157,6 +157,8 @@ def test_aggregates_integer_decisions_into_one_summary_row():
     assert row["Map FPR"] == "1/8 (12.5%)"
     assert row["Entropy FPR"] == "0/8 (0.0%)"
     assert row["r setting"] == "0.99n"
+    assert "workspace-a" not in row["Notes"]
+    assert "workspace-b" not in row["Notes"]
     assert audit["counts"]["wm_total"] == 8
     assert audit["counts"]["null_total"] == 8
     assert len(audit["shards"]) == 4
