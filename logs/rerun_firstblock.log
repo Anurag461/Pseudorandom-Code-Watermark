@@ -1,0 +1,19 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+codeword length n=4096
+loaded WM=30 UW=30 trace_len=16384 (truncating to 4096)
+
+========== fold_naive (first n tokens only) ==========
+  threshold = 358.1956  null_mean = 1.7865  null_std  = 59.4232
+  TPR: 23/30 (76.7%)   FPR: 0/30 (0.0%)
+  watermarked  stat: mean=+882.73 std=620.83 min=-36.14 max=+1956.03
+  unwatermarked stat: mean=-30.21 std=54.16 min=-147.33 max=+65.79
+
+========== fold_entropy_weighted (first n tokens only) ==========
+  threshold = 341.4902  null_mean = 3.4575  null_std  = 56.3594
+  TPR: 24/30 (80.0%)   FPR: 0/30 (0.0%)
+  watermarked  stat: mean=+888.02 std=613.30 min=+23.20 max=+1956.03
+  unwatermarked stat: mean=-23.93 std=48.05 min=-125.99 max=+58.73

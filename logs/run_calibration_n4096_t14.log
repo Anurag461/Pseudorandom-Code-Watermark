@@ -1,0 +1,66 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+[parent] visible GPUs: [0, 1, 2, 3, 4, 5, 6, 7]
+[parent] PRC params: n=4096 t=14 r=3833 noise_rate=0.0053
+[parent] saved 60 jobs to calib_workdir/artifacts.pt
+
+=== Phase 1: 60 generations across 8 GPUs ===
+[parent] launch job=0 gpu=0 prompt=0 watermark=True pid=143501
+[parent] launch job=1 gpu=1 prompt=0 watermark=False pid=143502
+[parent] launch job=2 gpu=2 prompt=1 watermark=True pid=143503
+[parent] launch job=3 gpu=3 prompt=1 watermark=False pid=143504
+[parent] launch job=4 gpu=4 prompt=2 watermark=True pid=143505
+[parent] launch job=5 gpu=5 prompt=2 watermark=False pid=143506
+[parent] launch job=6 gpu=6 prompt=3 watermark=True pid=143507
+[parent] launch job=7 gpu=7 prompt=3 watermark=False pid=143508
+[parent] done   job=0 gpu=0 (1/60 done, 517s elapsed)
+[parent] launch job=8 gpu=0 prompt=4 watermark=True pid=145738
+[parent] done   job=2 gpu=2 (2/60 done, 523s elapsed)
+[parent] launch job=9 gpu=2 prompt=4 watermark=False pid=145893
+[parent] done   job=3 gpu=3 (3/60 done, 527s elapsed)
+[parent] done   job=7 gpu=7 (4/60 done, 527s elapsed)
+[parent] launch job=10 gpu=3 prompt=5 watermark=True pid=146048
+[parent] launch job=11 gpu=7 prompt=5 watermark=False pid=146049
+[parent] done   job=5 gpu=5 (5/60 done, 529s elapsed)
+[parent] done   job=6 gpu=6 (6/60 done, 529s elapsed)
+[parent] launch job=12 gpu=5 prompt=6 watermark=True pid=146399
+[parent] launch job=13 gpu=6 prompt=6 watermark=False pid=146400
+[parent] done   job=4 gpu=4 (7/60 done, 531s elapsed)
+[parent] launch job=14 gpu=4 prompt=7 watermark=True pid=146737
+[parent] done   job=1 gpu=1 (8/60 done, 537s elapsed)
+[parent] launch job=15 gpu=1 prompt=7 watermark=False pid=147059
+[parent] done   job=10 gpu=3 (9/60 done, 1039s elapsed)
+[parent] launch job=16 gpu=3 prompt=8 watermark=True pid=147833
+[parent] done   job=8 gpu=0 (10/60 done, 1043s elapsed)
+[parent] launch job=17 gpu=0 prompt=8 watermark=False pid=147990
+[parent] done   job=9 gpu=2 (11/60 done, 1051s elapsed)
+[parent] launch job=18 gpu=2 prompt=9 watermark=True pid=148242
+[parent] done   job=12 gpu=5 (12/60 done, 1067s elapsed)
+[parent] launch job=19 gpu=5 prompt=9 watermark=False pid=148591
+[parent] done   job=15 gpu=1 (13/60 done, 1071s elapsed)
+[parent] launch job=20 gpu=1 prompt=10 watermark=True pid=148744
+[parent] done   job=11 gpu=7 (14/60 done, 1073s elapsed)
+[parent] done   job=13 gpu=6 (15/60 done, 1073s elapsed)
+[parent] launch job=21 gpu=7 prompt=10 watermark=False pid=148871
+[parent] launch job=22 gpu=6 prompt=11 watermark=True pid=148872
+[parent] done   job=14 gpu=4 (16/60 done, 1093s elapsed)
+[parent] launch job=23 gpu=4 prompt=11 watermark=False pid=149599
+[parent] done   job=16 gpu=3 (17/60 done, 1568s elapsed)
+[parent] done   job=17 gpu=0 (18/60 done, 1568s elapsed)
+[parent] launch job=24 gpu=3 prompt=12 watermark=True pid=149891
+[parent] launch job=25 gpu=0 prompt=12 watermark=False pid=149892
+[parent] done   job=18 gpu=2 (19/60 done, 1572s elapsed)
+[parent] launch job=26 gpu=2 prompt=13 watermark=True pid=150203
+[parent] done   job=20 gpu=1 (20/60 done, 1590s elapsed)
+[parent] launch job=27 gpu=1 prompt=13 watermark=False pid=150649
+[parent] done   job=21 gpu=7 (21/60 done, 1594s elapsed)
+[parent] launch job=28 gpu=7 prompt=14 watermark=True pid=150802
+[parent] done   job=19 gpu=5 (22/60 done, 1602s elapsed)
+[parent] launch job=29 gpu=5 prompt=14 watermark=False pid=151056
+[parent] done   job=22 gpu=6 (23/60 done, 1618s elapsed)
+[parent] launch job=30 gpu=6 prompt=15 watermark=True pid=151409
+[parent] done   job=23 gpu=4 (24/60 done, 1620s elapsed)
+[parent] launch job=31 gpu=4 prompt=15 watermark=False pid=151568

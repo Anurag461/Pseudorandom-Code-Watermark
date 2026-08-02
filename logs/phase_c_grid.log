@@ -1,0 +1,134 @@
+=== cell: watermark=kgw atk=0 alpha=2.0 ===
+=== run_spoof_attack phase=C model=0.6B variant=instruct watermark=kgw attack_active=0 alpha=2.0 ===
+[phaseC] 100 harmful prompts loaded
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Qwen3-0.6B/tokenizer.json
+[phaseC] tokenized 100 chat-template prompts; prompt-len mean=70.1 max=78
+[phaseC] 100 jobs -> spoof_workdir/spoof_06b_kgw_atk0_alpha2/artifacts.pt
+[phaseC] visible GPUs: [1, 2, 3, 4, 5, 6, 7]
+[parent] done job=1 gpu=2 (1/100 done, 32s elapsed)
+[parent] done job=2 gpu=3 (2/100 done, 32s elapsed)
+[parent] done job=6 gpu=7 (3/100 done, 32s elapsed)
+[parent] done job=0 gpu=1 (4/100 done, 34s elapsed)
+[parent] done job=3 gpu=4 (5/100 done, 34s elapsed)
+[parent] done job=4 gpu=5 (6/100 done, 34s elapsed)
+[parent] done job=5 gpu=6 (7/100 done, 34s elapsed)
+[parent] done job=7 gpu=2 (8/100 done, 62s elapsed)
+[parent] done job=8 gpu=3 (9/100 done, 62s elapsed)
+[parent] done job=9 gpu=7 (10/100 done, 62s elapsed)
+[parent] done job=10 gpu=1 (11/100 done, 64s elapsed)
+[parent] done job=11 gpu=4 (12/100 done, 64s elapsed)
+[parent] done job=12 gpu=5 (13/100 done, 64s elapsed)
+[parent] done job=13 gpu=6 (14/100 done, 64s elapsed)
+[parent] done job=14 gpu=2 (15/100 done, 92s elapsed)
+[parent] done job=15 gpu=3 (16/100 done, 92s elapsed)
+[parent] done job=16 gpu=7 (17/100 done, 92s elapsed)
+[parent] done job=17 gpu=1 (18/100 done, 94s elapsed)
+[parent] done job=18 gpu=4 (19/100 done, 94s elapsed)
+[parent] done job=19 gpu=5 (20/100 done, 94s elapsed)
+[parent] done job=20 gpu=6 (21/100 done, 94s elapsed)
+[parent] done job=21 gpu=2 (22/100 done, 122s elapsed)
+[parent] done job=22 gpu=3 (23/100 done, 122s elapsed)
+[parent] done job=23 gpu=7 (24/100 done, 122s elapsed)
+[parent] done job=24 gpu=1 (25/100 done, 124s elapsed)
+[parent] done job=25 gpu=4 (26/100 done, 124s elapsed)
+[parent] done job=26 gpu=5 (27/100 done, 124s elapsed)
+[parent] done job=27 gpu=6 (28/100 done, 124s elapsed)
+[parent] done job=28 gpu=2 (29/100 done, 152s elapsed)
+[parent] done job=29 gpu=3 (30/100 done, 152s elapsed)
+[parent] done job=30 gpu=7 (31/100 done, 152s elapsed)
+[parent] done job=31 gpu=1 (32/100 done, 154s elapsed)
+[parent] done job=32 gpu=4 (33/100 done, 154s elapsed)
+[parent] done job=33 gpu=5 (34/100 done, 154s elapsed)
+[parent] done job=34 gpu=6 (35/100 done, 154s elapsed)
+[parent] done job=35 gpu=2 (36/100 done, 182s elapsed)
+[parent] done job=36 gpu=3 (37/100 done, 182s elapsed)
+[parent] done job=37 gpu=7 (38/100 done, 182s elapsed)
+[parent] done job=38 gpu=1 (39/100 done, 184s elapsed)
+[parent] done job=39 gpu=4 (40/100 done, 184s elapsed)
+[parent] done job=40 gpu=5 (41/100 done, 184s elapsed)
+[parent] done job=41 gpu=6 (42/100 done, 184s elapsed)
+[parent] done job=42 gpu=2 (43/100 done, 212s elapsed)
+[parent] done job=43 gpu=3 (44/100 done, 212s elapsed)
+[parent] done job=44 gpu=7 (45/100 done, 212s elapsed)
+[parent] done job=45 gpu=1 (46/100 done, 214s elapsed)
+[parent] done job=46 gpu=4 (47/100 done, 214s elapsed)
+[parent] done job=47 gpu=5 (48/100 done, 214s elapsed)
+[parent] done job=48 gpu=6 (49/100 done, 214s elapsed)
+[parent] done job=49 gpu=2 (50/100 done, 242s elapsed)
+[parent] done job=50 gpu=3 (51/100 done, 242s elapsed)
+[parent] done job=51 gpu=7 (52/100 done, 242s elapsed)
+[parent] done job=52 gpu=1 (53/100 done, 244s elapsed)
+[parent] done job=53 gpu=4 (54/100 done, 244s elapsed)
+[parent] done job=54 gpu=5 (55/100 done, 244s elapsed)
+[parent] done job=55 gpu=6 (56/100 done, 244s elapsed)
+[parent] done job=56 gpu=2 (57/100 done, 272s elapsed)
+[parent] done job=57 gpu=3 (58/100 done, 272s elapsed)
+[parent] done job=58 gpu=7 (59/100 done, 272s elapsed)
+[parent] done job=59 gpu=1 (60/100 done, 274s elapsed)
+[parent] done job=60 gpu=4 (61/100 done, 274s elapsed)
+[parent] done job=61 gpu=5 (62/100 done, 274s elapsed)
+[parent] done job=62 gpu=6 (63/100 done, 274s elapsed)
+[parent] done job=63 gpu=2 (64/100 done, 302s elapsed)
+[parent] done job=64 gpu=3 (65/100 done, 302s elapsed)
+[parent] done job=65 gpu=7 (66/100 done, 302s elapsed)
+[parent] done job=66 gpu=1 (67/100 done, 304s elapsed)
+[parent] done job=67 gpu=4 (68/100 done, 304s elapsed)
+[parent] done job=68 gpu=5 (69/100 done, 304s elapsed)
+[parent] done job=69 gpu=6 (70/100 done, 304s elapsed)
+[parent] done job=70 gpu=2 (71/100 done, 332s elapsed)
+[parent] done job=71 gpu=3 (72/100 done, 332s elapsed)
+[parent] done job=72 gpu=7 (73/100 done, 332s elapsed)
+[parent] done job=73 gpu=1 (74/100 done, 334s elapsed)
+[parent] done job=74 gpu=4 (75/100 done, 334s elapsed)
+[parent] done job=75 gpu=5 (76/100 done, 334s elapsed)
+[parent] done job=76 gpu=6 (77/100 done, 334s elapsed)
+[parent] done job=77 gpu=2 (78/100 done, 363s elapsed)
+[parent] done job=78 gpu=3 (79/100 done, 363s elapsed)
+[parent] done job=79 gpu=7 (80/100 done, 363s elapsed)
+[parent] done job=80 gpu=1 (81/100 done, 365s elapsed)
+[parent] done job=81 gpu=4 (82/100 done, 365s elapsed)
+[parent] done job=82 gpu=5 (83/100 done, 365s elapsed)
+[parent] done job=83 gpu=6 (84/100 done, 365s elapsed)
+[parent] done job=84 gpu=2 (85/100 done, 393s elapsed)
+[parent] done job=85 gpu=3 (86/100 done, 393s elapsed)
+[parent] done job=86 gpu=7 (87/100 done, 393s elapsed)
+[parent] done job=87 gpu=1 (88/100 done, 395s elapsed)
+[parent] done job=88 gpu=4 (89/100 done, 395s elapsed)
+[parent] done job=89 gpu=5 (90/100 done, 395s elapsed)
+[parent] done job=90 gpu=6 (91/100 done, 395s elapsed)
+[parent] done job=92 gpu=3 (92/100 done, 421s elapsed)
+[parent] done job=91 gpu=2 (93/100 done, 423s elapsed)
+[parent] done job=93 gpu=7 (94/100 done, 423s elapsed)
+[parent] done job=94 gpu=1 (95/100 done, 425s elapsed)
+[parent] done job=95 gpu=4 (96/100 done, 425s elapsed)
+[parent] done job=96 gpu=5 (97/100 done, 425s elapsed)
+[parent] done job=97 gpu=6 (98/100 done, 425s elapsed)
+[parent] done job=98 gpu=3 (99/100 done, 451s elapsed)
+[parent] done job=99 gpu=2 (100/100 done, 451s elapsed)
+[phaseC] generation complete in spoof_workdir/spoof_06b_kgw_atk0_alpha2
+=== cell: watermark=kgw atk=1 alpha=2.0 ===
+=== run_spoof_attack phase=C model=0.6B variant=instruct watermark=kgw attack_active=1 alpha=2.0 ===
+[phaseC] 100 harmful prompts loaded
+Traceback (most recent call last):
+  File "/home/anurakas/nanochat/run_spoof_attack.py", line 540, in <module>
+    main()
+  File "/home/anurakas/nanochat/run_spoof_attack.py", line 534, in main
+    phase_c()
+  File "/home/anurakas/nanochat/run_spoof_attack.py", line 316, in phase_c
+    raise RuntimeError(f"{bias_path} missing; run --phase B first")
+RuntimeError: spoof_workdir/bias_kgw_06b.pt missing; run --phase B first
+=== cell: watermark=prc atk=1 alpha=2.0 ===
+=== run_spoof_attack phase=C model=0.6B variant=instruct watermark=prc attack_active=1 alpha=2.0 ===
+[phaseC] 100 harmful prompts loaded
+Traceback (most recent call last):
+  File "/home/anurakas/nanochat/run_spoof_attack.py", line 540, in <module>
+    main()
+  File "/home/anurakas/nanochat/run_spoof_attack.py", line 534, in main
+    phase_c()
+  File "/home/anurakas/nanochat/run_spoof_attack.py", line 316, in phase_c
+    raise RuntimeError(f"{bias_path} missing; run --phase B first")
+RuntimeError: spoof_workdir/bias_prc_06b.pt missing; run --phase B first
+[phase_c_grid] done at Tue May  5 02:23:05 UTC 2026

@@ -1,0 +1,7 @@
+[phase_e_drive] PRC phase_e_workdir/sanity: total=8 pending=8
+[phase_e_drive] gpu=1 -> 8 jobs
+[phase_e_drive] launched gpu=1 pid=360
+[phase_e_drive] progress: 0/8 done, 30s elapsed
+[phase_e_drive] progress: 6/8 done, 330s elapsed
+[phase_e_drive] DONE gpu=1
+[phase_e_drive] all done in 390s. final pending = 0

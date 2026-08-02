@@ -1,0 +1,15 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+workdir,method,fpr_target,tp,n_wm,fp,n_nw,threshold,null_mean,null_std
+calib_workdir_n128_t3_eta05,entropy_fold,1e-09,8,30,0,30,28.5446,0.0704,4.7474
+calib_workdir_n128_t3_eta05,naive_fold,1e-09,7,30,0,30,21.8062,0.0692,3.6242
+calib_workdir_n128_t3_eta05,syndrome_all,analytical,2,30,0,30,,,
+calib_workdir_n128_t3_eta05,syndrome_entropy,analytical,3,30,0,30,,,
+calib_workdir_n128_t7,naive_fold,1e-09,6,30,0,30,7.5001,-0.0196,1.2537
+calib_workdir_n128_t7,syndrome_all,analytical,0,30,0,30,,,
+calib_workdir_n128_t7,syndrome_entropy,analytical,0,30,0,30,,,
+calib_workdir_n4096_t14,syndrome_all,analytical,2,30,0,30,,,
+calib_workdir_n4096_t14,syndrome_entropy,analytical,3,30,0,30,,,

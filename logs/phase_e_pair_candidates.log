@@ -1,0 +1,54 @@
+partition shape: (2, 151936)
+partition[0] sum (zeros bucket size): 75776
+partition[1] sum (ones bucket size): 75776
+tokenizer.vocab_size: 151643
+
+--- candidate validation ---
+  ('apple', 'banana', space=True): id=23268,43096  buckets=0,0
+  ('apple', 'banana', space=False): id=22377,87747  buckets=1,0
+  ('yes', 'no', space=True): id=9834,902  buckets=0,1
+  ('yes', 'no', space=False): id=9693,2152  buckets=0,0
+  ('A', 'B', space=True): id=362,425  buckets=1,0
+  ('A', 'B', space=False): id=32,33  buckets=1,0
+  ('0', '1', space=False): id=15,16  buckets=1,1
+  ('cat', 'dog', space=True): id=8251,5562  buckets=0,1
+  ('cat', 'dog', space=False): id=4616,18457  buckets=0,1
+  ('up', 'down', space=True): id=705,1495  buckets=1,1
+  ('up', 'down', space=False): id=454,2923  buckets=0,1
+  ('on', 'off', space=True): id=389,1007  buckets=0,1
+  ('on', 'off', space=False): id=263,1847  buckets=1,1
+  ('hot', 'cold', space=True): id=4017,9255  buckets=0,0
+  ('hot', 'cold', space=False): id=10622,87072  buckets=1,1
+  ('red', 'blue', space=True): id=2518,6303  buckets=0,1
+  ('red', 'blue', space=False): id=1151,12203  buckets=1,1
+  ('left', 'right', space=True): id=2115,1290  buckets=0,1
+  ('left', 'right', space=False): id=2359,1291  buckets=0,1
+  ('true', 'false', space=True): id=830,895  buckets=0,0
+  ('true', 'false', space=False): id=1866,3849  buckets=0,0
+  ('good', 'bad', space=True): id=1661,3873  buckets=1,1
+  ('good', 'bad', space=False): id=18536,13855  buckets=1,0
+  ('one', 'two', space=True): id=825,1378  buckets=1,0
+  ('one', 'two', space=False): id=603,19789  buckets=1,1
+  ('alpha', 'beta', space=True): id=8287,13440  buckets=0,0
+  ('alpha', 'beta', space=False): id=7141,19127  buckets=0,1
+  ('foo', 'bar', space=True): id=15229,3619  buckets=0,1
+  ('foo', 'bar', space=False): id=7975,2257  buckets=1,0
+
+--- 16 usable pairs ---
+  {'w1': 'apple', 'w2': 'banana', 'with_space': False, 'id1': 22377, 'id2': 87747, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc': True}
+  {'w1': 'no', 'w2': 'yes', 'with_space': True, 'id1': 902, 'id2': 9834, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc_swapped': True, 'swap': True}
+  {'w1': 'A', 'w2': 'B', 'with_space': True, 'id1': 362, 'id2': 425, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc': True}
+  {'w1': 'A', 'w2': 'B', 'with_space': False, 'id1': 32, 'id2': 33, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc': True}
+  {'w1': 'dog', 'w2': 'cat', 'with_space': True, 'id1': 5562, 'id2': 8251, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc_swapped': True, 'swap': True}
+  {'w1': 'dog', 'w2': 'cat', 'with_space': False, 'id1': 18457, 'id2': 4616, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc_swapped': True, 'swap': True}
+  {'w1': 'down', 'w2': 'up', 'with_space': False, 'id1': 2923, 'id2': 454, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc_swapped': True, 'swap': True}
+  {'w1': 'off', 'w2': 'on', 'with_space': True, 'id1': 1007, 'id2': 389, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc_swapped': True, 'swap': True}
+  {'w1': 'blue', 'w2': 'red', 'with_space': True, 'id1': 6303, 'id2': 2518, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc_swapped': True, 'swap': True}
+  {'w1': 'right', 'w2': 'left', 'with_space': True, 'id1': 1290, 'id2': 2115, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc_swapped': True, 'swap': True}
+  {'w1': 'right', 'w2': 'left', 'with_space': False, 'id1': 1291, 'id2': 2359, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc_swapped': True, 'swap': True}
+  {'w1': 'good', 'w2': 'bad', 'with_space': False, 'id1': 18536, 'id2': 13855, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc': True}
+  {'w1': 'one', 'w2': 'two', 'with_space': True, 'id1': 825, 'id2': 1378, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc': True}
+  {'w1': 'beta', 'w2': 'alpha', 'with_space': False, 'id1': 19127, 'id2': 7141, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc_swapped': True, 'swap': True}
+  {'w1': 'bar', 'w2': 'foo', 'with_space': True, 'id1': 3619, 'id2': 15229, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc_swapped': True, 'swap': True}
+  {'w1': 'foo', 'w2': 'bar', 'with_space': False, 'id1': 7975, 'id2': 2257, 'in_bucket1_w1': 1, 'in_bucket1_w2': 0, 'usable_for_prc': True}
+wrote phase_e_pair_candidates.json

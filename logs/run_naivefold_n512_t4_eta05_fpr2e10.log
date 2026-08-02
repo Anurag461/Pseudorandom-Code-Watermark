@@ -1,0 +1,84 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.6.0
+Model uses weight tying.
+Qwen3-0.6B-Base/tokenizer.json
+[parent] visible GPUs: [0, 1, 2, 3, 4, 5, 6, 7]
+[parent] loaded existing artifacts.pt with n_jobs=60 n=512
+
+=== Phase 1 SKIPPED: reusing 60 existing results in calib_workdir ===
+[parent] watermarked=30 unwatermarked=30
+
+=== Phase 2: fit threshold (fold=naive, FPR target 2.0e-10) ===
+  threshold = 37.4435  null_mean = 0.0728  null_std  = 5.9755  traces_used = 30
+  saved -> qwen_threshold.json
+
+=== Phase 3a: detection on watermarked runs (TPR) ===
+  prompt 0: detected=True  stat=49.24  sigmas=8.2  (tokens=2048)
+  prompt 1: detected=True  stat=44.49  sigmas=7.4  (tokens=2048)
+  prompt 2: detected=False  stat=12.83  sigmas=2.1  (tokens=2048)
+  prompt 3: detected=True  stat=76.18  sigmas=12.7  (tokens=2048)
+  prompt 4: detected=True  stat=41.69  sigmas=7.0  (tokens=2048)
+  prompt 5: detected=True  stat=122.96  sigmas=20.6  (tokens=2048)
+  prompt 6: detected=True  stat=59.37  sigmas=9.9  (tokens=2048)
+  prompt 7: detected=False  stat=16.33  sigmas=2.7  (tokens=2048)
+  prompt 8: detected=False  stat=4.20  sigmas=0.7  (tokens=2048)
+  prompt 9: detected=True  stat=84.23  sigmas=14.1  (tokens=2048)
+  prompt 10: detected=False  stat=14.38  sigmas=2.4  (tokens=2048)
+  prompt 11: detected=False  stat=17.24  sigmas=2.9  (tokens=2048)
+  prompt 12: detected=False  stat=21.49  sigmas=3.6  (tokens=2048)
+  prompt 13: detected=True  stat=39.67  sigmas=6.6  (tokens=2048)
+  prompt 14: detected=False  stat=1.57  sigmas=0.3  (tokens=2048)
+  prompt 15: detected=False  stat=28.91  sigmas=4.8  (tokens=2048)
+  prompt 16: detected=True  stat=57.34  sigmas=9.6  (tokens=2048)
+  prompt 17: detected=False  stat=6.64  sigmas=1.1  (tokens=2048)
+  prompt 18: detected=True  stat=104.27  sigmas=17.4  (tokens=2048)
+  prompt 19: detected=True  stat=66.26  sigmas=11.1  (tokens=2048)
+  prompt 20: detected=True  stat=66.84  sigmas=11.2  (tokens=2048)
+  prompt 21: detected=True  stat=42.99  sigmas=7.2  (tokens=2048)
+  prompt 22: detected=True  stat=84.92  sigmas=14.2  (tokens=2048)
+  prompt 23: detected=False  stat=11.27  sigmas=1.9  (tokens=2048)
+  prompt 24: detected=True  stat=43.62  sigmas=7.3  (tokens=2048)
+  prompt 25: detected=True  stat=84.88  sigmas=14.2  (tokens=2048)
+  prompt 26: detected=True  stat=67.18  sigmas=11.2  (tokens=2048)
+  prompt 27: detected=True  stat=53.81  sigmas=9.0  (tokens=2048)
+  prompt 28: detected=True  stat=61.56  sigmas=10.3  (tokens=2048)
+  prompt 29: detected=True  stat=81.10  sigmas=13.6  (tokens=2048)
+
+=== Phase 3b: detection on UNwatermarked runs (FPR) ===
+  prompt 0: detected=False  stat=1.63  sigmas=0.3  (tokens=2048)
+  prompt 1: detected=False  stat=-1.13  sigmas=-0.2  (tokens=2048)
+  prompt 2: detected=False  stat=-0.22  sigmas=-0.0  (tokens=2048)
+  prompt 3: detected=False  stat=0.38  sigmas=0.1  (tokens=2048)
+  prompt 4: detected=False  stat=0.26  sigmas=0.0  (tokens=2048)
+  prompt 5: detected=False  stat=0.17  sigmas=0.0  (tokens=2048)
+  prompt 6: detected=False  stat=-0.06  sigmas=-0.0  (tokens=2048)
+  prompt 7: detected=False  stat=0.18  sigmas=0.0  (tokens=2048)
+  prompt 8: detected=False  stat=-0.59  sigmas=-0.1  (tokens=2048)
+  prompt 9: detected=False  stat=0.92  sigmas=0.1  (tokens=2048)
+  prompt 10: detected=False  stat=-0.58  sigmas=-0.1  (tokens=2048)
+  prompt 11: detected=False  stat=-0.99  sigmas=-0.2  (tokens=2048)
+  prompt 12: detected=False  stat=1.21  sigmas=0.2  (tokens=2048)
+  prompt 13: detected=False  stat=-1.26  sigmas=-0.2  (tokens=2048)
+  prompt 14: detected=False  stat=-0.78  sigmas=-0.1  (tokens=2048)
+  prompt 15: detected=False  stat=0.71  sigmas=0.1  (tokens=2048)
+  prompt 16: detected=False  stat=-1.72  sigmas=-0.3  (tokens=2048)
+  prompt 17: detected=False  stat=-2.81  sigmas=-0.5  (tokens=2048)
+  prompt 18: detected=False  stat=0.65  sigmas=0.1  (tokens=2048)
+  prompt 19: detected=False  stat=0.47  sigmas=0.1  (tokens=2048)
+  prompt 20: detected=False  stat=1.23  sigmas=0.2  (tokens=2048)
+  prompt 21: detected=False  stat=-0.18  sigmas=-0.0  (tokens=2048)
+  prompt 22: detected=False  stat=1.84  sigmas=0.3  (tokens=2048)
+  prompt 23: detected=False  stat=0.08  sigmas=0.0  (tokens=2048)
+  prompt 24: detected=False  stat=0.13  sigmas=0.0  (tokens=2048)
+  prompt 25: detected=False  stat=1.20  sigmas=0.2  (tokens=2048)
+  prompt 26: detected=False  stat=-0.29  sigmas=-0.1  (tokens=2048)
+  prompt 27: detected=False  stat=-0.01  sigmas=-0.0  (tokens=2048)
+  prompt 28: detected=False  stat=-0.25  sigmas=-0.1  (tokens=2048)
+  prompt 29: detected=False  stat=0.62  sigmas=0.1  (tokens=2048)
+
+=== Summary ===
+  method: naive_fold
+  TPR: 20/30  (66.7%)
+  FPR: 0/30  (0.0%)
+  threshold (FPR target 2.0e-10): 37.4435
