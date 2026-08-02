@@ -42,11 +42,14 @@ DEFAULT_BATCH = 64
 DEFAULT_ENTROPY_BATCH = 8
 
 CSV_COLUMNS = [
-    "Target FPR",
-    "n",
-    "t",
     "eta",
     "T",
+    "n",
+    "r value",
+    "r setting",
+    "t",
+    "Target FPR",
+    "Entropy Model",
     "Map TPR",
     "Entropy Aware TPR",
     "Naive TPR",
@@ -55,7 +58,6 @@ CSV_COLUMNS = [
     "Entropy FPR",
     "Naive FPR",
     "Log Hoeffding FPR",
-    "Entropy Model",
     "Entropy Trace Source",
     "Notes",
 ]
@@ -229,6 +231,8 @@ def _ensure_csv_schema(csv_out):
             "t": row.get("t", ""),
             "eta": row.get("eta", ""),
             "T": row.get("T", ""),
+            "r setting": row.get("r setting", ""),
+            "r value": row.get("r value", ""),
             "Map TPR": row.get("Map TPR", ""),
             "Entropy Aware TPR": row.get("Entropy Aware TPR", ""),
             "Naive TPR": row.get("Naive TPR", ""),
@@ -1361,6 +1365,10 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
         "t": t,
         "eta": eta,
         "T": T,
+        "r setting": f"{r_frac:g}n" if r_frac else (
+            "explicit" if r else "default"
+        ),
+        "r value": rank_info.get("rows", resolved_r or ""),
         "Map TPR": _format_rate(tp_m, len(wm)),
         "Entropy Aware TPR": _format_rate(tp_e, len(wm)),
         "Naive TPR": _format_rate(tp_n, len(wm)) if has_naive else "skipped",
@@ -1456,6 +1464,10 @@ def legacy_first_block_redetect(n: int = DEFAULT_N, t: int = DEFAULT_T,
         "t": t,
         "eta": eta,
         "T": score_T,
+        "r setting": f"{r_frac:g}n" if r_frac else (
+            "explicit" if r else "default"
+        ),
+        "r value": rank_info.get("rows", resolved_r or ""),
         "Map TPR": _format_rate(s["map_tp"], s["wm_total"]),
         "Entropy Aware TPR": _format_rate(s["entropy_tp"], s["wm_total"]),
         "Naive TPR": _format_rate(s["naive_tp"], s["wm_total"])
