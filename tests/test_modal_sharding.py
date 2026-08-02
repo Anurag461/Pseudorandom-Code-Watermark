@@ -157,11 +157,26 @@ def test_aggregates_integer_decisions_into_one_summary_row():
     assert row["Map FPR"] == "1/8 (12.5%)"
     assert row["Entropy FPR"] == "0/8 (0.0%)"
     assert row["r setting"] == "0.99n"
+    assert "4-shard prompt aggregation across 4 workspaces" in row["Notes"]
     assert "workspace-a" not in row["Notes"]
     assert "workspace-b" not in row["Notes"]
     assert audit["counts"]["wm_total"] == 8
     assert audit["counts"]["null_total"] == 8
     assert len(audit["shards"]) == 4
+
+
+def test_aggregates_two_prompt_shards_across_two_workspaces():
+    payloads = [
+        _payload(range(0, 4), "workspace-a"),
+        _payload(range(4, 8), "workspace-b"),
+    ]
+
+    row, audit = _aggregate_shard_payloads(payloads, 8)
+
+    assert "2-shard prompt aggregation across 2 workspaces" in row["Notes"]
+    assert "workspace-a" not in row["Notes"]
+    assert "workspace-b" not in row["Notes"]
+    assert len(audit["shards"]) == 2
 
 
 def test_rejects_overlapping_prompt_shards():

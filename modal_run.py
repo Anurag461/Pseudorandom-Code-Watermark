@@ -1854,7 +1854,7 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
         print(f"[main] appended 500/500 summary row to {csv_out}", flush=True)
     else:
         print("[main] partial shard: summary CSV not modified; use "
-              "aggregate_shards after all four shards finish", flush=True)
+              "aggregate_shards after all prompt shards finish", flush=True)
 
 
 def _aggregate_shard_payloads(payloads,
@@ -1971,8 +1971,12 @@ def _aggregate_shard_payloads(payloads,
     naive_fp = positives(null, "decision_naive") if has_naive else None
     nwm, nnw = len(wm), len(null)
     config = reference_config
+    workspace_count = len({
+        shard["workspace_label"] for shard in shard_descriptors
+    })
     notes = "; ".join([
-        "four-workspace prompt-shard aggregation",
+        (f"{len(shard_descriptors)}-shard prompt aggregation across "
+         f"{workspace_count} workspaces"),
         "validated exact global prompt coverage with no gaps or duplicates",
         f"artifact_fingerprint={reference_artifact}",
         f"code_fingerprint={reference_code.get('sha256', '')}",
