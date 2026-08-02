@@ -22,8 +22,13 @@ Usage:
       --r-frac 0.99 --fpr 1e-3 --entropy-model-size 4B
 """
 import csv
+import hashlib
+import json
 import os
+import re
 import shutil
+import subprocess
+from datetime import datetime, timezone
 
 import modal
 
@@ -40,6 +45,8 @@ GPU = "A10G"
 DEFAULT_MAX_CONTAINERS = 5
 DEFAULT_BATCH = 64
 DEFAULT_ENTROPY_BATCH = 8
+CANONICAL_NUM_PROMPTS = 500
+SHARD_RESULT_SCHEMA_VERSION = 1
 
 CSV_COLUMNS = [
     "eta",
@@ -165,15 +172,18 @@ def null_trace_dir(T, entropy_model_size):
     return f"/data/_null_detection_traces/{entropy_model_tag(entropy_model_size)}/T{T}"
 
 
-def find_complete_cache_T(root, min_T, num_prompts, prefix):
+def find_complete_cache_T(root, min_T, prompt_indices_or_count, prefix):
     """Return the smallest complete T' >= min_T cache, or None.
 
     Cache directories are named T{length} and contain one {prefix}_XXXX.pt
     record per prompt.  A longer causal generation/trace can be truncated to
-    any requested prefix length, so exact-length caches are not required.
+    any requested prefix length, so exact-length caches are not required. The
+    third argument may be the legacy prompt count or an exact index iterable.
     """
     if not os.path.isdir(root):
         return None
+
+    prompt_indices = _coerce_prompt_indices(prompt_indices_or_count)
 
     candidates = []
     for name in os.listdir(root):
@@ -188,7 +198,7 @@ def find_complete_cache_T(root, min_T, num_prompts, prefix):
         cache_dir = os.path.join(root, name)
         if all(os.path.exists(os.path.join(
                 cache_dir, f"{prefix}_{i:04d}.pt"))
-               for i in range(int(num_prompts))):
+               for i in prompt_indices):
             candidates.append(candidate_T)
 
     return min(candidates) if candidates else None
@@ -201,6 +211,158 @@ def _chunks(items, size):
 def _format_rate(count, total):
     denom = max(total, 1)
     return f"{count}/{total} ({count / denom:.1%})"
+
+
+def prompt_indices_for_shard(prompt_start, num_prompts,
+                             total_prompts=CANONICAL_NUM_PROMPTS):
+    """Return a validated contiguous range of global prompt indices."""
+    start = int(prompt_start)
+    count = int(num_prompts)
+    total = int(total_prompts)
+    if start < 0:
+        raise ValueError(f"prompt_start must be >= 0, got {start}")
+    if count <= 0:
+        raise ValueError(f"num_prompts must be > 0, got {count}")
+    if start + count > total:
+        raise ValueError(
+            f"prompt shard [{start}, {start + count}) exceeds canonical "
+            f"prompt count {total}"
+        )
+    return list(range(start, start + count))
+
+
+def _coerce_prompt_indices(prompt_indices_or_count):
+    """Accept the old count API as well as an exact iterable of indices."""
+    if isinstance(prompt_indices_or_count, int):
+        if prompt_indices_or_count < 0:
+            raise ValueError("prompt count must be nonnegative")
+        return list(range(prompt_indices_or_count))
+    indices = [int(i) for i in prompt_indices_or_count]
+    if len(indices) != len(set(indices)):
+        raise ValueError("prompt indices contain duplicates")
+    if any(i < 0 for i in indices):
+        raise ValueError("prompt indices must be nonnegative")
+    return indices
+
+
+def _json_safe(value):
+    """Convert numpy/torch scalar containers to JSON-compatible values."""
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, dict):
+        return {str(k): _json_safe(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(v) for v in value]
+    if hasattr(value, "item"):
+        try:
+            return _json_safe(value.item())
+        except (ValueError, TypeError):
+            pass
+    return str(value)
+
+
+def _atomic_write_json(path, payload):
+    parent = os.path.dirname(path)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+    temporary = f"{path}.tmp-{os.getpid()}"
+    with open(temporary, "w") as f:
+        json.dump(_json_safe(payload), f, sort_keys=True, indent=2)
+        f.write("\n")
+    os.replace(temporary, path)
+
+
+def _slug(value):
+    return re.sub(r"[^A-Za-z0-9_.-]+", "-", str(value)).strip("-") or "unknown"
+
+
+def shard_result_filename(tag, entropy_model_size, fpr, prompt_indices,
+                          workspace_label="workspace"):
+    indices = _coerce_prompt_indices(prompt_indices)
+    if not indices:
+        raise ValueError("cannot name an empty shard")
+    return (
+        f"{_slug(tag)}__{entropy_model_tag(entropy_model_size)}__"
+        f"fpr-{_slug(f'{float(fpr):.12g}')}__"
+        f"p{min(indices):04d}-{max(indices):04d}__"
+        f"{_slug(workspace_label)}.json"
+    )
+
+
+def _local_code_fingerprint():
+    """Fingerprint the local sources that determine generation/detection."""
+    digest = hashlib.sha256()
+    source_root = os.path.dirname(os.path.abspath(__file__))
+    source_files = [
+        "modal_run.py",
+        "detectors.py",
+        "prc.py",
+        "watermark_expt.py",
+        "qwen.py",
+        "prompts.jsonl",
+    ]
+    for relative_path in source_files:
+        digest.update(relative_path.encode())
+        with open(os.path.join(source_root, relative_path), "rb") as f:
+            for block in iter(lambda: f.read(1024 * 1024), b""):
+                digest.update(block)
+    try:
+        revision = subprocess.run(
+            ["git", "-C", source_root, "rev-parse", "HEAD"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        revision = "unknown"
+    return {"sha256": digest.hexdigest(), "git_revision": revision}
+
+
+def _semantic_fingerprint(value):
+    """Stable hash for nested experiment artifacts, including tensors."""
+    import numpy as np
+    import torch
+
+    digest = hashlib.sha256()
+
+    def update(item):
+        if item is None or isinstance(item, (str, int, float, bool)):
+            digest.update(type(item).__name__.encode())
+            digest.update(repr(item).encode())
+        elif isinstance(item, dict):
+            digest.update(b"dict")
+            for key in sorted(item, key=lambda k: str(k)):
+                update(str(key))
+                update(item[key])
+        elif isinstance(item, (list, tuple)):
+            digest.update(type(item).__name__.encode())
+            for child in item:
+                update(child)
+        elif hasattr(item, "detach") and hasattr(item, "shape"):
+            tensor = item.detach().cpu().contiguous()
+            digest.update(b"tensor")
+            digest.update(str(tensor.dtype).encode())
+            digest.update(repr(tuple(tensor.shape)).encode())
+            digest.update(tensor.view(-1).view(torch.uint8).numpy().tobytes())
+        elif hasattr(item, "tocsr"):
+            sparse = item.tocsr()
+            digest.update(b"sparse-csr")
+            update(np.asarray(sparse.shape))
+            update(np.asarray(sparse.indptr))
+            update(np.asarray(sparse.indices))
+            update(np.asarray(sparse.data))
+        elif isinstance(item, np.ndarray):
+            array = np.ascontiguousarray(np.asarray(item))
+            digest.update(b"ndarray")
+            digest.update(str(array.dtype).encode())
+            digest.update(repr(array.shape).encode())
+            digest.update(array.tobytes())
+        else:
+            digest.update(type(item).__name__.encode())
+            digest.update(repr(item).encode())
+
+    update(value)
+    return digest.hexdigest()
 
 
 def _ensure_csv_schema(csv_out):
@@ -260,6 +422,33 @@ def _append_summary_row(csv_out, row):
         writer.writerow(row)
 
 
+def _summary_row_identity(row):
+    return (
+        float(row["eta"]),
+        int(row["T"]),
+        int(row["n"]),
+        int(row["r value"]),
+        str(row["r setting"]).strip(),
+        int(row["t"]),
+        float(row["Target FPR"]),
+        str(row["Entropy Model"]).strip(),
+    )
+
+
+def _summary_row_exists(csv_out, candidate):
+    if not os.path.exists(csv_out) or os.path.getsize(csv_out) == 0:
+        return False
+    candidate_identity = _summary_row_identity(candidate)
+    with open(csv_out, newline="") as f:
+        for row in csv.DictReader(f):
+            try:
+                if _summary_row_identity(row) == candidate_identity:
+                    return True
+            except (KeyError, TypeError, ValueError):
+                continue
+    return False
+
+
 # ---- image ------------------------------------------------------------------
 image = (
     modal.Image.debian_slim(python_version="3.11")
@@ -299,9 +488,9 @@ app = modal.App("prc-hoeffding", image=image)
 @app.function(volumes={"/data": data_vol}, timeout=600)
 def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
                     r: int = 0, fresh: bool = False) -> int:
-    import glob
     import json
     import os
+    import shutil
 
     import numpy as np
     import torch
@@ -322,6 +511,8 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
         "blocks": DEFAULT_BLOCKS,
         "num_prompts": num_prompts,
         "gen_scheme": "single_codeword_batched",
+        "keygen_seed": SEED,
+        "keygen_rng_version": "explicit_seed_v1",
     }
     if requested_r is not None:
         config_sig["r"] = requested_r
@@ -330,19 +521,38 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
     if not fresh and os.path.exists(ap):
         prev = torch.load(ap, weights_only=False, map_location="cpu")
         if prev.get("config_sig") == config_sig:
+            if not prev.get("artifact_fingerprint"):
+                fingerprint_payload = {
+                    key: prev[key] for key in (
+                        "encoding_key", "decoding_key", "partition",
+                        "prompt_ids_list", "seed", "config_sig",
+                    )
+                }
+                prev["artifact_fingerprint"] = _semantic_fingerprint(
+                    fingerprint_payload
+                )
+                torch.save(prev, ap)
+                data_vol.commit()
             print(f"[build] reusing frozen key from {ap} (config matches)",
                   flush=True)
             return num_prompts
         print("[build] config changed -> rebuilding key, INVALIDATING wm cache",
               flush=True)
 
-    removed = 0
-    for p in glob.glob(os.path.join(wmd, "*.pt")):
-        os.remove(p)
-        removed += 1
-    if removed:
-        print(f"[build] cleared {removed} stale watermarked generations",
-              flush=True)
+    tag_root = os.path.dirname(ap)
+    invalidated = []
+    for stale_dir in (
+        wmd,
+        os.path.join(tag_root, "entropy"),
+        os.path.join(tag_root, "detect_traces"),
+        os.path.join(tag_root, "shard_results"),
+    ):
+        if os.path.isdir(stale_dir):
+            shutil.rmtree(stale_dir)
+            invalidated.append(stale_dir)
+    if invalidated:
+        print("[build] cleared stale key-dependent caches: "
+              f"{', '.join(invalidated)}", flush=True)
 
     torch.manual_seed(SEED)
     np.random.seed(SEED)
@@ -354,6 +564,7 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
         t=t,
         noise_rate=eta,
         r=requested_r,
+        seed=SEED,
     )
     _, parity_check_matrix, _, _, noise_rate, _, g, _, t_key = decoding_key
     rank_info = parity_check_rank_info(parity_check_matrix)
@@ -379,21 +590,25 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
         raise RuntimeError(f"prompts.jsonl has {len(rows)} rows, need {num_prompts}")
     prompt_ids_list = [row["prompt_tokens"] for row in rows]
 
-    torch.save(
-        {
-            "encoding_key": encoding_key,
-            "decoding_key": decoding_key,
-            "partition": partition,
-            "prompt_ids_list": prompt_ids_list,
-            "num_prompts": num_prompts,
-            "n": n,
-            "T": max_new_tokens,
-            "seed": SEED,
-            "config_sig": config_sig,
-            "parity_check_rank_info": rank_info,
-        },
-        ap,
-    )
+    artifact = {
+        "encoding_key": encoding_key,
+        "decoding_key": decoding_key,
+        "partition": partition,
+        "prompt_ids_list": prompt_ids_list,
+        "num_prompts": num_prompts,
+        "n": n,
+        "T": max_new_tokens,
+        "seed": SEED,
+        "config_sig": config_sig,
+        "parity_check_rank_info": rank_info,
+    }
+    artifact["artifact_fingerprint"] = _semantic_fingerprint({
+        key: artifact[key] for key in (
+            "encoding_key", "decoding_key", "partition", "prompt_ids_list",
+            "seed", "config_sig",
+        )
+    })
+    torch.save(artifact, ap)
     data_vol.commit()
     print(f"[build] wrote artifacts ({num_prompts} prompts) -> {ap}", flush=True)
     return num_prompts
@@ -401,23 +616,24 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
 
 # ---- cache probes (CPU; decide whether GPU work is needed) ------------------
 @app.function(volumes={"/data": data_vol}, timeout=300)
-def plan_generation(n: int, t: int, eta: float, num_prompts: int,
+def plan_generation(n: int, t: int, eta: float, prompt_indices: list,
                     r: int = 0) -> dict:
     requested_r = int(r) if r else None
     T = experiment_T(n)
     wmd = wm_dir(n, t, eta, requested_r, T)
+    prompt_indices = _coerce_prompt_indices(prompt_indices)
     data_vol.reload()
 
-    wm_missing = [i for i in range(num_prompts)
+    wm_missing = [i for i in prompt_indices
                   if not os.path.exists(os.path.join(wmd, f"wm_{i:04d}.pt"))]
 
     null_root = "/data/_nulls"
-    null_T = find_complete_cache_T(null_root, T, num_prompts, "null")
+    null_T = find_complete_cache_T(null_root, T, prompt_indices, "null")
     if null_T is None:
         null_T = T
         d = null_dir(T)
         null_missing = [
-            i for i in range(num_prompts)
+            i for i in prompt_indices
             if not os.path.exists(os.path.join(d, f"null_{i:04d}.pt"))
         ]
     else:
@@ -429,25 +645,26 @@ def plan_generation(n: int, t: int, eta: float, num_prompts: int,
 
 @app.function(volumes={"/data": data_vol}, timeout=300)
 def plan_entropy(tag: str, entropy_model_size: str, T: int, null_T: int,
-                 num_prompts: int) -> dict:
+                 prompt_indices: list) -> dict:
+    prompt_indices = _coerce_prompt_indices(prompt_indices)
     if uses_cached_generation_trace(entropy_model_size):
         return {"wm_missing": [], "null_missing": [],
                 "T": T, "null_T": null_T, "null_entropy_T": null_T}
 
     data_vol.reload()
     wdir = wm_entropy_dir(tag, entropy_model_size)
-    wm_missing = [i for i in range(num_prompts)
+    wm_missing = [i for i in prompt_indices
                   if not os.path.exists(os.path.join(wdir, f"wm_{i:04d}.pt"))]
 
     null_entropy_root = os.path.dirname(null_entropy_dir(T, entropy_model_size))
     null_entropy_T = find_complete_cache_T(
-        null_entropy_root, T, num_prompts, "null"
+        null_entropy_root, T, prompt_indices, "null"
     )
     if null_entropy_T is None:
         null_entropy_T = T
         ndir = null_entropy_dir(T, entropy_model_size)
         null_missing = [
-            i for i in range(num_prompts)
+            i for i in prompt_indices
             if not os.path.exists(os.path.join(ndir, f"null_{i:04d}.pt"))
         ]
     else:
@@ -695,9 +912,10 @@ class EntropyModel:
 # ---- detection over cached generations (CPU) --------------------------------
 @app.function(volumes={"/data": data_vol}, timeout=1800)
 def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
-               num_prompts: int, r: int = 0,
+               prompt_indices: list, r: int = 0,
                entropy_model_size: str = MODEL_SIZE,
-               null_entropy_T: int = 0) -> list:
+               null_entropy_T: int = 0,
+               run_metadata: dict = None) -> dict:
     import os
 
     import numpy as np
@@ -717,6 +935,10 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
     use_generation_trace = uses_cached_generation_trace(model_size)
     null_entropy_T = int(null_entropy_T) if null_entropy_T else T
     source_label = entropy_trace_source(model_size)
+    prompt_indices = _coerce_prompt_indices(prompt_indices)
+    if not prompt_indices:
+        raise ValueError("detection requires at least one prompt index")
+    run_metadata = dict(run_metadata or {})
     ap = art_path(n, t, eta, requested_r, T)
     wmd = wm_dir(n, t, eta, requested_r, T)
     nd = null_dir(null_T)
@@ -724,6 +946,14 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
     art = torch.load(ap, weights_only=False, map_location="cpu")
     decoding_key = art["decoding_key"]
     partition = art["partition"]
+    artifact_fingerprint = art.get("artifact_fingerprint")
+    if not artifact_fingerprint:
+        artifact_fingerprint = _semantic_fingerprint({
+            key: art[key] for key in (
+                "encoding_key", "decoding_key", "partition",
+                "prompt_ids_list", "seed", "config_sig",
+            )
+        })
     rank_info = art.get("parity_check_rank_info")
     if rank_info is None:
         rank_info = parity_check_rank_info(decoding_key[1])
@@ -803,6 +1033,7 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
                                   fpr=fpr, weight="entropy", return_info=True)
         out = {
             "prompt_idx": idx,
+            "source": "wm" if wm_flag else "null",
             "watermark": wm_flag,
             "decision_map": bool(dm),
             "stat_map": float(im["statistic"]),
@@ -820,6 +1051,12 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
             "entropy_model": model_display(model_size),
             "entropy_trace_source": source_label,
             "parity_check_rank_info": rank_info,
+            "tokens_sha256": hashlib.sha256(
+                tokens.detach().cpu().contiguous().numpy().tobytes()
+            ).hexdigest(),
+            "p_trace_sha256": hashlib.sha256(
+                np.ascontiguousarray(p_trace).tobytes()
+            ).hexdigest(),
         }
         if use_generation_trace:
             dn, ino = detect_hoeffding(decoding_key, tokens, p_trace, partition,
@@ -832,7 +1069,7 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
         return out
 
     out = []
-    for i in range(num_prompts):
+    for i in prompt_indices:
         gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
                         weights_only=False, map_location="cpu")
         wm_tokens = _prefix(gw["tokens"], "wm", i, "token")
@@ -847,9 +1084,57 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
         _save_detection_trace("null", i, null_tokens, null_p)
         out.append(_run(null_tokens, null_p, False, i))
 
-    if trace_saved:
-        data_vol.commit()
-    return out
+    workspace_label = run_metadata.get("workspace_label", "workspace")
+    filename = shard_result_filename(
+        tag, model_size, fpr, prompt_indices, workspace_label
+    )
+    remote_path = os.path.join(
+        f"/data/{tag}/shard_results/{entropy_model_tag(model_size)}",
+        filename,
+    )
+    safe_records = _json_safe(out)
+    records_json = json.dumps(
+        safe_records, sort_keys=True, separators=(",", ":")
+    ).encode()
+    config = {
+        "n": n,
+        "T": T,
+        "t": t,
+        "eta": eta,
+        "r_value": rank_info.get("rows", requested_r),
+        "r_setting": run_metadata.get(
+            "r_setting", "explicit" if requested_r is not None else "default"
+        ),
+        "target_fpr": fpr,
+        "generation_model": model_display(MODEL_SIZE),
+        "entropy_model": model_display(model_size),
+        "entropy_trace_source": source_label,
+        "seed": art.get("seed", SEED),
+        "canonical_num_prompts": run_metadata.get(
+            "canonical_num_prompts", CANONICAL_NUM_PROMPTS
+        ),
+    }
+    payload = {
+        "schema_version": SHARD_RESULT_SCHEMA_VERSION,
+        "config": config,
+        "artifact_fingerprint": artifact_fingerprint,
+        "code_fingerprint": run_metadata.get("code_fingerprint", {}),
+        "workspace_label": workspace_label,
+        "prompt_indices": prompt_indices,
+        "prompt_start": min(prompt_indices),
+        "prompt_stop": max(prompt_indices) + 1,
+        "record_count": len(safe_records),
+        "records_sha256": hashlib.sha256(records_json).hexdigest(),
+        "null_cache_T": null_T,
+        "null_entropy_cache_T": null_entropy_T,
+        "parity_check_rank_info": _json_safe(rank_info),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "records": safe_records,
+    }
+    _atomic_write_json(remote_path, payload)
+    data_vol.commit()
+    return {"results": out, "shard_payload": payload,
+            "remote_shard_path": remote_path}
 
 
 @app.function(volumes={"/data": data_vol}, timeout=1800)
@@ -1221,27 +1506,41 @@ def detect_legacy_first_block_summary(n: int, t: int, eta: float, fpr: float,
 # ---- driver -----------------------------------------------------------------
 @app.local_entrypoint()
 def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
+         prompt_start: int = 0,
          n: int = DEFAULT_N, t: int = DEFAULT_T, eta: float = DEFAULT_ETA,
          fpr: float = DEFAULT_FPR, fresh: bool = False,
          batch: int = DEFAULT_BATCH,
          entropy_batch: int = DEFAULT_ENTROPY_BATCH,
          r: int = 0, r_frac: float = 0.0,
          entropy_model_size: str = MODEL_SIZE,
-         csv_out: str = "hoeffding_results_summary.csv"):
+         csv_out: str = "hoeffding_results_summary.csv",
+         shard_out: str = "", workspace_label: str = ""):
+    prompt_indices = prompt_indices_for_shard(prompt_start, num_prompts)
     resolved_r = resolve_r(n, r, r_frac)
     validate_r_for_keygen(n, t, resolved_r)
     entropy_model_size = normalize_model_size(entropy_model_size)
     T = experiment_T(n)
     tag = config_tag(n, t, eta, resolved_r, T)
+    workspace_label = (
+        workspace_label.strip() if workspace_label else
+        os.environ.get("MODAL_PROFILE", "workspace")
+    )
+    code_fingerprint = _local_code_fingerprint()
+    is_complete_run = prompt_indices == list(range(CANONICAL_NUM_PROMPTS))
     r_text = f"r={resolved_r}" if resolved_r is not None else "r=default"
     print(f"[main] config {tag}  FPR_target={fpr:g}  ({num_prompts} prompts, "
+          f"global range={prompt_indices[0]}..{prompt_indices[-1]}, "
           f"batch={batch}, entropy_batch={entropy_batch}, {r_text}, "
           f"entropy_model={model_display(entropy_model_size)}, fresh={fresh}) ...",
           flush=True)
 
-    build_artifacts.remote(num_prompts, n, t, eta, resolved_r or 0, fresh)
+    build_artifacts.remote(
+        CANONICAL_NUM_PROMPTS, n, t, eta, resolved_r or 0, fresh
+    )
 
-    plan = plan_generation.remote(n, t, eta, num_prompts, resolved_r or 0)
+    plan = plan_generation.remote(
+        n, t, eta, prompt_indices, resolved_r or 0
+    )
     wm_missing, null_missing = plan["wm_missing"], plan["null_missing"]
     null_T = plan["null_T"]
     print(f"[main] to generate: {len(wm_missing)} watermarked, "
@@ -1270,7 +1569,9 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
     if uses_cached_generation_trace(entropy_model_size):
         print("[main] entropy trace: using cached generation p_trace", flush=True)
     else:
-        eplan = plan_entropy.remote(tag, entropy_model_size, T, null_T, num_prompts)
+        eplan = plan_entropy.remote(
+            tag, entropy_model_size, T, null_T, prompt_indices
+        )
         wm_e_missing = eplan["wm_missing"]
         null_e_missing = eplan["null_missing"]
         null_entropy_T = eplan["null_entropy_T"]
@@ -1302,9 +1603,32 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
     if not uses_cached_generation_trace(entropy_model_size):
         detect_label = "map + entropy-aware (naive/log skipped for alternate entropy)"
     print(f"[main] detecting ({detect_label}) ...", flush=True)
-    results = detect_all.remote(n, t, eta, fpr, null_T, num_prompts,
-                                resolved_r or 0, entropy_model_size,
-                                null_entropy_T)
+    r_setting = f"{r_frac:g}n" if r_frac else (
+        "explicit" if r else "default"
+    )
+    detection = detect_all.remote(
+        n, t, eta, fpr, null_T, prompt_indices,
+        resolved_r or 0, entropy_model_size, null_entropy_T,
+        {
+            "workspace_label": workspace_label,
+            "canonical_num_prompts": CANONICAL_NUM_PROMPTS,
+            "r_setting": r_setting,
+            "code_fingerprint": code_fingerprint,
+        },
+    )
+    results = detection["results"]
+    shard_payload = detection["shard_payload"]
+    if not shard_out:
+        shard_out = os.path.join(
+            "outputs", "shards",
+            shard_result_filename(
+                tag, entropy_model_size, fpr, prompt_indices, workspace_label
+            ),
+        )
+    _atomic_write_json(shard_out, shard_payload)
+    print(f"[main] saved local shard result -> {shard_out}", flush=True)
+    print(f"[main] saved remote shard result -> "
+          f"{detection['remote_shard_path']}", flush=True)
 
     wm = sorted([r0 for r0 in results if r0["watermark"]],
                 key=lambda r0: r0["prompt_idx"])
@@ -1365,9 +1689,7 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
         "t": t,
         "eta": eta,
         "T": T,
-        "r setting": f"{r_frac:g}n" if r_frac else (
-            "explicit" if r else "default"
-        ),
+        "r setting": r_setting,
         "r value": rank_info.get("rows", resolved_r or ""),
         "Map TPR": _format_rate(tp_m, len(wm)),
         "Entropy Aware TPR": _format_rate(tp_e, len(wm)),
@@ -1381,8 +1703,222 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
         "Entropy Trace Source": entropy_trace_source(entropy_model_size),
         "Notes": notes,
     }
+    if is_complete_run:
+        _append_summary_row(csv_out, row)
+        print(f"[main] appended 500/500 summary row to {csv_out}", flush=True)
+    else:
+        print("[main] partial shard: summary CSV not modified; use "
+              "aggregate_shards after all four shards finish", flush=True)
+
+
+def _aggregate_shard_payloads(payloads,
+                              expected_num_prompts=CANONICAL_NUM_PROMPTS):
+    """Validate and aggregate shard payloads into one summary CSV row."""
+    if not payloads:
+        raise ValueError("at least one shard payload is required")
+
+    expected_indices = set(range(int(expected_num_prompts)))
+    reference_config = payloads[0].get("config")
+    reference_artifact = payloads[0].get("artifact_fingerprint")
+    reference_code = payloads[0].get("code_fingerprint")
+    reference_rank = payloads[0].get("parity_check_rank_info", {})
+    if not reference_config or not reference_artifact or not reference_code:
+        raise ValueError("first shard is missing configuration fingerprints")
+    if int(reference_config.get("canonical_num_prompts", -1)) != int(
+            expected_num_prompts):
+        raise ValueError("shard canonical prompt count does not match aggregation")
+
+    by_source = {"wm": {}, "null": {}}
+    workspaces = []
+    shard_descriptors = []
+    for shard_number, payload in enumerate(payloads):
+        if payload.get("schema_version") != SHARD_RESULT_SCHEMA_VERSION:
+            raise ValueError(f"shard {shard_number} has unsupported schema")
+        if payload.get("config") != reference_config:
+            raise ValueError(f"shard {shard_number} configuration mismatch")
+        if payload.get("artifact_fingerprint") != reference_artifact:
+            raise ValueError(f"shard {shard_number} artifact/key mismatch")
+        if payload.get("code_fingerprint") != reference_code:
+            raise ValueError(f"shard {shard_number} code mismatch")
+        if payload.get("parity_check_rank_info", {}) != reference_rank:
+            raise ValueError(f"shard {shard_number} parity-rank mismatch")
+
+        indices = _coerce_prompt_indices(payload.get("prompt_indices", []))
+        index_set = set(indices)
+        if not indices:
+            raise ValueError(f"shard {shard_number} has no prompt indices")
+        records = payload.get("records", [])
+        if len(records) != 2 * len(indices):
+            raise ValueError(
+                f"shard {shard_number} has {len(records)} records; expected "
+                f"{2 * len(indices)}"
+            )
+        canonical_records = json.dumps(
+            _json_safe(records), sort_keys=True, separators=(",", ":")
+        ).encode()
+        checksum = hashlib.sha256(canonical_records).hexdigest()
+        if checksum != payload.get("records_sha256"):
+            raise ValueError(f"shard {shard_number} record checksum mismatch")
+
+        seen_within = set()
+        for record in records:
+            idx = int(record["prompt_idx"])
+            source = record.get("source")
+            if source not in by_source:
+                source = "wm" if record.get("watermark") else "null"
+            key = (source, idx)
+            if idx not in index_set:
+                raise ValueError(
+                    f"shard {shard_number} record {key} is outside its manifest"
+                )
+            if key in seen_within:
+                raise ValueError(f"shard {shard_number} duplicates record {key}")
+            if idx in by_source[source]:
+                raise ValueError(
+                    f"prompt {idx} source {source} appears in multiple shards"
+                )
+            if bool(record.get("watermark")) != (source == "wm"):
+                raise ValueError(f"shard {shard_number} source flag mismatch {key}")
+            seen_within.add(key)
+            by_source[source][idx] = record
+        expected_pairs = {(source, idx) for source in by_source for idx in indices}
+        if seen_within != expected_pairs:
+            missing = sorted(expected_pairs - seen_within)
+            raise ValueError(
+                f"shard {shard_number} is missing source/index records: {missing[:5]}"
+            )
+
+        workspace = str(payload.get("workspace_label", "unknown"))
+        workspaces.append(workspace)
+        shard_descriptors.append({
+            "workspace_label": workspace,
+            "prompt_indices": indices,
+            "records_sha256": checksum,
+            "created_at": payload.get("created_at"),
+            "null_cache_T": payload.get("null_cache_T"),
+            "null_entropy_cache_T": payload.get("null_entropy_cache_T"),
+        })
+
+    for source, records in by_source.items():
+        actual = set(records)
+        if actual != expected_indices:
+            missing = sorted(expected_indices - actual)
+            extra = sorted(actual - expected_indices)
+            raise ValueError(
+                f"{source} prompt coverage mismatch; missing={missing[:10]} "
+                f"extra={extra[:10]}"
+            )
+
+    wm = [by_source["wm"][i] for i in sorted(expected_indices)]
+    null = [by_source["null"][i] for i in sorted(expected_indices)]
+    naive_values = [r.get("decision_naive") for r in wm + null]
+    has_naive = all(value is not None for value in naive_values)
+    if not has_naive and any(value is not None for value in naive_values):
+        raise ValueError("naive decisions are inconsistently present across shards")
+
+    def positives(records, key):
+        return sum(bool(record[key]) for record in records)
+
+    map_tp = positives(wm, "decision_map")
+    map_fp = positives(null, "decision_map")
+    entropy_tp = positives(wm, "decision_entropy")
+    entropy_fp = positives(null, "decision_entropy")
+    naive_tp = positives(wm, "decision_naive") if has_naive else None
+    naive_fp = positives(null, "decision_naive") if has_naive else None
+    nwm, nnw = len(wm), len(null)
+    config = reference_config
+    notes = "; ".join([
+        "four-workspace prompt-shard aggregation",
+        f"workspaces={','.join(sorted(set(workspaces)))}",
+        "validated exact global prompt coverage with no gaps or duplicates",
+        f"artifact_fingerprint={reference_artifact}",
+        f"code_fingerprint={reference_code.get('sha256', '')}",
+    ])
+    row = {
+        "eta": config["eta"],
+        "T": config["T"],
+        "n": config["n"],
+        "r value": config["r_value"],
+        "r setting": config["r_setting"],
+        "t": config["t"],
+        "Target FPR": f"{float(config['target_fpr']):.0e}",
+        "Entropy Model": config["entropy_model"],
+        "Map TPR": _format_rate(map_tp, nwm),
+        "Entropy Aware TPR": _format_rate(entropy_tp, nwm),
+        "Naive TPR": _format_rate(naive_tp, nwm) if has_naive else "skipped",
+        "Log Hoeffding TPR": "skipped",
+        "Map FPR": _format_rate(map_fp, nnw),
+        "Entropy FPR": _format_rate(entropy_fp, nnw),
+        "Naive FPR": _format_rate(naive_fp, nnw) if has_naive else "skipped",
+        "Log Hoeffding FPR": "skipped",
+        "Entropy Trace Source": config["entropy_trace_source"],
+        "Notes": notes,
+    }
+    aggregation = {
+        "schema_version": SHARD_RESULT_SCHEMA_VERSION,
+        "config": config,
+        "artifact_fingerprint": reference_artifact,
+        "code_fingerprint": reference_code,
+        "parity_check_rank_info": reference_rank,
+        "expected_num_prompts": int(expected_num_prompts),
+        "shards": shard_descriptors,
+        "counts": {
+            "wm_total": nwm,
+            "null_total": nnw,
+            "map_tp": map_tp,
+            "map_fp": map_fp,
+            "entropy_tp": entropy_tp,
+            "entropy_fp": entropy_fp,
+            "naive_tp": naive_tp,
+            "naive_fp": naive_fp,
+        },
+        "summary_row": row,
+        "aggregated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    return row, aggregation
+
+
+@app.local_entrypoint()
+def aggregate_shards(shard_files: str,
+                     csv_out: str = "hoeffding_results_summary.csv",
+                     aggregate_out: str = "",
+                     expected_num_prompts: int = CANONICAL_NUM_PROMPTS):
+    """Validate local shard JSON files and append one authoritative CSV row."""
+    paths = [path.strip() for path in shard_files.split(",") if path.strip()]
+    if not paths:
+        raise ValueError("--shard-files must contain comma-separated JSON paths")
+    payloads = []
+    for path in paths:
+        with open(path) as f:
+            payloads.append(json.load(f))
+    row, aggregation = _aggregate_shard_payloads(
+        payloads, expected_num_prompts=expected_num_prompts
+    )
+    aggregation["local_shard_files"] = paths
+    if not aggregate_out:
+        config = aggregation["config"]
+        entropy_size = (
+            config["entropy_model"].replace("Qwen3-", "").replace("-Base", "")
+        )
+        aggregate_name = (
+            f"eta{_slug(config['eta'])}_n{config['n']}_T{config['T']}_"
+            f"r{config['r_value']}_"
+            f"{entropy_model_tag(entropy_size)}_"
+            f"fpr-{_slug(config['target_fpr'])}.json"
+        )
+        aggregate_out = os.path.join("outputs", "aggregates", aggregate_name)
+    _atomic_write_json(aggregate_out, aggregation)
+    if _summary_row_exists(csv_out, row):
+        raise ValueError(
+            "the authoritative CSV already contains this experiment identity; "
+            "not appending a duplicate row"
+        )
     _append_summary_row(csv_out, row)
-    print(f"[main] appended summary row to {csv_out}", flush=True)
+    print(f"[aggregate] validated {len(paths)} shards with "
+          f"{expected_num_prompts} watermarked + {expected_num_prompts} null",
+          flush=True)
+    print(f"[aggregate] wrote audit manifest -> {aggregate_out}", flush=True)
+    print(f"[aggregate] appended one summary row -> {csv_out}", flush=True)
 
 
 @app.local_entrypoint()

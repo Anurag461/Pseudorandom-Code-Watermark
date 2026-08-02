@@ -32,3 +32,14 @@ def test_ignores_malformed_directories_and_other_prefixes(tmp_path):
     _make_cache(tmp_path, 8192, "null", range(2))
 
     assert find_complete_cache_T(tmp_path, 2048, 2, "null") == 8192
+
+
+def test_checks_an_exact_global_prompt_shard(tmp_path):
+    _make_cache(tmp_path, 8192, "null", [125, 126, 127])
+
+    assert find_complete_cache_T(
+        tmp_path, 2048, [125, 126, 127], "null"
+    ) == 8192
+    assert find_complete_cache_T(
+        tmp_path, 2048, [124, 125, 126], "null"
+    ) is None
