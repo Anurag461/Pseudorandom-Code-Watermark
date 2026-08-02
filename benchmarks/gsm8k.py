@@ -1,4 +1,4 @@
-from task import Task, HFDataset
+from benchmarks.task import Task, HFDataset
 import re
 import numpy as np
 

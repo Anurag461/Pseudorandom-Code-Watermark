@@ -39,7 +39,7 @@ class Task(ABC):
     
     def __len__(self):
         stop = self.stop if self.stop is not None else self.num_examples()
-        span = stop - start
+        span = stop - self.start
         length = (span + self.step -1) // self.step
         assert length >= 0, "len cannot be -ve"
         return length

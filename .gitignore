@@ -38,3 +38,11 @@ auto_handoff*.json
 
 # Claude harness (do not redistribute)
 .claude/
+
+.DS_Store                                                                                                        
+.python-version                                                                                                  
+ATTACK_SUMMARY.md                                                                                                
+generate_corpus.py                                                                                               
+modal_invert.py                                                                                                  
+phase_f_brute_force_steal.py                                                                                     
+prc_visualizer.jsx  

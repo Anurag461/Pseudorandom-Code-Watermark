@@ -13,7 +13,8 @@ from huggingface_hub import hf_hub_download, snapshot_download
 from constants import test_prompts
 import numpy as np
 from prc import KeyGen, Encode, Detect
-
+from benchmarks.task import Task
+from benchmarks.gsm8k import GSM 
 
 pkgs = [
     "huggingface_hub",  # to download pretrained weights
@@ -803,3 +804,22 @@ def detect_syndrome(
         }
         return decision, info
     return decision
+
+
+def chat_eval_benchmark(benchmark: Task, model: Qwen3Model, tokenizer, log: bool=False):
+    scores = []
+    for i in range(benchmark.num_examples()):
+        conversation = benchmark.get_example(i)
+        enc = tokenizer.encode(conversation['messages'])
+        if i==0:
+            print(tokenizer.decode(enc))
+        """ generate_text_watermark_prc(
+            model,
+            token_ids,
+            max_new_tokens,
+            encoding_key,
+            partition_map,
+            eos_token_id=tokenizer.eos_token_id,
+            watermark=True)
+        """
+    return
