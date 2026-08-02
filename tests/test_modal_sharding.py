@@ -5,13 +5,56 @@ import json
 import pytest
 
 from modal_run import (
+    DETECTION_CHECKPOINT_SCHEMA_VERSION,
     SHARD_RESULT_SCHEMA_VERSION,
     _aggregate_shard_payloads,
     _append_summary_row,
+    _detection_checkpoint_identity,
+    _load_detection_checkpoint,
+    _save_detection_checkpoint,
     _summary_row_exists,
     prompt_indices_for_shard,
     resolve_r,
 )
+
+
+def _checkpoint_identity(**overrides):
+    values = {
+        "config": {
+            "n": 8192,
+            "T": 8192,
+            "t": 3,
+            "eta": 0.2,
+            "r_value": 8110,
+            "target_fpr": 1e-3,
+            "entropy_model": "Qwen3-4B-Base",
+        },
+        "artifact_fingerprint": "artifact-abc",
+        "code_fingerprint": {"sha256": "code-abc"},
+        "source": "wm",
+        "prompt_idx": 125,
+        "tokens_sha256": "tokens-abc",
+        "p_trace_sha256": "trace-abc",
+    }
+    values.update(overrides)
+    return _detection_checkpoint_identity(**values)
+
+
+def _checkpoint_record():
+    return {
+        "prompt_idx": 125,
+        "source": "wm",
+        "watermark": True,
+        "decision_map": True,
+        "stat_map": 42.0,
+        "thr_map": 10.0,
+        "decision_entropy": True,
+        "stat_entropy": 40.0,
+        "thr_entropy": 11.0,
+        "decision_naive": None,
+        "tokens_sha256": "tokens-abc",
+        "p_trace_sha256": "trace-abc",
+    }
 
 
 def _payload(indices, workspace, total=8):
@@ -161,3 +204,57 @@ def test_detects_an_existing_authoritative_row_across_numeric_formatting(tmp_pat
     candidate["Target FPR"] = "0.001"
 
     assert _summary_row_exists(csv_path, candidate)
+
+
+def test_detection_checkpoint_round_trip(tmp_path):
+    path = tmp_path / "wm_0125.json"
+    identity = _checkpoint_identity()
+    record = _checkpoint_record()
+
+    _save_detection_checkpoint(path, identity, record)
+
+    assert _load_detection_checkpoint(path, identity) == record
+    payload = json.loads(path.read_text())
+    assert payload["schema_version"] == DETECTION_CHECKPOINT_SCHEMA_VERSION
+    assert payload["identity"]["detector_implementation_sha256"] == "code-abc"
+
+
+@pytest.mark.parametrize("changed", [
+    {"artifact_fingerprint": "different-artifact"},
+    {"code_fingerprint": {"sha256": "different-code"}},
+    {"tokens_sha256": "different-tokens"},
+    {"p_trace_sha256": "different-trace"},
+    {"source": "null"},
+    {"prompt_idx": 126},
+])
+def test_detection_checkpoint_rejects_incompatible_identity(tmp_path, changed):
+    path = tmp_path / "wm_0125.json"
+    identity = _checkpoint_identity()
+    _save_detection_checkpoint(path, identity, _checkpoint_record())
+
+    assert _load_detection_checkpoint(
+        path, _checkpoint_identity(**changed)
+    ) is None
+
+
+def test_detection_checkpoint_rejects_target_fpr_change(tmp_path):
+    path = tmp_path / "wm_0125.json"
+    identity = _checkpoint_identity()
+    _save_detection_checkpoint(path, identity, _checkpoint_record())
+    changed_config = copy.deepcopy(identity["config"])
+    changed_config["target_fpr"] = 1e-4
+
+    assert _load_detection_checkpoint(
+        path, _checkpoint_identity(config=changed_config)
+    ) is None
+
+
+def test_detection_checkpoint_rejects_modified_record(tmp_path):
+    path = tmp_path / "wm_0125.json"
+    identity = _checkpoint_identity()
+    _save_detection_checkpoint(path, identity, _checkpoint_record())
+    payload = json.loads(path.read_text())
+    payload["record"]["decision_map"] = False
+    path.write_text(json.dumps(payload))
+
+    assert _load_detection_checkpoint(path, identity) is None

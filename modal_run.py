@@ -47,6 +47,8 @@ DEFAULT_BATCH = 64
 DEFAULT_ENTROPY_BATCH = 8
 CANONICAL_NUM_PROMPTS = 500
 SHARD_RESULT_SCHEMA_VERSION = 1
+DETECTION_CHECKPOINT_SCHEMA_VERSION = 1
+DETECTION_CHECKPOINT_COMMIT_INTERVAL = 10
 
 CSV_COLUMNS = [
     "eta",
@@ -172,6 +174,15 @@ def null_trace_dir(T, entropy_model_size):
     return f"/data/_null_detection_traces/{entropy_model_tag(entropy_model_size)}/T{T}"
 
 
+def detection_checkpoint_dir(tag, entropy_model_size, fpr):
+    """Config-local detector records, separated by model and target FPR."""
+    fpr_tag = _slug(f"{float(fpr):.12g}")
+    return (
+        f"/data/{tag}/detection_checkpoints/"
+        f"{entropy_model_tag(entropy_model_size)}/fpr-{fpr_tag}"
+    )
+
+
 def find_complete_cache_T(root, min_T, prompt_indices_or_count, prefix):
     """Return the smallest complete T' >= min_T cache, or None.
 
@@ -274,6 +285,81 @@ def _atomic_write_json(path, payload):
 
 def _slug(value):
     return re.sub(r"[^A-Za-z0-9_.-]+", "-", str(value)).strip("-") or "unknown"
+
+
+def _canonical_json_sha256(value):
+    encoded = json.dumps(
+        _json_safe(value), sort_keys=True, separators=(",", ":")
+    ).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _detection_checkpoint_identity(config, artifact_fingerprint,
+                                   code_fingerprint, source, prompt_idx,
+                                   tokens_sha256, p_trace_sha256):
+    """Compatibility manifest for one detector result.
+
+    A checkpoint is reusable only when the experiment configuration, frozen
+    PRC artifact, detector source code, prompt/source, and exact detector
+    inputs all match.
+    """
+    if isinstance(code_fingerprint, dict):
+        detector_sha256 = code_fingerprint.get("sha256", "")
+    else:
+        detector_sha256 = str(code_fingerprint or "")
+    return {
+        "config": _json_safe(config),
+        "artifact_fingerprint": str(artifact_fingerprint),
+        "detector_implementation_sha256": str(detector_sha256),
+        "source": str(source),
+        "prompt_idx": int(prompt_idx),
+        "tokens_sha256": str(tokens_sha256),
+        "p_trace_sha256": str(p_trace_sha256),
+    }
+
+
+def _save_detection_checkpoint(path, identity, record):
+    safe_record = _json_safe(record)
+    payload = {
+        "schema_version": DETECTION_CHECKPOINT_SCHEMA_VERSION,
+        "identity": _json_safe(identity),
+        "identity_sha256": _canonical_json_sha256(identity),
+        "record_sha256": _canonical_json_sha256(safe_record),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "record": safe_record,
+    }
+    _atomic_write_json(path, payload)
+
+
+def _load_detection_checkpoint(path, expected_identity):
+    """Return a verified detector record, or None for stale/corrupt data."""
+    try:
+        with open(path) as f:
+            payload = json.load(f)
+    except (FileNotFoundError, OSError, ValueError, TypeError):
+        return None
+    if payload.get("schema_version") != DETECTION_CHECKPOINT_SCHEMA_VERSION:
+        return None
+    identity = payload.get("identity")
+    if identity != _json_safe(expected_identity):
+        return None
+    identity_sha256 = _canonical_json_sha256(identity)
+    if payload.get("identity_sha256") != identity_sha256:
+        return None
+    record = payload.get("record")
+    if not isinstance(record, dict):
+        return None
+    if payload.get("record_sha256") != _canonical_json_sha256(record):
+        return None
+    if record.get("source") != identity.get("source"):
+        return None
+    if int(record.get("prompt_idx", -1)) != int(identity.get("prompt_idx", -2)):
+        return None
+    if record.get("tokens_sha256") != identity.get("tokens_sha256"):
+        return None
+    if record.get("p_trace_sha256") != identity.get("p_trace_sha256"):
+        return None
+    return record
 
 
 def shard_result_filename(tag, entropy_model_size, fpr, prompt_indices,
@@ -545,6 +631,7 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
         wmd,
         os.path.join(tag_root, "entropy"),
         os.path.join(tag_root, "detect_traces"),
+        os.path.join(tag_root, "detection_checkpoints"),
         os.path.join(tag_root, "shard_results"),
     ):
         if os.path.isdir(stale_dir):
@@ -958,6 +1045,29 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
     if rank_info is None:
         rank_info = parity_check_rank_info(decoding_key[1])
 
+    workspace_label = run_metadata.get("workspace_label", "workspace")
+    code_fingerprint = run_metadata.get("code_fingerprint", {})
+    config = {
+        "n": n,
+        "T": T,
+        "t": t,
+        "eta": eta,
+        "r_value": rank_info.get("rows", requested_r),
+        "r_setting": run_metadata.get(
+            "r_setting", "explicit" if requested_r is not None else "default"
+        ),
+        "target_fpr": fpr,
+        "generation_model": model_display(MODEL_SIZE),
+        "entropy_model": model_display(model_size),
+        "entropy_trace_source": source_label,
+        "seed": art.get("seed", SEED),
+        "canonical_num_prompts": run_metadata.get(
+            "canonical_num_prompts", CANONICAL_NUM_PROMPTS
+        ),
+    }
+    checkpoint_root = detection_checkpoint_dir(tag, model_size, fpr)
+    checkpoint_stats = {"reused": 0, "computed": 0, "stale_or_corrupt": 0}
+
     trace_saved = 0
 
     def _prefix(values, source, idx, field):
@@ -1026,7 +1136,17 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
         )
         trace_saved += 1
 
-    def _run(tokens, p_trace, wm_flag, idx):
+    def _input_hashes(tokens, p_trace):
+        tokens_sha256 = hashlib.sha256(
+            tokens.detach().cpu().contiguous().numpy().tobytes()
+        ).hexdigest()
+        p_trace_sha256 = hashlib.sha256(
+            np.ascontiguousarray(p_trace).tobytes()
+        ).hexdigest()
+        return tokens_sha256, p_trace_sha256
+
+    def _run(tokens, p_trace, wm_flag, idx,
+             tokens_sha256, p_trace_sha256):
         dm, im = detect_hoeffding(decoding_key, tokens, p_trace, partition,
                                   fpr=fpr, weight="map", return_info=True)
         de, ie = detect_hoeffding(decoding_key, tokens, p_trace, partition,
@@ -1051,12 +1171,8 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
             "entropy_model": model_display(model_size),
             "entropy_trace_source": source_label,
             "parity_check_rank_info": rank_info,
-            "tokens_sha256": hashlib.sha256(
-                tokens.detach().cpu().contiguous().numpy().tobytes()
-            ).hexdigest(),
-            "p_trace_sha256": hashlib.sha256(
-                np.ascontiguousarray(p_trace).tobytes()
-            ).hexdigest(),
+            "tokens_sha256": tokens_sha256,
+            "p_trace_sha256": p_trace_sha256,
         }
         if use_generation_trace:
             dn, ino = detect_hoeffding(decoding_key, tokens, p_trace, partition,
@@ -1068,23 +1184,57 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
             })
         return out
 
+    def _checkpointed_run(tokens, p_trace, wm_flag, idx):
+        source = "wm" if wm_flag else "null"
+        tokens_sha256, p_trace_sha256 = _input_hashes(tokens, p_trace)
+        identity = _detection_checkpoint_identity(
+            config,
+            artifact_fingerprint,
+            code_fingerprint,
+            source,
+            idx,
+            tokens_sha256,
+            p_trace_sha256,
+        )
+        checkpoint_path = os.path.join(
+            checkpoint_root, source, f"{source}_{idx:04d}.json"
+        )
+        existed = os.path.exists(checkpoint_path)
+        cached = _load_detection_checkpoint(checkpoint_path, identity)
+        if cached is not None:
+            checkpoint_stats["reused"] += 1
+            return cached
+        if existed:
+            checkpoint_stats["stale_or_corrupt"] += 1
+        record = _run(
+            tokens, p_trace, wm_flag, idx, tokens_sha256, p_trace_sha256
+        )
+        _save_detection_checkpoint(checkpoint_path, identity, record)
+        checkpoint_stats["computed"] += 1
+        return record
+
     out = []
-    for i in prompt_indices:
+    committed_checkpoint_count = 0
+    for position, i in enumerate(prompt_indices, start=1):
         gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
                         weights_only=False, map_location="cpu")
         wm_tokens = _prefix(gw["tokens"], "wm", i, "token")
         wm_p = _p_trace("wm", i, gw)
         _save_detection_trace("wm", i, wm_tokens, wm_p)
-        out.append(_run(wm_tokens, wm_p, True, i))
+        out.append(_checkpointed_run(wm_tokens, wm_p, True, i))
 
         gn = torch.load(os.path.join(nd, f"null_{i:04d}.pt"),
                         weights_only=False, map_location="cpu")
         null_tokens = _prefix(gn["tokens"], "null", i, "token")
         null_p = _p_trace("null", i, gn)
         _save_detection_trace("null", i, null_tokens, null_p)
-        out.append(_run(null_tokens, null_p, False, i))
+        out.append(_checkpointed_run(null_tokens, null_p, False, i))
 
-    workspace_label = run_metadata.get("workspace_label", "workspace")
+        if (position % DETECTION_CHECKPOINT_COMMIT_INTERVAL == 0
+                and checkpoint_stats["computed"] > committed_checkpoint_count):
+            data_vol.commit()
+            committed_checkpoint_count = checkpoint_stats["computed"]
+
     filename = shard_result_filename(
         tag, model_size, fpr, prompt_indices, workspace_label
     )
@@ -1096,24 +1246,6 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
     records_json = json.dumps(
         safe_records, sort_keys=True, separators=(",", ":")
     ).encode()
-    config = {
-        "n": n,
-        "T": T,
-        "t": t,
-        "eta": eta,
-        "r_value": rank_info.get("rows", requested_r),
-        "r_setting": run_metadata.get(
-            "r_setting", "explicit" if requested_r is not None else "default"
-        ),
-        "target_fpr": fpr,
-        "generation_model": model_display(MODEL_SIZE),
-        "entropy_model": model_display(model_size),
-        "entropy_trace_source": source_label,
-        "seed": art.get("seed", SEED),
-        "canonical_num_prompts": run_metadata.get(
-            "canonical_num_prompts", CANONICAL_NUM_PROMPTS
-        ),
-    }
     payload = {
         "schema_version": SHARD_RESULT_SCHEMA_VERSION,
         "config": config,
@@ -1128,12 +1260,18 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
         "null_cache_T": null_T,
         "null_entropy_cache_T": null_entropy_T,
         "parity_check_rank_info": _json_safe(rank_info),
+        "detection_checkpointing": {
+            "schema_version": DETECTION_CHECKPOINT_SCHEMA_VERSION,
+            "commit_interval_prompts": DETECTION_CHECKPOINT_COMMIT_INTERVAL,
+            **checkpoint_stats,
+        },
         "created_at": datetime.now(timezone.utc).isoformat(),
         "records": safe_records,
     }
     _atomic_write_json(remote_path, payload)
     data_vol.commit()
     return {"results": out, "shard_payload": payload,
+            "checkpoint_stats": checkpoint_stats,
             "remote_shard_path": remote_path}
 
 
@@ -1618,6 +1756,14 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
     )
     results = detection["results"]
     shard_payload = detection["shard_payload"]
+    checkpoint_stats = detection.get("checkpoint_stats", {})
+    print(
+        "[main] detection checkpoints: "
+        f"reused={checkpoint_stats.get('reused', 0)}, "
+        f"computed={checkpoint_stats.get('computed', 0)}, "
+        f"stale_or_corrupt={checkpoint_stats.get('stale_or_corrupt', 0)}",
+        flush=True,
+    )
     if not shard_out:
         shard_out = os.path.join(
             "outputs", "shards",
