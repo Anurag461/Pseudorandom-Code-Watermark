@@ -87,7 +87,21 @@ def bin_to_str(bin_list):
 # g - dimension of random code used. larger values help pseudorandomness
 # r - number of parity checks used. smaller values help pseudorandomness
 # noise_rate - amount of noise for Encode to add to codewords. larger values help p1seudorandomness
-def KeyGen(n, message_length=512, false_positive_rate=1e-9, t=3, g=None, r=None, noise_rate=None):
+def KeyGen(n, message_length=512, false_positive_rate=1e-9, t=3, g=None,
+           r=None, noise_rate=None, seed=None):
+    rng = np.random.default_rng(seed) if seed is not None else None
+
+    def field_random(shape):
+        return GF.Random(shape, seed=rng) if rng is not None else GF.Random(shape)
+
+    def choice(*args, **kwargs):
+        sampler = rng.choice if rng is not None else np.random.choice
+        return sampler(*args, **kwargs)
+
+    def permutation(*args, **kwargs):
+        sampler = rng.permutation if rng is not None else np.random.permutation
+        return sampler(*args, **kwargs)
+
     # Set basic scheme parameters
     num_test_bits = int(np.ceil(np.log2(1 / false_positive_rate)))
     secpar = int(np.log2(binom(n, t)))
@@ -99,14 +113,14 @@ def KeyGen(n, message_length=512, false_positive_rate=1e-9, t=3, g=None, r=None,
     if r is None: r = n - k - secpar
 
     # Sample n by k generator matrix (all but the first n-r of these will be over-written)
-    generator_matrix = GF.Random((n, k))
+    generator_matrix = field_random((n, k))
 
     # Sample scipy.sparse parity-check matrix together with the last n-r rows of the generator matrix
     row_indices = []
     col_indices = []
     data = []
     for row in range(r):
-        chosen_indices = np.random.choice(n - r + row, t - 1, replace=False)
+        chosen_indices = choice(n - r + row, t - 1, replace=False)
         chosen_indices = np.append(chosen_indices, n - r + row)
         row_indices.extend([row] * t)
         col_indices.extend(chosen_indices)
@@ -118,14 +132,14 @@ def KeyGen(n, message_length=512, false_positive_rate=1e-9, t=3, g=None, r=None,
     max_bp_iter = int(np.log(n) / np.log(t))
 
     # Sample one-time pad and test bits
-    one_time_pad = GF.Random(n)
-    test_bits = GF.Random(num_test_bits)
+    one_time_pad = field_random(n)
+    test_bits = field_random(num_test_bits)
 
     # Permute bits
-    permutation = np.random.permutation(n)
-    generator_matrix = generator_matrix[permutation]
-    one_time_pad = one_time_pad[permutation]
-    parity_check_matrix = parity_check_matrix[:, permutation]
+    bit_permutation = permutation(n)
+    generator_matrix = generator_matrix[bit_permutation]
+    one_time_pad = one_time_pad[bit_permutation]
+    parity_check_matrix = parity_check_matrix[:, bit_permutation]
 
     encoding_key = (generator_matrix, one_time_pad, test_bits, g, noise_rate)
     decoding_key = (generator_matrix, parity_check_matrix, one_time_pad, false_positive_rate, noise_rate, test_bits, g, max_bp_iter, t)
