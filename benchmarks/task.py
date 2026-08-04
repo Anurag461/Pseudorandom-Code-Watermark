@@ -26,6 +26,10 @@ class Task(ABC):
         self.step = step
 
     @abstractmethod
+    def load(self):
+        pass
+    
+    @abstractmethod
     def num_examples(self):
         pass
 
