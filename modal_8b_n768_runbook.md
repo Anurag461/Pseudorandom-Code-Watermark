@@ -24,6 +24,10 @@ The 8B run does not read or write the legacy 0.6B generation caches.
   `/data/_null_detection_traces/qwen3_8b_base/qwen3_8b_base/T768/`
 - model weights: the existing `prc-hf-cache` Modal Volume
 
+Before scaling generation, the runner loads one model container and commits
+`/cache/models/Qwen3-8B-Base` to that Volume. The remaining containers read the
+same persistent copy instead of downloading the 8B shards independently.
+
 Each new generation record stores `generation_model_size=8B` and
 `generation_model=Qwen3-8B-Base`. Detection rejects model-qualified records
 whose metadata does not match the requested generation model.

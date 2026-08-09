@@ -625,6 +625,7 @@ image = (
         {
             "HF_HOME": "/cache/hf",
             "HF_HUB_CACHE": "/cache/hf",
+            "PRC_MODEL_CACHE_DIR": "/cache/models",
             "PRC_MODEL_SIZE": MODEL_SIZE,
             "PRC_MODEL_VARIANT": "base",
             "TOKENIZERS_PARALLELISM": "false",
@@ -911,6 +912,14 @@ class Model:
 
         rows = [self.prompts[i] for i in indices]
         return torch.tensor(rows, dtype=torch.long, device=self.we.device)
+
+    @modal.method()
+    def ready(self) -> dict:
+        """Warm and commit the shared model cache before scaling the fleet."""
+        return {
+            "generation_model": model_display(self.model_size),
+            "model_cache_dir": os.environ.get("PRC_MODEL_CACHE_DIR", ""),
+        }
 
     @modal.method()
     def generate_wm(self, prompt_indices: list) -> dict:
@@ -1926,6 +1935,12 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
         model = Model.with_options(
             gpu=gpu, max_containers=max_containers
         )(tag=tag, model_size=generation_model_size)
+        cache_status = model.ready.remote()
+        print(
+            f"[main] model cache ready: {cache_status['generation_model']} "
+            f"at {cache_status['model_cache_dir']}",
+            flush=True,
+        )
         work = []
         if wm_missing:
             work.append((

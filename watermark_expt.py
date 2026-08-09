@@ -59,7 +59,8 @@ if USE_REASONING_MODEL or USE_INSTRUCT_MODEL:
 else:
     repo_id = f"Qwen/Qwen3-{CHOOSE_MODEL}-Base"
 
-local_dir = Path(repo_id).parts[-1]
+model_cache_root = Path(os.environ.get("PRC_MODEL_CACHE_DIR", "."))
+local_dir = model_cache_root / Path(repo_id).parts[-1]
 
 if CHOOSE_MODEL == "0.6B":
     weights_file = hf_hub_download(
@@ -87,10 +88,7 @@ del weights_dict
 tok = AutoTokenizer.from_pretrained('Qwen/Qwen3-0.6B')
 
 
-if USE_REASONING_MODEL or USE_INSTRUCT_MODEL:
-    tokenizer_file_path = f"Qwen3-{CHOOSE_MODEL}/tokenizer.json"
-else:
-    tokenizer_file_path = f"Qwen3-{CHOOSE_MODEL}-Base/tokenizer.json"
+tokenizer_file_path = str(local_dir / "tokenizer.json")
 
 hf_hub_download(
     repo_id=repo_id,
