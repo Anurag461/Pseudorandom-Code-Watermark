@@ -143,6 +143,7 @@ def test_prompt_indices_are_global_and_bounds_checked():
 
 
 def test_eta020_runbook_r_fraction_values():
+    assert resolve_r(768, r_frac=0.99) == 760
     assert resolve_r(8192, r_frac=0.99) == 8110
     assert resolve_r(4096, r_frac=0.99) == 4055
     assert resolve_r(2048, r_frac=0.99) == 2028
@@ -221,6 +222,16 @@ def test_detects_an_existing_authoritative_row_across_numeric_formatting(tmp_pat
     candidate["Target FPR"] = "0.001"
 
     assert _summary_row_exists(csv_path, candidate)
+
+
+def test_summary_identity_distinguishes_generation_models(tmp_path):
+    row, _ = _aggregate_shard_payloads(_four_payloads(), 8)
+    csv_path = tmp_path / "summary.csv"
+    _append_summary_row(csv_path, row)
+    candidate = dict(row)
+    candidate["Generation Model"] = "Qwen3-8B-Base"
+
+    assert not _summary_row_exists(csv_path, candidate)
 
 
 def test_detection_checkpoint_round_trip(tmp_path):

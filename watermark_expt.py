@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from scipy.special import binom, lambertw
 from importlib.metadata import version
 from qwen import *
@@ -13,8 +15,10 @@ from huggingface_hub import hf_hub_download, snapshot_download
 from constants import test_prompts
 import numpy as np
 from prc import KeyGen, Encode, Detect
-from benchmarks.task import Task
-from benchmarks.gsm8k import GSM 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from benchmarks.task import Task
 
 pkgs = [
     "huggingface_hub",  # to download pretrained weights

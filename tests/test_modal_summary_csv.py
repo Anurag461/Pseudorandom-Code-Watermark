@@ -12,3 +12,4 @@ def test_summary_schema_keeps_experiment_fields_first():
         "Target FPR",
         "Entropy Model",
     ]
+    assert "Generation Model" in CSV_COLUMNS
