@@ -14,6 +14,7 @@ from modal_run import (
     _save_detection_checkpoint,
     _summary_row_exists,
     prompt_indices_for_shard,
+    resolve_new_run_r,
     resolve_r,
 )
 
@@ -147,6 +148,17 @@ def test_eta020_runbook_r_fraction_values():
     assert resolve_r(8192, r_frac=0.99) == 8110
     assert resolve_r(4096, r_frac=0.99) == 4055
     assert resolve_r(2048, r_frac=0.99) == 2028
+
+
+def test_new_runs_enforce_r_fraction_policy():
+    assert resolve_new_run_r(768) == 760
+    assert resolve_new_run_r(768, r=760) == 760
+    assert resolve_new_run_r(768, r_frac=0.99) == 760
+
+    with pytest.raises(ValueError, match="require r=round\\(0.99n\\)=760"):
+        resolve_new_run_r(768, r=759)
+    with pytest.raises(ValueError, match="require --r-frac 0.99"):
+        resolve_new_run_r(768, r_frac=0.98)
 
 
 def test_aggregates_integer_decisions_into_one_summary_row():

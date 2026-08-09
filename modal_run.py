@@ -21,7 +21,7 @@ Usage:
     modal run modal_run.py --num-prompts 500 --n 512 --t 3 --eta 0.1 \
       --r-frac 0.99 --fpr 1e-3 --entropy-model-size 4B
     modal run modal_run.py --num-prompts 500 --max-containers 10 \
-      --n 768 --t 3 --eta 0.1 --r 760 --fpr 1e-3 \
+      --n 768 --t 3 --eta 0.1 --r-frac 0.99 --fpr 1e-3 \
       --generation-model-size 8B --gpu H100 --batch 100
 
 Generation-model caches are isolated. The historical Qwen3-0.6B-Base paths
@@ -51,6 +51,8 @@ GPU = "A10G"
 DEFAULT_MAX_CONTAINERS = 5
 DEFAULT_BATCH = 64
 DEFAULT_ENTROPY_BATCH = 8
+REQUIRED_R_FRAC = 0.99
+REQUIRED_R_SETTING = "0.99n"
 CANONICAL_NUM_PROMPTS = 500
 SHARD_RESULT_SCHEMA_VERSION = 1
 DETECTION_CHECKPOINT_SCHEMA_VERSION = 1
@@ -126,6 +128,21 @@ def resolve_r(n, r=0, r_frac=0.0):
     if explicit_frac:
         return int(round(explicit_frac * n))
     return None
+
+
+def resolve_new_run_r(n, r=0, r_frac=REQUIRED_R_FRAC):
+    """Enforce the project-wide r=round(0.99n) policy for new runs."""
+    expected_r = int(round(REQUIRED_R_FRAC * n))
+    if r and int(r) != expected_r:
+        raise ValueError(
+            f"new runs require r=round(0.99n)={expected_r} for n={n}; "
+            f"got explicit r={r}"
+        )
+    if r_frac and abs(float(r_frac) - REQUIRED_R_FRAC) > 1e-12:
+        raise ValueError(
+            f"new runs require --r-frac {REQUIRED_R_FRAC}; got {r_frac}"
+        )
+    return expected_r
 
 
 def validate_r_for_keygen(n, t, r):
@@ -657,7 +674,7 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
     import torch
     from prc import KeyGen, parity_check_rank_info
 
-    requested_r = int(r) if r else None
+    requested_r = resolve_new_run_r(n, r, 0.0)
     generation_model_size = normalize_model_size(generation_model_size)
     validate_r_for_keygen(n, t, requested_r)
     max_new_tokens = experiment_T(n)
@@ -1215,9 +1232,7 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
         "t": t,
         "eta": eta,
         "r_value": rank_info.get("rows", requested_r),
-        "r_setting": run_metadata.get(
-            "r_setting", "explicit" if requested_r is not None else "default"
-        ),
+        "r_setting": run_metadata.get("r_setting", REQUIRED_R_SETTING),
         "target_fpr": fpr,
         "generation_model": model_display(generation_model_size),
         "entropy_model": model_display(model_size),
@@ -1868,7 +1883,7 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
          fpr: float = DEFAULT_FPR, fresh: bool = False,
          batch: int = DEFAULT_BATCH,
          entropy_batch: int = DEFAULT_ENTROPY_BATCH,
-         r: int = 0, r_frac: float = 0.0,
+         r: int = 0, r_frac: float = REQUIRED_R_FRAC,
          generation_model_size: str = MODEL_SIZE,
          entropy_model_size: str = "",
          gpu: str = GPU,
@@ -1888,7 +1903,7 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
     if not gpu:
         raise ValueError("gpu must be non-empty")
     prompt_indices = prompt_indices_for_shard(prompt_start, num_prompts)
-    resolved_r = resolve_r(n, r, r_frac)
+    resolved_r = resolve_new_run_r(n, r, r_frac)
     validate_r_for_keygen(n, t, resolved_r)
     generation_model_size = normalize_model_size(generation_model_size)
     entropy_model_size = normalize_model_size(
@@ -1904,7 +1919,7 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
     )
     code_fingerprint = _local_code_fingerprint()
     is_complete_run = prompt_indices == list(range(CANONICAL_NUM_PROMPTS))
-    r_text = f"r={resolved_r}" if resolved_r is not None else "r=default"
+    r_text = f"r={resolved_r} ({REQUIRED_R_SETTING})"
     print(f"[main] config {tag}  FPR_target={fpr:g}  ({num_prompts} prompts, "
           f"global range={prompt_indices[0]}..{prompt_indices[-1]}, "
           f"batch={batch}, entropy_batch={entropy_batch}, {r_text}, "
@@ -2014,9 +2029,7 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
             entropy_model_size, generation_model_size):
         detect_label = "map + entropy-aware (naive/log skipped for alternate entropy)"
     print(f"[main] detecting ({detect_label}) ...", flush=True)
-    r_setting = f"{r_frac:g}n" if r_frac else (
-        "explicit" if r else "default"
-    )
+    r_setting = REQUIRED_R_SETTING
     detection = detect_all.remote(
         n, t, eta, fpr, null_T, prompt_indices,
         resolved_r or 0, entropy_model_size, null_entropy_T,

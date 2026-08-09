@@ -6,7 +6,7 @@ This run generates and detects with `Qwen3-8B-Base` using the standard
 - `n = T = 768`
 - `t = 3`
 - `eta = 0.1`
-- `r = 760` (`round(0.99 * 768)`)
+- `r = round(0.99n) = 760`; all new runs enforce this setting
 - target FPR `1e-3`
 - 500 watermarked and 500 null generations
 - generation-time 8B `p_trace` reused for map, entropy-aware, and naive
@@ -49,7 +49,7 @@ MODAL_PROFILE=YOUR_PROFILE modal run modal_run.py::main \
   --n 768 \
   --t 3 \
   --eta 0.1 \
-  --r 760 \
+  --r-frac 0.99 \
   --fpr 1e-3 \
   --generation-model-size 8B \
   --gpu H100 \
@@ -81,7 +81,7 @@ MODAL_PROFILE=YOUR_PROFILE modal run modal_run.py::main \
   --n 768 \
   --t 3 \
   --eta 0.1 \
-  --r 760 \
+  --r-frac 0.99 \
   --fpr 1e-3 \
   --generation-model-size 8B \
   --gpu H100 \
@@ -103,7 +103,7 @@ MODAL_PROFILE=YOUR_PROFILE modal run modal_run.py::main \
   --n 768 \
   --t 3 \
   --eta 0.1 \
-  --r 760 \
+  --r-frac 0.99 \
   --fpr 1e-3 \
   --generation-model-size 8B \
   --gpu H100 \
