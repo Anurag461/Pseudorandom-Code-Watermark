@@ -26,6 +26,8 @@ job = artifacts["jobs"][job_index]
 
 import watermark_expt as we
 
+encoding_key_fingerprint = we.semantic_sha256(encoding_key)
+
 # Replace the worker-local random partition with the shared one.
 we.partition = partition_cpu.to(we.device)
 
@@ -40,26 +42,41 @@ gen = we.generate_text_watermark_prc(
     we.model,
     prompt_ids,
     max_new_tokens=job["max_new_tokens"],
-    encoding_key=encoding_key,
+    encoding_key_fingerprint=encoding_key_fingerprint,
     partition_map=we.partition,
     eos_token_id=None,  # disable early stop; we want a full p-trace of length >= n
     watermark=job["watermark"],
+    collect_trace_details=True,
 )
-tokens, p_trace = we.generate_and_collect(gen)
+tokens, p_trace, trace_details = we.generate_and_collect_detailed(gen)
 dt = time.time() - t0
 
-out_path = os.path.join(out_dir, f"result_{job_index:02d}.pt")
-torch.save(
-    {
-        "job_index": job_index,
-        "job": job,
-        "tokens": tokens.cpu(),
-        "p_trace": p_trace,
-        "duration_sec": dt,
-        "cuda_device": os.environ.get("CUDA_VISIBLE_DEVICES", "?"),
-    },
-    out_path,
+payload = we.build_prc_generation_record(
+    prompt_ids,
+    tokens,
+    p_trace,
+    partition_cpu,
+    encoding_key[0].shape[0],
+    bool(job["watermark"]),
+    encoding_key=encoding_key,
+    prc_codeword_bits=trace_details["prc_codeword_bits"],
+    base_lm_entropy=trace_details["base_lm_entropy"],
+    base_token_logprob=trace_details["base_token_logprob"],
 )
+payload.update({
+    "job_index": job_index,
+    "job": job,
+    "generation_model": we.repo_id,
+    "generation_model_size": we.CHOOSE_MODEL,
+    "generation_model_variant": we._variant,
+    "artifact_seed": artifacts.get("seed"),
+    "artifact_fingerprint": artifacts.get("artifact_fingerprint"),
+    "duration_sec": dt,
+    "cuda_device": os.environ.get("CUDA_VISIBLE_DEVICES", "?"),
+})
+
+out_path = os.path.join(out_dir, f"result_{job_index:02d}.pt")
+torch.save(payload, out_path)
 print(
     f"[worker job={job_index} cuda={os.environ.get('CUDA_VISIBLE_DEVICES')}] "
     f"prompt={job['prompt_idx']} watermark={job['watermark']} "

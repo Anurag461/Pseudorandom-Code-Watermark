@@ -36,7 +36,9 @@ def main():
     import watermark_expt as we
     if watermark == "prc":
         encoding_key = artifacts["encoding_key"]
+        encoding_key_fingerprint = we.semantic_sha256(encoding_key)
         partition_cpu = artifacts["partition"]
+        partition_fingerprint = we.tensor_sha256(partition_cpu)
         we.partition = partition_cpu.to(we.device)
     else:
         import watermark_kgw as kgw
@@ -64,20 +66,37 @@ def main():
             gen = we.generate_text_watermark_prc(
                 we.model, prompt_ids,
                 max_new_tokens=job["max_new_tokens"],
-                encoding_key=encoding_key,
+                encoding_key_fingerprint=encoding_key_fingerprint,
                 partition_map=we.partition,
                 eos_token_id=None,
                 watermark=job["watermark"],
+                collect_trace_details=True,
             )
-            tokens, p_trace = we.generate_and_collect(gen)
-            payload = {
+            tokens, p_trace, trace_details = we.generate_and_collect_detailed(gen)
+            payload = we.build_prc_generation_record(
+                prompt_ids,
+                tokens,
+                p_trace,
+                partition_cpu,
+                encoding_key[0].shape[0],
+                bool(job["watermark"]),
+                encoding_key=encoding_key,
+                prc_codeword_bits=trace_details["prc_codeword_bits"],
+                base_lm_entropy=trace_details["base_lm_entropy"],
+                base_token_logprob=trace_details["base_token_logprob"],
+                partition_fingerprint=partition_fingerprint,
+            )
+            payload.update({
                 "job_index": job_idx,
                 "job": job,
-                "tokens": tokens.cpu(),
-                "p_trace": p_trace,
+                "generation_model": we.repo_id,
+                "generation_model_size": we.CHOOSE_MODEL,
+                "generation_model_variant": we._variant,
+                "artifact_seed": artifacts.get("seed"),
+                "artifact_fingerprint": artifacts.get("artifact_fingerprint"),
                 "duration_sec": time.time() - t0,
                 "cuda_device": cuda_dev,
-            }
+            })
         else:
             gen = kgw.generate_text_watermark_kgw(
                 we.model, prompt_ids,

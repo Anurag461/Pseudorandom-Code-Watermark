@@ -57,6 +57,7 @@ CANONICAL_NUM_PROMPTS = 500
 SHARD_RESULT_SCHEMA_VERSION = 1
 DETECTION_CHECKPOINT_SCHEMA_VERSION = 1
 DETECTION_CHECKPOINT_COMMIT_INTERVAL = 10
+DERIVED_TRACE_SCHEMA_VERSION = 1
 
 CSV_COLUMNS = [
     "eta",
@@ -265,6 +266,115 @@ def validate_generation_record(record, generation_model_size,
             f"{source} cache index {idx} has generation model label "
             f"{stored_display!r}, expected {model_display(expected_size)!r}"
         )
+
+    # Historical records remain readable. New-schema records, however, must be
+    # self-contained and internally length-consistent.
+    schema_version = record.get("generation_trace_schema_version")
+    if schema_version is not None:
+        from detectors import GENERATION_TRACE_SCHEMA_VERSION
+
+        if int(schema_version) != GENERATION_TRACE_SCHEMA_VERSION:
+            raise ValueError(
+                f"{source} cache index {idx} has unsupported generation "
+                f"trace schema {schema_version!r}"
+            )
+        required = (
+            "watermark",
+            "prompt_token_ids",
+            "tokens",
+            "prc_n",
+            "p_trace",
+            "observed_bucket_bits",
+            "entropy_trace",
+            "signed_entropy_trace",
+            "codeword_signed_entropy_trace",
+            "map_soft_tokens",
+            "folded_signed_entropy",
+            "folded_map_soft_tokens",
+            "prc_codeword_bits",
+            "prc_block_boundaries",
+            "base_lm_entropy",
+            "base_token_logprob",
+            "partition_sha256",
+            "encoding_key_sha256",
+        )
+        missing = [field for field in required if field not in record]
+        if missing:
+            raise ValueError(
+                f"{source} cache index {idx} is missing trace fields: "
+                f"{', '.join(missing)}"
+            )
+        token_count = len(record["tokens"])
+        prc_n = int(record["prc_n"])
+        if prc_n <= 0:
+            raise ValueError(
+                f"{source} cache index {idx} has invalid prc_n={prc_n}"
+            )
+        for field in (
+            "p_trace",
+            "observed_bucket_bits",
+            "entropy_trace",
+            "signed_entropy_trace",
+            "map_soft_tokens",
+            "base_lm_entropy",
+            "base_token_logprob",
+        ):
+            if len(record[field]) != token_count:
+                raise ValueError(
+                    f"{source} cache index {idx} has {len(record[field])} "
+                    f"{field} values for {token_count} tokens"
+                )
+        for field in ("folded_signed_entropy", "folded_map_soft_tokens"):
+            if len(record[field]) != prc_n:
+                raise ValueError(
+                    f"{source} cache index {idx} has {len(record[field])} "
+                    f"{field} values for prc_n={prc_n}"
+                )
+        observed_values = {
+            int(value) for value in record["observed_bucket_bits"]
+        }
+        if not observed_values.issubset({0, 1}):
+            raise ValueError(
+                f"{source} cache index {idx} has non-binary observed buckets"
+            )
+        expected_boundaries = [
+            (start, min(start + prc_n, token_count))
+            for start in range(0, token_count, prc_n)
+        ]
+        stored_boundaries = [
+            tuple(int(value) for value in row)
+            for row in record["prc_block_boundaries"]
+        ]
+        if stored_boundaries != expected_boundaries:
+            raise ValueError(
+                f"{source} cache index {idx} has invalid PRC block boundaries"
+            )
+        for field in ("partition_sha256", "encoding_key_sha256"):
+            if not re.fullmatch(r"[0-9a-f]{64}", str(record[field])):
+                raise ValueError(
+                    f"{source} cache index {idx} has invalid {field}"
+                )
+        if bool(record.get("watermark")):
+            codeword = record["prc_codeword_bits"]
+            if codeword is None or len(codeword) != token_count:
+                raise ValueError(
+                    f"{source} cache index {idx} lacks its exact PRC codeword"
+                )
+            if not {int(value) for value in codeword}.issubset({0, 1}):
+                raise ValueError(
+                    f"{source} cache index {idx} has a non-binary PRC codeword"
+                )
+            if len(record["codeword_signed_entropy_trace"]) != token_count:
+                raise ValueError(
+                    f"{source} cache index {idx} has a misaligned "
+                    "codeword-signed entropy trace"
+                )
+        elif (record["prc_codeword_bits"] is not None
+              or record["codeword_signed_entropy_trace"] is not None):
+            raise ValueError(
+                f"{source} cache index {idx} is null but contains PRC "
+                "codeword data"
+            )
 
 
 def find_complete_cache_T(root, min_T, prompt_indices_or_count, prefix):
@@ -892,6 +1002,7 @@ def plan_entropy(tag: str, entropy_model_size: str, T: int, null_T: int,
 class Model:
     tag: str = modal.parameter()
     model_size: str = modal.parameter()
+    code_fingerprint_sha256: str = modal.parameter()
 
     @modal.enter()
     def load(self):
@@ -920,7 +1031,12 @@ class Model:
         self.prompts = art["prompt_ids_list"]
         self.n = art["n"]
         self.T = int(art.get("T", art.get("config_sig", {}).get("T", experiment_T(art["n"]))))
-        we.partition = art["partition"].to(we.device)
+        self.partition_cpu = art["partition"]
+        self.partition_fingerprint = we.tensor_sha256(self.partition_cpu)
+        self.encoding_key_fingerprint = we.semantic_sha256(self.encoding_key)
+        self.artifact_fingerprint = art.get("artifact_fingerprint")
+        self.artifact_seed = art.get("seed")
+        we.partition = self.partition_cpu.to(we.device)
         self.partition = we.partition
         hf_cache.commit()
 
@@ -955,16 +1071,36 @@ class Model:
 
         t0 = time.time()
         batch = self._prompt_batch(todo)
-        tokens, p_traces = self.we.generate_batch_and_collect(
+        tokens, p_traces, trace_details = self.we.generate_batch_and_collect(
             self.we.model, batch, self.T, self.encoding_key,
-            self.partition, watermark=True,
+            self.partition, watermark=True, return_trace_details=True,
         )
         for row, i in enumerate(todo):
+            record = self.we.build_prc_generation_record(
+                batch[row],
+                tokens[row],
+                p_traces[row],
+                self.partition_cpu,
+                self.n,
+                True,
+                encoding_key_fingerprint=self.encoding_key_fingerprint,
+                prc_codeword_bits=trace_details["prc_codeword_bits"][row],
+                base_lm_entropy=trace_details["base_lm_entropy"][row],
+                base_token_logprob=trace_details["base_token_logprob"][row],
+                partition_fingerprint=self.partition_fingerprint,
+            )
+            record.update({
+                "prompt_idx": i,
+                "watermark": True,
+                "generation_model": model_display(self.model_size),
+                "generation_model_size": self.model_size,
+                "generation_model_variant": "base",
+                "artifact_seed": self.artifact_seed,
+                "artifact_fingerprint": self.artifact_fingerprint,
+                "code_fingerprint_sha256": self.code_fingerprint_sha256,
+            })
             torch.save(
-                {"prompt_idx": i, "watermark": True,
-                 "generation_model": model_display(self.model_size),
-                 "generation_model_size": self.model_size,
-                 "tokens": tokens[row].cpu(), "p_trace": p_traces[row]},
+                record,
                 os.path.join(wmd, f"wm_{i:04d}.pt"),
             )
         data_vol.commit()
@@ -988,16 +1124,36 @@ class Model:
 
         t0 = time.time()
         batch = self._prompt_batch(todo)
-        tokens, p_traces = self.we.generate_batch_and_collect(
+        tokens, p_traces, trace_details = self.we.generate_batch_and_collect(
             self.we.model, batch, self.T, self.encoding_key,
-            self.partition, watermark=False,
+            self.partition, watermark=False, return_trace_details=True,
         )
         for row, i in enumerate(todo):
+            record = self.we.build_prc_generation_record(
+                batch[row],
+                tokens[row],
+                p_traces[row],
+                self.partition_cpu,
+                self.n,
+                False,
+                encoding_key_fingerprint=self.encoding_key_fingerprint,
+                prc_codeword_bits=None,
+                base_lm_entropy=trace_details["base_lm_entropy"][row],
+                base_token_logprob=trace_details["base_token_logprob"][row],
+                partition_fingerprint=self.partition_fingerprint,
+            )
+            record.update({
+                "prompt_idx": i,
+                "watermark": False,
+                "generation_model": model_display(self.model_size),
+                "generation_model_size": self.model_size,
+                "generation_model_variant": "base",
+                "artifact_seed": self.artifact_seed,
+                "artifact_fingerprint": self.artifact_fingerprint,
+                "code_fingerprint_sha256": self.code_fingerprint_sha256,
+            })
             torch.save(
-                {"prompt_idx": i, "watermark": False,
-                 "generation_model": model_display(self.model_size),
-                 "generation_model_size": self.model_size,
-                 "tokens": tokens[row].cpu(), "p_trace": p_traces[row]},
+                record,
                 os.path.join(nd, f"null_{i:04d}.pt"),
             )
         data_vol.commit()
@@ -1053,15 +1209,24 @@ class EntropyModel:
     def _save_trace_payload(self, path, idx, source, tokens, p_trace):
         import numpy as np
         import torch
-        from detectors import binary_entropy, fold_soft_token, tokens_to_bits
+        from detectors import (
+            binary_entropy,
+            fold_map_soft_token,
+            fold_soft_token,
+            map_soft_token,
+            tokens_to_bits,
+        )
 
         bits = tokens_to_bits(tokens, self.partition_cpu)
         entropy = binary_entropy(p_trace) / np.log(2)
         signs = (1 - 2 * bits.astype(np.int64)).astype(np.float64)
         signed_entropy = signs * entropy
         folded = fold_soft_token(bits, p_trace, self.n)
+        map_tokens = map_soft_token(bits, p_trace)
+        folded_map = fold_map_soft_token(bits, p_trace, self.n)
         torch.save(
             {
+                "derived_trace_schema_version": DERIVED_TRACE_SCHEMA_VERSION,
                 "prompt_idx": idx,
                 "source": source,
                 "generation_model": model_display(
@@ -1074,9 +1239,12 @@ class EntropyModel:
                 ),
                 "tokens_len": int(tokens.numel()),
                 "p_trace": p_trace,
+                "observed_bucket_bits": bits.astype(np.uint8),
                 "entropy_trace": entropy.astype(np.float32),
                 "signed_entropy_trace": signed_entropy.astype(np.float32),
+                "map_soft_tokens": map_tokens.astype(np.float32),
                 "folded_signed_entropy": folded.astype(np.float32),
+                "folded_map_soft_tokens": folded_map.astype(np.float32),
             },
             path,
         )
@@ -1172,7 +1340,9 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
     from detectors import (
         binary_entropy,
         detect_hoeffding,
+        fold_map_soft_token,
         fold_soft_token,
+        map_soft_token,
         tokens_to_bits,
     )
     from prc import parity_check_rank_info
@@ -1302,8 +1472,11 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
         signs = (1 - 2 * bits.astype(np.int64)).astype(np.float64)
         signed_entropy = signs * entropy
         folded = fold_soft_token(bits, p_trace, n)
+        map_tokens = map_soft_token(bits, p_trace)
+        folded_map = fold_map_soft_token(bits, p_trace, n)
         torch.save(
             {
+                "derived_trace_schema_version": DERIVED_TRACE_SCHEMA_VERSION,
                 "prompt_idx": idx,
                 "source": source,
                 "generation_model": model_display(generation_model_size),
@@ -1313,9 +1486,12 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
                 "entropy_model": model_display(model_size),
                 "entropy_trace_source": source_label,
                 "tokens_len": int(tokens.numel()),
+                "observed_bucket_bits": bits.astype(np.uint8),
                 "entropy_trace": entropy.astype(np.float32),
                 "signed_entropy_trace": signed_entropy.astype(np.float32),
+                "map_soft_tokens": map_tokens.astype(np.float32),
                 "folded_signed_entropy": folded.astype(np.float32),
+                "folded_map_soft_tokens": folded_map.astype(np.float32),
             },
             path,
         )
@@ -1949,7 +2125,11 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
 
         model = Model.with_options(
             gpu=gpu, max_containers=max_containers
-        )(tag=tag, model_size=generation_model_size)
+        )(
+            tag=tag,
+            model_size=generation_model_size,
+            code_fingerprint_sha256=code_fingerprint["sha256"],
+        )
         cache_status = model.ready.remote()
         print(
             f"[main] model cache ready: {cache_status['generation_model']} "

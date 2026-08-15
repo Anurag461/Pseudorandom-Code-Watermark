@@ -150,11 +150,37 @@ Variant of #4. Within a block, drop any parity check whose `t` token positions i
 
 `run_calibration.py` orchestrates everything:
 
-- **Phase 1: generation.** Parent builds `(encoding_key, decoding_key, partition, prompt_ids, jobs)` once and saves to `WORKDIR/artifacts.pt`. Spawns one worker per GPU (`worker_generate.py`); each handles a `(prompt_idx, watermark)` job back-to-back, saving `WORKDIR/result_NN.pt` (tokens + p_trace + job metadata). Skipped if `REUSE_GENERATIONS=True` and the workdir already has matching artifacts + all 60 result files.
+- **Phase 1: generation.** Parent builds `(encoding_key, decoding_key, partition, prompt_ids, jobs)` once and saves to `WORKDIR/artifacts.pt`. Spawns one worker per GPU (`worker_generate.py`); each handles a `(prompt_idx, watermark)` job back-to-back, saving a self-contained trace record to `WORKDIR/result_NN.pt`. Skipped if `REUSE_GENERATIONS=True` and the workdir already has matching artifacts + all 60 result files.
 - **Phase 2: calibration.** Only for `entropy_fold` / `naive_fold`. Calls `fit_calibration` on the unwatermarked p_traces — re-samples 2000 simulated null draws (uniform random codeword + Bernoulli channel through real p_traces), folds them, computes the test statistic, and sets `threshold = null_mean + Φ⁻¹(1 − fpr) · null_std`. Saves to `qwen_threshold.json`. Syndrome methods skip Phase 2 (analytical threshold).
 - **Phase 3: detect.** Runs the detector on all 60 generations and reports TPR / FPR.
 
 The detector is selected by the top-of-file constant `DETECT_METHOD ∈ {"entropy_fold", "naive_fold", "syndrome_all", "syndrome_entropy"}`.
+
+### Saved PRC generation traces
+
+New PRC records use `generation_trace_schema_version = 1`. Every watermarked
+and null record contains the prompt token IDs, generated token IDs, bucket
+probability `p_trace`, observed bucket bits, binary bucket entropy, signed
+entropy under the observed-bucket sign, MAP soft tokens, both folded traces,
+full-vocabulary base-LM entropy, and the generated token's base-LM
+log-probability. It also records `prc_n`,
+block boundaries, model metadata, and SHA-256 fingerprints of the partition
+and encoding key. The fingerprint identifies the key without copying the
+reusable secret key into each sample.
+
+Watermarked records additionally contain `prc_codeword_bits`: the exact noisy
+`Encode()` bits used at each generated position, including a fresh vector for
+each length-`n` block. `codeword_signed_entropy_trace` stores the entropy under
+the latent PRC-codeword sign, removing any ambiguity with the observed-bucket
+signed trace. Null records store both fields as `None`, because no PRC codeword
+controls null sampling. Treat watermarked trace files as sensitive: the
+realized codeword is detector-relevant experimental data.
+
+Full-vocabulary logits and probability vectors are deliberately not saved;
+they are very large and the compact diagnostics above retain the quantities
+needed for the current analyses. Existing cached records are not rewritten.
+Legacy records remain readable, but an exact historical codeword cannot be
+reconstructed if it was not saved during generation.
 
 ---
 

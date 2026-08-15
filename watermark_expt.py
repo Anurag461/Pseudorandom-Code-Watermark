@@ -200,10 +200,13 @@ import numpy as np
 from scipy.stats import norm
 from prc import KeyGen, Encode, Detect
 from detectors import (
+    build_prc_generation_record,
     binary_entropy,
     fold_naive,
     fold_entropy_weighted,
     fold_soft_token,
+    semantic_sha256,
+    tensor_sha256,
     tokens_to_bits,
     detect_hoeffding,
 )
@@ -230,14 +233,16 @@ def generate_text_watermark_prc(
     partition_map,
     eos_token_id=None,
     watermark=True,
+    collect_trace_details=False,
 ):
     """
-    Yields (next_token, p1) per step where:
+    Yields ``(next_token, p1)`` per step by default. With
+    ``collect_trace_details=True``, yields ``(next_token, p1, details)`` so the
+    caller can persist the exact PRC codeword and compact LM diagnostics.
+
+    The first two values are:
         next_token : (batch, 1) long tensor of generated token IDs
         p1         : (batch,)   float tensor giving LM P[partition 1] at this step
-                                (equal to None when watermark=False, since the
-                                 detector won't use entropy info on unwatermarked
-                                 content -- but we still emit None for symmetry)
 
     The caller should accumulate both streams: the token stream becomes the
     generated text, and the p1 stream is used at detection time to weight
@@ -254,8 +259,11 @@ def generate_text_watermark_prc(
     # independent watermark under the same key.
     def _fresh_codeword():
         if watermark:
-            signed = Encode(encoding_key)           # torch +/-1, length n
+            signed = Encode(encoding_key)            # torch +/-1, length n
             return signed_to_bits(signed).to(device).float()
+        # Preserve the historical null RNG consumption even though these bits
+        # do not control unwatermarked sampling and are deliberately not saved
+        # as a PRC codeword.
         return torch.bernoulli(torch.full((n,), 0.5)).to(device)
 
     print("Watermark Enabled (PRC)" if watermark else "Watermark Disabled",
@@ -278,6 +286,14 @@ def generate_text_watermark_prc(
             probs = torch.softmax(logits, dim=-1)
             p1 = (probs * partition_map[1].to(logits.device)).sum(dim=-1)  # (batch,)
 
+            if collect_trace_details:
+                base_log_probs = torch.log_softmax(logits.float(), dim=-1)
+                base_probs = torch.exp(base_log_probs)
+                base_lm_entropy = -(
+                    base_probs * base_log_probs
+                ).sum(dim=-1)
+                base_lm_entropy = base_lm_entropy / np.log(2)
+
             if watermark:
                 xi = codeword[pos % n]                                  # 0. or 1.
                 bern_p = torch.where(
@@ -297,7 +313,20 @@ def generate_text_watermark_prc(
             if eos_token_id is not None and torch.all(next_token == eos_token_id):
                 break
 
-            yield next_token, p1.detach().cpu()
+            if collect_trace_details:
+                base_token_logprob = base_log_probs.gather(
+                    1, next_token
+                ).squeeze(1)
+                codeword_bit = None
+                if watermark:
+                    codeword_bit = xi.expand(token_ids.shape[0]).detach().cpu()
+                yield next_token, p1.detach().cpu(), {
+                    "prc_codeword_bit": codeword_bit,
+                    "base_lm_entropy": base_lm_entropy.detach().cpu(),
+                    "base_token_logprob": base_token_logprob.detach().cpu(),
+                }
+            else:
+                yield next_token, p1.detach().cpu()
 
             # Decode step: feed only the new token; the cache supplies past K/V.
             logits = model(next_token, cache=cache)[:, -1]
@@ -462,7 +491,8 @@ def detect_watermark_prc(
 def generate_and_collect(generator):
     """Drain a generate_text_watermark_prc generator into (tokens, p_trace)."""
     tok_chunks, p_chunks = [], []
-    for next_token, p1 in generator:
+    for item in generator:
+        next_token, p1 = item[:2]
         tok_chunks.append(next_token)
         p_chunks.append(p1)
     if not tok_chunks:
@@ -472,6 +502,65 @@ def generate_and_collect(generator):
     return tokens, p_trace
 
 
+def generate_and_collect_detailed(generator):
+    """Drain detailed PRC generation into tokens, p-trace, and diagnostics."""
+    tok_chunks, p_chunks = [], []
+    codeword_chunks, entropy_chunks, logprob_chunks = [], [], []
+    saw_null_codeword = False
+    for item in generator:
+        if len(item) != 3:
+            raise ValueError(
+                "detailed collection requires collect_trace_details=True"
+            )
+        next_token, p1, details = item
+        tok_chunks.append(next_token)
+        p_chunks.append(p1)
+        entropy_chunks.append(details["base_lm_entropy"])
+        logprob_chunks.append(details["base_token_logprob"])
+        codeword_bit = details["prc_codeword_bit"]
+        if codeword_bit is None:
+            saw_null_codeword = True
+        else:
+            codeword_chunks.append(codeword_bit)
+
+    if not tok_chunks:
+        empty = np.zeros(0, dtype=np.float32)
+        return (
+            torch.zeros(0, dtype=torch.long),
+            np.zeros(0, dtype=np.float64),
+            {
+                "prc_codeword_bits": None,
+                "base_lm_entropy": empty,
+                "base_token_logprob": empty.copy(),
+            },
+        )
+
+    if saw_null_codeword and codeword_chunks:
+        raise ValueError("generation mixed null and PRC codeword trace steps")
+    tokens = torch.cat(tok_chunks, dim=1).flatten()
+    p_trace = torch.stack(p_chunks, dim=1).flatten().float().numpy().astype(
+        np.float64
+    )
+    codeword_bits = None
+    if codeword_chunks:
+        codeword_bits = (
+            torch.stack(codeword_chunks, dim=1)
+            .flatten()
+            .to(dtype=torch.uint8)
+            .numpy()
+        )
+    details = {
+        "prc_codeword_bits": codeword_bits,
+        "base_lm_entropy": (
+            torch.stack(entropy_chunks, dim=1).flatten().float().numpy()
+        ),
+        "base_token_logprob": (
+            torch.stack(logprob_chunks, dim=1).flatten().float().numpy()
+        ),
+    }
+    return tokens, p_trace, details
+
+
 def generate_batch_and_collect(
     model,
     prompt_ids_batch,
@@ -479,6 +568,7 @@ def generate_batch_and_collect(
     encoding_key,
     partition_map,
     watermark=True,
+    return_trace_details=False,
 ):
     """Batched PRC generation over B equal-length prompts.
 
@@ -487,9 +577,14 @@ def generate_batch_and_collect(
             (RealNews prefixes are all 50 tokens, so no padding is needed).
         others: as in generate_text_watermark_prc.
 
-    Returns:
+    Returns by default:
         tokens   : (B, T) long tensor on CPU (T = max_new_tokens).
         p_traces : (B, T) float64 numpy array of LM P[partition 1] per step.
+
+    With ``return_trace_details=True``, also returns a dict containing
+    ``prc_codeword_bits``, ``base_lm_entropy``, and
+    ``base_token_logprob`` arrays of shape (B, T). The codeword value is None
+    for null generations.
 
     Each sequence gets its OWN fresh PRC codeword per length-n block, so the B
     generations are independent watermark instances under the same key -- byte
@@ -513,6 +608,7 @@ def generate_batch_and_collect(
     codeword = _fresh_codewords() if watermark else None
 
     tok_steps, p_steps = [], []
+    codeword_steps, lm_entropy_steps, token_logprob_steps = [], [], []
     with torch.no_grad():
         cache = KVCache()
         logits = model(prompt_ids_batch, cache=cache)[:, -1]        # (B, vocab)
@@ -523,6 +619,13 @@ def generate_batch_and_collect(
 
             probs = torch.softmax(logits, dim=-1)                   # (B, vocab)
             p1 = (probs * part1.to(logits.device)).sum(dim=-1)      # (B,)
+
+            if return_trace_details:
+                base_log_probs = torch.log_softmax(logits.float(), dim=-1)
+                base_probs = torch.exp(base_log_probs)
+                lm_entropy_steps.append(-(
+                    base_probs * base_log_probs
+                ).sum(dim=-1).div(np.log(2)).detach().cpu())
 
             if watermark:
                 xi = codeword[:, pos % n]                           # (B,)
@@ -542,12 +645,32 @@ def generate_batch_and_collect(
 
             tok_steps.append(next_token)
             p_steps.append(p1.detach().cpu())
+            if return_trace_details:
+                token_logprob_steps.append(base_log_probs.gather(
+                    1, next_token
+                ).squeeze(1).detach().cpu())
+                if watermark:
+                    codeword_steps.append(xi.detach().cpu())
 
             logits = model(next_token, cache=cache)[:, -1]         # (B, vocab)
 
     tokens = torch.cat(tok_steps, dim=1).cpu()                     # (B, T)
     p_traces = torch.stack(p_steps, dim=1).float().numpy().astype(np.float64)
-    return tokens, p_traces
+    if not return_trace_details:
+        return tokens, p_traces
+    details = {
+        "prc_codeword_bits": (
+            torch.stack(codeword_steps, dim=1).to(dtype=torch.uint8).numpy()
+            if watermark else None
+        ),
+        "base_lm_entropy": (
+            torch.stack(lm_entropy_steps, dim=1).float().numpy()
+        ),
+        "base_token_logprob": (
+            torch.stack(token_logprob_steps, dim=1).float().numpy()
+        ),
+    }
+    return tokens, p_traces, details
 
 
 def estimate_partition_trace_batch(
