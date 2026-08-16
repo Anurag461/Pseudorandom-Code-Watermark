@@ -17,6 +17,10 @@ wandb/
 *.bin
 *.safetensors
 
+# Online prefix-sweep per-prompt manifests (large, reproducible from cache)
+outputs/online_map_sweep_*_sampler-*.json
+outputs/online_map_sweep_*_sampler-*_increments/
+
 # Local model caches (do not commit upstream model weights)
 Qwen3-*/
 .cache/
@@ -45,4 +49,4 @@ ATTACK_SUMMARY.md
 generate_corpus.py                                                                                               
 modal_invert.py                                                                                                  
 phase_f_brute_force_steal.py                                                                                     
-prc_visualizer.jsx  
+prc_visualizer.jsx
