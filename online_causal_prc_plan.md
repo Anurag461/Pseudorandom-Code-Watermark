@@ -1,5 +1,29 @@
 # Online Causal PRC Experiment Plan
 
+## Completed 0.6B eta 0.20 boundary audit and Hoeffding additions (2026-08-17)
+
+The missing full audit at the 0.6B online boundary `T=n=3104` is complete.
+It reused all 500 watermarked records as exact prefixes of the static-KV
+`T=4096` online cache and all 500 null records from the compatible `T=8192`
+0.6B cache. The explicit cache-only guard passed before model construction, so
+no GPU generation was launched. Ten one-core CPU workers each scored 50
+prompts and reproduced the boundary-sweep MAP result exactly.
+
+- MAP: TPR `454/500 = 90.8%`; FPR `0/500 = 0.0%`.
+- Entropy-aware: TPR `404/500 = 80.8%`; FPR `0/500 = 0.0%`.
+- Naive: TPR `328/500 = 65.6%`; FPR `0/500 = 0.0%`.
+
+The detector wall time was 102.1 seconds. The exact incremental Modal charge
+was `$0.01466553` before credits (`$0.01348730` CPU and `$0.00117823` memory;
+zero H100 charge). The ten versioned detector shards and combined result are
+persisted on the `prc-data` volume. The local combined manifest is
+`outputs/online_causal_n3104_t3_eta0.20_prompts500_sampler-poscdf-v1_kvcache-static-v1_from_n4096.json`.
+
+The Hoeffding summary now includes this complete 0.6B boundary audit and the
+previously completed 8B eta 0.20 passing-boundary audit at `T=n=13088` (MAP
+`451/500 = 90.2%`, FPR `1/500 = 0.2%`). Both rows are explicitly labeled
+`online_causal_prc` and retain their source-cache provenance in `Notes`.
+
 ## Completed cache-only 8B comparisons at the 0.6B boundaries (2026-08-17)
 
 Two full MAP/entropy-aware/naive audits now measure the 8B model at the
