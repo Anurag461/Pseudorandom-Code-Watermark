@@ -19,6 +19,7 @@ modal run modal_online_run.py::sweep_map_prefixes \
   --t 3 --eta 0.20 --fpr 0.001 \
   --batch 5 --max-containers 1 --gpu H100 \
   --kv-cache-implementation static \
+  --detection-shard-size 1 --detection-max-containers 5 \
   --no-final-audit --no-pin-floor-cache
 ```
 
@@ -31,6 +32,7 @@ modal run modal_online_run.py::sweep_map_prefixes \
   --t 3 --eta 0.20 --fpr 0.001 \
   --batch 125 --max-containers 4 --gpu H100 \
   --kv-cache-implementation static \
+  --detection-shard-size 50 --detection-max-containers 10 \
   --no-final-audit --no-pin-floor-cache
 ```
 
@@ -40,6 +42,16 @@ on, but stops immediately after the first point that is not strictly above
 failing point is saved along with every preceding evaluated increment; all
 shorter requested lengths remain explicitly marked unevaluated. Null
 generation and the entropy/naive audit happen only after the boundary is known.
+
+MAP preparation is parallelized over prompts, not lengths. Production uses ten
+one-core CPU workers with 50 disjoint prompts each. Every worker loads and
+validates its own records, converts each token/probability trace once, and
+computes every longest-prefix signed parity-check contribution and squared
+contribution once. Versioned prepared shards are cached by source artifact,
+code fingerprint, maximum length, and exact prompt-index list. One one-core
+aggregator validates gap-free/nonoverlapping coverage, restores canonical
+prompt order, evaluates global TPR downward until the first failure, and is the
+only process that writes the combined grid or individual increment results.
 
 ## Current recommended experiment: ceiling-first MAP TPR sweep
 
@@ -82,8 +94,10 @@ The production pipeline should therefore:
 2. Generate directly to the ceiling, continue once from the longest compatible
    shorter cache, or use an already-compatible longer cache without generation.
 3. Prepare each saved record once for MAP detection, then evaluate lengths in
-   descending order. Stop immediately after the first failing length; never
-   score the remaining shorter grid blindly.
+   descending order. Prompt preparation may run in disjoint one-core CPU
+   shards, but one aggregator must make the global stopping decision. Stop
+   immediately after the first failing length; never score the remaining
+   shorter grid blindly.
 4. Record TP count, total, TPR, `r(L)`, support hash, threshold provenance,
    source cache/length, and pass/fail for every evaluated length in a resumable
    manifest and summary CSV. Record all skipped lengths as unevaluated.
@@ -137,6 +151,38 @@ The 0.6B ceiling-first setup is now implemented:
   traces, and causal PRC bits at the floor boundary. Incompatible ceiling
   records are moved to a timestamped, recoverable quarantine and regenerated;
   compatible records are left untouched.
+
+#### Prompt-sharded MAP preparation (2026-08-16)
+
+The MAP path now caches each prompt's longest-prefix signed check values and
+squared check values once, then reuses initial row ranges at shorter lengths.
+`sweep_map_prefixes` splits prompt indices into stable disjoint shards and maps
+them to Modal functions with one physical CPU each. Prepared-shard paths include
+the schema version, source artifact fingerprint, code fingerprint, maximum
+length, and an exact prompt-list hash. Cache validation rejects stale metadata,
+non-finite arrays, wrong row counts, reordered records, duplicate indices,
+gaps, and unexpected prompts before any aggregation.
+
+The production default is 50 prompts per shard, at most ten CPU containers for
+500 prompts. Workers persist only reusable preparation caches. A single
+aggregator restores requested prompt order, applies the strict global stopping
+rule, and alone writes prefix increments and the combined grid. Thus a local
+shard's pass/fail rate can never terminate the experiment, and no shorter
+length after the first global failure is evaluated.
+
+The full local suite passed 76 tests. A two-prompt `n=64` static-cache Modal
+validation used two one-core workers and reproduced the serial rows and every
+per-prompt score exactly. Since the global MAP rate failed at 64, the adaptive
+aggregator saved 64 and left 48 unevaluated. In the final implementation,
+supports and OTP signs were prepared once per shard in addition to once-per-
+prompt check values. App `ap-OFCDhlJXLhVXr8MFMo6oDk` prepared both shards in
+12.307 seconds of wall time; an identical rerun,
+`ap-ZeHVKDksGKHUOWnbyypjbv`, reported `2/2` preparation cache hits and 9.908
+seconds including Modal startup, volume loading, serial reference scoring, and
+aggregation. The final pair cost `$0.00249032`; including the two earlier
+prototype/reuse validations, total implementation validation cost was
+`$0.00511536` before credits. The itemized record is
+`outputs/online_map_detection_sharding_smoke_cost_ledger.csv`.
 
 The first production validation used Qwen3-0.6B, `eta=0.05`, `t=3`, 500
 prompts, a ceiling of 512, a floor of 400, and a descending step of 16:

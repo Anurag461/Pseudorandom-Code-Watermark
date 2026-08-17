@@ -1,4 +1,7 @@
+import numpy as np
 import pytest
+
+from online_prc import OnlinePRCKey, target_row_count
 
 from modal_run import (
     art_path,
@@ -27,11 +30,15 @@ from modal_online_run import (
     model_default_gpu as online_model_default_gpu,
     model_display as online_model_display,
     normalize_model_size as normalize_online_model_size,
+    merge_prepared_map_shards,
+    prepared_map_shard_path,
+    prompt_detection_shards,
     rate_strictly_above,
     resolve_model_runtime,
     shared_null_dir as online_null_dir,
     summarize_generation_cost,
     summarize_map_sweep,
+    validate_prepared_map_shard,
     validate_generation_model_record as validate_online_model_record,
     validate_generation_segments,
     validate_online_null_record,
@@ -343,6 +350,113 @@ def test_adaptive_map_sweep_never_scores_after_first_failure(monkeypatch):
     assert result["rows"][1]["tp"] == 3
     assert {length for _, length in calls} == {512, 496}
     assert all("480" not in item["map_scores"] for item in result["results"])
+
+
+def _prepared_shard_payload(key, prompt_indices, maximum=32):
+    row_count = target_row_count(maximum, key)
+    records = []
+    for index in prompt_indices:
+        signed = np.linspace(-0.25, 0.75, row_count) + index * 0.01
+        squared = np.linspace(0.1, 0.9, row_count) + index * 0.001
+        records.append({
+            "prompt_idx": int(index),
+            "signed_check_values": signed,
+            "squared_check_values": squared,
+        })
+    return {
+        "prepared_map_shard_schema_version": 1,
+        "result_kind": "online_map_prepared_prompt_shard",
+        "source_tag": "test/source",
+        "maximum_length": int(maximum),
+        "source_artifact_fingerprint": "artifact-fingerprint",
+        "online_key_sha256": key.fingerprint,
+        "code_fingerprint_sha256": "code-fingerprint",
+        "prompt_indices": [int(index) for index in prompt_indices],
+        "num_prompts": len(prompt_indices),
+        "records": records,
+    }
+
+
+def test_prompt_detection_shards_are_stable_and_paths_are_versioned():
+    assert prompt_detection_shards(list(range(7)), 3) == [
+        [0, 1, 2], [3, 4, 5], [6],
+    ]
+    with pytest.raises(ValueError, match="unique"):
+        prompt_detection_shards([0, 0], 1)
+    with pytest.raises(ValueError, match="positive"):
+        prompt_detection_shards([0], 0)
+
+    first = prepared_map_shard_path(
+        "tag", 64, [0, 1], "artifact", "code"
+    )
+    repeated = prepared_map_shard_path(
+        "tag", 64, [0, 1], "artifact", "code"
+    )
+    regrouped = prepared_map_shard_path(
+        "tag", 64, [1, 0], "artifact", "code"
+    )
+    assert first == repeated
+    assert "prepared_map_v1" in first
+    assert regrouped != first
+
+
+def test_prepared_prompt_shards_merge_exactly_in_requested_order():
+    key = OnlinePRCKey(3, 0.05, b"support", b"otp")
+    left = _prepared_shard_payload(key, [0, 1])
+    right = _prepared_shard_payload(key, [2, 3])
+    complete = _prepared_shard_payload(key, [0, 1, 2, 3])
+    row_count = target_row_count(32, key)
+    for payload in (left, right, complete):
+        validate_prepared_map_shard(
+            payload,
+            source_tag="test/source",
+            maximum_length=32,
+            artifact_fingerprint="artifact-fingerprint",
+            online_key_sha256=key.fingerprint,
+            code_fingerprint_sha256="code-fingerprint",
+            expected_row_count=row_count,
+        )
+
+    sharded = merge_prepared_map_shards(
+        [right, left], [0, 1, 2, 3], key, 32
+    )
+    serial = merge_prepared_map_shards(
+        [complete], [0, 1, 2, 3], key, 32
+    )
+    assert [record["prompt_idx"] for record in sharded] == [0, 1, 2, 3]
+
+    sharded_scores = evaluate_prepared_map_prefixes(
+        sharded, [32, 24, 16], 1e-3, 0.90,
+        stop_after_first_below=False,
+    )
+    serial_scores = evaluate_prepared_map_prefixes(
+        serial, [32, 24, 16], 1e-3, 0.90,
+        stop_after_first_below=False,
+    )
+    assert sharded_scores == serial_scores
+
+
+def test_prepared_prompt_shard_validation_rejects_gaps_and_duplicates():
+    key = OnlinePRCKey(3, 0.05, b"support", b"otp")
+    left = _prepared_shard_payload(key, [0, 1])
+    duplicate = _prepared_shard_payload(key, [1, 2])
+
+    with pytest.raises(ValueError, match="duplicate prompt index 1"):
+        merge_prepared_map_shards(
+            [left, duplicate], [0, 1, 2], key, 32
+        )
+    with pytest.raises(ValueError, match="coverage mismatch"):
+        merge_prepared_map_shards([left], [0, 1, 2], key, 32)
+    with pytest.raises(ValueError, match="code_fingerprint"):
+        validate_prepared_map_shard(
+            left,
+            source_tag="test/source",
+            maximum_length=32,
+            artifact_fingerprint="artifact-fingerprint",
+            online_key_sha256=key.fingerprint,
+            code_fingerprint_sha256="different-code",
+            expected_row_count=target_row_count(32, key),
+        )
 
 
 def test_generation_cost_summary_tracks_replay_suffix_and_gpu_seconds():

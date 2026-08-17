@@ -43,8 +43,11 @@ GPU = "A10G"
 DEFAULT_BATCH = 64
 DEFAULT_8B_BATCH = 25
 DEFAULT_MAX_CONTAINERS = 5
+DEFAULT_DETECTION_SHARD_SIZE = 50
+DEFAULT_DETECTION_MAX_CONTAINERS = 10
 CANONICAL_NUM_PROMPTS = 500
 RESULT_SCHEMA_VERSION = 2
+PREPARED_MAP_SHARD_SCHEMA_VERSION = 1
 LEGACY_SAMPLER_VERSION = "legacy_torch_global_v1"
 ONLINE_MODEL_CACHE_NAME = "qwen3_0p6b_base"
 SAMPLER_CACHE_TAG = "poscdf-v1"
@@ -214,6 +217,41 @@ def shared_null_dir(length: int,
     if model_size != MODEL_SIZE:
         root = f"{root}/{model_cache_name(model_size)}"
     return f"{root}/T{int(length)}"
+
+
+def prepared_map_shard_path(source_tag: str, maximum_length: int,
+                            prompt_indices: list[int],
+                            artifact_fingerprint: str,
+                            code_fingerprint: str) -> str:
+    """Return a deterministic, versioned path for derived MAP preparation."""
+    indices = [int(index) for index in prompt_indices]
+    if not indices or len(set(indices)) != len(indices):
+        raise ValueError("prompt_indices must be nonempty and unique")
+    encoded = ",".join(str(index) for index in indices).encode()
+    index_hash = hashlib.sha256(encoded).hexdigest()[:12]
+    shard_label = (
+        f"{min(indices):04d}-{max(indices):04d}-count{len(indices)}"
+        f"-{index_hash}"
+    )
+    return (
+        f"/data/{source_tag}/prepared_map_v"
+        f"{PREPARED_MAP_SHARD_SCHEMA_VERSION}/"
+        f"artifact-{str(artifact_fingerprint)[:16]}/"
+        f"code-{str(code_fingerprint)[:16]}/T{int(maximum_length)}/"
+        f"shard-{shard_label}.pt"
+    )
+
+
+def prompt_detection_shards(prompt_indices: list[int],
+                            shard_size: int) -> list[list[int]]:
+    """Split unique prompt indices into stable, order-preserving shards."""
+    indices = [int(index) for index in prompt_indices]
+    shard_size = int(shard_size)
+    if not indices or len(set(indices)) != len(indices):
+        raise ValueError("prompt_indices must be nonempty and unique")
+    if shard_size <= 0:
+        raise ValueError("detection shard_size must be positive")
+    return _chunks(indices, shard_size)
 
 
 def _chunks(values, size):
@@ -396,6 +434,121 @@ def evaluate_prepared_map_prefixes(
     }
 
 
+def validate_prepared_map_shard(
+    payload: dict,
+    *,
+    source_tag: str,
+    maximum_length: int,
+    artifact_fingerprint: str,
+    online_key_sha256: str,
+    code_fingerprint_sha256: str,
+    expected_row_count: int,
+) -> list[int]:
+    """Validate a derived prompt-shard cache before aggregation or reuse."""
+    import numpy as np
+
+    expected = {
+        "prepared_map_shard_schema_version": PREPARED_MAP_SHARD_SCHEMA_VERSION,
+        "result_kind": "online_map_prepared_prompt_shard",
+        "source_tag": str(source_tag),
+        "maximum_length": int(maximum_length),
+        "source_artifact_fingerprint": str(artifact_fingerprint),
+        "online_key_sha256": str(online_key_sha256),
+        "code_fingerprint_sha256": str(code_fingerprint_sha256),
+    }
+    for field, value in expected.items():
+        if payload.get(field) != value:
+            raise ValueError(
+                f"prepared MAP shard {field}={payload.get(field)!r}; "
+                f"expected {value!r}"
+            )
+
+    indices = [int(index) for index in payload.get("prompt_indices", [])]
+    records = payload.get("records", [])
+    record_indices = [int(record["prompt_idx"]) for record in records]
+    if not indices or len(set(indices)) != len(indices):
+        raise ValueError("prepared MAP shard prompt indices are invalid")
+    if record_indices != indices:
+        raise ValueError(
+            "prepared MAP shard records are not in declared prompt order"
+        )
+    if int(payload.get("num_prompts", -1)) != len(indices):
+        raise ValueError("prepared MAP shard prompt count is inconsistent")
+
+    row_count = int(expected_row_count)
+    for record in records:
+        signed = np.asarray(
+            record.get("signed_check_values"), dtype=np.float64
+        ).reshape(-1)
+        squared = np.asarray(
+            record.get("squared_check_values"), dtype=np.float64
+        ).reshape(-1)
+        if signed.size != row_count or squared.size != row_count:
+            raise ValueError(
+                f"prepared prompt {record['prompt_idx']} has "
+                f"{signed.size}/{squared.size} rows; expected {row_count}"
+            )
+        if not np.all(np.isfinite(signed)):
+            raise ValueError("prepared signed check values must be finite")
+        if not np.all(np.isfinite(squared)) or np.any(squared < 0):
+            raise ValueError(
+                "prepared squared check values must be finite and nonnegative"
+            )
+    return indices
+
+
+def merge_prepared_map_shards(
+    shard_payloads: list[dict],
+    expected_prompt_indices: list[int],
+    online_key,
+    maximum_length: int,
+) -> list[dict]:
+    """Merge validated shard records into exact requested prompt order."""
+    import numpy as np
+    from online_prc import materialize_supports, target_row_count
+
+    expected = [int(index) for index in expected_prompt_indices]
+    if not expected or len(set(expected)) != len(expected):
+        raise ValueError("expected_prompt_indices must be nonempty and unique")
+    maximum = int(maximum_length)
+    row_count = target_row_count(maximum, online_key)
+    supports = materialize_supports(maximum, online_key)
+    if int(supports.shape[0]) != int(row_count):
+        raise AssertionError("prepared MAP support count is inconsistent")
+
+    by_index = {}
+    for payload in shard_payloads:
+        for record in payload["records"]:
+            index = int(record["prompt_idx"])
+            if index in by_index:
+                raise ValueError(
+                    f"prepared MAP shards duplicate prompt index {index}"
+                )
+            by_index[index] = {
+                "prompt_idx": index,
+                "prepared": {
+                    "online_key": online_key,
+                    "maximum_length": maximum,
+                    "supports": supports,
+                    "signed_check_values": np.asarray(
+                        record["signed_check_values"], dtype=np.float64
+                    ).reshape(-1),
+                    "squared_check_values": np.asarray(
+                        record["squared_check_values"], dtype=np.float64
+                    ).reshape(-1),
+                },
+            }
+
+    missing = [index for index in expected if index not in by_index]
+    extra = sorted(set(by_index) - set(expected))
+    if missing or extra:
+        raise ValueError(
+            f"prepared MAP shard coverage mismatch: missing={missing}, "
+            f"extra={extra}"
+        )
+    return [by_index[index] for index in expected]
+
+
 def increment_payload_from_grid(grid_payload: dict, length: int) -> dict:
     """Extract one independently loadable MAP-prefix result from a grid."""
     length = int(length)
@@ -459,6 +612,9 @@ def increment_payload_from_grid(grid_payload: dict, length: int) -> dict:
         "source_online_support_sha256",
         "code_fingerprint_sha256",
         "experiment_seed",
+        "detection_strategy",
+        "prepared_shard_count",
+        "prepared_shard_cache_hits",
     )
     return {
         **{
@@ -2308,17 +2464,157 @@ def detect_saved_prefix(source_tag: str, prefix_T: int,
     return {"payload": payload, "remote_output_path": output_path}
 
 
-@app.function(volumes={"/data": data_vol}, timeout=1800)
-def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
-                           prompt_indices: list[int], fpr: float,
-                           code_fingerprint_sha256: str,
-                           target_map_tpr: float,
-                           stop_after_first_below: bool = True) -> dict:
-    """Adaptively score exact prefixes of one saved online ceiling cache."""
+@app.function(
+    cpu=1.0,
+    volumes={"/data": data_vol},
+    timeout=1800,
+)
+def prepare_map_prefix_shard(request: dict) -> dict:
+    """Prepare longest-prefix MAP contributions for one prompt shard."""
+    import time
+
+    import numpy as np
+    import torch
+    from detectors import (
+        prepare_online_map_prefix_context,
+        prepare_online_map_prefix_trace,
+    )
+    from online_prc import OnlinePRCKey, target_row_count
+
+    started = time.time()
+    source_tag = str(request["source_tag"])
+    prompt_indices = [int(index) for index in request["prompt_indices"]]
+    maximum = int(request["maximum_length"])
+    code_fingerprint = str(request["code_fingerprint_sha256"])
+    if not prompt_indices or len(set(prompt_indices)) != len(prompt_indices):
+        raise ValueError("prompt shard indices must be nonempty and unique")
+
+    data_vol.reload()
+    artifact = torch.load(
+        artifact_path(source_tag), weights_only=False, map_location="cpu"
+    )
+    source_T = int(artifact["T"])
+    if maximum <= 0 or maximum > source_T:
+        raise ValueError(
+            f"maximum_length must be in [1, source_T={source_T}]"
+        )
+    key = OnlinePRCKey.from_dict(artifact["online_key"])
+    row_count = target_row_count(maximum, key)
+    output_path = prepared_map_shard_path(
+        source_tag,
+        maximum,
+        prompt_indices,
+        artifact["artifact_fingerprint"],
+        code_fingerprint,
+    )
+
+    if os.path.isfile(output_path):
+        cached = torch.load(
+            output_path, weights_only=False, map_location="cpu"
+        )
+        cached_indices = validate_prepared_map_shard(
+            cached,
+            source_tag=source_tag,
+            maximum_length=maximum,
+            artifact_fingerprint=artifact["artifact_fingerprint"],
+            online_key_sha256=key.fingerprint,
+            code_fingerprint_sha256=code_fingerprint,
+            expected_row_count=row_count,
+        )
+        if cached_indices != prompt_indices:
+            raise ValueError("cached prepared shard prompt order is incorrect")
+        return {
+            "remote_output_path": output_path,
+            "prompt_indices": prompt_indices,
+            "num_prompts": len(prompt_indices),
+            "cached": True,
+            "seconds": time.time() - started,
+        }
+
+    partition = artifact["partition"]
+    prepared_context = prepare_online_map_prefix_context(key, maximum)
+    records = []
+    for index in prompt_indices:
+        path = os.path.join(wm_dir(source_tag), f"wm_{index:04d}.pt")
+        record = torch.load(path, weights_only=False, map_location="cpu")
+        validate_online_watermarked_record(record, artifact, index)
+        prepared = prepare_online_map_prefix_trace(
+            key,
+            record["tokens"],
+            record["p_trace"],
+            partition,
+            maximum,
+            prepared_context=prepared_context,
+        )
+        records.append({
+            "prompt_idx": int(index),
+            "signed_check_values": np.asarray(
+                prepared["signed_check_values"], dtype=np.float64
+            ).copy(),
+            "squared_check_values": np.asarray(
+                prepared["squared_check_values"], dtype=np.float64
+            ).copy(),
+        })
+
+    elapsed = time.time() - started
+    payload = {
+        "prepared_map_shard_schema_version": (
+            PREPARED_MAP_SHARD_SCHEMA_VERSION
+        ),
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "scheme": SCHEME,
+        "result_kind": "online_map_prepared_prompt_shard",
+        "source_tag": source_tag,
+        "source_T": source_T,
+        "maximum_length": maximum,
+        "prompt_indices": prompt_indices,
+        "num_prompts": len(prompt_indices),
+        "source_artifact_fingerprint": artifact["artifact_fingerprint"],
+        "online_key_sha256": key.fingerprint,
+        "code_fingerprint_sha256": code_fingerprint,
+        "row_count": int(row_count),
+        "cpu_preparation_seconds": elapsed,
+        "records": records,
+    }
+    validate_prepared_map_shard(
+        payload,
+        source_tag=source_tag,
+        maximum_length=maximum,
+        artifact_fingerprint=artifact["artifact_fingerprint"],
+        online_key_sha256=key.fingerprint,
+        code_fingerprint_sha256=code_fingerprint,
+        expected_row_count=row_count,
+    )
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    torch.save(payload, output_path)
+    if not os.path.isfile(output_path):
+        raise IOError(f"failed to persist prepared MAP shard {output_path}")
+    data_vol.commit()
+    return {
+        "remote_output_path": output_path,
+        "prompt_indices": prompt_indices,
+        "num_prompts": len(prompt_indices),
+        "cached": False,
+        "seconds": elapsed,
+    }
+
+
+@app.function(cpu=1.0, volumes={"/data": data_vol}, timeout=1800)
+def detect_map_prefix_grid_serial(source_tag: str,
+                                  prefix_lengths: list[int],
+                                  prompt_indices: list[int], fpr: float,
+                                  code_fingerprint_sha256: str,
+                                  target_map_tpr: float,
+                                  stop_after_first_below: bool = True,
+                                  persist_results: bool = True) -> dict:
+    """Serial reference path retained for exact sharding validation."""
     import time
 
     import torch
-    from detectors import prepare_online_map_prefix_trace
+    from detectors import (
+        prepare_online_map_prefix_context,
+        prepare_online_map_prefix_trace,
+    )
     from online_prc import OnlinePRCKey, support_sha256, target_row_count
 
     started = time.time()
@@ -2348,6 +2644,7 @@ def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
     expected_source_support = support_sha256(source_T, key)
     prepared_records = []
     maximum = max(lengths)
+    prepared_context = prepare_online_map_prefix_context(key, maximum)
     for index in prompt_indices:
         path = os.path.join(wm_dir(source_tag), f"wm_{index:04d}.pt")
         record = torch.load(path, weights_only=False, map_location="cpu")
@@ -2358,6 +2655,7 @@ def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
             record["p_trace"],
             partition,
             maximum,
+            prepared_context=prepared_context,
         )
         prepared_records.append({
             "prompt_idx": int(index),
@@ -2421,6 +2719,9 @@ def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
         "rows": rows,
         "results": prompt_results,
     }
+    if not persist_results:
+        payload["prefix_result_paths"] = {}
+        return {"payload": payload, "remote_output_path": None}
     output_dir = f"/data/{source_tag}/results"
     os.makedirs(output_dir, exist_ok=True)
     prefix_result_paths = {}
@@ -2447,6 +2748,192 @@ def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
         output_dir,
         f"map-prefix-grid-{grid_label}_fpr-"
         f"{_slug(f'{float(fpr):.12g}')}_prompts-{len(prompt_indices)}.pt",
+    )
+    torch.save(payload, output_path)
+    data_vol.commit()
+    return {"payload": payload, "remote_output_path": output_path}
+
+
+@app.function(cpu=1.0, volumes={"/data": data_vol}, timeout=1800)
+def aggregate_map_prefix_shards(
+    source_tag: str,
+    prefix_lengths: list[int],
+    prompt_indices: list[int],
+    fpr: float,
+    code_fingerprint_sha256: str,
+    target_map_tpr: float,
+    prepared_shards: list[dict],
+    preparation_wall_seconds: float,
+    stop_after_first_below: bool = True,
+) -> dict:
+    """Merge prepared prompt shards, adaptively score, and persist once."""
+    import time
+
+    import torch
+    from online_prc import OnlinePRCKey, support_sha256, target_row_count
+
+    started = time.time()
+    data_vol.reload()
+    artifact = torch.load(
+        artifact_path(source_tag), weights_only=False, map_location="cpu"
+    )
+    generation_model_size = artifact_generation_model_size(artifact)
+    key = OnlinePRCKey.from_dict(artifact["online_key"])
+    source_T = int(artifact["T"])
+    lengths = [int(length) for length in prefix_lengths]
+    indices = [int(index) for index in prompt_indices]
+    if not lengths or len(set(lengths)) != len(lengths):
+        raise ValueError("prefix_lengths must be nonempty and unique")
+    if any(length <= 0 or length > source_T for length in lengths):
+        raise ValueError(
+            f"every prefix length must be in [1, source_T={source_T}]"
+        )
+    if not indices or len(set(indices)) != len(indices):
+        raise ValueError("prompt_indices must be nonempty and unique")
+    if stop_after_first_below and lengths != sorted(lengths, reverse=True):
+        raise ValueError(
+            "adaptive prefix lengths must be ordered longest to shortest"
+        )
+    rate_strictly_above(0, 1, target_map_tpr)
+
+    maximum = max(lengths)
+    row_count = target_row_count(maximum, key)
+    shard_payloads = []
+    shard_inventory = []
+    for summary in prepared_shards:
+        path = str(summary["remote_output_path"])
+        payload = torch.load(path, weights_only=False, map_location="cpu")
+        validated_indices = validate_prepared_map_shard(
+            payload,
+            source_tag=source_tag,
+            maximum_length=maximum,
+            artifact_fingerprint=artifact["artifact_fingerprint"],
+            online_key_sha256=key.fingerprint,
+            code_fingerprint_sha256=code_fingerprint_sha256,
+            expected_row_count=row_count,
+        )
+        if validated_indices != [
+            int(index) for index in summary["prompt_indices"]
+        ]:
+            raise ValueError(
+                f"prepared shard summary disagrees with payload at {path}"
+            )
+        shard_payloads.append(payload)
+        shard_inventory.append({
+            "remote_output_path": path,
+            "prompt_indices": validated_indices,
+            "num_prompts": len(validated_indices),
+            "cached_this_invocation": bool(summary.get("cached", False)),
+            "invocation_seconds": float(summary.get("seconds", 0.0)),
+            "original_cpu_preparation_seconds": float(
+                payload.get("cpu_preparation_seconds", 0.0)
+            ),
+        })
+
+    prepared_records = merge_prepared_map_shards(
+        shard_payloads,
+        indices,
+        key,
+        maximum,
+    )
+    adaptive = evaluate_prepared_map_prefixes(
+        prepared_records,
+        lengths,
+        fpr,
+        target_map_tpr,
+        stop_after_first_below=stop_after_first_below,
+    )
+    rows = adaptive["rows"]
+    for row in rows:
+        length = int(row["n"])
+        expected_rows = target_row_count(length, key)
+        if int(row["r"]) != int(expected_rows):
+            raise AssertionError("prepared detector used the wrong row count")
+        row["prefix_online_support_sha256"] = support_sha256(length, key)
+    prompt_results = adaptive["results"]
+    evaluated_lengths = adaptive["evaluated_lengths"]
+
+    aggregation_seconds = time.time() - started
+    expected_source_support = support_sha256(source_T, key)
+    payload = {
+        "result_schema_version": RESULT_SCHEMA_VERSION,
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "scheme": SCHEME,
+        "result_kind": "saved_online_map_prefix_grid",
+        "detection_strategy": "prompt_sharded_precompute_v1",
+        "source_tag": source_tag,
+        "source_T": source_T,
+        "requested_prefix_lengths": lengths,
+        "prefix_lengths": evaluated_lengths,
+        "unevaluated_prefix_lengths": adaptive["unevaluated_lengths"],
+        "target_map_tpr": float(target_map_tpr),
+        "target_comparison": "strictly_greater_than",
+        "stop_after_first_below": adaptive["stop_after_first_below"],
+        "stopped_after_first_below": adaptive["stopped_after_first_below"],
+        "first_below_n": adaptive["first_below_n"],
+        "t": key.check_weight,
+        "eta": key.noise_rate,
+        "schedule_version": key.schedule_version,
+        "support_sampler_version": key.support_sampler_version,
+        "stopping_policy": STOPPING_POLICY,
+        "fpr_policy": FPR_POLICY,
+        "target_fpr": float(fpr),
+        "generation_model": model_display(generation_model_size),
+        "generation_model_size": generation_model_size,
+        "kv_cache_implementation": artifact_kv_cache_implementation(artifact),
+        "kv_cache_version": kv_cache_version(
+            artifact_kv_cache_implementation(artifact)
+        ),
+        "num_prompts": len(indices),
+        "prompt_indices": indices,
+        "source_artifact_fingerprint": artifact["artifact_fingerprint"],
+        "online_key_sha256": key.fingerprint,
+        "source_online_support_sha256": expected_source_support,
+        "code_fingerprint_sha256": code_fingerprint_sha256,
+        "experiment_seed": int(artifact.get("experiment_seed", SEED)),
+        "cpu_detection_seconds": (
+            float(preparation_wall_seconds) + aggregation_seconds
+        ),
+        "cpu_preparation_wall_seconds": float(preparation_wall_seconds),
+        "cpu_preparation_invocation_seconds": sum(
+            item["invocation_seconds"] for item in shard_inventory
+        ),
+        "cpu_aggregation_seconds": aggregation_seconds,
+        "prepared_shard_count": len(shard_inventory),
+        "prepared_shard_cache_hits": sum(
+            item["cached_this_invocation"] for item in shard_inventory
+        ),
+        "prepared_shards": shard_inventory,
+        "rows": rows,
+        "results": prompt_results,
+    }
+
+    output_dir = f"/data/{source_tag}/results"
+    os.makedirs(output_dir, exist_ok=True)
+    prefix_result_paths = {}
+    for length in evaluated_lengths:
+        increment_payload = increment_payload_from_grid(payload, length)
+        increment_path = os.path.join(
+            output_dir,
+            f"map-prefix-T{length}_fpr-{_slug(f'{float(fpr):.12g}')}"
+            f"_prompts-{len(indices)}.pt",
+        )
+        torch.save(increment_payload, increment_path)
+        if not os.path.isfile(increment_path):
+            raise IOError(
+                f"failed to persist MAP prefix result for T={length}: "
+                f"{increment_path}"
+            )
+        prefix_result_paths[str(length)] = increment_path
+    payload["prefix_result_paths"] = prefix_result_paths
+    grid_label = (
+        f"{min(evaluated_lengths)}-{max(evaluated_lengths)}"
+        f"-count{len(evaluated_lengths)}"
+    )
+    output_path = os.path.join(
+        output_dir,
+        f"map-prefix-grid-{grid_label}_fpr-"
+        f"{_slug(f'{float(fpr):.12g}')}_prompts-{len(indices)}.pt",
     )
     torch.save(payload, output_path)
     data_vol.commit()
@@ -2735,6 +3222,111 @@ def validate_kv_cache_runtime_smoke(n: int = 80, prefix_n: int = 64,
 
 
 @app.local_entrypoint()
+def validate_map_detection_sharding(
+    source_n: int = 64,
+    floor_n: int = 48,
+    step: int = 16,
+    num_prompts: int = 2,
+    t: int = 3,
+    eta: float = 0.05,
+    fpr: float = 1e-3,
+    target_map_tpr: float = 0.90,
+    experiment_seed: int = 424242,
+    generation_model_size: str = MODEL_SIZE,
+    kv_cache_implementation: str = "static",
+    detection_shard_size: int = 1,
+    detection_max_containers: int = 2,
+):
+    """Compare serial and prompt-sharded MAP detection on saved records."""
+    import time
+
+    generation_model_size = normalize_model_size(generation_model_size)
+    kv_cache_implementation = normalize_kv_cache_implementation(
+        kv_cache_implementation
+    )
+    indices = list(range(int(num_prompts)))
+    lengths = descending_prefix_grid(source_n, floor_n, step)
+    shards = prompt_detection_shards(indices, detection_shard_size)
+    code_fingerprint = _local_code_fingerprint()
+    tag = config_tag(
+        source_n,
+        t,
+        eta,
+        experiment_seed,
+        generation_model_size,
+        kv_cache_implementation,
+    )
+
+    serial = detect_map_prefix_grid_serial.remote(
+        tag,
+        lengths,
+        indices,
+        fpr,
+        code_fingerprint,
+        target_map_tpr,
+        True,
+        False,
+    )
+    requests = [{
+        "source_tag": tag,
+        "maximum_length": max(lengths),
+        "prompt_indices": shard,
+        "code_fingerprint_sha256": code_fingerprint,
+    } for shard in shards]
+    started = time.time()
+    prepare_function = prepare_map_prefix_shard.with_options(
+        cpu=1.0,
+        max_containers=min(detection_max_containers, len(shards)),
+    )
+    prepared = list(prepare_function.map(requests))
+    preparation_wall_seconds = time.time() - started
+    sharded = aggregate_map_prefix_shards.remote(
+        tag,
+        lengths,
+        indices,
+        fpr,
+        code_fingerprint,
+        target_map_tpr,
+        prepared,
+        preparation_wall_seconds,
+        True,
+    )
+
+    serial_payload = serial["payload"]
+    sharded_payload = sharded["payload"]
+    compared_fields = (
+        "prefix_lengths",
+        "unevaluated_prefix_lengths",
+        "first_below_n",
+        "rows",
+        "results",
+    )
+    mismatches = [
+        field for field in compared_fields
+        if serial_payload[field] != sharded_payload[field]
+    ]
+    if mismatches:
+        raise AssertionError(
+            f"serial and prompt-sharded MAP detection differ: {mismatches}"
+        )
+    print(
+        f"[map-sharding] exact serial equivalence for {num_prompts} prompts, "
+        f"{len(shards)} shards, evaluated={sharded_payload['prefix_lengths']}",
+        flush=True,
+    )
+    print(
+        f"[map-sharding] preparation wall={preparation_wall_seconds:.3f}s, "
+        f"cache_hits={sharded_payload['prepared_shard_cache_hits']}/"
+        f"{sharded_payload['prepared_shard_count']}",
+        flush=True,
+    )
+    print(
+        f"[map-sharding] remote result: {sharded['remote_output_path']}",
+        flush=True,
+    )
+
+
+@app.local_entrypoint()
 def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
          n: int = 256, t: int = 3, eta: float = 0.05,
          fpr: float = 1e-3, batch: int = 0,
@@ -2955,6 +3547,12 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
                        kv_cache_implementation: str = (
                            DEFAULT_KV_CACHE_IMPLEMENTATION
                        ),
+                       detection_shard_size: int = (
+                           DEFAULT_DETECTION_SHARD_SIZE
+                       ),
+                       detection_max_containers: int = (
+                           DEFAULT_DETECTION_MAX_CONTAINERS
+                       ),
                        final_audit: bool = True,
                        pin_floor_cache: bool = True):
     """Generate one ceiling cache and scan exact MAP prefixes downward."""
@@ -2973,8 +3571,11 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         raise ValueError(
             f"num_prompts must be in [1, {CANONICAL_NUM_PROMPTS}]"
         )
-    if t < 2 or batch <= 0 or max_containers <= 0:
-        raise ValueError("t, batch, and max_containers are invalid")
+    if (
+        t < 2 or batch <= 0 or max_containers <= 0
+        or detection_shard_size <= 0 or detection_max_containers <= 0
+    ):
+        raise ValueError("generation or detection runtime settings are invalid")
     if experiment_seed < 0:
         raise ValueError("experiment_seed must be nonnegative")
     if not 0 <= eta < 0.5 or not 0 < fpr < 1:
@@ -2994,7 +3595,9 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         f"eta={eta}, model={generation_model}, prompts={num_prompts}, "
         f"batch={batch}, kv_cache={kv_cache_implementation}, "
         f"experiment_seed={experiment_seed}, GPU={gpu}, "
-        f"max_containers={max_containers}",
+        f"max_containers={max_containers}, "
+        f"detection_shard_size={detection_shard_size}, "
+        f"detection_max_containers={detection_max_containers}",
         flush=True,
     )
 
@@ -3086,13 +3689,41 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
             flush=True,
         )
 
-    detected = detect_map_prefix_grid.remote(
+    detection_shards = prompt_detection_shards(
+        prompt_indices, detection_shard_size
+    )
+    preparation_requests = [{
+        "source_tag": source_tag,
+        "maximum_length": max(lengths),
+        "prompt_indices": shard,
+        "code_fingerprint_sha256": code_fingerprint,
+    } for shard in detection_shards]
+    preparation_started = time.time()
+    preparation_function = prepare_map_prefix_shard.with_options(
+        cpu=1.0,
+        max_containers=min(
+            int(detection_max_containers), len(detection_shards)
+        ),
+    )
+    prepared_shards = list(preparation_function.map(preparation_requests))
+    preparation_wall_seconds = time.time() - preparation_started
+    if len(prepared_shards) != len(detection_shards):
+        raise AssertionError("MAP prompt-shard preparation result count changed")
+    print(
+        f"[sweep] MAP preparation: shards={len(prepared_shards)}, "
+        f"cache_hits={sum(item['cached'] for item in prepared_shards)}, "
+        f"wall_seconds={preparation_wall_seconds:.1f}",
+        flush=True,
+    )
+    detected = aggregate_map_prefix_shards.remote(
         source_tag,
         lengths,
         prompt_indices,
         fpr,
         code_fingerprint,
         target_map_tpr,
+        prepared_shards,
+        preparation_wall_seconds,
         True,
     )
     grid_payload = detected["payload"]
@@ -3171,6 +3802,10 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         "experiment_seed": int(experiment_seed),
         "gpu": str(gpu),
         "max_containers": int(max_containers),
+        "detection_shard_size": int(detection_shard_size),
+        "detection_max_containers": int(detection_max_containers),
+        "detection_shard_count": len(detection_shards),
+        "detection_strategy": grid_payload["detection_strategy"],
         "generation_plan": plan,
         "ceiling_preparation": ceiling_preparation,
         "generation_cost": cost,

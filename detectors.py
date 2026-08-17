@@ -638,21 +638,8 @@ def detect_online_hoeffding(
     return (decision, info) if return_info else decision
 
 
-def prepare_online_map_prefix_trace(
-    online_key,
-    generated_token_ids,
-    partition_probs,
-    partition_map,
-    maximum_length,
-):
-    """Prepare one MAP trace once for adaptive prefix detection.
-
-    The signed check contribution and squared contribution for every parity
-    row through ``maximum_length`` are independent of the eventual stopping
-    prefix.  Keeping those arrays lets an adaptive sweep score one descending
-    length at a time without repeatedly converting tokens or rebuilding
-    supports, while still avoiding work at lengths after the first failure.
-    """
+def prepare_online_map_prefix_context(online_key, maximum_length):
+    """Materialize prompt-independent MAP supports and OTP signs once."""
     from online_prc import (
         OnlinePRCKey,
         materialize_supports,
@@ -666,6 +653,52 @@ def prepare_online_map_prefix_trace(
     maximum = int(maximum_length)
     if maximum <= 0:
         raise ValueError("maximum_length must be positive")
+    supports = materialize_supports(maximum, online_key)
+    otp = otp_prefix(maximum, online_key).astype(np.int64)
+    otp_signs = np.prod(
+        1 - 2 * otp[supports], axis=1
+    ).astype(np.float64)
+    return {
+        "online_key": online_key,
+        "maximum_length": maximum,
+        "supports": supports,
+        "otp_signs": otp_signs,
+    }
+
+
+def prepare_online_map_prefix_trace(
+    online_key,
+    generated_token_ids,
+    partition_probs,
+    partition_map,
+    maximum_length,
+    prepared_context=None,
+):
+    """Prepare one MAP trace once for adaptive prefix detection.
+
+    The signed check contribution and squared contribution for every parity
+    row through ``maximum_length`` are independent of the eventual stopping
+    prefix.  Keeping those arrays lets an adaptive sweep score one descending
+    length at a time without repeatedly converting tokens or rebuilding
+    supports, while still avoiding work at lengths after the first failure.
+    """
+    from online_prc import OnlinePRCKey
+
+    if isinstance(online_key, dict):
+        online_key = OnlinePRCKey.from_dict(online_key)
+    if not isinstance(online_key, OnlinePRCKey):
+        raise TypeError("online_key must be OnlinePRCKey or its serialized dict")
+    maximum = int(maximum_length)
+    if maximum <= 0:
+        raise ValueError("maximum_length must be positive")
+    context = (
+        prepare_online_map_prefix_context(online_key, maximum)
+        if prepared_context is None else prepared_context
+    )
+    if context.get("online_key") != online_key:
+        raise ValueError("prepared MAP context uses a different online key")
+    if int(context.get("maximum_length", -1)) != maximum:
+        raise ValueError("prepared MAP context uses a different maximum length")
 
     tokens = _as_cpu_token_tensor(generated_token_ids)
     probabilities = np.asarray(
@@ -679,13 +712,9 @@ def prepare_online_map_prefix_trace(
 
     bits = tokens_to_bits(tokens[:maximum], partition_map)
     soft = map_soft_token(bits, probabilities[:maximum])
-    longest_supports = materialize_supports(maximum, online_key)
-    longest_otp = otp_prefix(maximum, online_key).astype(np.int64)
+    longest_supports = context["supports"]
     check_values = np.prod(soft[longest_supports], axis=1)
-    otp_signs = np.prod(
-        1 - 2 * longest_otp[longest_supports], axis=1
-    ).astype(np.float64)
-    signed_check_values = otp_signs * check_values
+    signed_check_values = context["otp_signs"] * check_values
     squared_check_values = check_values ** 2
     if (
         not np.all(np.isfinite(signed_check_values))

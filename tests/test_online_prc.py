@@ -9,6 +9,8 @@ from detectors import (
     detect_online_hoeffding,
     detect_online_map_prefix_grid,
     map_soft_token,
+    prepare_online_map_prefix_context,
+    prepare_online_map_prefix_trace,
 )
 from online_prc import (
     GENERATION_SAMPLER_VERSION,
@@ -261,6 +263,44 @@ def test_online_map_prefix_grid_rejects_invalid_lengths():
     with pytest.raises(ValueError, match="need prefix length 9"):
         detect_online_map_prefix_grid(
             key, tokens, probabilities, _partition(), [9], fpr=1e-3
+        )
+
+
+def test_online_map_prompt_shard_context_is_exactly_reusable():
+    key = _key(813)
+    maximum = 32
+    tokens = torch.arange(maximum, dtype=torch.long) % 2
+    probabilities = np.linspace(0.05, 0.95, maximum)
+    context = prepare_online_map_prefix_context(key, maximum)
+
+    standalone = prepare_online_map_prefix_trace(
+        key, tokens, probabilities, _partition(), maximum
+    )
+    shared = prepare_online_map_prefix_trace(
+        key,
+        tokens,
+        probabilities,
+        _partition(),
+        maximum,
+        prepared_context=context,
+    )
+    assert np.array_equal(
+        standalone["signed_check_values"],
+        shared["signed_check_values"],
+    )
+    assert np.array_equal(
+        standalone["squared_check_values"],
+        shared["squared_check_values"],
+    )
+
+    with pytest.raises(ValueError, match="different online key"):
+        prepare_online_map_prefix_trace(
+            _key(814),
+            tokens,
+            probabilities,
+            _partition(),
+            maximum,
+            prepared_context=context,
         )
 
 
