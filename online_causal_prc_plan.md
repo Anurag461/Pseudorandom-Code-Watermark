@@ -1,6 +1,128 @@
 # Online Causal PRC Experiment Plan
 
-## Immediate next experiment: 0.6B, eta 0.20
+## Completed parallel full audit: Qwen3-8B, eta 0.20, T=n=13088 (2026-08-17)
+
+The requested selected-prefix audit is complete using the cached 14,336-token
+watermarked records and the shared 13,088-token null records. No model or GPU
+generation was launched. Ten one-core CPU workers each scored a stable shard of
+50 prompts under MAP, entropy-aware, and naive weighting; the aggregator restored
+canonical prompt order, checked complete non-overlapping coverage, and persisted
+both the versioned shard results and one combined result.
+
+- MAP: TPR `451/500 = 90.2%`; FPR `1/500 = 0.2%`.
+- Entropy-aware: TPR `431/500 = 86.2%`; FPR `0/500 = 0.0%`.
+- Naive: TPR `385/500 = 77.0%`; FPR `0/500 = 0.0%`.
+
+The parallel detector took 225.9 seconds of wall time. The exact Modal charge
+was `$0.02754972` before credits (`$0.02536963` CPU and `$0.00218009` memory;
+zero H100 charge). The complete successful watermarked campaign including this
+audit cost `$61.00515483`. Including the separately generated reusable null
+cache, the end-to-end successful experiment cost `$114.39120928`; including the
+aborted batch-16 smoke raises that to `$114.49698308`.
+
+The local combined result is
+`outputs/online_causal_n13088_t3_eta0.20_prompts500_gen-qwen3_8b_base_sampler-poscdf-v1_kvcache-static-v1_from_n14336.json`,
+the summary row is in `online_causal_results_summary.csv`, and the exact audit
+charge is appended to
+`outputs/online_map_sweep_n14336_to8192_eta0.20_8b_cost_ledger.csv`. The remote
+combined result and all ten prompt shards remain on the `prc-data` volume.
+
+The full audit path now uses versioned prompt-shard caching by default in both
+`main` and the selected-prefix phase of `sweep_map_prefixes`. A two-prompt Modal
+A/B gate compared it with the serial reference and found identical decisions,
+counts, and detailed scores. Local unit tests also enforce complete shard
+coverage, stable ordering, detector completeness, and rejection of duplicated
+or malformed shards.
+
+## Completed reusable 8B null cache at T=13088 (2026-08-17)
+
+The static-cache null campaign completed successfully at `T=13088` for all
+500 canonical prompts. A reusable batch-25 smoke generated prompts 0--24 on
+one H100; production reused those records and generated prompts 25--499 as 19
+full batch-25 shards on at most ten H100s. A final cache-only audit verified
+all 500 records, with no missing, invalid, rejected, or legacy-manifestless
+records. Every record has `static/static-v1` provenance and exactly 13,088
+tokens, probability values, LM-entropy values, and token-log-probability
+values. The shared eta-independent cache is
+`/data/_nulls/qwen3_8b_base/T13088` and can be truncated exactly for compatible
+fixed or online audits at any requested length at or below 13,088.
+
+The smoke took 2,208.2 measured H100 method-seconds and cost `$2.56828807`.
+Production processed the remaining 6,216,800 token positions in 43,899.9
+aggregate H100 method-seconds and 4,850.1 seconds of end-to-end wall time. Peak
+memory was 70,403,537,408 bytes allocated and 70,478,987,264 bytes reserved
+(about 65.6 GiB reserved). Smoke plus production generated 6,544,000 null token
+positions and cost `$53.38605445` before workspace credits. Exact app-level
+H100/CPU/memory charges are recorded in
+`outputs/shared_null_cache_T13088_8b_cost_ledger.csv`; the reusable manifests
+are `outputs/shared_null_cache_T13088_prompts25_gen-qwen3_8b_base_kvcache-static-v1.json`
+and `outputs/shared_null_cache_T13088_prompts500_gen-qwen3_8b_base_kvcache-static-v1.json`.
+
+## Completed result: Qwen3-8B, eta 0.20 (2026-08-17)
+
+The reusable-smoke and 500-prompt online campaign completed at a ceiling of
+`n=T=14336` with the static KV cache. The accepted production shape was batch
+25: a one-H100, 25-prompt smoke was retained as prompts 0--24, and the remaining
+475 prompts were generated as 19 full batches on at most ten H100 workers. The
+strict `MAP TPR > 90%` boundary on the descending 16-token grid is:
+
+- `n=T=13088`: `451/500 = 90.2%` (passes).
+- `n=T=13072`: `450/500 = 90.0%` (fails and terminates the scan).
+- Empirical boundary bracket: `(13072, 13088]`; 13088 is the smallest
+  evaluated passing grid point under the requested first-failure rule.
+
+The adaptive detector evaluated and saved 80 prefixes from 14336 through
+13072. It explicitly left the 305 requested shorter prefixes from 13056
+through 8192 unevaluated. Ten prompt-preparation shards covered all 500 records.
+Direct local and Modal inventories verified contiguous source records 0--499,
+the combined grid, all 80 production increment results, the smoke grid, and
+both smoke increments. No null generation or entropy/naive final audit was run
+during the boundary search.
+
+Production completion processed 6,809,600 model token positions in 50,126.1
+aggregate H100 method-seconds and 5,630.5 seconds of end-to-end wall time. The
+successful reusable smoke, cache replay, and production completion cost
+`$60.97760511` before workspace credits. Including the aborted batch-16 attempt
+that preceded the requested switch to batch 25, total spend was `$61.08337891`.
+The exact app-level H100/CPU/memory charges are saved in
+`outputs/online_map_sweep_n14336_to8192_eta0.20_8b_cost_ledger.csv`.
+
+## Completed result: 0.6B, eta 0.20 (2026-08-16)
+
+The reusable-smoke and 500-prompt production campaign completed with the
+planned static KV cache, H100 batching, prompt-sharded CPU preparation, and
+adaptive descending stopping rule. The strict `MAP TPR > 90%` boundary on the
+16-token grid is:
+
+- `n=T=3104`: `454/500 = 90.8%` (passes).
+- `n=T=3088`: `449/500 = 89.8%` (fails and terminates the scan).
+- Empirical boundary bracket: `(3088, 3104]`; the smallest evaluated passing
+  grid point is 3104.
+
+The scan evaluated and saved 64 increments from 4096 through 3088. It did not
+score the 129 requested shorter increments from 3072 through 1024; those are
+explicitly recorded as unevaluated in the manifest. The production run reused
+the five smoke records and generated only prompts 5--499 in four exact shards
+of `125 + 125 + 125 + 120` on four H100 workers. A cache-only replay then
+verified all 500 watermarked records and all ten prepared CPU shards, used zero
+GPU generation, and reproduced every TP count and the same stopping boundary.
+
+Saved local outputs are the JSON manifest, CSV, and 64 per-increment JSON files
+under
+`outputs/online_map_sweep_n4096_to1024_step16_t3_eta0.20_prompts500_sampler-poscdf-v1_kvcache-static-v1*`.
+The reusable five-prompt smoke has the corresponding `n4096_to4080` outputs.
+On the Modal volume, all 500 source records remain in the production artifact
+namespace, along with the combined grid result, every evaluated increment, and
+the versioned prompt-preparation shards. No null data or final entropy/naive
+audit was generated during this boundary search, as planned.
+
+Provider cost before workspace credits was `$0.19163305` for the reusable
+smoke, `$2.48965899` for production completion and detection, and `$0.00758154`
+for both cache-only verification replays, or `$2.68887358` in total. The exact
+per-app H100/CPU/memory breakdown is saved in
+`outputs/online_map_sweep_n4096_to1024_eta0.20_0p6b_cost_ledger.csv`.
+
+## Executed experiment setup: 0.6B, eta 0.20
 
 Use the opt-in static KV cache and generate a reusable `T=n=4096` ceiling.
 The production generation is 500 prompts with `--batch 125`, exactly four
@@ -308,8 +430,43 @@ artifacts and watermarked records are deliberately isolated below the suffix
 `_kvcache-static-v1`; historical concatenating tags are unchanged and cache
 discovery refuses to reuse watermarked records across implementations. Records,
 generation segments, sweep manifests, result payloads, and cost telemetry save
-the implementation/version. Shared null generation stays on the established
-concatenating path, so the existing null namespace is not split or polluted.
+the implementation/version.
+
+As of the reusable long-null setup, null generation has an independent
+`--null-kv-cache-implementation` option and can use the same static cache. New
+shared null directories retain the model-qualified `T...` layout so fixed and
+online detection can reuse them across eta values, but add an eta/key-independent
+`_manifest.json` recording the prompt corpus, partition, forced-length policy,
+null sampler/RNG policy, trace schema, and KV-cache implementation/version.
+New records also save this provenance, use atomic writes, report peak CUDA
+allocation/reservation, and are validated before resume. A legacy manifestless
+cache remains readable, but the runner refuses to append static records to a
+partially populated legacy directory. The null-only entry point
+`modal_online_run.py::build_null_cache` supports a reusable smoke, missing-only
+production generation, a cache-only verification pass, and a local cost/result
+manifest without launching watermarked generation or detection. This execution
+change does not alter the detector or its threshold.
+
+Reusable 25-prompt 8B smoke:
+
+```bash
+modal run modal_online_run.py::build_null_cache \
+  --num-prompts 25 --n 14336 --t 3 --eta 0.20 \
+  --generation-model-size 8B --batch 25 --gpu H100 --max-containers 1 \
+  --kv-cache-implementation static \
+  --null-kv-cache-implementation static
+```
+
+Production completion reuses those exact records and schedules the remaining
+19 batches over at most ten H100 containers:
+
+```bash
+modal run modal_online_run.py::build_null_cache \
+  --num-prompts 500 --n 14336 --t 3 --eta 0.20 \
+  --generation-model-size 8B --batch 25 --gpu H100 --max-containers 10 \
+  --kv-cache-implementation static \
+  --null-kv-cache-implementation static
+```
 
 Local tests use a two-layer miniature Qwen model and require exact logits and
 K/V values at prompt prefill and every decode step. They also verify stable

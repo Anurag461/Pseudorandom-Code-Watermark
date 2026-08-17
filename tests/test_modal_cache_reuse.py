@@ -19,10 +19,13 @@ from modal_online_run import (
     artifact_generation_model_size,
     artifact_kv_cache_implementation,
     artifact_compatibility_error,
+    compare_full_audit_results,
     config_tag as online_config_tag,
     descending_prefix_grid,
     discover_online_cache_tags,
     evaluate_prepared_map_prefixes,
+    expected_null_cache_manifest,
+    full_audit_shard_path,
     increment_payload_from_grid,
     legacy_config_tag as legacy_online_config_tag,
     model_cache_name as online_model_cache_name,
@@ -31,14 +34,18 @@ from modal_online_run import (
     model_display as online_model_display,
     normalize_model_size as normalize_online_model_size,
     merge_prepared_map_shards,
+    merge_full_audit_shards,
     prepared_map_shard_path,
     prompt_detection_shards,
     rate_strictly_above,
     resolve_model_runtime,
+    resolve_null_kv_cache_implementation,
     shared_null_dir as online_null_dir,
     summarize_generation_cost,
     summarize_map_sweep,
+    null_cache_manifest_compatibility_error,
     validate_prepared_map_shard,
+    validate_full_audit_shard,
     validate_generation_model_record as validate_online_model_record,
     validate_generation_segments,
     validate_online_null_record,
@@ -398,6 +405,112 @@ def test_prompt_detection_shards_are_stable_and_paths_are_versioned():
     assert first == repeated
     assert "prepared_map_v1" in first
     assert regrouped != first
+
+
+def _full_audit_shard_payload(prompt_indices, prefix_T=64):
+    results = []
+    for watermark in (True, False):
+        for index in prompt_indices:
+            results.append({
+                "prompt_idx": int(index),
+                "watermark": watermark,
+                "scores": {
+                    weight: {
+                        "decision": bool(watermark and index % 2 == 0),
+                        "length": int(prefix_T),
+                    }
+                    for weight in ("map", "entropy", "naive")
+                },
+            })
+    return {
+        "full_audit_shard_schema_version": 1,
+        "result_kind": "online_full_audit_prompt_shard",
+        "tag": "test/tag",
+        "watermarked_source_tag": "test/source",
+        "T": int(prefix_T),
+        "null_T": 80,
+        "target_fpr": 1e-3,
+        "fpr_policy": "one_shot",
+        "artifact_fingerprint": "artifact",
+        "watermarked_source_artifact_fingerprint": "source-artifact",
+        "online_key_sha256": "key",
+        "code_fingerprint_sha256": "code",
+        "prompt_indices": [int(index) for index in prompt_indices],
+        "num_prompts": len(prompt_indices),
+        "results": results,
+    }
+
+
+def test_full_audit_prompt_shards_validate_and_merge_in_serial_order():
+    left = _full_audit_shard_payload([0, 1])
+    right = _full_audit_shard_payload([2, 3])
+    validation = {
+        "tag": "test/tag",
+        "watermarked_source_tag": "test/source",
+        "prefix_T": 64,
+        "null_T": 80,
+        "fpr": 1e-3,
+        "artifact_fingerprint": "artifact",
+        "watermarked_source_fingerprint": "source-artifact",
+        "online_key_sha256": "key",
+        "code_fingerprint_sha256": "code",
+    }
+    assert validate_full_audit_shard(left, **validation) == [0, 1]
+    assert validate_full_audit_shard(right, **validation) == [2, 3]
+
+    merged = merge_full_audit_shards([right, left], [0, 1, 2, 3])
+    assert [
+        (result["watermark"], result["prompt_idx"])
+        for result in merged
+    ] == [
+        (True, 0), (True, 1), (True, 2), (True, 3),
+        (False, 0), (False, 1), (False, 2), (False, 3),
+    ]
+
+    path = full_audit_shard_path(
+        "test/tag", 64, 80, [0, 1], "artifact", "source", "code", 1e-3
+    )
+    assert "full_audit_shards_v1" in path
+    assert "shard-0000-0001-count2" in path
+
+
+def test_full_audit_prompt_shards_reject_duplicates_and_bad_scores():
+    left = _full_audit_shard_payload([0, 1])
+    duplicate = _full_audit_shard_payload([1, 2])
+    with pytest.raises(ValueError, match="duplicate watermark=True"):
+        merge_full_audit_shards([left, duplicate], [0, 1, 2])
+    with pytest.raises(ValueError, match="coverage mismatch"):
+        merge_full_audit_shards([left], [0, 1, 2])
+
+    left["results"][0]["scores"]["map"]["length"] = 63
+    with pytest.raises(ValueError, match="wrong length"):
+        validate_full_audit_shard(
+            left,
+            tag="test/tag",
+            watermarked_source_tag="test/source",
+            prefix_T=64,
+            null_T=80,
+            fpr=1e-3,
+            artifact_fingerprint="artifact",
+            watermarked_source_fingerprint="source-artifact",
+            online_key_sha256="key",
+            code_fingerprint_sha256="code",
+        )
+
+
+def test_full_audit_comparison_allows_only_tiny_float_roundoff():
+    left = _full_audit_shard_payload([0])["results"]
+    right = _full_audit_shard_payload([0])["results"]
+    right[0]["scores"]["entropy"]["statistic"] = 1.0
+    left[0]["scores"]["entropy"]["statistic"] = 1.0 + 5e-15
+    comparison = compare_full_audit_results(left, right)
+    assert comparison["equivalent"] is True
+    assert comparison["max_abs_float_difference"] == pytest.approx(5e-15)
+
+    right[0]["scores"]["entropy"]["decision"] = False
+    comparison = compare_full_audit_results(left, right)
+    assert comparison["equivalent"] is False
+    assert any(path.endswith("decision") for path in comparison["mismatches"])
 
 
 def test_prepared_prompt_shards_merge_exactly_in_requested_order():
@@ -786,6 +899,118 @@ def test_online_8b_null_validation_requires_model_partition_and_prompt():
             artifact,
             0,
             4,
+        )
+
+
+def test_static_null_manifest_is_eta_independent_and_versioned():
+    import torch
+
+    artifact = {
+        "T": 8,
+        "prompt_ids_list": [[1, 2], [3, 4]],
+        "partition": torch.tensor([[1, 0], [0, 1]], dtype=torch.float32),
+        "generation_model_size": "8B",
+        "generation_model": "Qwen3-8B-Base",
+        "experiment_seed": 111,
+        "online_key": {"noise_rate": 0.20},
+    }
+    same_null_inputs = {
+        **artifact,
+        "experiment_seed": 999,
+        "online_key": {"noise_rate": 0.05},
+    }
+    manifest = expected_null_cache_manifest(artifact, 8, "static")
+
+    assert manifest["kv_cache_implementation"] == "static"
+    assert manifest["kv_cache_version"] == "static-v1"
+    assert manifest["generation_sampler_version"] == (
+        "torch_multinomial_global_v1"
+    )
+    assert manifest == expected_null_cache_manifest(
+        same_null_inputs, 8, "static"
+    )
+    assert null_cache_manifest_compatibility_error(
+        manifest, same_null_inputs, 8
+    ) is None
+    assert "kv_cache_implementation differs" in (
+        null_cache_manifest_compatibility_error(
+            manifest, artifact, 8, "concat"
+        ) or ""
+    )
+
+
+def test_null_cache_implementation_is_explicit_or_inherits_watermarked():
+    assert resolve_null_kv_cache_implementation("", "static") == "static"
+    assert resolve_null_kv_cache_implementation("concat", "static") == "concat"
+    assert resolve_null_kv_cache_implementation("preallocated", "concat") == (
+        "static"
+    )
+
+
+def test_versioned_static_null_record_supports_exact_prefix_validation():
+    import torch
+    from detectors import tensor_sha256
+
+    partition = torch.tensor([[1, 0], [0, 1]], dtype=torch.float32)
+    artifact = {
+        "T": 4,
+        "prompt_ids_list": [[1, 0]],
+        "partition": partition,
+        "generation_model_size": "8B",
+        "generation_model": "Qwen3-8B-Base",
+    }
+    record = {
+        "watermark": False,
+        "prc_codeword_bits": None,
+        "tokens": torch.tensor([0, 1, 0, 1]),
+        "p_trace": np.full(4, 0.5),
+        "base_lm_entropy": np.full(4, 1.0, dtype=np.float32),
+        "base_token_logprob": np.full(4, -1.0, dtype=np.float32),
+        "prompt_token_ids": torch.tensor([1, 0]),
+        "partition_sha256": tensor_sha256(partition),
+        "generation_model_size": "8B",
+        "generation_model": "Qwen3-8B-Base",
+        "prompt_idx": 0,
+        "stopping_policy": "forced_length_v1",
+        "source_T": 4,
+        "realized_length": 4,
+        "generation_sampler_version": "torch_multinomial_global_v1",
+        "generation_rng_policy": "torch_multinomial_global_v1",
+        "kv_cache_implementation": "static",
+        "kv_cache_version": "static-v1",
+    }
+
+    validate_online_null_record(
+        record,
+        artifact,
+        0,
+        2,
+        source_length=4,
+        expected_kv_cache_implementation="static",
+        require_provenance=True,
+    )
+    # The fixed runner shares this null namespace and ignores the additional
+    # online/static provenance when the model identity matches.
+    validate_generation_record(record, "8B", "null", 0)
+    with pytest.raises(ValueError, match="kv_cache_implementation"):
+        validate_online_null_record(
+            {**record, "kv_cache_implementation": "concat"},
+            artifact,
+            0,
+            2,
+            source_length=4,
+            expected_kv_cache_implementation="static",
+            require_provenance=True,
+        )
+    with pytest.raises(ValueError, match="PRC codeword bits"):
+        validate_online_null_record(
+            {**record, "prc_codeword_bits": np.zeros(4, dtype=np.uint8)},
+            artifact,
+            0,
+            2,
+            source_length=4,
+            expected_kv_cache_implementation="static",
+            require_provenance=True,
         )
 
 

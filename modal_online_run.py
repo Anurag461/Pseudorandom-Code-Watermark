@@ -46,8 +46,12 @@ DEFAULT_MAX_CONTAINERS = 5
 DEFAULT_DETECTION_SHARD_SIZE = 50
 DEFAULT_DETECTION_MAX_CONTAINERS = 10
 CANONICAL_NUM_PROMPTS = 500
-RESULT_SCHEMA_VERSION = 2
+RESULT_SCHEMA_VERSION = 3
 PREPARED_MAP_SHARD_SCHEMA_VERSION = 1
+FULL_AUDIT_SHARD_SCHEMA_VERSION = 1
+NULL_CACHE_MANIFEST_SCHEMA_VERSION = 1
+NULL_CACHE_MANIFEST_FILENAME = "_manifest.json"
+NULL_GENERATION_SAMPLER_VERSION = "torch_multinomial_global_v1"
 LEGACY_SAMPLER_VERSION = "legacy_torch_global_v1"
 ONLINE_MODEL_CACHE_NAME = "qwen3_0p6b_base"
 SAMPLER_CACHE_TAG = "poscdf-v1"
@@ -71,6 +75,8 @@ LOCAL_CSV_COLUMNS = (
     "batch",
     "kv cache implementation",
     "kv cache version",
+    "null kv cache implementation",
+    "null kv cache version",
     "experiment seed",
     "Map TPR",
     "Map FPR",
@@ -112,6 +118,16 @@ def kv_cache_version(implementation="concat") -> str:
         STATIC_KV_CACHE_VERSION
         if implementation == "static"
         else CONCAT_KV_CACHE_VERSION
+    )
+
+
+def resolve_null_kv_cache_implementation(
+    null_implementation: str = "",
+    watermarked_implementation: str = DEFAULT_KV_CACHE_IMPLEMENTATION,
+) -> str:
+    """Resolve an explicit null cache choice, inheriting WM when omitted."""
+    return normalize_kv_cache_implementation(
+        null_implementation or watermarked_implementation
     )
 
 
@@ -219,6 +235,89 @@ def shared_null_dir(length: int,
     return f"{root}/T{int(length)}"
 
 
+def null_cache_manifest_path(length: int,
+                             generation_model_size: str = MODEL_SIZE) -> str:
+    return os.path.join(
+        shared_null_dir(length, generation_model_size),
+        NULL_CACHE_MANIFEST_FILENAME,
+    )
+
+
+def expected_null_cache_manifest(
+    artifact: dict,
+    length: int,
+    null_kv_cache_implementation: str,
+) -> dict:
+    """Build eta/key-independent provenance for a shared null cache."""
+    from detectors import (
+        GENERATION_TRACE_SCHEMA_VERSION,
+        semantic_sha256,
+        tensor_sha256,
+    )
+
+    model_size = artifact_generation_model_size(artifact)
+    implementation = normalize_kv_cache_implementation(
+        null_kv_cache_implementation
+    )
+    prompts = artifact["prompt_ids_list"]
+    return {
+        "schema_version": NULL_CACHE_MANIFEST_SCHEMA_VERSION,
+        "cache_kind": "unwatermarked_generation",
+        "T": int(length),
+        "forced_length": True,
+        "stopping_policy": STOPPING_POLICY,
+        "generation_model_size": model_size,
+        "generation_model": model_display(model_size),
+        "generation_model_variant": "base",
+        "prompt_count": len(prompts),
+        "prompt_corpus_sha256": semantic_sha256(prompts),
+        "partition_sha256": tensor_sha256(artifact["partition"]),
+        "generation_trace_schema_version": GENERATION_TRACE_SCHEMA_VERSION,
+        "generation_sampler_version": NULL_GENERATION_SAMPLER_VERSION,
+        "generation_rng_policy": NULL_GENERATION_SAMPLER_VERSION,
+        "kv_cache_implementation": implementation,
+        "kv_cache_version": kv_cache_version(implementation),
+    }
+
+
+def null_cache_manifest_compatibility_error(
+    manifest: dict,
+    artifact: dict,
+    length: int,
+    null_kv_cache_implementation: str | None = None,
+) -> str | None:
+    """Return why a shared null manifest is incompatible, if applicable."""
+    expected_implementation = (
+        normalize_kv_cache_implementation(null_kv_cache_implementation)
+        if null_kv_cache_implementation is not None else
+        normalize_kv_cache_implementation(
+            manifest.get("kv_cache_implementation")
+        )
+    )
+    expected = expected_null_cache_manifest(
+        artifact, length, expected_implementation
+    )
+    for field, expected_value in expected.items():
+        observed = manifest.get(field)
+        if observed != expected_value:
+            return f"{field} differs: {observed!r} != {expected_value!r}"
+    return None
+
+
+def load_null_cache_manifest(
+    length: int,
+    generation_model_size: str = MODEL_SIZE,
+) -> dict | None:
+    path = null_cache_manifest_path(length, generation_model_size)
+    if not os.path.isfile(path):
+        return None
+    with open(path) as handle:
+        manifest = json.load(handle)
+    if not isinstance(manifest, dict):
+        raise ValueError(f"null cache manifest {path} is not a mapping")
+    return manifest
+
+
 def prepared_map_shard_path(source_tag: str, maximum_length: int,
                             prompt_indices: list[int],
                             artifact_fingerprint: str,
@@ -252,6 +351,193 @@ def prompt_detection_shards(prompt_indices: list[int],
     if shard_size <= 0:
         raise ValueError("detection shard_size must be positive")
     return _chunks(indices, shard_size)
+
+
+def full_audit_shard_path(
+    tag: str,
+    prefix_T: int,
+    null_T: int,
+    prompt_indices: list[int],
+    artifact_fingerprint: str,
+    watermarked_source_fingerprint: str,
+    code_fingerprint: str,
+    fpr: float,
+) -> str:
+    """Return a deterministic path for one full-detector prompt shard."""
+    indices = [int(index) for index in prompt_indices]
+    if not indices or len(set(indices)) != len(indices):
+        raise ValueError("prompt_indices must be nonempty and unique")
+    encoded = ",".join(str(index) for index in indices).encode()
+    index_hash = hashlib.sha256(encoded).hexdigest()[:12]
+    shard_label = (
+        f"{min(indices):04d}-{max(indices):04d}-count{len(indices)}"
+        f"-{index_hash}"
+    )
+    return (
+        f"/data/{tag}/full_audit_shards_v"
+        f"{FULL_AUDIT_SHARD_SCHEMA_VERSION}/"
+        f"artifact-{str(artifact_fingerprint)[:16]}/"
+        f"wm-{str(watermarked_source_fingerprint)[:16]}/"
+        f"code-{str(code_fingerprint)[:16]}/T{int(prefix_T)}-"
+        f"nullT{int(null_T)}-fpr{_slug(f'{float(fpr):.12g}')}/"
+        f"shard-{shard_label}.pt"
+    )
+
+
+def validate_full_audit_shard(
+    payload: dict,
+    *,
+    tag: str,
+    watermarked_source_tag: str,
+    prefix_T: int,
+    null_T: int,
+    fpr: float,
+    artifact_fingerprint: str,
+    watermarked_source_fingerprint: str,
+    online_key_sha256: str,
+    code_fingerprint_sha256: str,
+) -> list[int]:
+    """Validate one cached MAP/entropy/naive prompt-shard result."""
+    expected = {
+        "full_audit_shard_schema_version": FULL_AUDIT_SHARD_SCHEMA_VERSION,
+        "result_kind": "online_full_audit_prompt_shard",
+        "tag": str(tag),
+        "watermarked_source_tag": str(watermarked_source_tag),
+        "T": int(prefix_T),
+        "null_T": int(null_T),
+        "target_fpr": float(fpr),
+        "fpr_policy": FPR_POLICY,
+        "artifact_fingerprint": str(artifact_fingerprint),
+        "watermarked_source_artifact_fingerprint": str(
+            watermarked_source_fingerprint
+        ),
+        "online_key_sha256": str(online_key_sha256),
+        "code_fingerprint_sha256": str(code_fingerprint_sha256),
+    }
+    for field, value in expected.items():
+        if payload.get(field) != value:
+            raise ValueError(
+                f"full-audit shard {field}={payload.get(field)!r}; "
+                f"expected {value!r}"
+            )
+
+    indices = [int(index) for index in payload.get("prompt_indices", [])]
+    if not indices or len(set(indices)) != len(indices):
+        raise ValueError("full-audit shard prompt indices are invalid")
+    if int(payload.get("num_prompts", -1)) != len(indices):
+        raise ValueError("full-audit shard prompt count is inconsistent")
+
+    results = payload.get("results", [])
+    expected_order = [
+        (watermark, index)
+        for watermark in (True, False)
+        for index in indices
+    ]
+    observed_order = [
+        (bool(result.get("watermark")), int(result.get("prompt_idx", -1)))
+        for result in results
+    ]
+    if observed_order != expected_order:
+        raise ValueError(
+            "full-audit shard results are not in watermark/prompt order"
+        )
+    for result in results:
+        scores = result.get("scores", {})
+        if set(scores) != {"map", "entropy", "naive"}:
+            raise ValueError("full-audit shard detector set is incomplete")
+        for score in scores.values():
+            if not isinstance(score.get("decision"), bool):
+                raise ValueError("full-audit decision must be boolean")
+            if int(score.get("length", -1)) != int(prefix_T):
+                raise ValueError("full-audit shard score used the wrong length")
+    return indices
+
+
+def merge_full_audit_shards(
+    shard_payloads: list[dict],
+    expected_prompt_indices: list[int],
+) -> list[dict]:
+    """Merge full-audit shards in serial detector result order."""
+    expected = [int(index) for index in expected_prompt_indices]
+    if not expected or len(set(expected)) != len(expected):
+        raise ValueError("expected_prompt_indices must be nonempty and unique")
+    by_kind = {True: {}, False: {}}
+    for payload in shard_payloads:
+        for result in payload.get("results", []):
+            watermark = bool(result["watermark"])
+            index = int(result["prompt_idx"])
+            if index in by_kind[watermark]:
+                raise ValueError(
+                    f"full-audit shards duplicate watermark={watermark} "
+                    f"prompt index {index}"
+                )
+            by_kind[watermark][index] = result
+
+    for watermark in (True, False):
+        missing = [index for index in expected if index not in by_kind[watermark]]
+        extra = sorted(set(by_kind[watermark]) - set(expected))
+        if missing or extra:
+            raise ValueError(
+                f"full-audit shard coverage mismatch for "
+                f"watermark={watermark}: missing={missing}, extra={extra}"
+            )
+    return [
+        by_kind[watermark][index]
+        for watermark in (True, False)
+        for index in expected
+    ]
+
+
+def compare_full_audit_results(
+    left: list[dict],
+    right: list[dict],
+    float_atol: float = 1e-12,
+) -> dict:
+    """Compare audit payloads exactly except for CPU float roundoff."""
+    import math
+
+    mismatches = []
+    max_abs_float_difference = 0.0
+
+    def compare(left_value, right_value, path):
+        nonlocal max_abs_float_difference
+        if isinstance(left_value, dict) and isinstance(right_value, dict):
+            if set(left_value) != set(right_value):
+                mismatches.append(f"{path}:keys")
+                return
+            for key in left_value:
+                compare(left_value[key], right_value[key], f"{path}.{key}")
+            return
+        if isinstance(left_value, list) and isinstance(right_value, list):
+            if len(left_value) != len(right_value):
+                mismatches.append(f"{path}:length")
+                return
+            for index, (left_item, right_item) in enumerate(
+                zip(left_value, right_value)
+            ):
+                compare(left_item, right_item, f"{path}[{index}]")
+            return
+        if isinstance(left_value, float) and isinstance(right_value, float):
+            difference = abs(left_value - right_value)
+            if math.isfinite(difference):
+                max_abs_float_difference = max(
+                    max_abs_float_difference, difference
+                )
+            if not math.isclose(
+                left_value, right_value, rel_tol=0.0, abs_tol=float_atol
+            ):
+                mismatches.append(path)
+            return
+        if left_value != right_value:
+            mismatches.append(path)
+
+    compare(left, right, "results")
+    return {
+        "equivalent": not mismatches,
+        "float_atol": float(float_atol),
+        "max_abs_float_difference": max_abs_float_difference,
+        "mismatches": mismatches,
+    }
 
 
 def _chunks(values, size):
@@ -965,10 +1251,18 @@ def validate_generation_model_record(record: dict, model_size: str,
         )
 
 
-def validate_online_null_record(record: dict, artifact: dict,
-                                prompt_index: int,
-                                required_length: int) -> None:
-    """Validate a fixed-run null before using its trace for online detection."""
+def validate_online_null_record(
+    record: dict,
+    artifact: dict,
+    prompt_index: int,
+    required_length: int,
+    *,
+    source_length: int | None = None,
+    expected_kv_cache_implementation: str | None = None,
+    require_provenance: bool = False,
+) -> None:
+    """Validate a shared null while retaining legacy-cache readability."""
+    import numpy as np
     import torch
     from detectors import tensor_sha256
 
@@ -978,12 +1272,31 @@ def validate_online_null_record(record: dict, artifact: dict,
     )
     if record.get("watermark") not in (False, None):
         raise ValueError(f"null record {prompt_index} is marked watermarked")
-    for field in ("tokens", "p_trace"):
+    if record.get("prc_codeword_bits") is not None:
+        raise ValueError(f"null record {prompt_index} stores PRC codeword bits")
+    expected_source_length = (
+        int(source_length) if source_length is not None else None
+    )
+    length_fields = ["tokens", "p_trace"]
+    for field in ("base_lm_entropy", "base_token_logprob"):
+        if require_provenance or record.get(field) is not None:
+            length_fields.append(field)
+    for field in length_fields:
         value = record.get(field)
-        if value is None or len(value) < int(required_length):
+        observed_length = 0 if value is None else int(np.asarray(value).size)
+        if observed_length < int(required_length):
             raise ValueError(
                 f"null record {prompt_index} field {field!r} is shorter "
                 f"than {required_length}"
+            )
+        if (
+            expected_source_length is not None
+            and observed_length != expected_source_length
+        ):
+            raise ValueError(
+                f"null record {prompt_index} field {field!r} has length "
+                f"{observed_length}, expected source length "
+                f"{expected_source_length}"
             )
     expected_partition = tensor_sha256(artifact["partition"])
     stored_partition = record.get("partition_sha256")
@@ -1004,6 +1317,56 @@ def validate_online_null_record(record: dict, artifact: dict,
         ).reshape(-1)
         if not torch.equal(observed_prompt, expected_prompt):
             raise ValueError(f"null record {prompt_index} has the wrong prompt")
+
+    optional_scalars = {
+        "prompt_idx": int(prompt_index),
+        "stopping_policy": STOPPING_POLICY,
+        "generation_sampler_version": NULL_GENERATION_SAMPLER_VERSION,
+        "generation_rng_policy": NULL_GENERATION_SAMPLER_VERSION,
+    }
+    if expected_source_length is not None:
+        optional_scalars.update({
+            "source_T": expected_source_length,
+            "realized_length": expected_source_length,
+        })
+    for field, expected in optional_scalars.items():
+        observed = record.get(field)
+        if observed is None and not require_provenance:
+            continue
+        if observed != expected:
+            raise ValueError(
+                f"null record {prompt_index} has incompatible {field}: "
+                f"{observed!r} != {expected!r}"
+            )
+
+    stored_implementation = record.get("kv_cache_implementation")
+    if expected_kv_cache_implementation is not None:
+        expected_implementation = normalize_kv_cache_implementation(
+            expected_kv_cache_implementation
+        )
+        if stored_implementation is None and require_provenance:
+            raise ValueError(
+                f"null record {prompt_index} lacks kv cache provenance"
+            )
+        if stored_implementation is not None:
+            observed_implementation = normalize_kv_cache_implementation(
+                stored_implementation
+            )
+            if observed_implementation != expected_implementation:
+                raise ValueError(
+                    f"null record {prompt_index} has incompatible "
+                    f"kv_cache_implementation: "
+                    f"{observed_implementation!r} != "
+                    f"{expected_implementation!r}"
+                )
+            observed_version = record.get("kv_cache_version")
+            expected_version = kv_cache_version(expected_implementation)
+            if observed_version != expected_version:
+                raise ValueError(
+                    f"null record {prompt_index} has incompatible "
+                    f"kv_cache_version: {observed_version!r} != "
+                    f"{expected_version!r}"
+                )
 
 
 def validate_online_watermarked_record(record: dict, artifact: dict,
@@ -1260,8 +1623,12 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
     }
 
 
-def _find_compatible_null_T(prompt_indices: list[int], requested_T: int,
-                            generation_model_size: str = MODEL_SIZE):
+def _find_compatible_null_T(
+    prompt_indices: list[int],
+    requested_T: int,
+    generation_model_size: str = MODEL_SIZE,
+    artifact: dict | None = None,
+):
     model_size = normalize_model_size(generation_model_size)
     null_root = os.path.dirname(shared_null_dir(0, model_size))
     if not os.path.isdir(null_root):
@@ -1273,6 +1640,17 @@ def _find_compatible_null_T(prompt_indices: list[int], requested_T: int,
             candidates.append(int(match.group(1)))
     for length in sorted(candidates):
         directory = shared_null_dir(length, model_size)
+        if artifact is not None:
+            try:
+                manifest = load_null_cache_manifest(length, model_size)
+                if manifest is not None:
+                    incompatibility = null_cache_manifest_compatibility_error(
+                        manifest, artifact, length
+                    )
+                    if incompatibility:
+                        continue
+            except (OSError, ValueError, json.JSONDecodeError):
+                continue
         if all(
             os.path.exists(os.path.join(directory, f"null_{index:04d}.pt"))
             for index in prompt_indices
@@ -1283,7 +1661,9 @@ def _find_compatible_null_T(prompt_indices: list[int], requested_T: int,
 
 @app.function(volumes={"/data": data_vol}, timeout=300)
 def plan_generation(tag: str, prompt_indices: list[int], T: int,
-                    allow_wm_reuse: bool = True) -> dict:
+                    allow_wm_reuse: bool = True,
+                    null_kv_cache_implementation: str = "",
+                    include_null: bool = True) -> dict:
     import torch
 
     data_vol.reload()
@@ -1295,6 +1675,9 @@ def plan_generation(tag: str, prompt_indices: list[int], T: int,
     )
     kv_cache_implementation = artifact_kv_cache_implementation(
         requested_artifact
+    )
+    null_kv_cache_implementation = resolve_null_kv_cache_implementation(
+        null_kv_cache_implementation, kv_cache_implementation
     )
     watermarked_missing = [
         index for index in prompt_indices
@@ -1374,11 +1757,43 @@ def plan_generation(tag: str, prompt_indices: list[int], T: int,
             wm_resume_source_tag = selected["tag"]
             wm_resume_source_T = int(selected["T"])
 
-    null_T = _find_compatible_null_T(
-        prompt_indices, T, generation_model_size
-    )
-    if null_T is None:
+    null_T = None
+    null_missing = []
+    if include_null:
+        null_T = _find_compatible_null_T(
+            prompt_indices, T, generation_model_size, requested_artifact
+        )
+    if include_null and null_T is None:
         null_T = int(T)
+        target_manifest = load_null_cache_manifest(
+            null_T, generation_model_size
+        )
+        if target_manifest is not None:
+            incompatibility = null_cache_manifest_compatibility_error(
+                target_manifest,
+                requested_artifact,
+                null_T,
+                null_kv_cache_implementation,
+            )
+            if incompatibility:
+                raise ValueError(
+                    f"cannot append to incompatible null cache T={null_T}: "
+                    f"{incompatibility}"
+                )
+        elif (
+            null_kv_cache_implementation != DEFAULT_KV_CACHE_IMPLEMENTATION
+            and os.path.isdir(shared_null_dir(null_T, generation_model_size))
+            and any(
+                name.startswith("null_") and name.endswith(".pt")
+                for name in os.listdir(
+                    shared_null_dir(null_T, generation_model_size)
+                )
+            )
+        ):
+            raise ValueError(
+                f"cannot mix {null_kv_cache_implementation} records into "
+                f"legacy manifestless null cache T={null_T}"
+            )
         null_missing = [
             index for index in prompt_indices
             if not os.path.exists(
@@ -1388,8 +1803,10 @@ def plan_generation(tag: str, prompt_indices: list[int], T: int,
                 )
             )
         ]
-    else:
+    elif include_null:
         null_missing = []
+    else:
+        null_T = int(T)
     return {
         "wm_missing": watermarked_missing,
         "wm_mode": wm_mode,
@@ -1404,6 +1821,234 @@ def plan_generation(tag: str, prompt_indices: list[int], T: int,
         "generation_model": model_display(generation_model_size),
         "kv_cache_implementation": kv_cache_implementation,
         "kv_cache_version": kv_cache_version(kv_cache_implementation),
+        "null_kv_cache_implementation": null_kv_cache_implementation,
+        "null_kv_cache_version": kv_cache_version(
+            null_kv_cache_implementation
+        ),
+    }
+
+
+@app.function(volumes={"/data": data_vol}, timeout=1800)
+def plan_null_cache_generation(
+    tag: str,
+    prompt_indices: list[int],
+    requested_T: int,
+    null_kv_cache_implementation: str,
+) -> dict:
+    """Validate reusable null records and identify only genuine missing work."""
+    import uuid
+
+    import torch
+
+    data_vol.reload()
+    artifact = torch.load(
+        artifact_path(tag), weights_only=False, map_location="cpu"
+    )
+    model_size = artifact_generation_model_size(artifact)
+    requested_T = int(requested_T)
+    implementation = normalize_kv_cache_implementation(
+        null_kv_cache_implementation
+    )
+    null_root = os.path.dirname(shared_null_dir(0, model_size))
+    candidates = []
+    if os.path.isdir(null_root):
+        for name in os.listdir(null_root):
+            match = re.fullmatch(r"T(\d+)", name)
+            if match and int(match.group(1)) >= requested_T:
+                candidates.append(int(match.group(1)))
+
+    rejected_candidates = []
+    for length in sorted(candidates):
+        directory = shared_null_dir(length, model_size)
+        paths = {
+            index: os.path.join(directory, f"null_{index:04d}.pt")
+            for index in prompt_indices
+        }
+        if not all(os.path.isfile(path) for path in paths.values()):
+            continue
+        try:
+            manifest = load_null_cache_manifest(length, model_size)
+            if manifest is not None:
+                incompatibility = null_cache_manifest_compatibility_error(
+                    manifest, artifact, length
+                )
+                if incompatibility:
+                    raise ValueError(incompatibility)
+            for index, path in paths.items():
+                record = torch.load(
+                    path, weights_only=False, map_location="cpu"
+                )
+                validate_online_null_record(
+                    record,
+                    artifact,
+                    index,
+                    requested_T,
+                    source_length=length,
+                    expected_kv_cache_implementation=(
+                        manifest.get("kv_cache_implementation")
+                        if manifest is not None else None
+                    ),
+                    require_provenance=manifest is not None,
+                )
+        except Exception as exc:
+            rejected_candidates.append({
+                "T": int(length),
+                "reason": f"{type(exc).__name__}: {exc}",
+            })
+            continue
+        return {
+            "null_T": int(length),
+            "null_missing": [],
+            "null_invalid": [],
+            "null_rejected_candidates": rejected_candidates,
+            "null_kv_cache_implementation": (
+                manifest.get("kv_cache_implementation")
+                if manifest is not None else None
+            ),
+            "null_kv_cache_version": (
+                manifest.get("kv_cache_version")
+                if manifest is not None else None
+            ),
+            "legacy_manifestless": manifest is None,
+        }
+
+    directory = shared_null_dir(requested_T, model_size)
+    os.makedirs(directory, exist_ok=True)
+    manifest = load_null_cache_manifest(requested_T, model_size)
+    legacy_manifestless = False
+    if manifest is not None:
+        incompatibility = null_cache_manifest_compatibility_error(
+            manifest, artifact, requested_T, implementation
+        )
+        if incompatibility:
+            raise ValueError(
+                f"cannot append to incompatible null cache T={requested_T}: "
+                f"{incompatibility}"
+            )
+    else:
+        existing = [
+            name for name in os.listdir(directory)
+            if name.startswith("null_") and name.endswith(".pt")
+        ]
+        legacy_manifestless = bool(existing)
+        if existing and implementation != DEFAULT_KV_CACHE_IMPLEMENTATION:
+            raise ValueError(
+                f"cannot mix {implementation} records into legacy "
+                f"manifestless null cache T={requested_T}"
+            )
+
+    missing = []
+    invalid = []
+    quarantine_dir = os.path.join(directory, "_quarantine")
+    for index in prompt_indices:
+        path = os.path.join(directory, f"null_{index:04d}.pt")
+        if not os.path.isfile(path):
+            missing.append(int(index))
+            continue
+        try:
+            record = torch.load(path, weights_only=False, map_location="cpu")
+            validate_online_null_record(
+                record,
+                artifact,
+                index,
+                requested_T,
+                source_length=requested_T,
+                expected_kv_cache_implementation=(
+                    manifest.get("kv_cache_implementation")
+                    if manifest is not None else None
+                ),
+                require_provenance=manifest is not None,
+            )
+        except Exception as exc:
+            os.makedirs(quarantine_dir, exist_ok=True)
+            quarantined_path = os.path.join(
+                quarantine_dir,
+                f"null_{index:04d}-{uuid.uuid4().hex}.pt",
+            )
+            os.replace(path, quarantined_path)
+            invalid.append({
+                "prompt_idx": int(index),
+                "reason": f"{type(exc).__name__}: {exc}",
+                "quarantined_path": quarantined_path,
+            })
+            missing.append(int(index))
+    if invalid:
+        data_vol.commit()
+    return {
+        "null_T": requested_T,
+        "null_missing": missing,
+        "null_invalid": invalid,
+        "null_rejected_candidates": rejected_candidates,
+        "null_kv_cache_implementation": implementation,
+        "null_kv_cache_version": kv_cache_version(implementation),
+        "legacy_manifestless": legacy_manifestless,
+    }
+
+
+@app.function(volumes={"/data": data_vol}, timeout=1800)
+def verify_shared_null_cache(
+    tag: str,
+    prompt_indices: list[int],
+    null_T: int,
+) -> dict:
+    """Perform the cache-only acceptance audit after null generation."""
+    import torch
+
+    data_vol.reload()
+    artifact = torch.load(
+        artifact_path(tag), weights_only=False, map_location="cpu"
+    )
+    model_size = artifact_generation_model_size(artifact)
+    null_T = int(null_T)
+    manifest = load_null_cache_manifest(null_T, model_size)
+    if manifest is not None:
+        incompatibility = null_cache_manifest_compatibility_error(
+            manifest, artifact, null_T
+        )
+        if incompatibility:
+            raise ValueError(
+                f"null cache T={null_T} manifest is incompatible: "
+                f"{incompatibility}"
+            )
+
+    provenance_counts = {}
+    for index in prompt_indices:
+        path = os.path.join(
+            shared_null_dir(null_T, model_size),
+            f"null_{index:04d}.pt",
+        )
+        record = torch.load(path, weights_only=False, map_location="cpu")
+        validate_online_null_record(
+            record,
+            artifact,
+            index,
+            null_T,
+            source_length=null_T,
+            expected_kv_cache_implementation=(
+                manifest.get("kv_cache_implementation")
+                if manifest is not None else None
+            ),
+            require_provenance=manifest is not None,
+        )
+        provenance = (
+            str(
+                record.get("kv_cache_implementation")
+                or "legacy-unversioned"
+            ),
+            str(record.get("kv_cache_version") or "legacy-unversioned"),
+        )
+        label = "/".join(provenance)
+        provenance_counts[label] = provenance_counts.get(label, 0) + 1
+    return {
+        "verified": len(prompt_indices),
+        "prompt_indices": [int(index) for index in prompt_indices],
+        "null_T": null_T,
+        "generation_model_size": model_size,
+        "generation_model": model_display(model_size),
+        "manifest": manifest,
+        "legacy_manifestless": manifest is None,
+        "provenance_counts": provenance_counts,
+        "model_token_positions_processed": 0,
     }
 
 
@@ -1418,6 +2063,7 @@ class OnlineModel:
     model_size: str = modal.parameter()
     code_fingerprint_sha256: str = modal.parameter()
     kv_cache_implementation: str = modal.parameter()
+    null_kv_cache_implementation: str = modal.parameter()
 
     @modal.enter()
     def load(self):
@@ -1430,6 +2076,12 @@ class OnlineModel:
         self.model_size = normalize_model_size(self.model_size)
         self.kv_cache_implementation = normalize_kv_cache_implementation(
             self.kv_cache_implementation
+        )
+        self.null_kv_cache_implementation = (
+            resolve_null_kv_cache_implementation(
+                self.null_kv_cache_implementation,
+                self.kv_cache_implementation,
+            )
         )
         os.environ["PRC_MODEL_SIZE"] = self.model_size
         os.environ["PRC_MODEL_VARIANT"] = "base"
@@ -1488,6 +2140,12 @@ class OnlineModel:
             "kv_cache_implementation": self.kv_cache_implementation,
             "kv_cache_version": kv_cache_version(
                 self.kv_cache_implementation
+            ),
+            "null_kv_cache_implementation": (
+                self.null_kv_cache_implementation
+            ),
+            "null_kv_cache_version": kv_cache_version(
+                self.null_kv_cache_implementation
             ),
         }
 
@@ -1878,19 +2536,112 @@ class OnlineModel:
     @modal.method()
     def generate_null(self, prompt_indices: list[int]) -> dict:
         import time
+        import uuid
 
         import torch
 
         data_vol.reload()
         directory = shared_null_dir(self.T, self.model_size)
         os.makedirs(directory, exist_ok=True)
-        todo = [
-            index for index in prompt_indices
-            if not os.path.exists(os.path.join(directory, f"null_{index:04d}.pt"))
-        ]
+        manifest = load_null_cache_manifest(self.T, self.model_size)
+        if manifest is not None:
+            incompatibility = null_cache_manifest_compatibility_error(
+                manifest,
+                self.artifact,
+                self.T,
+                self.null_kv_cache_implementation,
+            )
+            if incompatibility:
+                raise ValueError(
+                    f"null cache T={self.T} has incompatible manifest: "
+                    f"{incompatibility}"
+                )
+
+        todo = []
+        quarantined = []
+        quarantine_dir = os.path.join(directory, "_quarantine")
+        for index in prompt_indices:
+            path = os.path.join(directory, f"null_{index:04d}.pt")
+            if not os.path.isfile(path):
+                todo.append(index)
+                continue
+            try:
+                record = torch.load(
+                    path, weights_only=False, map_location="cpu"
+                )
+                validate_online_null_record(
+                    record,
+                    self.artifact,
+                    index,
+                    self.T,
+                    source_length=self.T,
+                    expected_kv_cache_implementation=(
+                        manifest.get("kv_cache_implementation")
+                        if manifest is not None else None
+                    ),
+                    require_provenance=manifest is not None,
+                )
+            except Exception as exc:
+                os.makedirs(quarantine_dir, exist_ok=True)
+                quarantined_path = os.path.join(
+                    quarantine_dir,
+                    f"null_{index:04d}-{uuid.uuid4().hex}.pt",
+                )
+                os.replace(path, quarantined_path)
+                quarantined.append({
+                    "prompt_idx": int(index),
+                    "reason": f"{type(exc).__name__}: {exc}",
+                    "quarantined_path": quarantined_path,
+                })
+                todo.append(index)
         if not todo:
-            return {"generated": 0, "cached": len(prompt_indices), "batch": 0}
+            return {
+                "generated": 0,
+                "cached": len(prompt_indices),
+                "batch": 0,
+                "seconds": 0.0,
+                "kv_cache_implementation": (
+                    manifest.get("kv_cache_implementation")
+                    if manifest is not None else None
+                ),
+                "kv_cache_version": (
+                    manifest.get("kv_cache_version")
+                    if manifest is not None else None
+                ),
+                "quarantined": quarantined,
+            }
+
+        existing_records = [
+            name for name in os.listdir(directory)
+            if name.startswith("null_") and name.endswith(".pt")
+        ]
+        if manifest is None and existing_records:
+            if (
+                self.null_kv_cache_implementation
+                != DEFAULT_KV_CACHE_IMPLEMENTATION
+            ):
+                raise ValueError(
+                    f"cannot mix {self.null_kv_cache_implementation} records "
+                    f"into legacy manifestless null cache T={self.T}"
+                )
+        elif manifest is None:
+            manifest = expected_null_cache_manifest(
+                self.artifact,
+                self.T,
+                self.null_kv_cache_implementation,
+            )
+            manifest_path = null_cache_manifest_path(self.T, self.model_size)
+            temporary_manifest = (
+                f"{manifest_path}.tmp-{uuid.uuid4().hex}"
+            )
+            with open(temporary_manifest, "w") as handle:
+                json.dump(manifest, handle, sort_keys=True, indent=2)
+            os.replace(temporary_manifest, manifest_path)
+
         started = time.time()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            torch.cuda.reset_peak_memory_stats()
         prompt_batch = self._prompt_batch(todo)
         tokens, p_traces, details = self.we.generate_batch_and_collect_online(
             self.we.model,
@@ -1900,10 +2651,12 @@ class OnlineModel:
             self.partition,
             watermark=False,
             return_trace_details=True,
-            # Shared null caches retain the established concatenating path;
-            # static-cache validation is isolated to online watermarked data.
-            kv_cache_implementation=DEFAULT_KV_CACHE_IMPLEMENTATION,
+            kv_cache_implementation=self.null_kv_cache_implementation,
         )
+        if int(tokens.shape[1]) != self.T:
+            raise AssertionError(
+                f"generated null record length {tokens.shape[1]} != {self.T}"
+            )
         for row, index in enumerate(todo):
             record = self.we.build_prc_generation_record(
                 prompt_batch[row],
@@ -1923,14 +2676,56 @@ class OnlineModel:
                 "generation_model_size": self.model_size,
                 "generation_model": model_display(self.model_size),
                 "generation_model_variant": "base",
+                "stopping_policy": STOPPING_POLICY,
+                "source_T": self.T,
+                "realized_length": self.T,
+                "generation_sampler_version": (
+                    NULL_GENERATION_SAMPLER_VERSION
+                ),
+                "generation_rng_policy": NULL_GENERATION_SAMPLER_VERSION,
+                "kv_cache_implementation": (
+                    self.null_kv_cache_implementation
+                ),
+                "kv_cache_version": kv_cache_version(
+                    self.null_kv_cache_implementation
+                ),
+                "generation_segments": [{
+                    "start": 0,
+                    "end": self.T,
+                    "sampler_version": NULL_GENERATION_SAMPLER_VERSION,
+                    "mode": "fresh_null",
+                    "kv_cache_implementation": (
+                        self.null_kv_cache_implementation
+                    ),
+                    "kv_cache_version": kv_cache_version(
+                        self.null_kv_cache_implementation
+                    ),
+                }],
+                "code_fingerprint_sha256": self.code_fingerprint_sha256,
             })
-            torch.save(record, os.path.join(directory, f"null_{index:04d}.pt"))
+            path = os.path.join(directory, f"null_{index:04d}.pt")
+            temporary_path = f"{path}.tmp-{uuid.uuid4().hex}"
+            torch.save(record, temporary_path)
+            os.replace(temporary_path, path)
         data_vol.commit()
+        peak_allocated_bytes = 0
+        peak_reserved_bytes = 0
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            peak_allocated_bytes = int(torch.cuda.max_memory_allocated())
+            peak_reserved_bytes = int(torch.cuda.max_memory_reserved())
         return {
             "generated": len(todo),
             "cached": len(prompt_indices) - len(todo),
             "batch": len(todo),
             "seconds": time.time() - started,
+            "kv_cache_implementation": self.null_kv_cache_implementation,
+            "kv_cache_version": kv_cache_version(
+                self.null_kv_cache_implementation
+            ),
+            "peak_cuda_allocated_bytes": peak_allocated_bytes,
+            "peak_cuda_reserved_bytes": peak_reserved_bytes,
+            "quarantined": quarantined,
         }
 
 
@@ -2168,6 +2963,379 @@ def prepare_sweep_ceiling(target_tag: str, reference_tag: str,
     }
 
 
+@app.function(cpu=1.0, volumes={"/data": data_vol}, timeout=1800)
+def detect_full_audit_prompt_shard(request: dict) -> dict:
+    """Score MAP, entropy, and naive detectors for one prompt shard."""
+    import time
+
+    import torch
+    from detectors import detect_online_hoeffding
+    from online_prc import OnlinePRCKey
+
+    started = time.time()
+    tag = str(request["tag"])
+    watermarked_source_tag = str(request["watermarked_source_tag"])
+    prefix_T = int(request["prefix_T"])
+    null_T = int(request["null_T"])
+    fpr = float(request["fpr"])
+    code_fingerprint = str(request["code_fingerprint_sha256"])
+    prompt_indices = [int(index) for index in request["prompt_indices"]]
+    if not prompt_indices or len(set(prompt_indices)) != len(prompt_indices):
+        raise ValueError("full-audit prompt shard must be nonempty and unique")
+
+    data_vol.reload()
+    artifact = torch.load(
+        artifact_path(tag), weights_only=False, map_location="cpu"
+    )
+    source_artifact = torch.load(
+        artifact_path(watermarked_source_tag),
+        weights_only=False,
+        map_location="cpu",
+    )
+    incompatibility = artifact_compatibility_error(artifact, source_artifact)
+    if incompatibility:
+        raise ValueError(
+            f"watermarked cache {watermarked_source_tag} is incompatible "
+            f"with {tag}: {incompatibility}"
+        )
+    artifact_T = int(artifact["T"])
+    source_T = int(source_artifact["T"])
+    if prefix_T <= 0 or prefix_T > artifact_T or prefix_T > source_T:
+        raise ValueError(
+            f"prefix_T={prefix_T} exceeds artifact/source lengths "
+            f"{artifact_T}/{source_T}"
+        )
+
+    generation_model_size = artifact_generation_model_size(artifact)
+    null_manifest = load_null_cache_manifest(null_T, generation_model_size)
+    if null_T < prefix_T:
+        raise ValueError(
+            f"null cache T={null_T} is shorter than prefix T={prefix_T}"
+        )
+    key = OnlinePRCKey.from_dict(artifact["online_key"])
+    partition = artifact["partition"]
+    output_path = full_audit_shard_path(
+        tag,
+        prefix_T,
+        null_T,
+        prompt_indices,
+        artifact["artifact_fingerprint"],
+        source_artifact["artifact_fingerprint"],
+        code_fingerprint,
+        fpr,
+    )
+    validation_kwargs = {
+        "tag": tag,
+        "watermarked_source_tag": watermarked_source_tag,
+        "prefix_T": prefix_T,
+        "null_T": null_T,
+        "fpr": fpr,
+        "artifact_fingerprint": artifact["artifact_fingerprint"],
+        "watermarked_source_fingerprint": source_artifact[
+            "artifact_fingerprint"
+        ],
+        "online_key_sha256": key.fingerprint,
+        "code_fingerprint_sha256": code_fingerprint,
+    }
+    if os.path.isfile(output_path):
+        cached = torch.load(
+            output_path, weights_only=False, map_location="cpu"
+        )
+        cached_indices = validate_full_audit_shard(
+            cached, **validation_kwargs
+        )
+        if cached_indices != prompt_indices:
+            raise ValueError("cached full-audit shard prompt order is wrong")
+        return {
+            "remote_output_path": output_path,
+            "prompt_indices": prompt_indices,
+            "num_prompts": len(prompt_indices),
+            "cached": True,
+            "seconds": time.time() - started,
+        }
+
+    results = []
+    for watermark in (True, False):
+        directory = (
+            wm_dir(watermarked_source_tag)
+            if watermark
+            else shared_null_dir(null_T, generation_model_size)
+        )
+        record_prefix = "wm" if watermark else "null"
+        source = source_artifact if watermark else artifact
+        for index in prompt_indices:
+            path = os.path.join(
+                directory, f"{record_prefix}_{index:04d}.pt"
+            )
+            record = torch.load(path, weights_only=False, map_location="cpu")
+            if len(record["tokens"]) < prefix_T:
+                raise ValueError(f"record {path} is shorter than T={prefix_T}")
+            if len(record["p_trace"]) < prefix_T:
+                raise ValueError(
+                    f"record {path} has a short probability trace"
+                )
+            if watermark:
+                validate_online_watermarked_record(record, source, index)
+            else:
+                validate_online_null_record(
+                    record,
+                    artifact,
+                    index,
+                    prefix_T,
+                    source_length=null_T,
+                    expected_kv_cache_implementation=(
+                        null_manifest.get("kv_cache_implementation")
+                        if null_manifest is not None else None
+                    ),
+                    require_provenance=null_manifest is not None,
+                )
+
+            tokens = record["tokens"][:prefix_T]
+            probabilities = record["p_trace"][:prefix_T]
+            scored = {}
+            for weight in ("map", "entropy", "naive"):
+                decision, info = detect_online_hoeffding(
+                    key,
+                    tokens,
+                    probabilities,
+                    partition,
+                    fpr=fpr,
+                    weight=weight,
+                    fpr_policy=FPR_POLICY,
+                    return_info=True,
+                )
+                if int(info["length"]) != prefix_T:
+                    raise AssertionError(
+                        "full-audit shard detector used the wrong length"
+                    )
+                scored[weight] = {"decision": bool(decision), **info}
+            results.append({
+                "prompt_idx": int(index),
+                "watermark": watermark,
+                "scores": scored,
+            })
+
+    elapsed = time.time() - started
+    payload = {
+        "full_audit_shard_schema_version": FULL_AUDIT_SHARD_SCHEMA_VERSION,
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "scheme": SCHEME,
+        "result_kind": "online_full_audit_prompt_shard",
+        "tag": tag,
+        "watermarked_source_tag": watermarked_source_tag,
+        "source_T": source_T,
+        "T": prefix_T,
+        "null_T": null_T,
+        "target_fpr": fpr,
+        "fpr_policy": FPR_POLICY,
+        "prompt_indices": prompt_indices,
+        "num_prompts": len(prompt_indices),
+        "artifact_fingerprint": artifact["artifact_fingerprint"],
+        "watermarked_source_artifact_fingerprint": source_artifact[
+            "artifact_fingerprint"
+        ],
+        "online_key_sha256": key.fingerprint,
+        "code_fingerprint_sha256": code_fingerprint,
+        "cpu_detection_seconds": elapsed,
+        "results": results,
+    }
+    validate_full_audit_shard(payload, **validation_kwargs)
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    torch.save(payload, output_path)
+    if not os.path.isfile(output_path):
+        raise IOError(f"failed to persist full-audit shard {output_path}")
+    data_vol.commit()
+    return {
+        "remote_output_path": output_path,
+        "prompt_indices": prompt_indices,
+        "num_prompts": len(prompt_indices),
+        "cached": False,
+        "seconds": elapsed,
+    }
+
+
+@app.function(cpu=1.0, volumes={"/data": data_vol}, timeout=1800)
+def aggregate_full_audit_shards(
+    tag: str,
+    prefix_T: int,
+    prompt_indices: list[int],
+    null_T: int,
+    fpr: float,
+    batch: int,
+    code_fingerprint_sha256: str,
+    watermarked_source_tag: str,
+    watermarked_cache_mode: str,
+    watermarked_resume_source_tag: str,
+    watermarked_resume_source_T: int,
+    shard_summaries: list[dict],
+    detection_wall_seconds: float,
+) -> dict:
+    """Validate, merge, count, and persist full-detector prompt shards."""
+    import time
+
+    import torch
+    from online_prc import OnlinePRCKey, support_sha256, target_row_count
+
+    started = time.time()
+    data_vol.reload()
+    artifact = torch.load(
+        artifact_path(tag), weights_only=False, map_location="cpu"
+    )
+    source_artifact = torch.load(
+        artifact_path(watermarked_source_tag),
+        weights_only=False,
+        map_location="cpu",
+    )
+    incompatibility = artifact_compatibility_error(artifact, source_artifact)
+    if incompatibility:
+        raise ValueError(
+            f"watermarked cache {watermarked_source_tag} is incompatible "
+            f"with {tag}: {incompatibility}"
+        )
+    generation_model_size = artifact_generation_model_size(artifact)
+    null_manifest = load_null_cache_manifest(null_T, generation_model_size)
+    key = OnlinePRCKey.from_dict(artifact["online_key"])
+    prefix_T = int(prefix_T)
+    indices = [int(index) for index in prompt_indices]
+    validation_kwargs = {
+        "tag": tag,
+        "watermarked_source_tag": watermarked_source_tag,
+        "prefix_T": prefix_T,
+        "null_T": int(null_T),
+        "fpr": float(fpr),
+        "artifact_fingerprint": artifact["artifact_fingerprint"],
+        "watermarked_source_fingerprint": source_artifact[
+            "artifact_fingerprint"
+        ],
+        "online_key_sha256": key.fingerprint,
+        "code_fingerprint_sha256": code_fingerprint_sha256,
+    }
+    shard_payloads = []
+    shard_inventory = []
+    for summary in shard_summaries:
+        path = str(summary["remote_output_path"])
+        payload = torch.load(path, weights_only=False, map_location="cpu")
+        validated_indices = validate_full_audit_shard(
+            payload, **validation_kwargs
+        )
+        declared_indices = [
+            int(index) for index in summary["prompt_indices"]
+        ]
+        if validated_indices != declared_indices:
+            raise ValueError(
+                f"full-audit shard summary disagrees with payload at {path}"
+            )
+        shard_payloads.append(payload)
+        shard_inventory.append({
+            "remote_output_path": path,
+            "prompt_indices": validated_indices,
+            "num_prompts": len(validated_indices),
+            "cached_this_invocation": bool(summary.get("cached", False)),
+            "invocation_seconds": float(summary.get("seconds", 0.0)),
+            "original_cpu_detection_seconds": float(
+                payload.get("cpu_detection_seconds", 0.0)
+            ),
+        })
+
+    results = merge_full_audit_shards(shard_payloads, indices)
+    wm = [result for result in results if result["watermark"]]
+    null = [result for result in results if not result["watermark"]]
+    counts = {}
+    for weight in ("map", "entropy", "naive"):
+        counts[weight] = {
+            "tp": sum(result["scores"][weight]["decision"] for result in wm),
+            "fp": sum(
+                result["scores"][weight]["decision"] for result in null
+            ),
+            "watermarked_total": len(wm),
+            "null_total": len(null),
+        }
+
+    aggregation_seconds = time.time() - started
+    source_T = int(source_artifact["T"])
+    payload = {
+        "result_schema_version": RESULT_SCHEMA_VERSION,
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "scheme": SCHEME,
+        "result_kind": "prompt_sharded_online_full_audit",
+        "detection_strategy": "prompt_sharded_full_audit_v1",
+        "tag": tag,
+        "n": prefix_T,
+        "T": prefix_T,
+        "t": key.check_weight,
+        "eta": key.noise_rate,
+        "r": target_row_count(prefix_T, key),
+        "free_coordinates": prefix_T - target_row_count(prefix_T, key),
+        "row_rate_numerator": key.row_rate_numerator,
+        "row_rate_denominator": key.row_rate_denominator,
+        "schedule_version": key.schedule_version,
+        "support_sampler_version": key.support_sampler_version,
+        "stopping_policy": STOPPING_POLICY,
+        "fpr_policy": FPR_POLICY,
+        "target_fpr": float(fpr),
+        "generation_model": model_display(generation_model_size),
+        "generation_model_size": generation_model_size,
+        "kv_cache_implementation": artifact_kv_cache_implementation(artifact),
+        "kv_cache_version": kv_cache_version(
+            artifact_kv_cache_implementation(artifact)
+        ),
+        "num_prompts": len(indices),
+        "prompt_indices": indices,
+        "batch": int(batch),
+        "null_cache_T": int(null_T),
+        "null_cache_manifest": null_manifest,
+        "null_kv_cache_implementation": (
+            null_manifest.get("kv_cache_implementation")
+            if null_manifest is not None else None
+        ),
+        "null_kv_cache_version": (
+            null_manifest.get("kv_cache_version")
+            if null_manifest is not None else None
+        ),
+        "watermarked_cache_mode": watermarked_cache_mode,
+        "watermarked_cache_T": source_T,
+        "watermarked_cache_tag": watermarked_source_tag,
+        "watermarked_resume_source_tag": (
+            watermarked_resume_source_tag or None
+        ),
+        "watermarked_resume_source_T": (
+            int(watermarked_resume_source_T) or None
+        ),
+        "watermarked_source_artifact_fingerprint": source_artifact[
+            "artifact_fingerprint"
+        ],
+        "artifact_fingerprint": artifact["artifact_fingerprint"],
+        "online_key_sha256": key.fingerprint,
+        "online_support_sha256": support_sha256(prefix_T, key),
+        "code_fingerprint_sha256": code_fingerprint_sha256,
+        "experiment_seed": int(artifact.get("experiment_seed", SEED)),
+        "cpu_detection_wall_seconds": float(detection_wall_seconds),
+        "cpu_aggregation_seconds": aggregation_seconds,
+        "cpu_detection_invocation_seconds": sum(
+            item["invocation_seconds"] for item in shard_inventory
+        ),
+        "detection_shard_count": len(shard_inventory),
+        "detection_shard_cache_hits": sum(
+            item["cached_this_invocation"] for item in shard_inventory
+        ),
+        "detection_shards": shard_inventory,
+        "counts": counts,
+        "results": results,
+    }
+    output_dir = f"/data/{tag}/results"
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(
+        output_dir,
+        f"full-audit-prefix-T{prefix_T}_fpr-"
+        f"{_slug(f'{float(fpr):.12g}')}_prompts-{len(indices)}.pt",
+    )
+    torch.save(payload, output_path)
+    if not os.path.isfile(output_path):
+        raise IOError(f"failed to persist full audit {output_path}")
+    data_vol.commit()
+    return {"payload": payload, "remote_output_path": output_path}
+
+
 @app.function(volumes={"/data": data_vol}, timeout=1800)
 def detect_all(tag: str, prompt_indices: list[int], null_T: int, fpr: float,
                batch: int, code_fingerprint_sha256: str,
@@ -2184,6 +3352,9 @@ def detect_all(tag: str, prompt_indices: list[int], null_T: int, fpr: float,
         artifact_path(tag), weights_only=False, map_location="cpu"
     )
     generation_model_size = artifact_generation_model_size(artifact)
+    null_manifest = load_null_cache_manifest(
+        null_T, generation_model_size
+    )
     key = OnlinePRCKey.from_dict(artifact["online_key"])
     partition = artifact["partition"]
     T = int(artifact["T"])
@@ -2223,7 +3394,16 @@ def detect_all(tag: str, prompt_indices: list[int], null_T: int, fpr: float,
                 )
             else:
                 validate_online_null_record(
-                    record, artifact, index, T
+                    record,
+                    artifact,
+                    index,
+                    T,
+                    source_length=int(null_T),
+                    expected_kv_cache_implementation=(
+                        null_manifest.get("kv_cache_implementation")
+                        if null_manifest is not None else None
+                    ),
+                    require_provenance=null_manifest is not None,
                 )
 
             tokens = record["tokens"][:T]
@@ -2285,6 +3465,15 @@ def detect_all(tag: str, prompt_indices: list[int], null_T: int, fpr: float,
         "prompt_indices": prompt_indices,
         "batch": int(batch),
         "null_cache_T": int(null_T),
+        "null_cache_manifest": null_manifest,
+        "null_kv_cache_implementation": (
+            null_manifest.get("kv_cache_implementation")
+            if null_manifest is not None else None
+        ),
+        "null_kv_cache_version": (
+            null_manifest.get("kv_cache_version")
+            if null_manifest is not None else None
+        ),
         "watermarked_cache_mode": wm_reuse_mode,
         "watermarked_cache_T": wm_source_T,
         "watermarked_cache_tag": wm_source_tag,
@@ -2331,6 +3520,9 @@ def detect_saved_prefix(source_tag: str, prefix_T: int,
         artifact_path(source_tag), weights_only=False, map_location="cpu"
     )
     generation_model_size = artifact_generation_model_size(artifact)
+    null_manifest = load_null_cache_manifest(
+        null_T, generation_model_size
+    )
     key = OnlinePRCKey.from_dict(artifact["online_key"])
     partition = artifact["partition"]
     source_T = int(artifact["T"])
@@ -2373,7 +3565,16 @@ def detect_saved_prefix(source_tag: str, prefix_T: int,
                 validate_online_watermarked_record(record, artifact, index)
             else:
                 validate_online_null_record(
-                    record, artifact, index, prefix_T
+                    record,
+                    artifact,
+                    index,
+                    prefix_T,
+                    source_length=int(null_T),
+                    expected_kv_cache_implementation=(
+                        null_manifest.get("kv_cache_implementation")
+                        if null_manifest is not None else None
+                    ),
+                    require_provenance=null_manifest is not None,
                 )
 
             tokens = record["tokens"][:prefix_T]
@@ -2443,6 +3644,15 @@ def detect_saved_prefix(source_tag: str, prefix_T: int,
         "num_prompts": len(prompt_indices),
         "prompt_indices": prompt_indices,
         "null_cache_T": int(null_T),
+        "null_cache_manifest": null_manifest,
+        "null_kv_cache_implementation": (
+            null_manifest.get("kv_cache_implementation")
+            if null_manifest is not None else None
+        ),
+        "null_kv_cache_version": (
+            null_manifest.get("kv_cache_version")
+            if null_manifest is not None else None
+        ),
         "source_artifact_fingerprint": artifact["artifact_fingerprint"],
         "online_key_sha256": key.fingerprint,
         "source_online_support_sha256": expected_source_support,
@@ -2947,6 +4157,7 @@ def _execute_generation_plan(tag: str, plan: dict, batch: int,
                              kv_cache_implementation: str = (
                                  DEFAULT_KV_CACHE_IMPLEMENTATION
                              ),
+                             null_kv_cache_implementation: str = "",
                              include_null: bool = True,
                              log_prefix: str = "sweep") -> dict:
     """Execute missing generation work selected by ``plan_generation``."""
@@ -2967,6 +4178,12 @@ def _execute_generation_plan(tag: str, plan: dict, batch: int,
         code_fingerprint_sha256=code_fingerprint,
         kv_cache_implementation=normalize_kv_cache_implementation(
             kv_cache_implementation
+        ),
+        null_kv_cache_implementation=(
+            resolve_null_kv_cache_implementation(
+                null_kv_cache_implementation,
+                kv_cache_implementation,
+            )
         ),
     )
     print(f"[{log_prefix}] model ready: {model.ready.remote()}", flush=True)
@@ -3006,6 +4223,68 @@ def _execute_generation_plan(tag: str, plan: dict, batch: int,
             flush=True,
         )
     return generation_meta
+
+
+def _execute_parallel_full_audit(
+    *,
+    tag: str,
+    prefix_T: int,
+    prompt_indices: list[int],
+    null_T: int,
+    fpr: float,
+    batch: int,
+    code_fingerprint: str,
+    watermarked_source_tag: str,
+    watermarked_cache_mode: str,
+    watermarked_resume_source_tag: str = "",
+    watermarked_resume_source_T: int = 0,
+    detection_shard_size: int = DEFAULT_DETECTION_SHARD_SIZE,
+    detection_max_containers: int = DEFAULT_DETECTION_MAX_CONTAINERS,
+    log_prefix: str = "audit",
+) -> dict:
+    """Run the complete three-detector audit across prompt CPU shards."""
+    import time
+
+    shards = prompt_detection_shards(prompt_indices, detection_shard_size)
+    requests = [{
+        "tag": tag,
+        "watermarked_source_tag": watermarked_source_tag,
+        "prefix_T": int(prefix_T),
+        "null_T": int(null_T),
+        "fpr": float(fpr),
+        "code_fingerprint_sha256": code_fingerprint,
+        "prompt_indices": shard,
+    } for shard in shards]
+    worker = detect_full_audit_prompt_shard.with_options(
+        cpu=1.0,
+        max_containers=min(int(detection_max_containers), len(shards)),
+    )
+    started = time.time()
+    summaries = list(worker.map(requests))
+    wall_seconds = time.time() - started
+    if len(summaries) != len(shards):
+        raise AssertionError("full-audit prompt-shard result count changed")
+    print(
+        f"[{log_prefix}] full detector: shards={len(shards)}, "
+        f"cache_hits={sum(item['cached'] for item in summaries)}, "
+        f"wall_seconds={wall_seconds:.1f}",
+        flush=True,
+    )
+    return aggregate_full_audit_shards.remote(
+        tag,
+        int(prefix_T),
+        [int(index) for index in prompt_indices],
+        int(null_T),
+        float(fpr),
+        int(batch),
+        code_fingerprint,
+        watermarked_source_tag,
+        watermarked_cache_mode,
+        watermarked_resume_source_tag,
+        int(watermarked_resume_source_T),
+        summaries,
+        wall_seconds,
+    )
 
 
 @app.function(volumes={"/data": data_vol}, timeout=600)
@@ -3194,6 +4473,7 @@ def validate_kv_cache_runtime_smoke(n: int = 80, prefix_n: int = 64,
         model_size=generation_model_size,
         code_fingerprint_sha256=_local_code_fingerprint(),
         kv_cache_implementation="static",
+        null_kv_cache_implementation="static",
     )
     print(f"[kv-cache-runtime] model ready: {model.ready.remote()}", flush=True)
     payload = model.validate_kv_cache_runtime.remote(
@@ -3327,6 +4607,302 @@ def validate_map_detection_sharding(
 
 
 @app.local_entrypoint()
+def validate_full_audit_sharding(
+    n: int = 256,
+    num_prompts: int = 2,
+    t: int = 3,
+    eta: float = 0.05,
+    fpr: float = 1e-3,
+    batch: int = 2,
+    experiment_seed: int = SEED,
+    generation_model_size: str = MODEL_SIZE,
+    kv_cache_implementation: str = DEFAULT_KV_CACHE_IMPLEMENTATION,
+    null_kv_cache_implementation: str = "",
+    detection_shard_size: int = 1,
+    detection_max_containers: int = 2,
+):
+    """Prove full-detector prompt sharding matches the serial reference."""
+    generation_model_size = normalize_model_size(generation_model_size)
+    kv_cache_implementation = normalize_kv_cache_implementation(
+        kv_cache_implementation
+    )
+    null_kv_cache_implementation = resolve_null_kv_cache_implementation(
+        null_kv_cache_implementation, kv_cache_implementation
+    )
+    indices = list(range(int(num_prompts)))
+    code_fingerprint = _local_code_fingerprint()
+    tag = config_tag(
+        n,
+        t,
+        eta,
+        experiment_seed,
+        generation_model_size,
+        kv_cache_implementation,
+    )
+    build_artifacts.remote(
+        num_prompts,
+        n,
+        t,
+        eta,
+        experiment_seed,
+        False,
+        generation_model_size,
+        kv_cache_implementation,
+    )
+    plan = plan_generation.remote(
+        tag,
+        indices,
+        n,
+        True,
+        null_kv_cache_implementation,
+        True,
+    )
+    if plan["wm_missing"] or plan["null_missing"]:
+        raise FileNotFoundError(
+            "full-audit sharding validation is cache-only; missing "
+            f"wm={plan['wm_missing']}, null={plan['null_missing']}"
+        )
+
+    serial = detect_all.remote(
+        tag,
+        indices,
+        plan["null_T"],
+        fpr,
+        batch,
+        code_fingerprint,
+        plan["wm_source_tag"],
+        plan["wm_mode"],
+        plan["wm_resume_source_tag"],
+        plan["wm_resume_source_T"],
+    )
+    sharded = _execute_parallel_full_audit(
+        tag=tag,
+        prefix_T=n,
+        prompt_indices=indices,
+        null_T=plan["null_T"],
+        fpr=fpr,
+        batch=batch,
+        code_fingerprint=code_fingerprint,
+        watermarked_source_tag=plan["wm_source_tag"],
+        watermarked_cache_mode=plan["wm_mode"],
+        watermarked_resume_source_tag=plan["wm_resume_source_tag"],
+        watermarked_resume_source_T=plan["wm_resume_source_T"],
+        detection_shard_size=detection_shard_size,
+        detection_max_containers=detection_max_containers,
+        log_prefix="full-audit-sharding",
+    )
+    serial_payload = serial["payload"]
+    sharded_payload = sharded["payload"]
+    compared_fields = (
+        "n",
+        "T",
+        "r",
+        "free_coordinates",
+        "target_fpr",
+        "counts",
+    )
+    mismatches = [
+        field for field in compared_fields
+        if serial_payload[field] != sharded_payload[field]
+    ]
+    result_comparison = compare_full_audit_results(
+        serial_payload["results"], sharded_payload["results"]
+    )
+    if not result_comparison["equivalent"]:
+        mismatches.append("results")
+    if mismatches:
+        raise AssertionError(
+            "serial and prompt-sharded full detection differ: "
+            f"{mismatches}; result_comparison={result_comparison}"
+        )
+    print(
+        f"[full-audit-sharding] exact serial equivalence for "
+        f"{num_prompts} prompts across "
+        f"{sharded_payload['detection_shard_count']} shards",
+        flush=True,
+    )
+    print(
+        f"[full-audit-sharding] decisions/counts exact; maximum float "
+        f"difference={result_comparison['max_abs_float_difference']:.3g}",
+        flush=True,
+    )
+    print(
+        f"[full-audit-sharding] counts={sharded_payload['counts']}",
+        flush=True,
+    )
+    print(
+        f"[full-audit-sharding] remote result: "
+        f"{sharded['remote_output_path']}",
+        flush=True,
+    )
+
+
+@app.local_entrypoint()
+def build_null_cache(
+    num_prompts: int = 5,
+    n: int = 64,
+    t: int = 3,
+    eta: float = 0.05,
+    batch: int = 0,
+    experiment_seed: int = SEED,
+    max_containers: int = 1,
+    gpu: str = "",
+    generation_model_size: str = MODEL_SIZE,
+    kv_cache_implementation: str = "static",
+    null_kv_cache_implementation: str = "static",
+):
+    """Build or verify a reusable shared null cache without WM generation."""
+    import time
+
+    started = time.time()
+    generation_model_size, batch, gpu = resolve_model_runtime(
+        generation_model_size, batch, gpu
+    )
+    kv_cache_implementation = normalize_kv_cache_implementation(
+        kv_cache_implementation
+    )
+    null_kv_cache_implementation = resolve_null_kv_cache_implementation(
+        null_kv_cache_implementation, kv_cache_implementation
+    )
+    if not 0 < int(num_prompts) <= CANONICAL_NUM_PROMPTS:
+        raise ValueError(
+            f"num_prompts must be in [1, {CANONICAL_NUM_PROMPTS}]"
+        )
+    if n <= 0 or t < 2 or batch <= 0 or max_containers <= 0:
+        raise ValueError("n, t, batch, and max_containers must be positive")
+    if experiment_seed < 0 or not 0 <= eta < 0.5:
+        raise ValueError("experiment_seed or eta is invalid")
+
+    prompt_indices = list(range(int(num_prompts)))
+    code_fingerprint = _local_code_fingerprint()
+    tag = config_tag(
+        n,
+        t,
+        eta,
+        experiment_seed,
+        generation_model_size,
+        kv_cache_implementation,
+    )
+    print(
+        f"[null-cache] target T={n}, model="
+        f"{model_display(generation_model_size)}, prompts={num_prompts}, "
+        f"batch={batch}, null_kv_cache={null_kv_cache_implementation}, "
+        f"GPU={gpu}, max_containers={max_containers}",
+        flush=True,
+    )
+    build = build_artifacts.remote(
+        num_prompts,
+        n,
+        t,
+        eta,
+        experiment_seed,
+        False,
+        generation_model_size,
+        kv_cache_implementation,
+    )
+    plan = plan_null_cache_generation.remote(
+        tag,
+        prompt_indices,
+        n,
+        null_kv_cache_implementation,
+    )
+    print(
+        f"[null-cache] plan: source_T={plan['null_T']}, "
+        f"missing={len(plan['null_missing'])}, "
+        f"invalid={len(plan['null_invalid'])}, "
+        f"legacy_manifestless={plan['legacy_manifestless']}",
+        flush=True,
+    )
+    if plan["null_rejected_candidates"]:
+        print(
+            f"[null-cache] rejected candidates: "
+            f"{plan['null_rejected_candidates']}",
+            flush=True,
+        )
+
+    generation_records = []
+    if plan["null_missing"]:
+        if int(plan["null_T"]) != int(n):
+            raise AssertionError("missing work must target the requested T")
+        model = OnlineModel.with_options(
+            gpu=gpu, max_containers=max_containers
+        )(
+            tag=tag,
+            model_size=generation_model_size,
+            code_fingerprint_sha256=code_fingerprint,
+            kv_cache_implementation=kv_cache_implementation,
+            null_kv_cache_implementation=null_kv_cache_implementation,
+        )
+        print(f"[null-cache] model ready: {model.ready.remote()}", flush=True)
+        generation_records = list(model.generate_null.map(
+            _chunks(plan["null_missing"], batch)
+        ))
+        print(
+            f"[null-cache] generated="
+            f"{sum(item['generated'] for item in generation_records)}, "
+            f"batch_sizes="
+            f"{[item['batch'] for item in generation_records if item['batch']]}",
+            flush=True,
+        )
+    else:
+        print("[null-cache] cache-only; no GPU generation launched", flush=True)
+
+    verification = verify_shared_null_cache.remote(
+        tag, prompt_indices, plan["null_T"]
+    )
+    generation_cost = summarize_generation_cost(
+        {"wm": [], "null": generation_records}, n, gpu
+    )
+    generation_cost["local_end_to_end_wall_seconds"] = time.time() - started
+    payload = {
+        "result_schema_version": RESULT_SCHEMA_VERSION,
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "result_kind": "shared_null_cache_build",
+        "requested_T": int(n),
+        "actual_null_T": int(plan["null_T"]),
+        "num_prompts": int(num_prompts),
+        "prompt_indices": prompt_indices,
+        "generation_model_size": generation_model_size,
+        "generation_model": model_display(generation_model_size),
+        "batch": int(batch),
+        "gpu": str(gpu),
+        "max_containers": int(max_containers),
+        "watermarked_kv_cache_implementation": kv_cache_implementation,
+        "null_kv_cache_implementation": (
+            verification["manifest"].get("kv_cache_implementation")
+            if verification["manifest"] is not None else None
+        ),
+        "null_kv_cache_version": (
+            verification["manifest"].get("kv_cache_version")
+            if verification["manifest"] is not None else None
+        ),
+        "artifact_tag": tag,
+        "artifact_fingerprint": build["artifact_fingerprint"],
+        "generation_plan": plan,
+        "generation_batches": generation_records,
+        "generation_cost": generation_cost,
+        "verification": verification,
+    }
+    os.makedirs("outputs", exist_ok=True)
+    replay_suffix = "_cache-replay" if not generation_records else ""
+    output_path = os.path.join(
+        "outputs",
+        f"shared_null_cache_T{n}_prompts{num_prompts}_"
+        f"gen-{model_cache_name(generation_model_size)}_"
+        f"kvcache-{kv_cache_version(null_kv_cache_implementation)}"
+        f"{replay_suffix}.json",
+    )
+    with open(output_path, "w") as handle:
+        json.dump(payload, handle, indent=2, allow_nan=False)
+    print(
+        f"[null-cache] verified={verification['verified']}, "
+        f"provenance={verification['provenance_counts']}",
+        flush=True,
+    )
+    print(f"[null-cache] local manifest: {output_path}", flush=True)
+
+
+@app.local_entrypoint()
 def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
          n: int = 256, t: int = 3, eta: float = 0.05,
          fpr: float = 1e-3, batch: int = 0,
@@ -3335,6 +4911,9 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
          gpu: str = "", fresh: bool = False,
          generation_model_size: str = MODEL_SIZE,
          kv_cache_implementation: str = DEFAULT_KV_CACHE_IMPLEMENTATION,
+         null_kv_cache_implementation: str = "",
+         detection_shard_size: int = DEFAULT_DETECTION_SHARD_SIZE,
+         detection_max_containers: int = DEFAULT_DETECTION_MAX_CONTAINERS,
          csv_out: str = "online_causal_results_summary.csv"):
     generation_model_size, batch, gpu = resolve_model_runtime(
         generation_model_size, batch, gpu
@@ -3343,11 +4922,17 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
     kv_cache_implementation = normalize_kv_cache_implementation(
         kv_cache_implementation
     )
+    null_kv_cache_implementation = resolve_null_kv_cache_implementation(
+        null_kv_cache_implementation, kv_cache_implementation
+    )
     if num_prompts <= 0 or num_prompts > CANONICAL_NUM_PROMPTS:
         raise ValueError(
             f"num_prompts must be in [1, {CANONICAL_NUM_PROMPTS}]"
         )
-    if n <= 0 or t < 2 or batch <= 0 or max_containers <= 0:
+    if (
+        n <= 0 or t < 2 or batch <= 0 or max_containers <= 0
+        or detection_shard_size <= 0 or detection_max_containers <= 0
+    ):
         raise ValueError("n, t, batch, and max_containers are invalid")
     if experiment_seed < 0:
         raise ValueError("experiment_seed must be nonnegative")
@@ -3363,8 +4948,11 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
         f"[main] {SCHEME}: T=n={n}, t={t}, eta={eta}, fpr={fpr:g}, "
         f"model={generation_model}, prompts={num_prompts}, batch={batch}, "
         f"kv_cache={kv_cache_implementation}, "
+        f"null_kv_cache={null_kv_cache_implementation}, "
         f"experiment_seed={experiment_seed}, GPU={gpu}, "
-        f"max_containers={max_containers}", flush=True,
+        f"max_containers={max_containers}, "
+        f"detection_shard_size={detection_shard_size}, "
+        f"detection_max_containers={detection_max_containers}", flush=True,
     )
     build = build_artifacts.remote(
         num_prompts, n, t, eta, experiment_seed, fresh,
@@ -3375,7 +4963,7 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
         f"{build['artifact_fingerprint']}", flush=True,
     )
     plan = plan_generation.remote(
-        tag, prompt_indices, n, allow_wm_reuse=not fresh
+        tag, prompt_indices, n, not fresh, null_kv_cache_implementation
     )
     print(
         f"[main] generation plan: wm_missing={len(plan['wm_missing'])}, "
@@ -3403,6 +4991,7 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
             model_size=generation_model_size,
             code_fingerprint_sha256=code_fingerprint,
             kv_cache_implementation=kv_cache_implementation,
+            null_kv_cache_implementation=null_kv_cache_implementation,
         )
         print(f"[main] model ready: {model.ready.remote()}", flush=True)
         work = []
@@ -3441,17 +5030,21 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
     else:
         print("[main] all generation records cached", flush=True)
 
-    detected = detect_all.remote(
-        tag,
-        prompt_indices,
-        plan["null_T"],
-        fpr,
-        batch,
-        code_fingerprint,
-        plan["wm_source_tag"],
-        plan["wm_mode"],
-        plan["wm_resume_source_tag"],
-        plan["wm_resume_source_T"],
+    detected = _execute_parallel_full_audit(
+        tag=tag,
+        prefix_T=n,
+        prompt_indices=prompt_indices,
+        null_T=plan["null_T"],
+        fpr=fpr,
+        batch=batch,
+        code_fingerprint=code_fingerprint,
+        watermarked_source_tag=plan["wm_source_tag"],
+        watermarked_cache_mode=plan["wm_mode"],
+        watermarked_resume_source_tag=plan["wm_resume_source_tag"],
+        watermarked_resume_source_T=plan["wm_resume_source_T"],
+        detection_shard_size=detection_shard_size,
+        detection_max_containers=detection_max_containers,
+        log_prefix="main",
     )
     payload = detected["payload"]
     counts = payload["counts"]
@@ -3507,6 +5100,14 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
         "batch": batch,
         "kv cache implementation": kv_cache_implementation,
         "kv cache version": kv_cache_version(kv_cache_implementation),
+        "null kv cache implementation": (
+            payload.get("null_kv_cache_implementation")
+            or "legacy-unversioned"
+        ),
+        "null kv cache version": (
+            payload.get("null_kv_cache_version")
+            or "legacy-unversioned"
+        ),
         "experiment seed": experiment_seed,
         "Map TPR": _format_rate(counts["map"]["tp"], num_prompts),
         "Map FPR": _format_rate(counts["map"]["fp"], num_prompts),
@@ -3547,6 +5148,7 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
                        kv_cache_implementation: str = (
                            DEFAULT_KV_CACHE_IMPLEMENTATION
                        ),
+                       null_kv_cache_implementation: str = "",
                        detection_shard_size: int = (
                            DEFAULT_DETECTION_SHARD_SIZE
                        ),
@@ -3565,6 +5167,9 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
     generation_model = model_display(generation_model_size)
     kv_cache_implementation = normalize_kv_cache_implementation(
         kv_cache_implementation
+    )
+    null_kv_cache_implementation = resolve_null_kv_cache_implementation(
+        null_kv_cache_implementation, kv_cache_implementation
     )
     lengths = descending_prefix_grid(source_n, floor_n, step)
     if num_prompts <= 0 or num_prompts > CANONICAL_NUM_PROMPTS:
@@ -3594,6 +5199,7 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         f"step={step}, target_map_tpr>{target_map_tpr:.1%}, t={t}, "
         f"eta={eta}, model={generation_model}, prompts={num_prompts}, "
         f"batch={batch}, kv_cache={kv_cache_implementation}, "
+        f"null_kv_cache={null_kv_cache_implementation}, "
         f"experiment_seed={experiment_seed}, GPU={gpu}, "
         f"max_containers={max_containers}, "
         f"detection_shard_size={detection_shard_size}, "
@@ -3634,7 +5240,9 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         requested_tag,
         prompt_indices,
         source_n,
-        allow_wm_reuse=not fresh and not pin_floor_cache,
+        not fresh and not pin_floor_cache,
+        null_kv_cache_implementation,
+        final_audit,
     )
     if pin_floor_cache and plan["wm_missing"]:
         plan.update({
@@ -3668,6 +5276,7 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         code_fingerprint,
         generation_model_size,
         kv_cache_implementation,
+        null_kv_cache_implementation,
         include_null=final_audit,
         log_prefix="sweep",
     )
@@ -3745,13 +5354,28 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
     selected_n = summary["last_passing_n_descending"]
     final_result = None
     if selected_n is not None and final_audit:
-        final_result = detect_saved_prefix.remote(
-            source_tag,
-            selected_n,
-            prompt_indices,
-            plan["null_T"],
-            fpr,
-            code_fingerprint,
+        final_result = _execute_parallel_full_audit(
+            tag=source_tag,
+            prefix_T=selected_n,
+            prompt_indices=prompt_indices,
+            null_T=plan["null_T"],
+            fpr=fpr,
+            batch=batch,
+            code_fingerprint=code_fingerprint,
+            watermarked_source_tag=source_tag,
+            watermarked_cache_mode=(
+                "exact_cache" if int(selected_n) == source_T
+                else "prefix_from_longer"
+            ),
+            watermarked_resume_source_tag=(
+                plan["wm_resume_source_tag"] or ""
+            ),
+            watermarked_resume_source_T=(
+                plan["wm_resume_source_T"] or 0
+            ),
+            detection_shard_size=detection_shard_size,
+            detection_max_containers=detection_max_containers,
+            log_prefix="sweep-final-audit",
         )
         final_map = final_result["payload"]["counts"]["map"]
         if (
@@ -3797,6 +5421,12 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         "generation_model_size": generation_model_size,
         "kv_cache_implementation": kv_cache_implementation,
         "kv_cache_version": kv_cache_version(kv_cache_implementation),
+        "null_kv_cache_implementation": (
+            plan["null_kv_cache_implementation"] if final_audit else None
+        ),
+        "null_kv_cache_version": (
+            plan["null_kv_cache_version"] if final_audit else None
+        ),
         "num_prompts": int(num_prompts),
         "batch": int(batch),
         "experiment_seed": int(experiment_seed),
