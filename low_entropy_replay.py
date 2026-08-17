@@ -3,7 +3,8 @@
 Phase 0 reconstructs the existing online MAP statistic from saved token and
 partition-probability traces.  Phase 1 scores the identical check evidence
 with both the legacy Hoeffding threshold and the optimized conditional
-weighted-Rademacher Chernoff threshold.
+weighted-Rademacher Chernoff threshold.  Phase 2 separately selects a
+probability-only reliability-adaptive basis of the same fixed dual code.
 
 This module deliberately contains no Modal app and no model imports.  It can
 be imported by a short-lived remote cache reader without affecting generation
@@ -15,9 +16,17 @@ import math
 
 import numpy as np
 
+from adaptive_parity_basis import (
+    DEFAULT_ERASURE_QUANTILES,
+    bucket_reliability,
+    select_reliability_adaptive_basis,
+)
 from detectors import (
+    fold_map_soft_token,
+    map_soft_token,
     prepare_online_map_prefix_context,
     prepare_online_map_prefix_trace,
+    tokens_to_bits,
 )
 from online_prc import OnlinePRCKey, target_row_count
 from weighted_rademacher import (
@@ -257,6 +266,362 @@ def score_online_map_evidence(
             },
         },
     }
+
+
+def prepare_fixed_map_block_evidence(
+    decoding_key,
+    generated_token_ids,
+    partition_probs,
+    partition_map,
+    *,
+    block_index: int = 0,
+) -> dict:
+    """Reconstruct one fixed-PRC block's exact MAP check evidence.
+
+    This mirrors ``detect_hoeffding(..., weight="map")`` without applying a
+    threshold.  Keeping preparation and calibration separate ensures that the
+    Hoeffding and weighted-Rademacher decisions use identical check values.
+    """
+    if not isinstance(decoding_key, (tuple, list)) or len(decoding_key) != 9:
+        raise TypeError("decoding_key must be the nine-field fixed PRC key")
+    generator_matrix, parity_matrix, one_time_pad = decoding_key[:3]
+    n = int(generator_matrix.shape[0])
+    if n <= 0:
+        raise ValueError("fixed PRC block length must be positive")
+
+    bits = tokens_to_bits(generated_token_ids, partition_map)
+    probabilities = np.asarray(partition_probs, dtype=np.float64).reshape(-1)
+    if bits.shape != probabilities.shape:
+        raise ValueError(
+            f"tokens length {bits.shape[0]} != p_trace length "
+            f"{probabilities.shape[0]}"
+        )
+    total_length = int(bits.size)
+    if total_length >= n:
+        num_blocks = total_length // n
+        if not 0 <= int(block_index) < num_blocks:
+            raise ValueError(
+                f"block_index must be in [0, {num_blocks}), got {block_index}"
+            )
+        start = int(block_index) * n
+        stop = start + n
+        soft = map_soft_token(bits[start:stop], probabilities[start:stop])
+    else:
+        if int(block_index) != 0:
+            raise ValueError("a partial fixed block only has block_index 0")
+        num_blocks = 1
+        soft = fold_map_soft_token(bits, probabilities, n)
+
+    parity = parity_matrix.tocsr()
+    if parity.shape[1] != n:
+        raise ValueError(
+            f"parity matrix has {parity.shape[1]} columns, expected n={n}"
+        )
+    row_sizes = np.diff(parity.indptr)
+    if np.any(row_sizes <= 0):
+        raise ValueError("fixed parity matrix contains an empty check")
+    check_values = np.asarray(
+        [
+            np.prod(soft[parity.indices[parity.indptr[row]:parity.indptr[row + 1]]])
+            for row in range(parity.shape[0])
+        ],
+        dtype=np.float64,
+    )
+    otp = np.asarray(one_time_pad, dtype=np.int64).reshape(-1)
+    if otp.size != n:
+        raise ValueError(f"one-time pad has length {otp.size}, expected n={n}")
+    otp_signs = np.asarray(
+        [
+            np.prod(
+                1 - 2 * otp[
+                    parity.indices[parity.indptr[row]:parity.indptr[row + 1]]
+                ]
+            )
+            for row in range(parity.shape[0])
+        ],
+        dtype=np.float64,
+    )
+    signed = otp_signs * check_values
+    squared = check_values ** 2
+    if not np.all(np.isfinite(signed)) or not np.all(np.isfinite(squared)):
+        raise ValueError("fixed MAP evidence contains non-finite check values")
+
+    return {
+        "length": n,
+        "n": n,
+        "T": total_length,
+        "r": int(parity.shape[0]),
+        "num_blocks": int(num_blocks),
+        "block_index": int(block_index),
+        "signed_check_values": signed,
+        "check_weights": np.abs(check_values),
+        "squared_check_values": squared,
+    }
+
+
+def replay_cached_fixed_map_record(
+    artifact: dict,
+    record: dict,
+    *,
+    false_positive_rate: float,
+) -> dict:
+    """Replay all complete fixed-PRC blocks in one cached generation record."""
+    for field in ("decoding_key", "partition"):
+        if field not in artifact:
+            raise KeyError(f"artifact is missing {field!r}")
+    for field in ("tokens", "p_trace"):
+        if field not in record:
+            raise KeyError(f"record is missing {field!r}")
+    fpr = float(false_positive_rate)
+    if not 0.0 < fpr < 1.0:
+        raise ValueError("false_positive_rate must be in (0, 1)")
+
+    n = int(artifact.get("n", artifact["decoding_key"][0].shape[0]))
+    requested_T = int(artifact.get("T", len(record["p_trace"])))
+    available = min(len(record["tokens"]), len(record["p_trace"]))
+    if available < requested_T:
+        raise ValueError(
+            f"cached record has {available} values, artifact requires {requested_T}"
+        )
+    tokens = record["tokens"][:requested_T]
+    probabilities = np.asarray(record["p_trace"][:requested_T])
+    num_blocks = requested_T // n if requested_T >= n else 1
+    block_fpr = fpr / num_blocks
+    block_results = []
+    for block_index in range(num_blocks):
+        evidence = prepare_fixed_map_block_evidence(
+            artifact["decoding_key"],
+            tokens,
+            probabilities,
+            artifact["partition"],
+            block_index=block_index,
+        )
+        scored = score_online_map_evidence(
+            evidence,
+            false_positive_rate=block_fpr,
+            fpr_policy="one_shot",
+        )
+        scored["method"] = "fixed_map_block_phase01_replay"
+        scored["block_index"] = block_index
+        block_results.append(scored)
+
+    calibrations = {}
+    for method in ("hoeffding", "weighted_rademacher_chernoff"):
+        method_blocks = [result["calibrations"][method] for result in block_results]
+        margins = [
+            block_results[index]["statistic"] - block["threshold"]
+            for index, block in enumerate(method_blocks)
+        ]
+        best_index = int(np.argmax(margins))
+        best = method_blocks[best_index]
+        calibrations[method] = {
+            **best,
+            "decision": bool(any(block["decision"] for block in method_blocks)),
+            "blocks_passed": int(sum(block["decision"] for block in method_blocks)),
+            "best_block": best_index,
+            "block_fpr": block_fpr,
+        }
+
+    result = {
+        "method": "fixed_map_phase01_replay",
+        "n": n,
+        "T": requested_T,
+        "r": int(block_results[0]["r"]),
+        "num_blocks": num_blocks,
+        "fpr": fpr,
+        "block_fpr": block_fpr,
+        "calibrations": calibrations,
+        "blocks": block_results,
+    }
+    for field in ("prompt_idx", "watermark"):
+        if field in record:
+            result[field] = record[field]
+    return result
+
+
+def prepare_reliability_adaptive_fixed_map_block_evidence(
+    decoding_key,
+    generated_token_ids,
+    partition_probs,
+    partition_map,
+    *,
+    block_index: int = 0,
+    erasure_quantiles=DEFAULT_ERASURE_QUANTILES,
+) -> dict:
+    """Build Phase 2 evidence from a probability-selected dual basis.
+
+    Basis selection sees only the parity matrix, the absolute reliability
+    implied by ``partition_probs``, and the configured channel noise rate.
+    The one-time pad is consulted only after the basis has been fixed, when
+    the independent transformed parity signs are computed for scoring.
+    """
+    if not isinstance(decoding_key, (tuple, list)) or len(decoding_key) != 9:
+        raise TypeError("decoding_key must be the nine-field fixed PRC key")
+    generator_matrix, parity_matrix, one_time_pad = decoding_key[:3]
+    noise_rate = float(decoding_key[4])
+    n = int(generator_matrix.shape[0])
+    if n <= 0:
+        raise ValueError("fixed PRC block length must be positive")
+
+    bits = tokens_to_bits(generated_token_ids, partition_map)
+    probabilities = np.asarray(partition_probs, dtype=np.float64).reshape(-1)
+    if bits.shape != probabilities.shape:
+        raise ValueError(
+            f"tokens length {bits.shape[0]} != p_trace length "
+            f"{probabilities.shape[0]}"
+        )
+    total_length = int(bits.size)
+    num_blocks = total_length // n
+    if num_blocks <= 0:
+        raise ValueError(
+            "Phase 2 adaptive-basis replay requires a complete fixed block"
+        )
+    if not 0 <= int(block_index) < num_blocks:
+        raise ValueError(
+            f"block_index must be in [0, {num_blocks}), got {block_index}"
+        )
+    start = int(block_index) * n
+    stop = start + n
+    block_probabilities = probabilities[start:stop]
+    soft = map_soft_token(bits[start:stop], block_probabilities)
+    reliabilities = bucket_reliability(block_probabilities)
+
+    parity = parity_matrix.tocsr()
+    if parity.shape[1] != n:
+        raise ValueError(
+            f"parity matrix has {parity.shape[1]} columns, expected n={n}"
+        )
+    basis = select_reliability_adaptive_basis(
+        parity,
+        reliabilities,
+        noise_rate,
+        erasure_quantiles=erasure_quantiles,
+    )
+    supports = basis["supports"]
+    attenuation = 1.0 - 2.0 * noise_rate
+    degrees = np.asarray([support.size for support in supports], dtype=np.int64)
+    noise_weights = np.power(attenuation, degrees, dtype=np.float64)
+    check_values = np.asarray(
+        [
+            noise_weights[row] * np.prod(soft[support])
+            for row, support in enumerate(supports)
+        ],
+        dtype=np.float64,
+    )
+
+    otp = np.asarray(one_time_pad, dtype=np.int64).reshape(-1)
+    if otp.size != n:
+        raise ValueError(f"one-time pad has length {otp.size}, expected n={n}")
+    otp_signs = np.asarray(
+        [np.prod(1 - 2 * otp[support]) for support in supports],
+        dtype=np.float64,
+    )
+    signed = otp_signs * check_values
+    squared = check_values ** 2
+    if not np.all(np.isfinite(signed)) or not np.all(np.isfinite(squared)):
+        raise ValueError("adaptive fixed MAP evidence contains non-finite values")
+
+    return {
+        "method": "fixed_map_reliability_adaptive_basis_evidence_v1",
+        "length": n,
+        "n": n,
+        "T": total_length,
+        "r": int(len(supports)),
+        "num_blocks": int(num_blocks),
+        "block_index": int(block_index),
+        "signed_check_values": signed,
+        "check_weights": np.abs(check_values),
+        "squared_check_values": squared,
+        "basis_selection": basis["selection"],
+    }
+
+
+def replay_cached_fixed_map_record_phase2(
+    artifact: dict,
+    record: dict,
+    *,
+    false_positive_rate: float,
+    erasure_quantiles=DEFAULT_ERASURE_QUANTILES,
+) -> dict:
+    """Replay the Phase 2 adaptive-basis detector on one cached record."""
+    for field in ("decoding_key", "partition"):
+        if field not in artifact:
+            raise KeyError(f"artifact is missing {field!r}")
+    for field in ("tokens", "p_trace"):
+        if field not in record:
+            raise KeyError(f"record is missing {field!r}")
+    fpr = float(false_positive_rate)
+    if not 0.0 < fpr < 1.0:
+        raise ValueError("false_positive_rate must be in (0, 1)")
+
+    n = int(artifact.get("n", artifact["decoding_key"][0].shape[0]))
+    requested_T = int(artifact.get("T", len(record["p_trace"])))
+    available = min(len(record["tokens"]), len(record["p_trace"]))
+    if available < requested_T:
+        raise ValueError(
+            f"cached record has {available} values, artifact requires {requested_T}"
+        )
+    if requested_T < n:
+        raise ValueError(
+            "Phase 2 adaptive-basis replay requires at least one complete block"
+        )
+    tokens = record["tokens"][:requested_T]
+    probabilities = np.asarray(record["p_trace"][:requested_T])
+    num_blocks = requested_T // n
+    block_fpr = fpr / num_blocks
+    block_results = []
+    for block_index in range(num_blocks):
+        evidence = prepare_reliability_adaptive_fixed_map_block_evidence(
+            artifact["decoding_key"],
+            tokens,
+            probabilities,
+            artifact["partition"],
+            block_index=block_index,
+            erasure_quantiles=erasure_quantiles,
+        )
+        scored = score_online_map_evidence(
+            evidence,
+            false_positive_rate=block_fpr,
+            fpr_policy="one_shot",
+        )
+        scored["method"] = "fixed_map_block_phase2_adaptive_basis_replay"
+        scored["block_index"] = block_index
+        scored["basis_selection"] = evidence["basis_selection"]
+        block_results.append(scored)
+
+    calibrations = {}
+    for method in ("hoeffding", "weighted_rademacher_chernoff"):
+        method_blocks = [result["calibrations"][method] for result in block_results]
+        margins = [
+            block_results[index]["statistic"] - block["threshold"]
+            for index, block in enumerate(method_blocks)
+        ]
+        best_index = int(np.argmax(margins))
+        best = method_blocks[best_index]
+        calibrations[method] = {
+            **best,
+            "decision": bool(any(block["decision"] for block in method_blocks)),
+            "blocks_passed": int(sum(block["decision"] for block in method_blocks)),
+            "best_block": best_index,
+            "block_fpr": block_fpr,
+        }
+
+    result = {
+        "method": "fixed_map_phase2_adaptive_basis_replay",
+        "basis_method": "reliability_erasure_elimination_v1",
+        "n": n,
+        "T": requested_T,
+        "r": int(block_results[0]["r"]),
+        "num_blocks": num_blocks,
+        "fpr": fpr,
+        "block_fpr": block_fpr,
+        "calibrations": calibrations,
+        "blocks": block_results,
+    }
+    for field in ("prompt_idx", "watermark"):
+        if field in record:
+            result[field] = record[field]
+    return result
 
 
 def replay_cached_online_map_record(
