@@ -1,13 +1,55 @@
 # Online Causal PRC Experiment Plan
 
+## Immediate next experiment: 0.6B, eta 0.20
+
+Use the opt-in static KV cache and generate a reusable `T=n=4096` ceiling.
+The production generation is 500 prompts with `--batch 125`, exactly four
+mapped shards on at most four H100s (`--max-containers 4 --gpu H100`). A small
+five-prompt smoke uses one H100 and batch 5; its prompt-indexed records share
+the exact production namespace and are retained. Consequently, the production
+completion generates only the missing 495 records in four shards of
+`125 + 125 + 125 + 120`.
+
+Smoke only the ceiling and its next 16-token prefix:
+
+```bash
+modal run modal_online_run.py::sweep_map_prefixes \
+  --source-n 4096 --floor-n 4080 --step 16 \
+  --target-map-tpr 0.90 --num-prompts 5 \
+  --t 3 --eta 0.20 --fpr 0.001 \
+  --batch 5 --max-containers 1 --gpu H100 \
+  --kv-cache-implementation static \
+  --no-final-audit --no-pin-floor-cache
+```
+
+Then complete the reusable ceiling and scan downward:
+
+```bash
+modal run modal_online_run.py::sweep_map_prefixes \
+  --source-n 4096 --floor-n 1024 --step 16 \
+  --target-map-tpr 0.90 --num-prompts 500 \
+  --t 3 --eta 0.20 --fpr 0.001 \
+  --batch 125 --max-containers 4 --gpu H100 \
+  --kv-cache-implementation static \
+  --no-final-audit --no-pin-floor-cache
+```
+
+The scan is adaptive and descending. It evaluates 4096, 4080, 4064, and so
+on, but stops immediately after the first point that is not strictly above
+90% MAP TPR. For 500 prompts, `451/500` passes and `450/500` fails. The first
+failing point is saved along with every preceding evaluated increment; all
+shorter requested lengths remain explicitly marked unevaluated. Null
+generation and the entropy/naive audit happen only after the boundary is known.
+
 ## Current recommended experiment: ceiling-first MAP TPR sweep
 
 The default experiment should generate one reusable online sequence collection
-to a credible maximum length, then find the first MAP-TPR crossing by scoring
-saved prefixes every 16 tokens. Do **not** physically resume generation every
-16 tokens: the current continuation path must replay the saved prefix to rebuild
-the model KV cache, so many small extensions would repeatedly pay for almost the
-same prefix. Prefix detection is CPU-only and substantially cheaper.
+to a credible maximum length, then find the MAP-TPR boundary by scoring saved
+prefixes downward every 16 tokens. Stop after the first prefix that is not
+strictly above the target. Do **not** physically resume generation every 16
+tokens: the current continuation path must replay the saved prefix to rebuild
+the model KV cache, so many small extensions would repeatedly pay for almost
+the same prefix. Prefix detection is CPU-only and substantially cheaper.
 
 For example, for the 0.6B, `eta=0.15` campaign, use a generation ceiling of
 `N_max=2048`, then score
@@ -39,14 +81,13 @@ The production pipeline should therefore:
    GPU, batch size, and concurrency limit.
 2. Generate directly to the ceiling, continue once from the longest compatible
    shorter cache, or use an already-compatible longer cache without generation.
-3. Run one MAP-only prefix-grid detector that loads each saved record once and
-   evaluates all requested lengths in ascending order.
+3. Prepare each saved record once for MAP detection, then evaluate lengths in
+   descending order. Stop immediately after the first failing length; never
+   score the remaining shorter grid blindly.
 4. Record TP count, total, TPR, `r(L)`, support hash, threshold provenance,
-   source cache/length, and pass/fail for every length in a resumable manifest
-   and summary CSV.
-5. Select the first prefix with `TP / num_prompts > 0.90`. Optionally require a
-   second consecutive passing prefix as a stability check, while preserving the
-   first observed crossing separately.
+   source cache/length, and pass/fail for every evaluated length in a resumable
+   manifest and summary CSV. Record all skipped lengths as unevaluated.
+5. Select the last passing prefix immediately before the first failing prefix.
 6. At the selected length, run the full final audit, including MAP FPR with a
    compatible null cache and optional entropy/naive results. Null generation is
    not required at every exploratory prefix because the per-document threshold
@@ -86,10 +127,11 @@ The 0.6B ceiling-first setup is now implemented:
   same MAP decision, statistic, `V`, and threshold as independent calls to the
   existing one-length detector.
 - `modal_online_run.py::sweep_map_prefixes` ensures the ceiling cache exists,
-  evaluates a descending prefix grid, applies the strict empirical target,
-  records a resumable JSON manifest and CSV, runs the full detector/null audit
-  at the selected length, and records measured GPU work separately from CPU
-  prefix detection.
+  prepares the saved traces once, evaluates a descending prefix grid only
+  through its first failing point, applies the strict empirical target, records
+  a resumable JSON manifest and CSV, optionally runs the full detector/null
+  audit at the selected length, and records measured GPU work separately from
+  CPU prefix detection.
 - A sweep may pin every ceiling record to a declared canonical floor cache.
   Before detection it compares token IDs, probability traces, entropy/log-prob
   traces, and causal PRC bits at the floor boundary. Incompatible ceiling
@@ -131,6 +173,171 @@ and `.json`. Each increment also has an independently loadable local JSON and
 remote `.pt` result indexed by the manifest. The large token, probability,
 entropy/log-probability, and PRC-bit traces remain stored once in the canonical
 512-token cache; prefix generation records are not duplicated.
+
+The corresponding fixed-length confirmation at `T=n=448`, `eta=0.05`,
+`t=3`, and 500 prompts detected MAP `466/500` (93.2%), entropy `399/500`
+(79.8%), and naive `291/500` (58.2%), with `0/500` false positives for all
+three detectors. At the same length, the online construction detected MAP
+`455/500` (91.0%), entropy `388/500` (77.6%), and naive `260/500` (52.0%).
+Thus the fixed MAP result is 11 prompts, or 2.2 percentage points, higher for
+this paired parameter setting. The fixed run reused the complete 512-token
+null cache, persisted all 500 watermarked records, and cost `$0.20658095`
+before workspace credits.
+
+### Eta 0.15 ceiling-first result (2026-08-16)
+
+The second production sweep used Qwen3-0.6B, `eta=0.15`, `t=3`, 500 prompts,
+an online ceiling of 2048, a floor of 1024, and a descending step of 16. Batch
+64 fit on A10G, and five containers generated the 498 records not already
+created by the two-prompt smoke test. A compatible fixed-length null cache at
+`T=8192` supplied all 500 null traces, so no new null tokens were generated.
+
+The strict `MAP TPR > 90%` crossing is bracketed by `(1488, 1504]` on the
+16-token grid: `n=T=1504` detected `453/500` (90.6%), while `n=T=1488`
+detected `446/500` (89.2%). For reference, the endpoints detected `484/500`
+(96.8%) at 2048 and `342/500` (68.4%) at 1024. The full audit at 1504 matched
+the grid with MAP `453/500` and FPR `0/500`; entropy detected `398/500` with
+FPR `0/500`, and naive detected `279/500` with FPR `0/500`.
+
+All 500 ceiling records were verified in the reusable Modal cache with token,
+probability, entropy, token-log-probability, and PRC-bit traces. All 65 prefix
+increments have separate local JSON and remote `.pt` results, in addition to
+the combined grid and final audit. The compact grid is stored at
+`outputs/online_map_sweep_n2048_to1024_step16_t3_eta0.15_prompts500_sampler-poscdf-v1.csv`.
+
+The two-prompt smoke and full 500-prompt campaign cost `$0.90315289` before
+workspace credits: `$0.84883360` A10G, `$0.04474380` CPU, and `$0.00957549`
+memory. The full run alone cost `$0.86929309`; the reusable smoke records cost
+`$0.03385980`. Exact per-app billing is recorded in
+`outputs/online_map_sweep_n2048_to1024_eta0.15_cost_ledger.csv`.
+
+The paired fixed-length Qwen3-0.6B baseline at `n=T=1504`, `eta=0.15`, `t=3`
+and 500 prompts detected MAP `455/500` (91.0%), entropy `424/500` (84.8%), and
+naive `341/500` (68.2%), with FPR `0/500` for every detector. Compared with the
+online construction at the same length, fixed was higher by 2 MAP prompts
+(`+0.4` percentage points), 26 entropy prompts (`+5.2` points), and 62 naive
+prompts (`+12.4` points). Thus both constructions exceed the strict 90% MAP
+target at 1504, and their observed MAP difference is small in this paired
+500-prompt comparison.
+
+The fixed run used a full-rank `r=1489` matrix, batch 64 over up to five A10Gs,
+reused the complete fixed null cache at `T=8192`, and persisted all 500
+watermarked records. One detector container was preempted and automatically
+retried without regenerating the saved watermarked samples. The run cost
+`$0.56037526` before credits: `$0.53044381` A10G, `$0.02387968` CPU, and
+`$0.00605177` memory. Exact billing is recorded in
+`outputs/fixed_n1504_t3_eta0.15_prompts500_cost_ledger.csv`.
+
+### Qwen3-8B generalization (2026-08-16)
+
+The online runner now accepts `--generation-model-size 8B`. Model choice is
+part of artifact identity, watermarked-cache discovery, null-cache discovery,
+continuation compatibility, record validation, result metadata, and local
+filenames. The 8B path loads `Qwen3-8B-Base`, defaults to H100 and batch 25,
+stores online records below `qwen3_8b_base`, and reads only model-qualified 8B
+nulls below `/data/_nulls/qwen3_8b_base`. Existing 0.6B paths are unchanged.
+
+An end-to-end two-prompt `n=T=64`, `eta=0.15`, `t=3` mechanics smoke generated
+and saved 8B online records, reused the existing complete 8B null cache at
+`T=768`, and completed MAP, entropy-aware, and naive detection. A cached rerun
+launched no GPU generation. The smoke is not a TPR measurement; its purpose was
+model loading, isolation, persistence, null compatibility, and detection. The
+exact production commands and batching guidance are in
+`modal_online_8b_runbook.md`.
+
+#### Opt-in static KV cache: implementation and small validation (2026-08-16)
+
+The custom Qwen decoder's historical `KVCache` still appends each layer's new
+key and value with `torch.cat`, and it remains the default for fixed, legacy,
+and existing online runs. An opt-in inference-only `StaticKVCache` now lazily
+allocates one fixed-capacity K/V pair per layer, copies each new slice into its
+absolute sequence range, and returns a view of the populated prefix. Online
+generation allocates for `prompt_length + target_T`, checks capacity, dtype,
+device, and shape on every update, and retains allocations across `reset()`.
+No PRC construction, position-addressed random draw, detector, or threshold
+changed.
+
+The online CLI selects it with `--kv-cache-implementation static`. Static
+artifacts and watermarked records are deliberately isolated below the suffix
+`_kvcache-static-v1`; historical concatenating tags are unchanged and cache
+discovery refuses to reuse watermarked records across implementations. Records,
+generation segments, sweep manifests, result payloads, and cost telemetry save
+the implementation/version. Shared null generation stays on the established
+concatenating path, so the existing null namespace is not split or polluted.
+
+Local tests use a two-layer miniature Qwen model and require exact logits and
+K/V values at prompt prefill and every decode step. They also verify stable
+storage pointers, allocation reuse after reset, overflow rejection, cache-tag
+isolation, historical-record compatibility, and cross-implementation reuse
+rejection. The full local suite passed 71 tests.
+
+Small A10G validation used two 0.6B prompts and isolated experiment seed
+`424242`. At `n=64`, separately saved concat and static direct runs matched
+exactly for tokens, `p_trace`, LM entropy, token log-probability, PRC bits,
+observed bucket bits, and MAP soft tokens. More importantly, an in-container
+A/B utility ran both cache implementations through the same loaded model and
+found exact concat-versus-static direct output and exact static direct-versus-
+resumed output at both `n=80` from prefix 64 and `n=256` from prefix 128. At
+`n=256`, concat direct took 10.64 seconds and static direct took 10.24 seconds;
+peak reserved CUDA memory was identical at 1,637,875,712 bytes, while static
+peak allocated memory was about 25 MB higher because it reserves its full
+capacity immediately. These tiny runs validate correctness, not the eventual
+long-context speedup.
+
+Provider billing for all ten validation apps—including the two saved direct
+runs, continuation run, two in-container A/B runs, saved `n=256` smoke, and
+three CPU-only record comparisons—was `$0.09980649` before credits. The
+per-app GPU, CPU, and memory charges are preserved in
+`outputs/online_static_kv_cache_smoke_cost_ledger.csv`; the GPU portion was
+`$0.09351127`.
+
+A comparison between records produced in separate Modal app executions did
+expose a broader reproducibility caveat: tiny GPU probability-trace differences
+can occur even before token sequences diverge, including between two concat
+runs. Position-addressed random uniforms remain identical, but a small logits
+difference can eventually cross an inverse-CDF boundary. The in-container test
+isolates cache-layout correctness; it does not establish byte-identical model
+outputs across arbitrary GPU containers. This issue predates and is independent
+of the static cache.
+
+Before a large static-cache campaign, run a small reusable batch at its actual
+ceiling, then verify persistence, peak memory, runtime, and a cache-only replay.
+For the 0.6B eta 0.20 production completion, use batch 125 on at most four
+H100s; the first production shard is also the full-batch memory validation.
+The completed 8B eta 0.15 campaign remains on the concatenating cache and is
+untouched.
+
+#### Qwen3-8B eta 0.15 production result (2026-08-16)
+
+The full online campaign used `n=T=4096`, `eta=0.15`, `t=3`, 500 prompts,
+batch 50, at most five H100 containers, and exact saved-prefix evaluation from
+4096 down to 3200 in steps of 16. It reused 77 watermarked and 27 null smoke
+records, then generated only the missing 423 watermarked and 473 null records.
+The generation plan used nine watermarked shards (`8 x 50 + 23`) and ten null
+shards (`9 x 50 + 23`). One warm container later lost contact with the Modal
+scheduler while requesting another input, but all mapped shards had committed
+and the aggregate plan completed without regeneration or missing records.
+
+No tested length strictly exceeded the 90% MAP target. The ceiling detected
+`448/500` (89.6%) at 4096; the maximum over all 57 evaluated prefixes was also
+448 detections. The floor detected `440/500` (88.0%) at 3200. Therefore the
+empirical online crossing for this configuration is above 4096, rather than
+within the planned `[3200, 4096]` grid. Small one- or two-document reversals
+between adjacent prefixes were recorded as empirical monotonicity warnings and
+do not indicate a cache or detector inconsistency.
+
+A separate cache-only full audit at 4096 found all 500 watermarked and 500 null
+records, launched no GPU, and measured MAP `448/500` (89.6%), entropy-aware
+`423/500` (84.6%), and naive `335/500` (67.0%), with `0/500` false positives
+for every detector. Direct volume inventory confirmed contiguous prompt-indexed
+caches from 0 through 499, so all records can be reused for shorter detection
+or as the complete replay source for a longer online ceiling.
+
+The production generation and 57-prefix sweep cost `$11.12997658` before
+credits (`$10.89981769` H100, `$0.19339690` CPU, `$0.03676199` memory). The
+cache-only full audit cost `$0.00476049`, for an incremental production total
+of `$11.13473707`. Exact billing is recorded in
+`outputs/online_map_sweep_n4096_to3200_eta0.15_8b_cost_ledger.csv`.
 
 ## Side-by-side construction
 

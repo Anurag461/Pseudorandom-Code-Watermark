@@ -10,6 +10,14 @@ Example (the first full experiment):
 
     modal run modal_online_run.py --num-prompts 500 --n 256 --t 3 \
       --eta 0.05 --fpr 1e-3 --batch 64 --max-containers 5
+
+8B generation and detection use the same causal construction and detector,
+with model-qualified caches and 8B probability traces:
+
+    modal run modal_online_run.py::sweep_map_prefixes \
+      --generation-model-size 8B --source-n 2048 --floor-n 1024 \
+      --step 16 --eta 0.15 --num-prompts 500 --batch 25 \
+      --max-containers 5 --gpu H100 --no-pin-floor-cache
 """
 import csv
 import hashlib
@@ -29,15 +37,21 @@ FPR_POLICY = "one_shot"
 SEED = 12345
 MODEL_SIZE = "0.6B"
 MODEL_DISPLAY = "Qwen3-0.6B-Base"
+SUPPORTED_MODEL_SIZES = ("0.6B", "8B")
 VOCAB = 151_936
 GPU = "A10G"
 DEFAULT_BATCH = 64
+DEFAULT_8B_BATCH = 25
 DEFAULT_MAX_CONTAINERS = 5
 CANONICAL_NUM_PROMPTS = 500
 RESULT_SCHEMA_VERSION = 2
 LEGACY_SAMPLER_VERSION = "legacy_torch_global_v1"
 ONLINE_MODEL_CACHE_NAME = "qwen3_0p6b_base"
 SAMPLER_CACHE_TAG = "poscdf-v1"
+DEFAULT_KV_CACHE_IMPLEMENTATION = "concat"
+CONCAT_KV_CACHE_VERSION = "concat-v1"
+STATIC_KV_CACHE_VERSION = "static-v1"
+KV_CACHE_IMPLEMENTATIONS = ("concat", "static")
 LOCAL_CSV_COLUMNS = (
     "timestamp_utc",
     "scheme",
@@ -52,6 +66,8 @@ LOCAL_CSV_COLUMNS = (
     "Generation Model",
     "num prompts",
     "batch",
+    "kv cache implementation",
+    "kv cache version",
     "experiment seed",
     "Map TPR",
     "Map FPR",
@@ -72,14 +88,91 @@ LOCAL_CSV_COLUMNS = (
 )
 
 
+def normalize_kv_cache_implementation(implementation="concat") -> str:
+    value = str(implementation or DEFAULT_KV_CACHE_IMPLEMENTATION).strip().lower()
+    value = {
+        "dynamic": "concat",
+        "legacy": "concat",
+        "preallocated": "static",
+    }.get(value, value)
+    if value not in KV_CACHE_IMPLEMENTATIONS:
+        raise ValueError(
+            f"kv cache implementation must be one of "
+            f"{KV_CACHE_IMPLEMENTATIONS}; got {implementation!r}"
+        )
+    return value
+
+
+def kv_cache_version(implementation="concat") -> str:
+    implementation = normalize_kv_cache_implementation(implementation)
+    return (
+        STATIC_KV_CACHE_VERSION
+        if implementation == "static"
+        else CONCAT_KV_CACHE_VERSION
+    )
+
+
 def _slug(value) -> str:
     return re.sub(r"[^A-Za-z0-9_.-]+", "-", str(value)).strip("-")
 
 
+def normalize_model_size(model_size: str = MODEL_SIZE) -> str:
+    value = MODEL_SIZE if model_size is None else str(model_size).strip()
+    if not value:
+        value = MODEL_SIZE
+    upper = value.upper()
+    if upper.endswith("B"):
+        normalized = upper[:-1] + "B"
+    elif upper.replace(".", "", 1).isdigit():
+        normalized = f"{upper}B"
+    else:
+        normalized = value
+    if normalized not in SUPPORTED_MODEL_SIZES:
+        raise ValueError(
+            f"online generation model must be one of "
+            f"{SUPPORTED_MODEL_SIZES}; got {model_size!r}"
+        )
+    return normalized
+
+
+def model_display(model_size: str = MODEL_SIZE) -> str:
+    return f"Qwen3-{normalize_model_size(model_size)}-Base"
+
+
+def model_cache_name(model_size: str = MODEL_SIZE) -> str:
+    size = normalize_model_size(model_size).lower().replace(".", "p")
+    return f"qwen3_{size}_base"
+
+
+def model_default_gpu(model_size: str = MODEL_SIZE) -> str:
+    return "H100" if normalize_model_size(model_size) == "8B" else GPU
+
+
+def model_default_batch(model_size: str = MODEL_SIZE) -> int:
+    return (
+        DEFAULT_8B_BATCH
+        if normalize_model_size(model_size) == "8B"
+        else DEFAULT_BATCH
+    )
+
+
+def resolve_model_runtime(model_size: str, batch: int = 0,
+                          gpu: str = "") -> tuple[str, int, str]:
+    """Normalize the model and choose safe model-specific CLI defaults."""
+    normalized = normalize_model_size(model_size)
+    requested_batch = int(batch)
+    if requested_batch < 0:
+        raise ValueError("batch must be nonnegative (zero selects the default)")
+    resolved_batch = requested_batch or model_default_batch(normalized)
+    resolved_gpu = str(gpu).strip() or model_default_gpu(normalized)
+    return normalized, resolved_batch, resolved_gpu
+
+
 def legacy_config_tag(n: int, t: int, eta: float,
-                      experiment_seed: int = SEED) -> str:
+                      experiment_seed: int = SEED,
+                      generation_model_size: str = MODEL_SIZE) -> str:
     tag = (
-        f"{SCHEME}/qwen3_0p6b_base/"
+        f"{SCHEME}/{model_cache_name(generation_model_size)}/"
         f"n{int(n)}_T{int(n)}_t{int(t)}_eta{float(eta):.2f}_rr99of100"
     )
     if int(experiment_seed) != SEED:
@@ -88,12 +181,21 @@ def legacy_config_tag(n: int, t: int, eta: float,
 
 
 def config_tag(n: int, t: int, eta: float,
-               experiment_seed: int = SEED) -> str:
+               experiment_seed: int = SEED,
+               generation_model_size: str = MODEL_SIZE,
+               kv_cache_implementation: str = DEFAULT_KV_CACHE_IMPLEMENTATION,
+               ) -> str:
     """Sampler-v2 namespace; legacy caches remain readable as sources."""
-    return (
-        f"{legacy_config_tag(n, t, eta, experiment_seed)}"
+    implementation = normalize_kv_cache_implementation(
+        kv_cache_implementation
+    )
+    tag = (
+        f"{legacy_config_tag(n, t, eta, experiment_seed, generation_model_size)}"
         f"_sampler-{SAMPLER_CACHE_TAG}"
     )
+    if implementation != DEFAULT_KV_CACHE_IMPLEMENTATION:
+        tag += f"_kvcache-{kv_cache_version(implementation)}"
+    return tag
 
 
 def artifact_path(tag: str) -> str:
@@ -104,9 +206,14 @@ def wm_dir(tag: str) -> str:
     return f"/data/{tag}/wm"
 
 
-def shared_null_dir(length: int) -> str:
-    # This is modal_run.py's historical/current Qwen3-0.6B forced-length cache.
-    return f"/data/_nulls/T{int(length)}"
+def shared_null_dir(length: int,
+                    generation_model_size: str = MODEL_SIZE) -> str:
+    """Use the fixed runner's model-qualified shared-null layout."""
+    model_size = normalize_model_size(generation_model_size)
+    root = "/data/_nulls"
+    if model_size != MODEL_SIZE:
+        root = f"{root}/{model_cache_name(model_size)}"
+    return f"{root}/T{int(length)}"
 
 
 def _chunks(values, size):
@@ -212,6 +319,83 @@ def summarize_map_sweep(rows: list[dict], target_rate: float) -> dict:
     }
 
 
+def evaluate_prepared_map_prefixes(
+    prepared_records: list[dict],
+    prefix_lengths: list[int],
+    fpr: float,
+    target_rate: float,
+    stop_after_first_below: bool = True,
+) -> dict:
+    """Evaluate descending MAP prefixes and stop at the first failure.
+
+    Each record must already contain the ceiling-length per-row MAP
+    contributions produced by ``prepare_online_map_prefix_trace``.  Therefore
+    stepping through lengths neither reloads traces nor rebuilds check values.
+    """
+    from detectors import score_prepared_online_map_prefix
+
+    lengths = [int(length) for length in prefix_lengths]
+    if not lengths or len(set(lengths)) != len(lengths):
+        raise ValueError("prefix_lengths must be nonempty and unique")
+    if lengths != sorted(lengths, reverse=True):
+        raise ValueError("prefix_lengths must be ordered longest to shortest")
+    if not prepared_records:
+        raise ValueError("prepared_records must be nonempty")
+    rate_strictly_above(0, 1, target_rate)
+
+    prompt_results = [{
+        "prompt_idx": int(record["prompt_idx"]),
+        "watermark": True,
+        "map_scores": {},
+    } for record in prepared_records]
+    rows = []
+    first_below_n = None
+    for length in lengths:
+        decisions = []
+        scores = []
+        for record in prepared_records:
+            score = score_prepared_online_map_prefix(
+                record["prepared"],
+                length,
+                fpr=fpr,
+                fpr_policy=FPR_POLICY,
+            )
+            scores.append(score)
+            decisions.append(bool(score["decision"]))
+        for result, score in zip(prompt_results, scores):
+            result["map_scores"][str(length)] = score
+
+        tp = int(sum(decisions))
+        total = len(decisions)
+        representative = scores[0]
+        rows.append({
+            "n": int(length),
+            "T": int(length),
+            "r": int(representative["r"]),
+            "free_coordinates": int(representative["free_coordinates"]),
+            "tp": tp,
+            "watermarked_total": total,
+            "tpr": tp / total,
+        })
+        if (
+            stop_after_first_below
+            and not rate_strictly_above(tp, total, target_rate)
+        ):
+            first_below_n = int(length)
+            break
+
+    evaluated_lengths = [int(row["n"]) for row in rows]
+    return {
+        "rows": rows,
+        "results": prompt_results,
+        "evaluated_lengths": evaluated_lengths,
+        "unevaluated_lengths": lengths[len(evaluated_lengths):],
+        "stop_after_first_below": bool(stop_after_first_below),
+        "first_below_n": first_below_n,
+        "stopped_after_first_below": first_below_n is not None,
+    }
+
+
 def increment_payload_from_grid(grid_payload: dict, length: int) -> dict:
     """Extract one independently loadable MAP-prefix result from a grid."""
     length = int(length)
@@ -265,6 +449,9 @@ def increment_payload_from_grid(grid_payload: dict, length: int) -> dict:
         "fpr_policy",
         "target_fpr",
         "generation_model",
+        "generation_model_size",
+        "kv_cache_implementation",
+        "kv_cache_version",
         "num_prompts",
         "prompt_indices",
         "source_artifact_fingerprint",
@@ -311,6 +498,8 @@ def summarize_generation_cost(generation_meta: dict, source_n: int,
     replayed_prefix_tokens = 0
     generated_suffix_tokens = 0
     generated_null_tokens = 0
+    peak_cuda_allocated_bytes = 0
+    peak_cuda_reserved_bytes = 0
     for kind in ("wm", "null"):
         for record in generation_meta.get(kind, []):
             generated = int(record.get("generated", 0))
@@ -320,11 +509,19 @@ def summarize_generation_cost(generation_meta: dict, source_n: int,
             suffix = int(record.get("suffix_tokens_generated", 0) or 0)
             replayed = batch * resume_prefix if kind == "wm" else 0
             null_tokens = generated * int(source_n) if kind == "null" else 0
+            peak_allocated = int(record.get("peak_cuda_allocated_bytes", 0) or 0)
+            peak_reserved = int(record.get("peak_cuda_reserved_bytes", 0) or 0)
             if generated:
                 measured_gpu_seconds += seconds
             replayed_prefix_tokens += replayed
             generated_suffix_tokens += suffix
             generated_null_tokens += null_tokens
+            peak_cuda_allocated_bytes = max(
+                peak_cuda_allocated_bytes, peak_allocated
+            )
+            peak_cuda_reserved_bytes = max(
+                peak_cuda_reserved_bytes, peak_reserved
+            )
             batches.append({
                 "kind": kind,
                 "generated_records": generated,
@@ -335,6 +532,12 @@ def summarize_generation_cost(generation_meta: dict, source_n: int,
                 "replayed_prefix_tokens": replayed,
                 "generated_suffix_tokens": suffix,
                 "generated_null_tokens": null_tokens,
+                "kv_cache_implementation": record.get(
+                    "kv_cache_implementation"
+                ),
+                "kv_cache_version": record.get("kv_cache_version"),
+                "peak_cuda_allocated_bytes": peak_allocated,
+                "peak_cuda_reserved_bytes": peak_reserved,
             })
     return {
         "gpu": str(gpu),
@@ -348,6 +551,8 @@ def summarize_generation_cost(generation_meta: dict, source_n: int,
             + generated_suffix_tokens
             + generated_null_tokens
         ),
+        "peak_cuda_allocated_bytes": peak_cuda_allocated_bytes,
+        "peak_cuda_reserved_bytes": peak_cuda_reserved_bytes,
         "batches": batches,
         "billing_note": (
             "Measured method time excludes container image/model startup; "
@@ -366,7 +571,11 @@ def _append_local_csv(path: str, row: dict) -> None:
         if old_columns != LOCAL_CSV_COLUMNS:
             migrated = f"{path}.schema-migration.tmp"
             with open(migrated, "w", newline="") as handle:
-                writer = csv.DictWriter(handle, fieldnames=LOCAL_CSV_COLUMNS)
+                writer = csv.DictWriter(
+                    handle,
+                    fieldnames=LOCAL_CSV_COLUMNS,
+                    lineterminator="\n",
+                )
                 writer.writeheader()
                 for old_row in old_rows:
                     writer.writerow({
@@ -375,25 +584,41 @@ def _append_local_csv(path: str, row: dict) -> None:
                     })
             os.replace(migrated, path)
     with open(path, "a", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=LOCAL_CSV_COLUMNS)
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=LOCAL_CSV_COLUMNS,
+            lineterminator="\n",
+        )
         if not exists:
             writer.writeheader()
         writer.writerow({column: row.get(column, "") for column in LOCAL_CSV_COLUMNS})
 
 
-def online_cache_root(data_root: str = "/data") -> str:
-    return os.path.join(data_root, SCHEME, ONLINE_MODEL_CACHE_NAME)
+def online_cache_root(data_root: str = "/data",
+                      generation_model_size: str = MODEL_SIZE) -> str:
+    return os.path.join(
+        data_root, SCHEME, model_cache_name(generation_model_size)
+    )
 
 
 def discover_online_cache_tags(data_root: str, requested_T: int, t: int,
-                               eta: float, experiment_seed: int) -> list[dict]:
+                               eta: float, experiment_seed: int,
+                               generation_model_size: str = MODEL_SIZE,
+                               required_prompt_indices=None,
+                               kv_cache_implementation: str = (
+                                   DEFAULT_KV_CACHE_IMPLEMENTATION
+                               )) -> list[dict]:
     """List same-configuration online cache namespaces by realized length.
 
     Directory names are only a first filter.  Remote planning additionally
     compares the serialized keys, partitions, prompts, and artifact metadata
     before any record is reused.
     """
-    root = online_cache_root(data_root)
+    model_size = normalize_model_size(generation_model_size)
+    kv_cache_implementation = normalize_kv_cache_implementation(
+        kv_cache_implementation
+    )
+    root = online_cache_root(data_root, model_size)
     if not os.path.isdir(root):
         return []
     candidates = []
@@ -404,10 +629,14 @@ def discover_online_cache_tags(data_root: str, requested_T: int, t: int,
         n_value, T_value = (int(match.group(1)), int(match.group(2)))
         if n_value != T_value:
             continue
-        possible_tags = (
-            config_tag(T_value, t, eta, experiment_seed),
-            legacy_config_tag(T_value, t, eta, experiment_seed),
-        )
+        possible_tags = [config_tag(
+            T_value, t, eta, experiment_seed, model_size,
+            kv_cache_implementation,
+        )]
+        if kv_cache_implementation == DEFAULT_KV_CACHE_IMPLEMENTATION:
+            possible_tags.append(legacy_config_tag(
+                T_value, t, eta, experiment_seed, model_size
+            ))
         expected_tag = next(
             (candidate for candidate in possible_tags
              if name == candidate.rsplit("/", 1)[-1]),
@@ -418,6 +647,15 @@ def discover_online_cache_tags(data_root: str, requested_T: int, t: int,
         candidate_dir = os.path.join(root, name)
         if not os.path.isfile(os.path.join(candidate_dir, "artifacts.pt")):
             continue
+        if required_prompt_indices is not None:
+            candidate_wm_dir = os.path.join(candidate_dir, "wm")
+            if not all(
+                os.path.isfile(os.path.join(
+                    candidate_wm_dir, f"wm_{int(index):04d}.pt"
+                ))
+                for index in required_prompt_indices
+            ):
+                continue
         candidates.append({
             "T": T_value,
             "tag": expected_tag,
@@ -427,6 +665,8 @@ def discover_online_cache_tags(data_root: str, requested_T: int, t: int,
                 if expected_tag == possible_tags[0]
                 else LEGACY_SAMPLER_VERSION
             ),
+            "kv_cache_implementation": kv_cache_implementation,
+            "kv_cache_version": kv_cache_version(kv_cache_implementation),
             "relation": (
                 "exact" if T_value == int(requested_T)
                 else "longer" if T_value > int(requested_T)
@@ -488,6 +728,10 @@ def artifact_compatibility_error(target: dict, source: dict) -> str | None:
         return "partition tensor is missing"
     if not torch.equal(target_partition, source_partition):
         return "token partition differs"
+    if artifact_kv_cache_implementation(
+        target
+    ) != artifact_kv_cache_implementation(source):
+        return "KV cache implementation differs"
 
     target_config = target.get("config_sig", {})
     source_config = source.get("config_sig", {})
@@ -511,6 +755,101 @@ def artifact_compatibility_error(target: dict, source: dict) -> str | None:
     return None
 
 
+def artifact_kv_cache_implementation(artifact: dict) -> str:
+    """Read cache metadata while treating historical artifacts as concat."""
+    config = artifact.get("config_sig", {})
+    return normalize_kv_cache_implementation(
+        artifact.get(
+            "kv_cache_implementation",
+            config.get(
+                "kv_cache_implementation",
+                DEFAULT_KV_CACHE_IMPLEMENTATION,
+            ),
+        )
+    )
+
+
+def artifact_generation_model_size(artifact: dict) -> str:
+    config = artifact.get("config_sig", {})
+    return normalize_model_size(
+        artifact.get(
+            "generation_model_size",
+            config.get("generation_model_size", MODEL_SIZE),
+        )
+    )
+
+
+def validate_generation_model_record(record: dict, model_size: str,
+                                     source: str, prompt_index: int) -> None:
+    """Reject cross-model records while retaining legacy 0.6B readability."""
+    expected_size = normalize_model_size(model_size)
+    stored_size = record.get("generation_model_size")
+    stored_display = record.get("generation_model")
+    if stored_size is None:
+        if expected_size != MODEL_SIZE:
+            raise ValueError(
+                f"{source} record {prompt_index} lacks generation-model "
+                f"metadata; refusing to treat it as "
+                f"{model_display(expected_size)}"
+            )
+    elif normalize_model_size(stored_size) != expected_size:
+        raise ValueError(
+            f"{source} record {prompt_index} was generated by "
+            f"{model_display(stored_size)}, expected "
+            f"{model_display(expected_size)}"
+        )
+    if (
+        stored_display is not None
+        and str(stored_display).strip() != model_display(expected_size)
+    ):
+        raise ValueError(
+            f"{source} record {prompt_index} has generation model label "
+            f"{stored_display!r}, expected "
+            f"{model_display(expected_size)!r}"
+        )
+
+
+def validate_online_null_record(record: dict, artifact: dict,
+                                prompt_index: int,
+                                required_length: int) -> None:
+    """Validate a fixed-run null before using its trace for online detection."""
+    import torch
+    from detectors import tensor_sha256
+
+    generation_model_size = artifact_generation_model_size(artifact)
+    validate_generation_model_record(
+        record, generation_model_size, "null", prompt_index
+    )
+    if record.get("watermark") not in (False, None):
+        raise ValueError(f"null record {prompt_index} is marked watermarked")
+    for field in ("tokens", "p_trace"):
+        value = record.get(field)
+        if value is None or len(value) < int(required_length):
+            raise ValueError(
+                f"null record {prompt_index} field {field!r} is shorter "
+                f"than {required_length}"
+            )
+    expected_partition = tensor_sha256(artifact["partition"])
+    stored_partition = record.get("partition_sha256")
+    # Historical fixed-run nulls can predate the explicit partition hash.
+    # Their model-qualified directory plus required model metadata keeps 8B
+    # and 0.6B isolated; any explicit partition hash must still match.
+    if stored_partition is not None and stored_partition != expected_partition:
+        raise ValueError(
+            f"null record {prompt_index} uses a different token partition"
+        )
+    stored_prompt = record.get("prompt_token_ids")
+    if stored_prompt is not None:
+        expected_prompt = torch.as_tensor(
+            artifact["prompt_ids_list"][prompt_index], dtype=torch.long
+        ).reshape(-1)
+        observed_prompt = torch.as_tensor(
+            stored_prompt, dtype=torch.long
+        ).reshape(-1)
+        if not torch.equal(observed_prompt, expected_prompt):
+            raise ValueError(f"null record {prompt_index} has the wrong prompt")
+
+
 def validate_online_watermarked_record(record: dict, artifact: dict,
                                        prompt_index: int) -> list[dict]:
     """Strictly validate a saved online record and normalize its provenance."""
@@ -520,6 +859,8 @@ def validate_online_watermarked_record(record: dict, artifact: dict,
     from online_prc import OnlinePRCKey, support_sha256, target_row_count
 
     source_T = int(artifact["T"])
+    generation_model_size = artifact_generation_model_size(artifact)
+    expected_kv_cache = artifact_kv_cache_implementation(artifact)
     key = OnlinePRCKey.from_dict(artifact["online_key"])
     path_label = f"online wm record {prompt_index} at T={source_T}"
     expected_scalars = {
@@ -533,8 +874,8 @@ def validate_online_watermarked_record(record: dict, artifact: dict,
         "support_sampler_version": key.support_sampler_version,
         "online_key_sha256": key.fingerprint,
         "online_support_sha256": support_sha256(source_T, key),
-        "generation_model_size": MODEL_SIZE,
-        "generation_model": MODEL_DISPLAY,
+        "generation_model_size": generation_model_size,
+        "generation_model": model_display(generation_model_size),
         "artifact_seed": int(artifact.get("experiment_seed", SEED)),
         "artifact_fingerprint": artifact["artifact_fingerprint"],
         "partition_sha256": tensor_sha256(artifact["partition"]),
@@ -545,6 +886,17 @@ def validate_online_watermarked_record(record: dict, artifact: dict,
                 f"{path_label} has incompatible {field}: "
                 f"{record.get(field)!r} != {expected!r}"
             )
+    validate_generation_model_record(
+        record, generation_model_size, "online watermarked", prompt_index
+    )
+    stored_kv_cache = normalize_kv_cache_implementation(
+        record.get("kv_cache_implementation", DEFAULT_KV_CACHE_IMPLEMENTATION)
+    )
+    if stored_kv_cache != expected_kv_cache:
+        raise ValueError(
+            f"{path_label} has incompatible kv_cache_implementation: "
+            f"{stored_kv_cache!r} != {expected_kv_cache!r}"
+        )
 
     prompt = torch.as_tensor(record.get("prompt_token_ids"), dtype=torch.long)
     expected_prompt = torch.as_tensor(
@@ -623,7 +975,11 @@ app = modal.App("prc-online-causal", image=image)
 @app.function(volumes={"/data": data_vol}, timeout=600)
 def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
                     experiment_seed: int = SEED,
-                    fresh: bool = False) -> dict:
+                    fresh: bool = False,
+                    generation_model_size: str = MODEL_SIZE,
+                    kv_cache_implementation: str = (
+                        DEFAULT_KV_CACHE_IMPLEMENTATION
+                    )) -> dict:
     import shutil
 
     import numpy as np
@@ -643,10 +999,17 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
         raise ValueError(f"num_prompts must be in [1, {CANONICAL_NUM_PROMPTS}]")
     if int(experiment_seed) < 0:
         raise ValueError("experiment_seed must be nonnegative")
+    generation_model_size = normalize_model_size(generation_model_size)
+    kv_cache_implementation = normalize_kv_cache_implementation(
+        kv_cache_implementation
+    )
     key = OnlinePRCKey.from_seed(
         experiment_seed, check_weight=int(t), noise_rate=float(eta)
     )
-    tag = config_tag(n, t, eta, experiment_seed)
+    tag = config_tag(
+        n, t, eta, experiment_seed, generation_model_size,
+        kv_cache_implementation,
+    )
     path = artifact_path(tag)
     config = {
         "scheme": SCHEME,
@@ -660,11 +1023,18 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
         "support_sampler_version": key.support_sampler_version,
         "generation_cap": int(n),
         "stopping_policy": STOPPING_POLICY,
-        "generation_model_size": MODEL_SIZE,
-        "generation_model": MODEL_DISPLAY,
+        "generation_model_size": generation_model_size,
+        "generation_model": model_display(generation_model_size),
         "keygen_seed": int(experiment_seed),
         "partition_seed": SEED,
     }
+    # Keep the historical concat artifact byte-for-byte addressable while
+    # giving the opt-in static implementation an explicit, isolated identity.
+    if kv_cache_implementation != DEFAULT_KV_CACHE_IMPLEMENTATION:
+        config.update({
+            "kv_cache_implementation": kv_cache_implementation,
+            "kv_cache_version": kv_cache_version(kv_cache_implementation),
+        })
 
     data_vol.reload()
     if not fresh and os.path.exists(path):
@@ -714,13 +1084,18 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
         "rank": int(rank),
         "config_sig": config,
         "experiment_seed": int(experiment_seed),
+        "generation_model_size": generation_model_size,
+        "generation_model": model_display(generation_model_size),
+        "kv_cache_implementation": kv_cache_implementation,
+        "kv_cache_version": kv_cache_version(kv_cache_implementation),
     }
     artifact["artifact_fingerprint"] = semantic_sha256(artifact)
     torch.save(artifact, path)
     data_vol.commit()
     print(
         f"[build] {tag}: T=n={n}, t={t}, r={realized_r}, "
-        f"free={n - realized_r}, rank={rank}", flush=True,
+        f"free={n - realized_r}, rank={rank}, "
+        f"kv_cache={kv_cache_implementation}", flush=True,
     )
     return {
         "tag": tag,
@@ -729,16 +1104,19 @@ def build_artifacts(num_prompts: int, n: int, t: int, eta: float,
     }
 
 
-def _find_compatible_null_T(prompt_indices: list[int], requested_T: int):
-    if not os.path.isdir("/data/_nulls"):
+def _find_compatible_null_T(prompt_indices: list[int], requested_T: int,
+                            generation_model_size: str = MODEL_SIZE):
+    model_size = normalize_model_size(generation_model_size)
+    null_root = os.path.dirname(shared_null_dir(0, model_size))
+    if not os.path.isdir(null_root):
         return None
     candidates = []
-    for name in os.listdir("/data/_nulls"):
+    for name in os.listdir(null_root):
         match = re.fullmatch(r"T(\d+)", name)
         if match and int(match.group(1)) >= int(requested_T):
             candidates.append(int(match.group(1)))
     for length in sorted(candidates):
-        directory = shared_null_dir(length)
+        directory = shared_null_dir(length, model_size)
         if all(
             os.path.exists(os.path.join(directory, f"null_{index:04d}.pt"))
             for index in prompt_indices
@@ -755,6 +1133,12 @@ def plan_generation(tag: str, prompt_indices: list[int], T: int,
     data_vol.reload()
     requested_artifact = torch.load(
         artifact_path(tag), weights_only=False, map_location="cpu"
+    )
+    generation_model_size = artifact_generation_model_size(
+        requested_artifact
+    )
+    kv_cache_implementation = artifact_kv_cache_implementation(
+        requested_artifact
     )
     watermarked_missing = [
         index for index in prompt_indices
@@ -774,7 +1158,9 @@ def plan_generation(tag: str, prompt_indices: list[int], T: int,
         experiment_seed = int(requested_artifact.get("experiment_seed", SEED))
         compatible = []
         for candidate in discover_online_cache_tags(
-            "/data", T, check_weight, noise_rate, experiment_seed
+            "/data", T, check_weight, noise_rate, experiment_seed,
+            generation_model_size,
+            kv_cache_implementation=kv_cache_implementation,
         ):
             if candidate["tag"] == tag:
                 continue
@@ -832,13 +1218,18 @@ def plan_generation(tag: str, prompt_indices: list[int], T: int,
             wm_resume_source_tag = selected["tag"]
             wm_resume_source_T = int(selected["T"])
 
-    null_T = _find_compatible_null_T(prompt_indices, T)
+    null_T = _find_compatible_null_T(
+        prompt_indices, T, generation_model_size
+    )
     if null_T is None:
         null_T = int(T)
         null_missing = [
             index for index in prompt_indices
             if not os.path.exists(
-                os.path.join(shared_null_dir(T), f"null_{index:04d}.pt")
+                os.path.join(
+                    shared_null_dir(T, generation_model_size),
+                    f"null_{index:04d}.pt",
+                )
             )
         ]
     else:
@@ -853,29 +1244,55 @@ def plan_generation(tag: str, prompt_indices: list[int], T: int,
         "wm_rejected_candidates": rejected_candidates,
         "null_missing": null_missing,
         "null_T": int(null_T),
+        "generation_model_size": generation_model_size,
+        "generation_model": model_display(generation_model_size),
+        "kv_cache_implementation": kv_cache_implementation,
+        "kv_cache_version": kv_cache_version(kv_cache_implementation),
     }
 
 
 @app.cls(
     gpu=GPU,
     volumes={"/data": data_vol, "/cache": hf_cache},
-    timeout=3600,
+    timeout=7200,
     max_containers=DEFAULT_MAX_CONTAINERS,
 )
 class OnlineModel:
     tag: str = modal.parameter()
+    model_size: str = modal.parameter()
     code_fingerprint_sha256: str = modal.parameter()
+    kv_cache_implementation: str = modal.parameter()
 
     @modal.enter()
     def load(self):
+        import os
+
         import torch
         from detectors import tensor_sha256
         from online_prc import OnlinePRCKey
 
+        self.model_size = normalize_model_size(self.model_size)
+        self.kv_cache_implementation = normalize_kv_cache_implementation(
+            self.kv_cache_implementation
+        )
+        os.environ["PRC_MODEL_SIZE"] = self.model_size
+        os.environ["PRC_MODEL_VARIANT"] = "base"
         data_vol.reload()
         artifact = torch.load(
             artifact_path(self.tag), weights_only=False, map_location="cpu"
         )
+        artifact_model_size = artifact_generation_model_size(artifact)
+        if artifact_model_size != self.model_size:
+            raise ValueError(
+                f"artifact generation model {artifact_model_size} does not "
+                f"match requested model {self.model_size}"
+            )
+        artifact_kv_cache = artifact_kv_cache_implementation(artifact)
+        if artifact_kv_cache != self.kv_cache_implementation:
+            raise ValueError(
+                f"artifact KV cache implementation {artifact_kv_cache} does "
+                f"not match requested {self.kv_cache_implementation}"
+            )
         self.artifact = artifact
         self.key_dict = artifact["online_key"]
         self.key = OnlinePRCKey.from_dict(self.key_dict)
@@ -906,7 +1323,17 @@ class OnlineModel:
 
     @modal.method()
     def ready(self) -> dict:
-        return {"model": MODEL_DISPLAY, "T": self.T, "n": self.n}
+        return {
+            "model": model_display(self.model_size),
+            "model_size": self.model_size,
+            "model_cache_dir": os.environ.get("PRC_MODEL_CACHE_DIR", ""),
+            "T": self.T,
+            "n": self.n,
+            "kv_cache_implementation": self.kv_cache_implementation,
+            "kv_cache_version": kv_cache_version(
+                self.kv_cache_implementation
+            ),
+        }
 
     @modal.method()
     def generate_wm(self, request) -> dict:
@@ -934,6 +1361,9 @@ class OnlineModel:
             return {"generated": 0, "cached": len(prompt_indices), "batch": 0}
 
         started = time.time()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            torch.cuda.reset_peak_memory_stats()
         prompt_batch = self._prompt_batch(todo)
         document_seeds = [
             derive_document_seed(self.experiment_seed, index) for index in todo
@@ -1000,6 +1430,7 @@ class OnlineModel:
                 document_seeds=document_seeds,
                 prefix_tokens_batch=prefix_tokens,
                 prefix_codeword_bits_batch=prefix_codeword,
+                kv_cache_implementation=self.kv_cache_implementation,
             )
         )
         if resume_source_tag:
@@ -1062,6 +1493,10 @@ class OnlineModel:
                     "end": self.T,
                     "sampler_version": GENERATION_SAMPLER_VERSION,
                     "mode": "continued_suffix",
+                    "kv_cache_implementation": self.kv_cache_implementation,
+                    "kv_cache_version": kv_cache_version(
+                        self.kv_cache_implementation
+                    ),
                     "source_tag": resume_source_tag,
                     "source_T": resume_source_T,
                     "source_record_sha256": source_record_fingerprints[row],
@@ -1074,6 +1509,10 @@ class OnlineModel:
                     "end": self.T,
                     "sampler_version": GENERATION_SAMPLER_VERSION,
                     "mode": "fresh",
+                    "kv_cache_implementation": self.kv_cache_implementation,
+                    "kv_cache_version": kv_cache_version(
+                        self.kv_cache_implementation
+                    ),
                 }]
                 reuse_mode = "fresh"
                 sampler_label = GENERATION_SAMPLER_VERSION
@@ -1089,8 +1528,13 @@ class OnlineModel:
                 "support_sampler_version": self.key.support_sampler_version,
                 "online_key_sha256": self.key_fingerprint,
                 "online_support_sha256": self.support_fingerprint,
-                "generation_model_size": MODEL_SIZE,
-                "generation_model": MODEL_DISPLAY,
+                "generation_model_size": self.model_size,
+                "generation_model": model_display(self.model_size),
+                "generation_model_variant": "base",
+                "kv_cache_implementation": self.kv_cache_implementation,
+                "kv_cache_version": kv_cache_version(
+                    self.kv_cache_implementation
+                ),
                 "artifact_seed": self.experiment_seed,
                 "artifact_fingerprint": self.artifact_fingerprint,
                 "code_fingerprint_sha256": self.code_fingerprint_sha256,
@@ -1105,6 +1549,12 @@ class OnlineModel:
             )
             torch.save(record, os.path.join(directory, f"wm_{index:04d}.pt"))
         data_vol.commit()
+        peak_allocated_bytes = 0
+        peak_reserved_bytes = 0
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            peak_allocated_bytes = int(torch.cuda.max_memory_allocated())
+            peak_reserved_bytes = int(torch.cuda.max_memory_reserved())
         return {
             "generated": len(todo),
             "cached": len(prompt_indices) - len(todo),
@@ -1112,7 +1562,161 @@ class OnlineModel:
             "resumed": bool(resume_source_tag),
             "resume_prefix_T": resume_source_T,
             "suffix_tokens_generated": len(todo) * (self.T - resume_source_T),
+            "kv_cache_implementation": self.kv_cache_implementation,
+            "kv_cache_version": kv_cache_version(
+                self.kv_cache_implementation
+            ),
+            "peak_cuda_allocated_bytes": peak_allocated_bytes,
+            "peak_cuda_reserved_bytes": peak_reserved_bytes,
             "seconds": time.time() - started,
+        }
+
+    @modal.method()
+    def validate_kv_cache_runtime(self, prompt_indices: list[int],
+                                  prefix_T: int) -> dict:
+        """A/B both cache paths in one loaded model without saving records."""
+        import time
+
+        import numpy as np
+        import torch
+        from online_prc import derive_document_seed
+
+        prefix_T = int(prefix_T)
+        if not 0 < prefix_T < self.T:
+            raise ValueError("prefix_T must be strictly between zero and T")
+        prompt_indices = [int(index) for index in prompt_indices]
+        prompt_batch = self._prompt_batch(prompt_indices)
+        document_seeds = [
+            derive_document_seed(self.experiment_seed, index)
+            for index in prompt_indices
+        ]
+
+        def generate(implementation, prefix_tokens=None, prefix_bits=None):
+            if torch.cuda.is_available():
+                torch.cuda.synchronize()
+                torch.cuda.reset_peak_memory_stats()
+            started = time.time()
+            tokens, p_traces, details = (
+                self.we.generate_batch_and_collect_online(
+                    self.we.model,
+                    prompt_batch,
+                    self.T,
+                    self.key,
+                    self.partition,
+                    watermark=True,
+                    return_trace_details=True,
+                    document_seeds=document_seeds,
+                    prefix_tokens_batch=prefix_tokens,
+                    prefix_codeword_bits_batch=prefix_bits,
+                    kv_cache_implementation=implementation,
+                )
+            )
+            if torch.cuda.is_available():
+                torch.cuda.synchronize()
+            return {
+                "tokens": tokens,
+                "p_trace": p_traces,
+                "details": details,
+                "seconds": time.time() - started,
+                "peak_cuda_allocated_bytes": (
+                    int(torch.cuda.max_memory_allocated())
+                    if torch.cuda.is_available() else 0
+                ),
+                "peak_cuda_reserved_bytes": (
+                    int(torch.cuda.max_memory_reserved())
+                    if torch.cuda.is_available() else 0
+                ),
+            }
+
+        concat = generate("concat")
+        static = generate("static")
+        resumed_suffix = generate(
+            "static",
+            prefix_tokens=static["tokens"][:, :prefix_T],
+            prefix_bits=static["details"]["prc_codeword_bits"][:, :prefix_T],
+        )
+        resumed = {
+            "tokens": torch.cat([
+                static["tokens"][:, :prefix_T],
+                resumed_suffix["tokens"],
+            ], dim=1),
+            "p_trace": np.concatenate([
+                static["p_trace"][:, :prefix_T],
+                resumed_suffix["p_trace"],
+            ], axis=1),
+            "details": {},
+        }
+        for field in (
+            "prc_codeword_bits", "base_lm_entropy", "base_token_logprob"
+        ):
+            resumed["details"][field] = np.concatenate([
+                static["details"][field][:, :prefix_T],
+                resumed_suffix["details"][field],
+            ], axis=1)
+
+        def exact_comparison(left, right):
+            values = {
+                "tokens": (
+                    np.asarray(left["tokens"]), np.asarray(right["tokens"])
+                ),
+                "p_trace": (left["p_trace"], right["p_trace"]),
+            }
+            for field in (
+                "prc_codeword_bits", "base_lm_entropy", "base_token_logprob"
+            ):
+                values[field] = (
+                    left["details"][field], right["details"][field]
+                )
+            fields = {}
+            for field, (left_values, right_values) in values.items():
+                left_values = np.asarray(left_values)
+                right_values = np.asarray(right_values)
+                exact = bool(np.array_equal(left_values, right_values))
+                result = {"exact_equal": exact}
+                if not exact and left_values.shape == right_values.shape:
+                    unequal = np.flatnonzero(
+                        left_values.reshape(-1) != right_values.reshape(-1)
+                    )
+                    result["first_mismatch_flat_index"] = int(unequal[0])
+                    if np.issubdtype(left_values.dtype, np.number):
+                        result["max_abs_difference"] = float(np.max(np.abs(
+                            left_values.astype(np.float64)
+                            - right_values.astype(np.float64)
+                        )))
+                fields[field] = result
+            return {
+                "all_exact": all(
+                    result["exact_equal"] for result in fields.values()
+                ),
+                "fields": fields,
+            }
+
+        return {
+            "T": self.T,
+            "prefix_T": prefix_T,
+            "prompt_indices": prompt_indices,
+            "concat_vs_static_direct": exact_comparison(concat, static),
+            "static_direct_vs_resumed": exact_comparison(static, resumed),
+            "metrics": {
+                "concat_direct": {
+                    key: concat[key] for key in (
+                        "seconds", "peak_cuda_allocated_bytes",
+                        "peak_cuda_reserved_bytes",
+                    )
+                },
+                "static_direct": {
+                    key: static[key] for key in (
+                        "seconds", "peak_cuda_allocated_bytes",
+                        "peak_cuda_reserved_bytes",
+                    )
+                },
+                "static_resumed_suffix": {
+                    key: resumed_suffix[key] for key in (
+                        "seconds", "peak_cuda_allocated_bytes",
+                        "peak_cuda_reserved_bytes",
+                    )
+                },
+            },
         }
 
     @modal.method()
@@ -1122,7 +1726,7 @@ class OnlineModel:
         import torch
 
         data_vol.reload()
-        directory = shared_null_dir(self.T)
+        directory = shared_null_dir(self.T, self.model_size)
         os.makedirs(directory, exist_ok=True)
         todo = [
             index for index in prompt_indices
@@ -1140,6 +1744,9 @@ class OnlineModel:
             self.partition,
             watermark=False,
             return_trace_details=True,
+            # Shared null caches retain the established concatenating path;
+            # static-cache validation is isolated to online watermarked data.
+            kv_cache_implementation=DEFAULT_KV_CACHE_IMPLEMENTATION,
         )
         for row, index in enumerate(todo):
             record = self.we.build_prc_generation_record(
@@ -1157,8 +1764,8 @@ class OnlineModel:
             )
             record.update({
                 "prompt_idx": int(index),
-                "generation_model_size": MODEL_SIZE,
-                "generation_model": MODEL_DISPLAY,
+                "generation_model_size": self.model_size,
+                "generation_model": model_display(self.model_size),
                 "generation_model_variant": "base",
             })
             torch.save(record, os.path.join(directory, f"null_{index:04d}.pt"))
@@ -1420,6 +2027,7 @@ def detect_all(tag: str, prompt_indices: list[int], null_T: int, fpr: float,
     artifact = torch.load(
         artifact_path(tag), weights_only=False, map_location="cpu"
     )
+    generation_model_size = artifact_generation_model_size(artifact)
     key = OnlinePRCKey.from_dict(artifact["online_key"])
     partition = artifact["partition"]
     T = int(artifact["T"])
@@ -1443,7 +2051,9 @@ def detect_all(tag: str, prompt_indices: list[int], null_T: int, fpr: float,
 
     for watermark in (True, False):
         directory = (
-            wm_dir(wm_source_tag) if watermark else shared_null_dir(null_T)
+            wm_dir(wm_source_tag)
+            if watermark
+            else shared_null_dir(null_T, generation_model_size)
         )
         prefix = "wm" if watermark else "null"
         for index in prompt_indices:
@@ -1454,6 +2064,10 @@ def detect_all(tag: str, prompt_indices: list[int], null_T: int, fpr: float,
             if watermark:
                 validate_online_watermarked_record(
                     record, source_artifact, index
+                )
+            else:
+                validate_online_null_record(
+                    record, artifact, index, T
                 )
 
             tokens = record["tokens"][:T]
@@ -1505,7 +2119,12 @@ def detect_all(tag: str, prompt_indices: list[int], null_T: int, fpr: float,
         "stopping_policy": STOPPING_POLICY,
         "fpr_policy": FPR_POLICY,
         "target_fpr": float(fpr),
-        "generation_model": MODEL_DISPLAY,
+        "generation_model": model_display(generation_model_size),
+        "generation_model_size": generation_model_size,
+        "kv_cache_implementation": artifact_kv_cache_implementation(artifact),
+        "kv_cache_version": kv_cache_version(
+            artifact_kv_cache_implementation(artifact)
+        ),
         "num_prompts": len(prompt_indices),
         "prompt_indices": prompt_indices,
         "batch": int(batch),
@@ -1555,6 +2174,7 @@ def detect_saved_prefix(source_tag: str, prefix_T: int,
     artifact = torch.load(
         artifact_path(source_tag), weights_only=False, map_location="cpu"
     )
+    generation_model_size = artifact_generation_model_size(artifact)
     key = OnlinePRCKey.from_dict(artifact["online_key"])
     partition = artifact["partition"]
     source_T = int(artifact["T"])
@@ -1572,7 +2192,11 @@ def detect_saved_prefix(source_tag: str, prefix_T: int,
     prefix_support = support_sha256(prefix_T, key)
     results = []
     for watermark in (True, False):
-        directory = wm_dir(source_tag) if watermark else shared_null_dir(null_T)
+        directory = (
+            wm_dir(source_tag)
+            if watermark
+            else shared_null_dir(null_T, generation_model_size)
+        )
         record_prefix = "wm" if watermark else "null"
         for index in prompt_indices:
             path = os.path.join(
@@ -1590,18 +2214,11 @@ def detect_saved_prefix(source_tag: str, prefix_T: int,
                     f"values; need prefix_T={prefix_T}"
                 )
             if watermark:
-                if record.get("scheme") != SCHEME:
-                    raise ValueError(f"watermarked record {path} has wrong scheme")
-                if record.get("artifact_fingerprint") != artifact["artifact_fingerprint"]:
-                    raise ValueError(f"watermarked record {path} has stale artifact")
-                if record.get("online_support_sha256") != expected_source_support:
-                    raise ValueError(
-                        f"watermarked record {path} has stale source support table"
-                    )
-                if int(record.get("realized_length", -1)) != source_T:
-                    raise ValueError(
-                        f"watermarked record {path} has wrong realized length"
-                    )
+                validate_online_watermarked_record(record, artifact, index)
+            else:
+                validate_online_null_record(
+                    record, artifact, index, prefix_T
+                )
 
             tokens = record["tokens"][:prefix_T]
             probabilities = record["p_trace"][:prefix_T]
@@ -1661,7 +2278,12 @@ def detect_saved_prefix(source_tag: str, prefix_T: int,
         "stopping_policy": STOPPING_POLICY,
         "fpr_policy": FPR_POLICY,
         "target_fpr": float(fpr),
-        "generation_model": MODEL_DISPLAY,
+        "generation_model": model_display(generation_model_size),
+        "generation_model_size": generation_model_size,
+        "kv_cache_implementation": artifact_kv_cache_implementation(artifact),
+        "kv_cache_version": kv_cache_version(
+            artifact_kv_cache_implementation(artifact)
+        ),
         "num_prompts": len(prompt_indices),
         "prompt_indices": prompt_indices,
         "null_cache_T": int(null_T),
@@ -1689,12 +2311,14 @@ def detect_saved_prefix(source_tag: str, prefix_T: int,
 @app.function(volumes={"/data": data_vol}, timeout=1800)
 def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
                            prompt_indices: list[int], fpr: float,
-                           code_fingerprint_sha256: str) -> dict:
-    """Score MAP TPR for several exact prefixes of one saved online cache."""
+                           code_fingerprint_sha256: str,
+                           target_map_tpr: float,
+                           stop_after_first_below: bool = True) -> dict:
+    """Adaptively score exact prefixes of one saved online ceiling cache."""
     import time
 
     import torch
-    from detectors import detect_online_map_prefix_grid
+    from detectors import prepare_online_map_prefix_trace
     from online_prc import OnlinePRCKey, support_sha256, target_row_count
 
     started = time.time()
@@ -1702,6 +2326,7 @@ def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
     artifact = torch.load(
         artifact_path(source_tag), weights_only=False, map_location="cpu"
     )
+    generation_model_size = artifact_generation_model_size(artifact)
     key = OnlinePRCKey.from_dict(artifact["online_key"])
     partition = artifact["partition"]
     source_T = int(artifact["T"])
@@ -1714,50 +2339,47 @@ def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
         )
     if not prompt_indices:
         raise ValueError("prompt_indices must be nonempty")
+    if stop_after_first_below and lengths != sorted(lengths, reverse=True):
+        raise ValueError(
+            "adaptive prefix lengths must be ordered longest to shortest"
+        )
+    rate_strictly_above(0, 1, target_map_tpr)
 
     expected_source_support = support_sha256(source_T, key)
-    decisions = {length: [] for length in lengths}
-    prompt_results = []
+    prepared_records = []
+    maximum = max(lengths)
     for index in prompt_indices:
         path = os.path.join(wm_dir(source_tag), f"wm_{index:04d}.pt")
         record = torch.load(path, weights_only=False, map_location="cpu")
         validate_online_watermarked_record(record, artifact, index)
-        scores = detect_online_map_prefix_grid(
+        prepared = prepare_online_map_prefix_trace(
             key,
             record["tokens"],
             record["p_trace"],
             partition,
-            lengths,
-            fpr=fpr,
-            fpr_policy=FPR_POLICY,
+            maximum,
         )
-        by_length = {}
-        for score in scores:
-            length = int(score["length"])
-            decision = bool(score["decision"])
-            decisions[length].append(decision)
-            by_length[str(length)] = score
-        prompt_results.append({
+        prepared_records.append({
             "prompt_idx": int(index),
-            "watermark": True,
-            "map_scores": by_length,
+            "prepared": prepared,
         })
 
-    rows = []
-    for length in lengths:
-        tp = int(sum(decisions[length]))
-        total = len(decisions[length])
+    adaptive = evaluate_prepared_map_prefixes(
+        prepared_records,
+        lengths,
+        fpr,
+        target_map_tpr,
+        stop_after_first_below=stop_after_first_below,
+    )
+    rows = adaptive["rows"]
+    for row in rows:
+        length = int(row["n"])
         row_count = target_row_count(length, key)
-        rows.append({
-            "n": length,
-            "T": length,
-            "r": int(row_count),
-            "free_coordinates": int(length - row_count),
-            "tp": tp,
-            "watermarked_total": total,
-            "tpr": tp / total,
-            "prefix_online_support_sha256": support_sha256(length, key),
-        })
+        if int(row["r"]) != int(row_count):
+            raise AssertionError("prepared detector used the wrong row count")
+        row["prefix_online_support_sha256"] = support_sha256(length, key)
+    prompt_results = adaptive["results"]
+    evaluated_lengths = adaptive["evaluated_lengths"]
 
     elapsed = time.time() - started
     payload = {
@@ -1767,7 +2389,14 @@ def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
         "result_kind": "saved_online_map_prefix_grid",
         "source_tag": source_tag,
         "source_T": source_T,
-        "prefix_lengths": lengths,
+        "requested_prefix_lengths": lengths,
+        "prefix_lengths": evaluated_lengths,
+        "unevaluated_prefix_lengths": adaptive["unevaluated_lengths"],
+        "target_map_tpr": float(target_map_tpr),
+        "target_comparison": "strictly_greater_than",
+        "stop_after_first_below": adaptive["stop_after_first_below"],
+        "stopped_after_first_below": adaptive["stopped_after_first_below"],
+        "first_below_n": adaptive["first_below_n"],
         "t": key.check_weight,
         "eta": key.noise_rate,
         "schedule_version": key.schedule_version,
@@ -1775,7 +2404,12 @@ def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
         "stopping_policy": STOPPING_POLICY,
         "fpr_policy": FPR_POLICY,
         "target_fpr": float(fpr),
-        "generation_model": MODEL_DISPLAY,
+        "generation_model": model_display(generation_model_size),
+        "generation_model_size": generation_model_size,
+        "kv_cache_implementation": artifact_kv_cache_implementation(artifact),
+        "kv_cache_version": kv_cache_version(
+            artifact_kv_cache_implementation(artifact)
+        ),
         "num_prompts": len(prompt_indices),
         "prompt_indices": [int(index) for index in prompt_indices],
         "source_artifact_fingerprint": artifact["artifact_fingerprint"],
@@ -1790,7 +2424,7 @@ def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
     output_dir = f"/data/{source_tag}/results"
     os.makedirs(output_dir, exist_ok=True)
     prefix_result_paths = {}
-    for length in lengths:
+    for length in evaluated_lengths:
         increment_payload = increment_payload_from_grid(payload, length)
         increment_path = os.path.join(
             output_dir,
@@ -1805,7 +2439,10 @@ def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
             )
         prefix_result_paths[str(length)] = increment_path
     payload["prefix_result_paths"] = prefix_result_paths
-    grid_label = f"{min(lengths)}-{max(lengths)}-count{len(lengths)}"
+    grid_label = (
+        f"{min(evaluated_lengths)}-{max(evaluated_lengths)}"
+        f"-count{len(evaluated_lengths)}"
+    )
     output_path = os.path.join(
         output_dir,
         f"map-prefix-grid-{grid_label}_fpr-"
@@ -1819,6 +2456,10 @@ def detect_map_prefix_grid(source_tag: str, prefix_lengths: list[int],
 def _execute_generation_plan(tag: str, plan: dict, batch: int,
                              max_containers: int, gpu: str,
                              code_fingerprint: str,
+                             generation_model_size: str = MODEL_SIZE,
+                             kv_cache_implementation: str = (
+                                 DEFAULT_KV_CACHE_IMPLEMENTATION
+                             ),
                              include_null: bool = True,
                              log_prefix: str = "sweep") -> dict:
     """Execute missing generation work selected by ``plan_generation``."""
@@ -1833,7 +2474,14 @@ def _execute_generation_plan(tag: str, plan: dict, batch: int,
 
     model = OnlineModel.with_options(
         gpu=gpu, max_containers=max_containers
-    )(tag=tag, code_fingerprint_sha256=code_fingerprint)
+    )(
+        tag=tag,
+        model_size=normalize_model_size(generation_model_size),
+        code_fingerprint_sha256=code_fingerprint,
+        kv_cache_implementation=normalize_kv_cache_implementation(
+            kv_cache_implementation
+        ),
+    )
     print(f"[{log_prefix}] model ready: {model.ready.remote()}", flush=True)
     work = []
     if needs_wm:
@@ -1873,14 +2521,236 @@ def _execute_generation_plan(tag: str, plan: dict, batch: int,
     return generation_meta
 
 
+@app.function(volumes={"/data": data_vol}, timeout=600)
+def compare_kv_cache_records(n: int, t: int, eta: float,
+                             experiment_seed: int,
+                             prompt_indices: list[int],
+                             generation_model_size: str = MODEL_SIZE) -> dict:
+    """Compare isolated concat/static online records field-for-field."""
+    import numpy as np
+    import torch
+
+    generation_model_size = normalize_model_size(generation_model_size)
+    concat_tag = config_tag(
+        n, t, eta, experiment_seed, generation_model_size, "concat"
+    )
+    static_tag = config_tag(
+        n, t, eta, experiment_seed, generation_model_size, "static"
+    )
+    data_vol.reload()
+    concat_artifact = torch.load(
+        artifact_path(concat_tag), weights_only=False, map_location="cpu"
+    )
+    static_artifact = torch.load(
+        artifact_path(static_tag), weights_only=False, map_location="cpu"
+    )
+    artifact_checks = {
+        "online_key": concat_artifact["online_key"] == static_artifact["online_key"],
+        "partition": torch.equal(
+            concat_artifact["partition"], static_artifact["partition"]
+        ),
+        "prompt_corpus": (
+            concat_artifact["prompt_ids_list"]
+            == static_artifact["prompt_ids_list"]
+        ),
+        "length": int(concat_artifact["T"]) == int(static_artifact["T"]) == int(n),
+    }
+    fields = (
+        "tokens",
+        "p_trace",
+        "base_lm_entropy",
+        "base_token_logprob",
+        "prc_codeword_bits",
+        "observed_bucket_bits",
+        "map_soft_tokens",
+    )
+    comparisons = []
+    for index in prompt_indices:
+        concat_record = torch.load(
+            os.path.join(wm_dir(concat_tag), f"wm_{int(index):04d}.pt"),
+            weights_only=False,
+            map_location="cpu",
+        )
+        static_record = torch.load(
+            os.path.join(wm_dir(static_tag), f"wm_{int(index):04d}.pt"),
+            weights_only=False,
+            map_location="cpu",
+        )
+        validate_online_watermarked_record(
+            concat_record, concat_artifact, int(index)
+        )
+        validate_online_watermarked_record(
+            static_record, static_artifact, int(index)
+        )
+        field_results = {}
+        for field in fields:
+            concat_values = np.asarray(concat_record[field])
+            static_values = np.asarray(static_record[field])
+            equal = bool(np.array_equal(concat_values, static_values))
+            result = {"exact_equal": equal}
+            if not equal and concat_values.shape == static_values.shape:
+                unequal = np.flatnonzero(
+                    concat_values.reshape(-1) != static_values.reshape(-1)
+                )
+                result["first_mismatch_flat_index"] = int(unequal[0])
+                result["equal_flat_prefix_length"] = int(unequal[0])
+            if (
+                not equal
+                and np.issubdtype(concat_values.dtype, np.number)
+                and concat_values.shape == static_values.shape
+            ):
+                result["max_abs_difference"] = float(np.max(np.abs(
+                    concat_values.astype(np.float64)
+                    - static_values.astype(np.float64)
+                )))
+            field_results[field] = result
+        comparisons.append({
+            "prompt_idx": int(index),
+            "fields": field_results,
+            "all_fields_exact": all(
+                result["exact_equal"] for result in field_results.values()
+            ),
+            "concat_cache_mode": concat_record.get("watermarked_cache_mode"),
+            "static_cache_mode": static_record.get("watermarked_cache_mode"),
+        })
+
+    payload = {
+        "comparison_schema_version": 1,
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "n": int(n),
+        "t": int(t),
+        "eta": float(eta),
+        "experiment_seed": int(experiment_seed),
+        "generation_model_size": generation_model_size,
+        "generation_model": model_display(generation_model_size),
+        "concat_tag": concat_tag,
+        "static_tag": static_tag,
+        "prompt_indices": [int(index) for index in prompt_indices],
+        "artifact_checks": artifact_checks,
+        "comparisons": comparisons,
+        "all_exact": (
+            all(artifact_checks.values())
+            and all(item["all_fields_exact"] for item in comparisons)
+        ),
+    }
+    output_dir = os.path.join("/data", static_tag, "results")
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(
+        output_dir,
+        f"kv-cache-equivalence-prompts-{len(prompt_indices)}.pt",
+    )
+    torch.save(payload, output_path)
+    data_vol.commit()
+    return {"payload": payload, "remote_output_path": output_path}
+
+
+@app.local_entrypoint()
+def compare_kv_caches(n: int = 64, num_prompts: int = 2,
+                      t: int = 3, eta: float = 0.05,
+                      experiment_seed: int = SEED,
+                      generation_model_size: str = MODEL_SIZE):
+    if n <= 0 or num_prompts <= 0 or num_prompts > CANONICAL_NUM_PROMPTS:
+        raise ValueError("n or num_prompts is invalid")
+    result = compare_kv_cache_records.remote(
+        n,
+        t,
+        eta,
+        experiment_seed,
+        list(range(int(num_prompts))),
+        normalize_model_size(generation_model_size),
+    )
+    payload = result["payload"]
+    print(
+        f"[kv-cache-compare] n={n}, prompts={num_prompts}, "
+        f"all_exact={payload['all_exact']}",
+        flush=True,
+    )
+    for comparison in payload["comparisons"]:
+        print(
+            f"[kv-cache-compare] prompt={comparison['prompt_idx']} "
+            f"all_fields_exact={comparison['all_fields_exact']}",
+            flush=True,
+        )
+    print(
+        f"[kv-cache-compare] remote result: {result['remote_output_path']}",
+        flush=True,
+    )
+    os.makedirs("outputs", exist_ok=True)
+    local_path = os.path.join(
+        "outputs",
+        f"online_kv_cache_equivalence_n{n}_t{t}_eta{eta:.2f}_"
+        f"prompts{num_prompts}_seed{experiment_seed}_"
+        f"gen-{model_cache_name(generation_model_size)}.json",
+    )
+    with open(local_path, "w") as handle:
+        json.dump(payload, handle, indent=2, allow_nan=False)
+    print(f"[kv-cache-compare] local result: {local_path}", flush=True)
+
+
+@app.local_entrypoint()
+def validate_kv_cache_runtime_smoke(n: int = 80, prefix_n: int = 64,
+                                    num_prompts: int = 2,
+                                    t: int = 3, eta: float = 0.05,
+                                    experiment_seed: int = SEED,
+                                    generation_model_size: str = MODEL_SIZE,
+                                    gpu: str = ""):
+    generation_model_size, _, gpu = resolve_model_runtime(
+        generation_model_size, 1, gpu
+    )
+    if not 0 < prefix_n < n:
+        raise ValueError("require 0 < prefix_n < n")
+    tag = config_tag(
+        n, t, eta, experiment_seed, generation_model_size, "static"
+    )
+    model = OnlineModel.with_options(gpu=gpu, max_containers=1)(
+        tag=tag,
+        model_size=generation_model_size,
+        code_fingerprint_sha256=_local_code_fingerprint(),
+        kv_cache_implementation="static",
+    )
+    print(f"[kv-cache-runtime] model ready: {model.ready.remote()}", flush=True)
+    payload = model.validate_kv_cache_runtime.remote(
+        list(range(int(num_prompts))), prefix_n
+    )
+    direct_exact = payload["concat_vs_static_direct"]["all_exact"]
+    resumed_exact = payload["static_direct_vs_resumed"]["all_exact"]
+    print(
+        f"[kv-cache-runtime] concat_vs_static_direct={direct_exact}; "
+        f"static_direct_vs_resumed={resumed_exact}",
+        flush=True,
+    )
+    print(
+        f"[kv-cache-runtime] metrics={payload['metrics']}", flush=True
+    )
+    os.makedirs("outputs", exist_ok=True)
+    local_path = os.path.join(
+        "outputs",
+        f"online_kv_cache_runtime_n{n}_from_n{prefix_n}_t{t}_"
+        f"eta{eta:.2f}_prompts{num_prompts}_seed{experiment_seed}_"
+        f"gen-{model_cache_name(generation_model_size)}.json",
+    )
+    with open(local_path, "w") as handle:
+        json.dump(payload, handle, indent=2, allow_nan=False)
+    print(f"[kv-cache-runtime] local result: {local_path}", flush=True)
+
+
 @app.local_entrypoint()
 def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
          n: int = 256, t: int = 3, eta: float = 0.05,
-         fpr: float = 1e-3, batch: int = DEFAULT_BATCH,
+         fpr: float = 1e-3, batch: int = 0,
          experiment_seed: int = SEED,
          max_containers: int = DEFAULT_MAX_CONTAINERS,
-         gpu: str = GPU, fresh: bool = False,
+         gpu: str = "", fresh: bool = False,
+         generation_model_size: str = MODEL_SIZE,
+         kv_cache_implementation: str = DEFAULT_KV_CACHE_IMPLEMENTATION,
          csv_out: str = "online_causal_results_summary.csv"):
+    generation_model_size, batch, gpu = resolve_model_runtime(
+        generation_model_size, batch, gpu
+    )
+    generation_model = model_display(generation_model_size)
+    kv_cache_implementation = normalize_kv_cache_implementation(
+        kv_cache_implementation
+    )
     if num_prompts <= 0 or num_prompts > CANONICAL_NUM_PROMPTS:
         raise ValueError(
             f"num_prompts must be in [1, {CANONICAL_NUM_PROMPTS}]"
@@ -1893,15 +2763,20 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
         raise ValueError("eta must be in [0,.5) and fpr in (0,1)")
     prompt_indices = list(range(int(num_prompts)))
     code_fingerprint = _local_code_fingerprint()
-    tag = config_tag(n, t, eta, experiment_seed)
+    tag = config_tag(
+        n, t, eta, experiment_seed, generation_model_size,
+        kv_cache_implementation,
+    )
     print(
         f"[main] {SCHEME}: T=n={n}, t={t}, eta={eta}, fpr={fpr:g}, "
-        f"model={MODEL_DISPLAY}, prompts={num_prompts}, batch={batch}, "
+        f"model={generation_model}, prompts={num_prompts}, batch={batch}, "
+        f"kv_cache={kv_cache_implementation}, "
         f"experiment_seed={experiment_seed}, GPU={gpu}, "
         f"max_containers={max_containers}", flush=True,
     )
     build = build_artifacts.remote(
-        num_prompts, n, t, eta, experiment_seed, fresh
+        num_prompts, n, t, eta, experiment_seed, fresh,
+        generation_model_size, kv_cache_implementation,
     )
     print(
         f"[main] artifact {'reused' if build['reused'] else 'built'}: "
@@ -1931,7 +2806,12 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
 
         model = OnlineModel.with_options(
             gpu=gpu, max_containers=max_containers
-        )(tag=tag, code_fingerprint_sha256=code_fingerprint)
+        )(
+            tag=tag,
+            model_size=generation_model_size,
+            code_fingerprint_sha256=code_fingerprint,
+            kv_cache_implementation=kv_cache_implementation,
+        )
         print(f"[main] model ready: {model.ready.remote()}", flush=True)
         work = []
         if plan["wm_missing"]:
@@ -1998,6 +2878,14 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
 
     os.makedirs("outputs", exist_ok=True)
     seed_suffix = "" if experiment_seed == SEED else f"_seed{experiment_seed}"
+    model_suffix = (
+        "" if generation_model_size == MODEL_SIZE
+        else f"_gen-{model_cache_name(generation_model_size)}"
+    )
+    kv_cache_suffix = (
+        "" if kv_cache_implementation == DEFAULT_KV_CACHE_IMPLEMENTATION
+        else f"_kvcache-{kv_cache_version(kv_cache_implementation)}"
+    )
     reuse_suffix = (
         f"_from_n{plan['wm_source_T']}"
         if plan["wm_mode"] == "prefix_from_longer" else ""
@@ -2005,7 +2893,8 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
     local_json = os.path.join(
         "outputs",
         f"online_causal_n{n}_t{t}_eta{eta:.2f}_prompts{num_prompts}"
-        f"{seed_suffix}_sampler-{SAMPLER_CACHE_TAG}{reuse_suffix}.json",
+        f"{seed_suffix}{model_suffix}_sampler-{SAMPLER_CACHE_TAG}"
+        f"{kv_cache_suffix}{reuse_suffix}.json",
     )
     local_payload = {**payload, "results": payload["results"]}
     with open(local_json, "w") as handle:
@@ -2021,9 +2910,11 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
         "r setting": "causal round(0.99L), startup-clamped",
         "t": t,
         "Target FPR": f"{fpr:.0e}",
-        "Generation Model": MODEL_DISPLAY,
+        "Generation Model": generation_model,
         "num prompts": num_prompts,
         "batch": batch,
+        "kv cache implementation": kv_cache_implementation,
+        "kv cache version": kv_cache_version(kv_cache_implementation),
         "experiment seed": experiment_seed,
         "Map TPR": _format_rate(counts["map"]["tp"], num_prompts),
         "Map FPR": _format_rate(counts["map"]["fp"], num_prompts),
@@ -2056,16 +2947,27 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
                        step: int = 16, target_map_tpr: float = 0.90,
                        num_prompts: int = CANONICAL_NUM_PROMPTS,
                        t: int = 3, eta: float = 0.05,
-                       fpr: float = 1e-3, batch: int = DEFAULT_BATCH,
+                       fpr: float = 1e-3, batch: int = 0,
                        experiment_seed: int = SEED,
                        max_containers: int = DEFAULT_MAX_CONTAINERS,
-                       gpu: str = GPU, fresh: bool = False,
+                       gpu: str = "", fresh: bool = False,
+                       generation_model_size: str = MODEL_SIZE,
+                       kv_cache_implementation: str = (
+                           DEFAULT_KV_CACHE_IMPLEMENTATION
+                       ),
                        final_audit: bool = True,
                        pin_floor_cache: bool = True):
     """Generate one ceiling cache and scan exact MAP prefixes downward."""
     import time
 
     started = time.time()
+    generation_model_size, batch, gpu = resolve_model_runtime(
+        generation_model_size, batch, gpu
+    )
+    generation_model = model_display(generation_model_size)
+    kv_cache_implementation = normalize_kv_cache_implementation(
+        kv_cache_implementation
+    )
     lengths = descending_prefix_grid(source_n, floor_n, step)
     if num_prompts <= 0 or num_prompts > CANONICAL_NUM_PROMPTS:
         raise ValueError(
@@ -2082,18 +2984,23 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
 
     prompt_indices = list(range(int(num_prompts)))
     code_fingerprint = _local_code_fingerprint()
-    requested_tag = config_tag(source_n, t, eta, experiment_seed)
+    requested_tag = config_tag(
+        source_n, t, eta, experiment_seed, generation_model_size,
+        kv_cache_implementation,
+    )
     print(
         f"[sweep] {SCHEME}: ceiling T=n={source_n}, floor={floor_n}, "
         f"step={step}, target_map_tpr>{target_map_tpr:.1%}, t={t}, "
-        f"eta={eta}, prompts={num_prompts}, batch={batch}, "
+        f"eta={eta}, model={generation_model}, prompts={num_prompts}, "
+        f"batch={batch}, kv_cache={kv_cache_implementation}, "
         f"experiment_seed={experiment_seed}, GPU={gpu}, "
         f"max_containers={max_containers}",
         flush=True,
     )
 
     build = build_artifacts.remote(
-        num_prompts, source_n, t, eta, experiment_seed, fresh
+        num_prompts, source_n, t, eta, experiment_seed, fresh,
+        generation_model_size, kv_cache_implementation,
     )
     print(
         f"[sweep] ceiling artifact "
@@ -2103,7 +3010,10 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
     )
     ceiling_preparation = None
     if pin_floor_cache:
-        reference_tag = config_tag(floor_n, t, eta, experiment_seed)
+        reference_tag = config_tag(
+            floor_n, t, eta, experiment_seed, generation_model_size,
+            kv_cache_implementation,
+        )
         ceiling_preparation = prepare_sweep_ceiling.remote(
             requested_tag,
             reference_tag,
@@ -2153,6 +3063,8 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         max_containers,
         gpu,
         code_fingerprint,
+        generation_model_size,
+        kv_cache_implementation,
         include_null=final_audit,
         log_prefix="sweep",
     )
@@ -2180,9 +3092,14 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         prompt_indices,
         fpr,
         code_fingerprint,
+        target_map_tpr,
+        True,
     )
     grid_payload = detected["payload"]
     summary = summarize_map_sweep(grid_payload["rows"], target_map_tpr)
+    evaluated_lengths = [
+        int(length) for length in grid_payload["prefix_lengths"]
+    ]
 
     print("\n=== Online MAP descending prefix sweep ===", flush=True)
     print("     n       r       MAP TPR   > target", flush=True)
@@ -2230,12 +3147,25 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         "actual_source_T": source_T,
         "actual_source_tag": source_tag,
         "floor_n": int(floor_n),
+        "requested_prefix_lengths": lengths,
+        "evaluated_prefix_lengths": evaluated_lengths,
+        "unevaluated_prefix_lengths": grid_payload[
+            "unevaluated_prefix_lengths"
+        ],
+        "stop_after_first_below": True,
+        "stopped_after_first_below": bool(
+            grid_payload["stopped_after_first_below"]
+        ),
+        "first_below_n": grid_payload["first_below_n"],
         "step": int(step),
         "target_map_tpr": float(target_map_tpr),
         "t": int(t),
         "eta": float(eta),
         "target_fpr": float(fpr),
-        "generation_model": MODEL_DISPLAY,
+        "generation_model": generation_model,
+        "generation_model_size": generation_model_size,
+        "kv_cache_implementation": kv_cache_implementation,
+        "kv_cache_version": kv_cache_version(kv_cache_implementation),
         "num_prompts": int(num_prompts),
         "batch": int(batch),
         "experiment_seed": int(experiment_seed),
@@ -2279,10 +3209,18 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
 
     os.makedirs("outputs", exist_ok=True)
     seed_suffix = "" if experiment_seed == SEED else f"_seed{experiment_seed}"
+    model_suffix = (
+        "" if generation_model_size == MODEL_SIZE
+        else f"_gen-{model_cache_name(generation_model_size)}"
+    )
+    kv_cache_suffix = (
+        "" if kv_cache_implementation == DEFAULT_KV_CACHE_IMPLEMENTATION
+        else f"_kvcache-{kv_cache_version(kv_cache_implementation)}"
+    )
     stem = (
         f"online_map_sweep_n{source_n}_to{floor_n}_step{step}_t{t}_"
-        f"eta{eta:.2f}_prompts{num_prompts}{seed_suffix}_"
-        f"sampler-{SAMPLER_CACHE_TAG}"
+        f"eta{eta:.2f}_prompts{num_prompts}{seed_suffix}{model_suffix}_"
+        f"sampler-{SAMPLER_CACHE_TAG}{kv_cache_suffix}"
     )
     local_json = os.path.join("outputs", f"{stem}.json")
     local_csv = os.path.join("outputs", f"{stem}.csv")
@@ -2290,7 +3228,7 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
     os.makedirs(increment_dir, exist_ok=True)
     increment_result_index = {}
     rows_by_length = {int(row["n"]): row for row in summary["rows"]}
-    for length in lengths:
+    for length in evaluated_lengths:
         increment_payload = increment_payload_from_grid(grid_payload, length)
         increment_payload.update({
             "target_map_tpr": float(target_map_tpr),
@@ -2326,7 +3264,9 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         "prefix_online_support_sha256", "source_T", "source_tag",
     )
     with open(local_csv, "w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=csv_columns)
+        writer = csv.DictWriter(
+            handle, fieldnames=csv_columns, lineterminator="\n"
+        )
         writer.writeheader()
         for row in summary["rows"]:
             writer.writerow({
@@ -2374,13 +3314,24 @@ def sweep_map_prefixes(source_n: int = 512, floor_n: int = 400,
         f"({len(increment_result_index)} files)",
         flush=True,
     )
+    if grid_payload["unevaluated_prefix_lengths"]:
+        print(
+            f"[sweep] early stop left "
+            f"{len(grid_payload['unevaluated_prefix_lengths'])} shorter "
+            f"increments unevaluated",
+            flush=True,
+        )
 
 
 @app.local_entrypoint()
 def redetect_prefix(source_n: int = 400, prefix_n: int = 256,
                     num_prompts: int = CANONICAL_NUM_PROMPTS,
                     t: int = 3, eta: float = 0.05,
-                    fpr: float = 1e-3, experiment_seed: int = SEED):
+                    fpr: float = 1e-3, experiment_seed: int = SEED,
+                    generation_model_size: str = MODEL_SIZE,
+                    kv_cache_implementation: str = (
+                        DEFAULT_KV_CACHE_IMPLEMENTATION
+                    )):
     """Score a shorter prefix directly from a saved longer online run."""
     if source_n <= 0 or prefix_n <= 0 or prefix_n > source_n:
         raise ValueError("require 0 < prefix_n <= source_n")
@@ -2392,9 +3343,16 @@ def redetect_prefix(source_n: int = 400, prefix_n: int = 256,
         raise ValueError("t or experiment_seed is invalid")
     if not 0 <= eta < 0.5 or not 0 < fpr < 1:
         raise ValueError("eta must be in [0,.5) and fpr in (0,1)")
+    generation_model_size = normalize_model_size(generation_model_size)
+    kv_cache_implementation = normalize_kv_cache_implementation(
+        kv_cache_implementation
+    )
 
     prompt_indices = list(range(int(num_prompts)))
-    source_tag = config_tag(source_n, t, eta, experiment_seed)
+    source_tag = config_tag(
+        source_n, t, eta, experiment_seed, generation_model_size,
+        kv_cache_implementation,
+    )
     plan = plan_generation.remote(source_tag, prompt_indices, prefix_n)
     if plan["wm_missing"]:
         raise FileNotFoundError(
@@ -2408,6 +3366,8 @@ def redetect_prefix(source_n: int = 400, prefix_n: int = 256,
         )
     print(
         f"[redetect_prefix] source_T={source_n} -> T=n={prefix_n}; "
+        f"model={model_display(generation_model_size)}; "
+        f"kv_cache={kv_cache_implementation}; "
         f"prompts={num_prompts}; null_cache_T={plan['null_T']}; "
         "generation=none",
         flush=True,
@@ -2438,11 +3398,19 @@ def redetect_prefix(source_n: int = 400, prefix_n: int = 256,
 
     os.makedirs("outputs", exist_ok=True)
     seed_suffix = "" if experiment_seed == SEED else f"_seed{experiment_seed}"
+    model_suffix = (
+        "" if generation_model_size == MODEL_SIZE
+        else f"_gen-{model_cache_name(generation_model_size)}"
+    )
+    kv_cache_suffix = (
+        "" if kv_cache_implementation == DEFAULT_KV_CACHE_IMPLEMENTATION
+        else f"_kvcache-{kv_cache_version(kv_cache_implementation)}"
+    )
     local_json = os.path.join(
         "outputs",
         f"online_causal_prefix_n{prefix_n}_from_n{source_n}_t{t}_"
-        f"eta{eta:.2f}_prompts{num_prompts}{seed_suffix}_"
-        f"sampler-{SAMPLER_CACHE_TAG}.json",
+        f"eta{eta:.2f}_prompts{num_prompts}{seed_suffix}{model_suffix}_"
+        f"sampler-{SAMPLER_CACHE_TAG}{kv_cache_suffix}.json",
     )
     with open(local_json, "w") as handle:
         json.dump(payload, handle, indent=2, allow_nan=False)

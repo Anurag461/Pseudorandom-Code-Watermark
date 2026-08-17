@@ -684,6 +684,7 @@ def generate_batch_and_collect_online(
     document_seeds=None,
     prefix_tokens_batch=None,
     prefix_codeword_bits_batch=None,
+    kv_cache_implementation="concat",
 ):
     """Batched forced-prefix generation, optionally resuming a saved prefix.
 
@@ -703,6 +704,10 @@ def generate_batch_and_collect_online(
     position rather than PyTorch's process-global RNG.  Consequently a
     one-shot run and a resumed run use the same random variates for every
     position, independent of batching or worker scheduling.
+
+    ``kv_cache_implementation`` is deliberately opt-in. ``"concat"`` retains
+    the historical cache path, while ``"static"`` preallocates per-layer K/V
+    storage for the prompt plus the requested continuation length.
     """
     from online_prc import (
         GENERATION_SAMPLER_VERSION,
@@ -716,6 +721,9 @@ def generate_batch_and_collect_online(
     model.eval()
     batch_size = int(prompt_ids_batch.shape[0])
     target_length = int(max_new_tokens)
+    kv_cache_implementation = normalize_kv_cache_implementation(
+        kv_cache_implementation
+    )
     if target_length < 0:
         raise ValueError("max_new_tokens must be nonnegative")
     if watermark:
@@ -785,7 +793,10 @@ def generate_batch_and_collect_online(
     token_steps, p_steps = [], []
     codeword_steps, entropy_steps, logprob_steps = [], [], []
     with torch.no_grad():
-        cache = KVCache()
+        cache = make_kv_cache(
+            kv_cache_implementation,
+            max_length=int(prompt_ids_batch.shape[1]) + target_length,
+        )
         logits = model(prompt_ids_batch, cache=cache)[:, -1]
 
         # Replaying one token at a time matches the incremental attention path
@@ -891,6 +902,8 @@ def generate_batch_and_collect_online(
         "online_sampler_version": (
             GENERATION_SAMPLER_VERSION if watermark else None
         ),
+        "kv_cache_implementation": kv_cache_implementation,
+        "kv_cache_version": kv_cache_version(kv_cache_implementation),
         "resume_prefix_length": prefix_length,
     }
     return tokens, p_traces, details

@@ -13,16 +13,28 @@ from modal_run import (
     wm_dir,
 )
 from modal_online_run import (
+    artifact_generation_model_size,
+    artifact_kv_cache_implementation,
     artifact_compatibility_error,
     config_tag as online_config_tag,
     descending_prefix_grid,
     discover_online_cache_tags,
+    evaluate_prepared_map_prefixes,
     increment_payload_from_grid,
     legacy_config_tag as legacy_online_config_tag,
+    model_cache_name as online_model_cache_name,
+    model_default_batch as online_model_default_batch,
+    model_default_gpu as online_model_default_gpu,
+    model_display as online_model_display,
+    normalize_model_size as normalize_online_model_size,
     rate_strictly_above,
+    resolve_model_runtime,
+    shared_null_dir as online_null_dir,
     summarize_generation_cost,
     summarize_map_sweep,
+    validate_generation_model_record as validate_online_model_record,
     validate_generation_segments,
+    validate_online_null_record,
     validate_online_watermarked_record,
 )
 
@@ -115,9 +127,50 @@ def test_online_replicate_seeds_have_isolated_cache_namespaces():
     assert legacy_online_config_tag(256, 3, 0.05, 12345) != baseline
 
 
+def test_online_static_kv_cache_has_an_isolated_versioned_namespace():
+    concat = online_config_tag(256, 3, 0.05, 12345)
+    static = online_config_tag(
+        256, 3, 0.05, 12345, "0.6B", "static"
+    )
+
+    assert concat.endswith("_sampler-poscdf-v1")
+    assert static.endswith("_sampler-poscdf-v1_kvcache-static-v1")
+    assert concat != static
+
+
+def test_online_generation_model_runtime_and_namespaces_are_isolated():
+    point_six_tag = online_config_tag(768, 3, 0.1, 12345, "0.6B")
+    eight_b_tag = online_config_tag(768, 3, 0.1, 12345, "8b")
+
+    assert point_six_tag.startswith(
+        "online_causal_prc_v1/qwen3_0p6b_base/"
+    )
+    assert eight_b_tag.startswith(
+        "online_causal_prc_v1/qwen3_8b_base/"
+    )
+    assert point_six_tag != eight_b_tag
+    assert online_null_dir(768) == "/data/_nulls/T768"
+    assert online_null_dir(768, "8") == (
+        "/data/_nulls/qwen3_8b_base/T768"
+    )
+    assert normalize_online_model_size("8") == "8B"
+    assert online_model_display("8B") == "Qwen3-8B-Base"
+    assert online_model_cache_name("0.6") == "qwen3_0p6b_base"
+    assert online_model_default_gpu("8B") == "H100"
+    assert online_model_default_batch("8B") == 25
+    assert resolve_model_runtime("8b") == ("8B", 25, "H100")
+    assert resolve_model_runtime("8B", 10, "H100:80GB") == (
+        "8B", 10, "H100:80GB"
+    )
+    with pytest.raises(ValueError, match="must be one of"):
+        normalize_online_model_size("4B")
+    with pytest.raises(ValueError, match="batch must be nonnegative"):
+        resolve_model_runtime("8B", -1, "H100")
+
+
 def _make_online_cache(root, T, t=3, eta=0.05, seed=12345,
-                       prompt_indices=range(3)):
-    tag = online_config_tag(T, t, eta, seed)
+                       prompt_indices=range(3), model_size="0.6B"):
+    tag = online_config_tag(T, t, eta, seed, model_size)
     directory = root / tag
     (directory / "wm").mkdir(parents=True)
     (directory / "artifacts.pt").touch()
@@ -142,6 +195,45 @@ def test_online_cache_discovery_classifies_both_reuse_directions(tmp_path):
         (400, "longer"),
     ]
     assert [item["tag"] for item in found] == [tag_256, tag_400]
+
+
+def test_online_cache_discovery_never_crosses_generation_models(tmp_path):
+    point_six_tag = _make_online_cache(tmp_path, 256, model_size="0.6B")
+    eight_b_tag = _make_online_cache(tmp_path, 400, model_size="8B")
+
+    point_six = discover_online_cache_tags(
+        str(tmp_path), requested_T=300, t=3, eta=0.05,
+        experiment_seed=12345, generation_model_size="0.6B",
+    )
+    eight_b = discover_online_cache_tags(
+        str(tmp_path), requested_T=300, t=3, eta=0.05,
+        experiment_seed=12345, generation_model_size="8B",
+    )
+
+    assert [item["tag"] for item in point_six] == [point_six_tag]
+    assert [item["tag"] for item in eight_b] == [eight_b_tag]
+
+
+def test_online_cache_discovery_never_crosses_kv_implementations(tmp_path):
+    concat_tag = _make_online_cache(tmp_path, 256)
+    static_tag = online_config_tag(
+        400, 3, 0.05, 12345, "0.6B", "static"
+    )
+    static_dir = tmp_path / static_tag
+    (static_dir / "wm").mkdir(parents=True)
+    (static_dir / "artifacts.pt").touch()
+
+    concat = discover_online_cache_tags(
+        str(tmp_path), requested_T=300, t=3, eta=0.05,
+        experiment_seed=12345, kv_cache_implementation="concat",
+    )
+    static = discover_online_cache_tags(
+        str(tmp_path), requested_T=300, t=3, eta=0.05,
+        experiment_seed=12345, kv_cache_implementation="static",
+    )
+
+    assert [item["tag"] for item in concat] == [concat_tag]
+    assert [item["tag"] for item in static] == [static_tag]
 
 
 def test_online_cache_discovery_requires_artifact_and_exact_config(tmp_path):
@@ -210,6 +302,47 @@ def test_map_sweep_selects_contiguous_last_pass_and_flags_nonmonotonicity():
         "higher_n": 464,
         "higher_tpr": 0.9,
     }]
+
+
+def test_adaptive_map_sweep_never_scores_after_first_failure(monkeypatch):
+    calls = []
+
+    def fake_score(prepared, length, **_kwargs):
+        prompt_idx = int(prepared["prompt_idx"])
+        calls.append((prompt_idx, int(length)))
+        decision = int(length) == 512 or prompt_idx < 3
+        return {
+            "decision": decision,
+            "length": int(length),
+            "n": int(length),
+            "T": int(length),
+            "r": int(length) - 2,
+            "free_coordinates": 2,
+        }
+
+    monkeypatch.setattr(
+        "detectors.score_prepared_online_map_prefix", fake_score
+    )
+    prepared = [{
+        "prompt_idx": index,
+        "prepared": {"prompt_idx": index},
+    } for index in range(4)]
+    result = evaluate_prepared_map_prefixes(
+        prepared,
+        [512, 496, 480, 464],
+        fpr=1e-3,
+        target_rate=0.90,
+        stop_after_first_below=True,
+    )
+
+    assert result["evaluated_lengths"] == [512, 496]
+    assert result["unevaluated_lengths"] == [480, 464]
+    assert result["first_below_n"] == 496
+    assert result["stopped_after_first_below"] is True
+    assert result["rows"][0]["tp"] == 4
+    assert result["rows"][1]["tp"] == 3
+    assert {length for _, length in calls} == {512, 496}
+    assert all("480" not in item["map_scores"] for item in result["results"])
 
 
 def test_generation_cost_summary_tracks_replay_suffix_and_gpu_seconds():
@@ -370,6 +503,20 @@ def test_online_artifact_compatibility_allows_only_length_fields_to_differ():
     assert artifact_compatibility_error(target, wrong_partition) == (
         "token partition differs"
     )
+    assert artifact_kv_cache_implementation(target) == "concat"
+    static_source = {
+        **source,
+        "kv_cache_implementation": "static",
+        "config_sig": {
+            **source["config_sig"],
+            "kv_cache_implementation": "static",
+            "kv_cache_version": "static-v1",
+        },
+    }
+    assert artifact_kv_cache_implementation(static_source) == "static"
+    assert artifact_compatibility_error(target, static_source) == (
+        "KV cache implementation differs"
+    )
 
 
 def test_online_record_validation_accepts_legacy_provenance_and_rejects_key_mix():
@@ -448,6 +595,83 @@ def test_online_record_validation_accepts_legacy_provenance_and_rejects_key_mix(
     with pytest.raises(ValueError, match="online_key_sha256"):
         validate_online_watermarked_record(
             wrong_key_record, artifact, prompt_index
+        )
+
+    static_artifact = {
+        **artifact,
+        "kv_cache_implementation": "static",
+        "kv_cache_version": "static-v1",
+    }
+    static_record = {
+        **record,
+        "kv_cache_implementation": "static",
+        "kv_cache_version": "static-v1",
+    }
+    validate_online_watermarked_record(
+        static_record, static_artifact, prompt_index
+    )
+    with pytest.raises(ValueError, match="kv_cache_implementation"):
+        validate_online_watermarked_record(
+            record, static_artifact, prompt_index
+        )
+
+
+def test_online_8b_null_validation_requires_model_partition_and_prompt():
+    import numpy as np
+    import torch
+    from detectors import tensor_sha256
+
+    partition = torch.tensor([[1, 0], [0, 1]], dtype=torch.float32)
+    artifact = {
+        "T": 4,
+        "prompt_ids_list": [[1, 0]],
+        "partition": partition,
+        "generation_model_size": "8B",
+        "generation_model": "Qwen3-8B-Base",
+        "config_sig": {
+            "generation_model_size": "8B",
+            "generation_model": "Qwen3-8B-Base",
+        },
+    }
+    record = {
+        "watermark": False,
+        "tokens": torch.tensor([0, 1, 0, 1]),
+        "p_trace": np.full(4, 0.5),
+        "prompt_token_ids": torch.tensor([1, 0]),
+        "partition_sha256": tensor_sha256(partition),
+        "generation_model_size": "8B",
+        "generation_model": "Qwen3-8B-Base",
+    }
+
+    assert artifact_generation_model_size(artifact) == "8B"
+    validate_online_null_record(record, artifact, 0, 4)
+    legacy_partition_record = {
+        key: value for key, value in record.items()
+        if key != "partition_sha256"
+    }
+    validate_online_null_record(legacy_partition_record, artifact, 0, 4)
+    validate_online_model_record({}, "0.6B", "legacy null", 0)
+
+    with pytest.raises(ValueError, match="lacks generation-model metadata"):
+        validate_online_null_record(
+            {
+                key: value for key, value in record.items()
+                if key not in ("generation_model_size", "generation_model")
+            },
+            artifact,
+            0,
+            4,
+        )
+    with pytest.raises(ValueError, match="different token partition"):
+        validate_online_null_record(
+            {**record, "partition_sha256": "0" * 64}, artifact, 0, 4
+        )
+    with pytest.raises(ValueError, match="wrong prompt"):
+        validate_online_null_record(
+            {**record, "prompt_token_ids": torch.tensor([0, 1])},
+            artifact,
+            0,
+            4,
         )
 
 

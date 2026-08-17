@@ -638,6 +638,153 @@ def detect_online_hoeffding(
     return (decision, info) if return_info else decision
 
 
+def prepare_online_map_prefix_trace(
+    online_key,
+    generated_token_ids,
+    partition_probs,
+    partition_map,
+    maximum_length,
+):
+    """Prepare one MAP trace once for adaptive prefix detection.
+
+    The signed check contribution and squared contribution for every parity
+    row through ``maximum_length`` are independent of the eventual stopping
+    prefix.  Keeping those arrays lets an adaptive sweep score one descending
+    length at a time without repeatedly converting tokens or rebuilding
+    supports, while still avoiding work at lengths after the first failure.
+    """
+    from online_prc import (
+        OnlinePRCKey,
+        materialize_supports,
+        otp_prefix,
+    )
+
+    if isinstance(online_key, dict):
+        online_key = OnlinePRCKey.from_dict(online_key)
+    if not isinstance(online_key, OnlinePRCKey):
+        raise TypeError("online_key must be OnlinePRCKey or its serialized dict")
+    maximum = int(maximum_length)
+    if maximum <= 0:
+        raise ValueError("maximum_length must be positive")
+
+    tokens = _as_cpu_token_tensor(generated_token_ids)
+    probabilities = np.asarray(
+        partition_probs, dtype=np.float64
+    ).reshape(-1)
+    if int(tokens.numel()) < maximum or probabilities.size < maximum:
+        raise ValueError(
+            f"record has {min(int(tokens.numel()), probabilities.size)} values; "
+            f"need prefix length {maximum}"
+        )
+
+    bits = tokens_to_bits(tokens[:maximum], partition_map)
+    soft = map_soft_token(bits, probabilities[:maximum])
+    longest_supports = materialize_supports(maximum, online_key)
+    longest_otp = otp_prefix(maximum, online_key).astype(np.int64)
+    check_values = np.prod(soft[longest_supports], axis=1)
+    otp_signs = np.prod(
+        1 - 2 * longest_otp[longest_supports], axis=1
+    ).astype(np.float64)
+    signed_check_values = otp_signs * check_values
+    squared_check_values = check_values ** 2
+    if (
+        not np.all(np.isfinite(signed_check_values))
+        or not np.all(np.isfinite(squared_check_values))
+    ):
+        raise ValueError("non-finite online detector check contribution")
+    return {
+        "online_key": online_key,
+        "maximum_length": maximum,
+        "supports": longest_supports,
+        "signed_check_values": signed_check_values,
+        "squared_check_values": squared_check_values,
+    }
+
+
+def score_prepared_online_map_prefix(
+    prepared,
+    length,
+    fpr=1e-9,
+    fpr_policy="one_shot",
+    numerical_tolerance=1e-15,
+):
+    """Score one exact prefix from :func:`prepare_online_map_prefix_trace`."""
+    from online_prc import target_row_count
+
+    online_key = prepared["online_key"]
+    length = int(length)
+    maximum = int(prepared["maximum_length"])
+    if length <= 0 or length > maximum:
+        raise ValueError(
+            f"length must be in [1, maximum_length={maximum}], got {length}"
+        )
+    if not 0.0 < float(fpr) < 1.0:
+        raise ValueError("fpr must be in (0, 1)")
+    if fpr_policy not in ("one_shot", "alpha_spending_v1"):
+        raise ValueError(
+            "fpr_policy must be 'one_shot' or 'alpha_spending_v1'"
+        )
+
+    row_count = target_row_count(length, online_key)
+    supports = prepared["supports"][:row_count]
+    if supports.size and int(np.max(supports)) >= length:
+        raise AssertionError(
+            "causal support prefix references a coordinate outside its length"
+        )
+
+    effective_fpr = float(fpr)
+    if fpr_policy == "alpha_spending_v1":
+        effective_fpr = float(6.0 * fpr / (np.pi ** 2 * length ** 2))
+    base_info = {
+        "method": "hoeffding_online_causal",
+        "scheme": online_key.scheme,
+        "schedule_version": online_key.schedule_version,
+        "support_sampler_version": online_key.support_sampler_version,
+        "weight": "map",
+        "length": length,
+        "n": length,
+        "T": length,
+        "r": int(row_count),
+        "free_coordinates": int(length - row_count),
+        "fpr": float(fpr),
+        "effective_fpr": effective_fpr,
+        "fpr_policy": fpr_policy,
+    }
+    if row_count == 0:
+        return {
+            "decision": False,
+            **base_info,
+            "statistic": 0.0,
+            "threshold": float("inf"),
+            "V": 0.0,
+            "status": "insufficient_evidence_no_checks",
+        }
+
+    statistic = float(np.sum(prepared["signed_check_values"][:row_count]))
+    V = float(np.sum(prepared["squared_check_values"][:row_count]))
+    if not np.isfinite(V) or not np.isfinite(statistic):
+        raise ValueError("non-finite online detector statistic or variance proxy")
+    if V <= float(numerical_tolerance):
+        return {
+            "decision": False,
+            **base_info,
+            "statistic": statistic,
+            "threshold": float("inf"),
+            "V": V,
+            "status": "insufficient_evidence_zero_variance",
+        }
+
+    threshold = float(np.sqrt(2.0 * V * np.log(1.0 / effective_fpr)))
+    return {
+        "decision": bool(statistic >= threshold),
+        **base_info,
+        "statistic": statistic,
+        "threshold": threshold,
+        "V": V,
+        "status": "ok",
+    }
+
+
 def detect_online_map_prefix_grid(
     online_key,
     generated_token_ids,
@@ -651,29 +798,9 @@ def detect_online_map_prefix_grid(
     """Score MAP detection at several exact prefixes of one online record.
 
     The result at every requested length is mathematically identical to a
-    separate :func:`detect_online_hoeffding` call with ``weight="map"``.  This
-    grid implementation converts the token trace once and materializes only
-    the longest support/OTP prefix; causal prefix consistency then lets each
-    shorter length reuse the appropriate initial rows.
+    separate :func:`detect_online_hoeffding` call with ``weight="map"``.  The
+    token conversion and per-row check contributions are prepared once.
     """
-    from online_prc import (
-        OnlinePRCKey,
-        materialize_supports,
-        otp_prefix,
-        target_row_count,
-    )
-
-    if isinstance(online_key, dict):
-        online_key = OnlinePRCKey.from_dict(online_key)
-    if not isinstance(online_key, OnlinePRCKey):
-        raise TypeError("online_key must be OnlinePRCKey or its serialized dict")
-    if not 0.0 < float(fpr) < 1.0:
-        raise ValueError("fpr must be in (0, 1)")
-    if fpr_policy not in ("one_shot", "alpha_spending_v1"):
-        raise ValueError(
-            "fpr_policy must be 'one_shot' or 'alpha_spending_v1'"
-        )
-
     lengths = [int(length) for length in prefix_lengths]
     if not lengths:
         raise ValueError("prefix_lengths must be nonempty")
@@ -682,86 +809,21 @@ def detect_online_map_prefix_grid(
     if any(length <= 0 for length in lengths):
         raise ValueError("every prefix length must be positive")
 
-    tokens = _as_cpu_token_tensor(generated_token_ids)
-    probabilities = np.asarray(
-        partition_probs, dtype=np.float64
-    ).reshape(-1)
-    maximum = max(lengths)
-    if int(tokens.numel()) < maximum or probabilities.size < maximum:
-        raise ValueError(
-            f"record has {min(int(tokens.numel()), probabilities.size)} values; "
-            f"need prefix length {maximum}"
+    prepared = prepare_online_map_prefix_trace(
+        online_key,
+        generated_token_ids,
+        partition_probs,
+        partition_map,
+        max(lengths),
+    )
+
+    return [
+        score_prepared_online_map_prefix(
+            prepared,
+            length,
+            fpr=fpr,
+            fpr_policy=fpr_policy,
+            numerical_tolerance=numerical_tolerance,
         )
-
-    bits = tokens_to_bits(tokens[:maximum], partition_map)
-    soft = map_soft_token(bits, probabilities[:maximum])
-    longest_supports = materialize_supports(maximum, online_key)
-    longest_otp = otp_prefix(maximum, online_key).astype(np.int64)
-
-    results = []
-    for length in lengths:
-        row_count = target_row_count(length, online_key)
-        supports = longest_supports[:row_count]
-        if supports.size and int(np.max(supports)) >= length:
-            raise AssertionError(
-                "causal support prefix references a coordinate outside its length"
-            )
-
-        effective_fpr = float(fpr)
-        if fpr_policy == "alpha_spending_v1":
-            effective_fpr = float(6.0 * fpr / (np.pi ** 2 * length ** 2))
-        base_info = {
-            "method": "hoeffding_online_causal",
-            "scheme": online_key.scheme,
-            "schedule_version": online_key.schedule_version,
-            "support_sampler_version": online_key.support_sampler_version,
-            "weight": "map",
-            "length": length,
-            "n": length,
-            "T": length,
-            "r": int(row_count),
-            "free_coordinates": int(length - row_count),
-            "fpr": float(fpr),
-            "effective_fpr": effective_fpr,
-            "fpr_policy": fpr_policy,
-        }
-        if row_count == 0:
-            results.append({
-                "decision": False,
-                **base_info,
-                "statistic": 0.0,
-                "threshold": float("inf"),
-                "V": 0.0,
-                "status": "insufficient_evidence_no_checks",
-            })
-            continue
-
-        check_values = np.prod(soft[supports], axis=1)
-        otp_signs = np.prod(
-            1 - 2 * longest_otp[supports], axis=1
-        ).astype(np.float64)
-        statistic = float(np.sum(otp_signs * check_values))
-        V = float(np.sum(check_values ** 2))
-        if not np.isfinite(V) or not np.isfinite(statistic):
-            raise ValueError("non-finite online detector statistic or variance proxy")
-        if V <= float(numerical_tolerance):
-            results.append({
-                "decision": False,
-                **base_info,
-                "statistic": statistic,
-                "threshold": float("inf"),
-                "V": V,
-                "status": "insufficient_evidence_zero_variance",
-            })
-            continue
-
-        threshold = float(np.sqrt(2.0 * V * np.log(1.0 / effective_fpr)))
-        results.append({
-            "decision": bool(statistic >= threshold),
-            **base_info,
-            "statistic": statistic,
-            "threshold": threshold,
-            "V": V,
-            "status": "ok",
-        })
-    return results
+        for length in lengths
+    ]
