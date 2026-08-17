@@ -353,6 +353,17 @@ def prompt_detection_shards(prompt_indices: list[int],
     return _chunks(indices, shard_size)
 
 
+def require_complete_cache_plan(plan: dict) -> None:
+    """Refuse cache-only detection before any model container can launch."""
+    missing_wm = [int(index) for index in plan.get("wm_missing", [])]
+    missing_null = [int(index) for index in plan.get("null_missing", [])]
+    if missing_wm or missing_null:
+        raise FileNotFoundError(
+            "cache-only audit requires complete generation caches; "
+            f"missing watermarked={missing_wm}, missing null={missing_null}"
+        )
+
+
 def full_audit_shard_path(
     tag: str,
     prefix_T: int,
@@ -4914,6 +4925,7 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
          null_kv_cache_implementation: str = "",
          detection_shard_size: int = DEFAULT_DETECTION_SHARD_SIZE,
          detection_max_containers: int = DEFAULT_DETECTION_MAX_CONTAINERS,
+         cache_only: bool = False,
          csv_out: str = "online_causal_results_summary.csv"):
     generation_model_size, batch, gpu = resolve_model_runtime(
         generation_model_size, batch, gpu
@@ -4952,7 +4964,8 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
         f"experiment_seed={experiment_seed}, GPU={gpu}, "
         f"max_containers={max_containers}, "
         f"detection_shard_size={detection_shard_size}, "
-        f"detection_max_containers={detection_max_containers}", flush=True,
+        f"detection_max_containers={detection_max_containers}, "
+        f"cache_only={cache_only}", flush=True,
     )
     build = build_artifacts.remote(
         num_prompts, n, t, eta, experiment_seed, fresh,
@@ -4980,8 +4993,19 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
             flush=True,
         )
 
+    if cache_only:
+        require_complete_cache_plan(plan)
+        print(
+            "[main] cache-only guard passed; GPU generation is disabled",
+            flush=True,
+        )
+
     generation_meta = {"wm": [], "null": []}
     if plan["wm_missing"] or plan["null_missing"]:
+        if cache_only:
+            raise AssertionError(
+                "cache-only guard allowed missing generation records"
+            )
         from concurrent.futures import ThreadPoolExecutor
 
         model = OnlineModel.with_options(
@@ -5081,7 +5105,11 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
         f"{seed_suffix}{model_suffix}_sampler-{SAMPLER_CACHE_TAG}"
         f"{kv_cache_suffix}{reuse_suffix}.json",
     )
-    local_payload = {**payload, "results": payload["results"]}
+    local_payload = {
+        **payload,
+        "results": payload["results"],
+        "execution_mode": "cache_only" if cache_only else "generate_or_reuse",
+    }
     with open(local_json, "w") as handle:
         json.dump(local_payload, handle, indent=2, allow_nan=False)
     row = {

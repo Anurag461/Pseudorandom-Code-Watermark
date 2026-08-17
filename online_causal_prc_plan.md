@@ -1,5 +1,36 @@
 # Online Causal PRC Experiment Plan
 
+## Completed cache-only 8B comparisons at the 0.6B boundaries (2026-08-17)
+
+Two full MAP/entropy-aware/naive audits now measure the 8B model at the
+previously selected 0.6B online MAP boundaries. Both jobs ran in an explicit
+`--cache-only` mode that checks all 500 watermarked and null records before the
+generation branch can construct a model container. They reused exact prefixes
+of longer online records and launched no GPU generation.
+
+| eta | Evaluated T=n | 0.6B online MAP at this n | 8B online MAP | 8B entropy-aware | 8B naive | 8B FPRs |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0.15 | 1504 | 453/500 (90.6%) | 317/500 (63.4%) | 223/500 (44.6%) | 104/500 (20.8%) | 0/500 for all three |
+| 0.20 | 3104 | 454/500 (90.8%) | 303/500 (60.6%) | 218/500 (43.6%) | 111/500 (22.2%) | 0/500 for all three |
+
+The eta 0.15 audit used the 4,096-token 8B watermarked cache and a compatible
+1,625-token null cache. Ten 50-prompt CPU shards completed in 110.1 seconds of
+detector wall time and cost `$0.01823568` (`$0.01679405` CPU plus `$0.00144163`
+memory). Its local combined result is
+`outputs/online_causal_n1504_t3_eta0.15_prompts500_gen-qwen3_8b_base_sampler-poscdf-v1_from_n4096.json`.
+
+The eta 0.20 audit used the 14,336-token static-KV 8B watermarked cache and a
+compatible 4,096-token null cache. Ten 50-prompt CPU shards completed in 120.8
+seconds of detector wall time and cost `$0.01753222` (`$0.01616616` CPU plus
+`$0.00136606` memory). Its local combined result is
+`outputs/online_causal_n3104_t3_eta0.20_prompts500_gen-qwen3_8b_base_sampler-poscdf-v1_kvcache-static-v1_from_n14336.json`.
+
+These rows are cross-model comparisons, not 8B boundary estimates: both are
+well below 90% MAP. The 8B eta 0.20 passing boundary remains 13,088 on the
+16-token grid. The current 8B eta 0.15 cache reaches only 4,096 and has 89.6%
+MAP there, so finding its first strict passing point still requires longer 8B
+watermarked generation.
+
 ## Completed parallel full audit: Qwen3-8B, eta 0.20, T=n=13088 (2026-08-17)
 
 The requested selected-prefix audit is complete using the cached 14,336-token

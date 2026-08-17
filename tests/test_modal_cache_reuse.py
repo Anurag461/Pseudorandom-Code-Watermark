@@ -38,6 +38,7 @@ from modal_online_run import (
     prepared_map_shard_path,
     prompt_detection_shards,
     rate_strictly_above,
+    require_complete_cache_plan,
     resolve_model_runtime,
     resolve_null_kv_cache_implementation,
     shared_null_dir as online_null_dir,
@@ -405,6 +406,20 @@ def test_prompt_detection_shards_are_stable_and_paths_are_versioned():
     assert first == repeated
     assert "prepared_map_v1" in first
     assert regrouped != first
+
+
+def test_cache_only_guard_refuses_any_missing_generation_records():
+    require_complete_cache_plan({"wm_missing": [], "null_missing": []})
+    with pytest.raises(FileNotFoundError, match=r"watermarked=\[2\]"):
+        require_complete_cache_plan({
+            "wm_missing": [2],
+            "null_missing": [],
+        })
+    with pytest.raises(FileNotFoundError, match=r"null=\[4, 5\]"):
+        require_complete_cache_plan({
+            "wm_missing": [],
+            "null_missing": [4, 5],
+        })
 
 
 def _full_audit_shard_payload(prompt_indices, prefix_T=64):
