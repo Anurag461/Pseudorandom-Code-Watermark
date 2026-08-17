@@ -112,6 +112,151 @@ class KVCache:
     def reset(self):
         self.cache = {}
 
+
+CONCAT_KV_CACHE_VERSION = "concat-v1"
+STATIC_KV_CACHE_VERSION = "static-v1"
+KV_CACHE_IMPLEMENTATIONS = ("concat", "static")
+
+
+def normalize_kv_cache_implementation(implementation="concat"):
+    """Normalize an inference KV-cache implementation name."""
+    value = str(implementation or "concat").strip().lower()
+    aliases = {
+        "dynamic": "concat",
+        "legacy": "concat",
+        "preallocated": "static",
+    }
+    value = aliases.get(value, value)
+    if value not in KV_CACHE_IMPLEMENTATIONS:
+        raise ValueError(
+            f"kv cache implementation must be one of "
+            f"{KV_CACHE_IMPLEMENTATIONS}; got {implementation!r}"
+        )
+    return value
+
+
+def kv_cache_version(implementation="concat"):
+    implementation = normalize_kv_cache_implementation(implementation)
+    return (
+        STATIC_KV_CACHE_VERSION
+        if implementation == "static"
+        else CONCAT_KV_CACHE_VERSION
+    )
+
+
+class StaticKVCache:
+    """Inference-only, lazily allocated fixed-capacity K/V cache.
+
+    Each layer receives one pair of tensors with sequence capacity
+    ``max_length``. Updates copy only the new K/V slice into that storage and
+    return a view of the populated prefix, avoiding the full-history
+    allocation and copy performed by ``torch.cat`` at every decode step.
+    """
+
+    def __init__(self, max_length):
+        self.max_length = int(max_length)
+        if self.max_length <= 0:
+            raise ValueError("static KV cache max_length must be positive")
+        self.cache = {}
+        self._lengths = {}
+
+    @staticmethod
+    def _shape_without_sequence(tensor):
+        if tensor.ndim != 4:
+            raise ValueError(
+                "KV tensors must have shape "
+                "(batch, num_kv_groups, sequence, head_dim)"
+            )
+        return tensor.shape[:2] + tensor.shape[3:]
+
+    def _allocate_layer(self, layer_idx, k, v):
+        if self._shape_without_sequence(k) != self._shape_without_sequence(v):
+            raise ValueError("key and value cache shapes are incompatible")
+        shape = (
+            int(k.shape[0]),
+            int(k.shape[1]),
+            self.max_length,
+            int(k.shape[3]),
+        )
+        self.cache[layer_idx] = (
+            torch.empty(shape, dtype=k.dtype, device=k.device),
+            torch.empty(shape, dtype=v.dtype, device=v.device),
+        )
+        self._lengths[layer_idx] = 0
+
+    def update(self, layer_idx, k, v):
+        self._shape_without_sequence(k)
+        self._shape_without_sequence(v)
+        if int(k.shape[2]) != int(v.shape[2]):
+            raise ValueError("key and value updates must have equal lengths")
+        if int(k.shape[2]) <= 0:
+            raise ValueError("KV cache updates must be nonempty")
+        if layer_idx not in self.cache:
+            self._allocate_layer(layer_idx, k, v)
+
+        key_cache, value_cache = self.cache[layer_idx]
+        expected_shape = (
+            int(key_cache.shape[0]),
+            int(key_cache.shape[1]),
+            int(key_cache.shape[3]),
+        )
+        if self._shape_without_sequence(k) != expected_shape:
+            raise ValueError("key update shape changed after cache allocation")
+        if self._shape_without_sequence(v) != expected_shape:
+            raise ValueError("value update shape changed after cache allocation")
+        if k.dtype != key_cache.dtype or k.device != key_cache.device:
+            raise ValueError("key update dtype/device changed after cache allocation")
+        if v.dtype != value_cache.dtype or v.device != value_cache.device:
+            raise ValueError("value update dtype/device changed after cache allocation")
+
+        start = int(self._lengths[layer_idx])
+        end = start + int(k.shape[2])
+        if end > self.max_length:
+            raise ValueError(
+                f"static KV cache capacity {self.max_length} exceeded by "
+                f"update ending at {end}"
+            )
+        with torch.no_grad():
+            key_cache[:, :, start:end, :].copy_(k)
+            value_cache[:, :, start:end, :].copy_(v)
+        self._lengths[layer_idx] = end
+        return (
+            key_cache[:, :, :end, :],
+            value_cache[:, :, :end, :],
+        )
+
+    def get_seq_len(self):
+        if not self._lengths:
+            return 0
+        lengths = set(self._lengths.values())
+        if len(lengths) != 1:
+            raise RuntimeError(
+                "static KV cache layers have inconsistent sequence lengths"
+            )
+        return next(iter(lengths))
+
+    def reset(self):
+        # Retain the preallocated tensors so repeated inference can reuse them.
+        for layer_idx in self._lengths:
+            self._lengths[layer_idx] = 0
+
+    def allocated_bytes(self):
+        return sum(
+            tensor.numel() * tensor.element_size()
+            for pair in self.cache.values()
+            for tensor in pair
+        )
+
+
+def make_kv_cache(implementation="concat", max_length=None):
+    """Build an inference cache without changing the legacy default."""
+    implementation = normalize_kv_cache_implementation(implementation)
+    if implementation == "concat":
+        return KVCache()
+    if max_length is None:
+        raise ValueError("static KV cache requires max_length")
+    return StaticKVCache(max_length)
+
 class GroupedQueryAttention(nn.Module):
     def __init__(
         self, d_in, num_heads, num_kv_groups, head_dim=None, qk_norm=False, dtype=None

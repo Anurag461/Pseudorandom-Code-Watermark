@@ -1,0 +1,9 @@
+n,T,r,free_coordinates,tp,watermarked_total,tpr,above_target,target_map_tpr,prefix_online_support_sha256,source_T,source_tag
+512,512,507,5,468,500,0.936,True,0.9,3dd746ea6da80b43b4a844d9ecb3029afcd4342db4c0896bbfd0236b1f66ed6a,512,online_causal_prc_v1/qwen3_0p6b_base/n512_T512_t3_eta0.05_rr99of100_sampler-poscdf-v1
+496,496,491,5,468,500,0.936,True,0.9,bb9f55582b688fee42f0ad2a04ec78d592c6a6fa592882a06c33ac6dd22aa1a3,512,online_causal_prc_v1/qwen3_0p6b_base/n512_T512_t3_eta0.05_rr99of100_sampler-poscdf-v1
+480,480,475,5,462,500,0.924,True,0.9,dba66cb04f6007b4707a1e79a8615d91c59d94dd7128a72c8ae42e19ee6e7700,512,online_causal_prc_v1/qwen3_0p6b_base/n512_T512_t3_eta0.05_rr99of100_sampler-poscdf-v1
+464,464,459,5,459,500,0.918,True,0.9,350158ff82832bf8d4c9951ea11c436838cdb0923a106ab591cb91b024704f84,512,online_causal_prc_v1/qwen3_0p6b_base/n512_T512_t3_eta0.05_rr99of100_sampler-poscdf-v1
+448,448,444,4,455,500,0.91,True,0.9,699b1536f16128e49c78750a7324cde5c763a5923164d5ec22f07c963f7896d2,512,online_causal_prc_v1/qwen3_0p6b_base/n512_T512_t3_eta0.05_rr99of100_sampler-poscdf-v1
+432,432,428,4,447,500,0.894,False,0.9,9d428288bee5812f75e3e68349245becc0a3364efe796bcf61ae7379827511af,512,online_causal_prc_v1/qwen3_0p6b_base/n512_T512_t3_eta0.05_rr99of100_sampler-poscdf-v1
+416,416,412,4,444,500,0.888,False,0.9,e359d65a5c91041f9b27de8fba399f4a4f4885ee9a6da6eec13b6669ce67ee10,512,online_causal_prc_v1/qwen3_0p6b_base/n512_T512_t3_eta0.05_rr99of100_sampler-poscdf-v1
+400,400,396,4,439,500,0.878,False,0.9,1a98162ed28e3131baca490a2ca9315b8eca0e64f6d1586aa3d4e3723283f6d8,512,online_causal_prc_v1/qwen3_0p6b_base/n512_T512_t3_eta0.05_rr99of100_sampler-poscdf-v1
