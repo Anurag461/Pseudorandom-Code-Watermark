@@ -1,0 +1,76 @@
+{
+  "result_schema_version": 3,
+  "timestamp_utc": "2026-08-17T09:24:03Z",
+  "result_kind": "shared_null_cache_production_summary",
+  "requested_T": 13088,
+  "actual_null_T": 13088,
+  "num_prompts": 500,
+  "prompt_index_range": [0, 499],
+  "generation_model_size": "8B",
+  "generation_model": "Qwen3-8B-Base",
+  "null_kv_cache_implementation": "static",
+  "null_kv_cache_version": "static-v1",
+  "remote_cache_directory": "/data/_nulls/qwen3_8b_base/T13088",
+  "smoke": {
+    "app_id": "ap-AIwsWObNJta0RMtcMzJZNC",
+    "app_url": "https://modal.com/apps/new-prc-watermark/main/ap-AIwsWObNJta0RMtcMzJZNC",
+    "reused_records": 0,
+    "generated_records": 25,
+    "batch_sizes": [25],
+    "generated_null_tokens": 327200,
+    "measured_gpu_method_seconds": 2208.24174451828,
+    "local_end_to_end_wall_seconds": 2322.468317747116,
+    "peak_cuda_allocated_bytes": 70403537408,
+    "peak_cuda_reserved_bytes": 70478987264,
+    "provider_total_cost_usd": 2.56828807
+  },
+  "production_completion": {
+    "app_id": "ap-hqKda6UjEI25gcxX2UF4be",
+    "app_url": "https://modal.com/apps/new-prc-watermark/main/ap-hqKda6UjEI25gcxX2UF4be",
+    "reused_records": 25,
+    "generated_records": 475,
+    "batch_count": 19,
+    "batch_size": 25,
+    "max_h100_containers": 10,
+    "generated_null_tokens": 6216800,
+    "measured_gpu_method_seconds": 43899.94483089447,
+    "measured_gpu_method_hours": 12.194429119692908,
+    "local_end_to_end_wall_seconds": 4850.136748790741,
+    "peak_cuda_allocated_bytes": 70403537408,
+    "peak_cuda_reserved_bytes": 70478987264,
+    "provider_h100_cost_usd": 49.73310482,
+    "provider_cpu_cost_usd": 0.93644125,
+    "provider_memory_cost_usd": 0.14822031,
+    "provider_total_cost_usd": 50.81776638
+  },
+  "campaign_total": {
+    "generated_records": 500,
+    "generated_null_tokens": 6544000,
+    "measured_gpu_method_seconds": 46108.18657541275,
+    "provider_h100_cost_usd": 52.24574416,
+    "provider_cpu_cost_usd": 0.98462284,
+    "provider_memory_cost_usd": 0.15568745,
+    "provider_total_cost_usd": 53.38605445
+  },
+  "verification": {
+    "verified_records": 500,
+    "missing_records": 0,
+    "invalid_records": 0,
+    "rejected_candidates": 0,
+    "legacy_manifestless": false,
+    "provenance_counts": {
+      "static/static-v1": 500
+    },
+    "model_token_positions_processed": 0
+  },
+  "cache_manifest": {
+    "schema_version": 1,
+    "stopping_policy": "forced_length_v1",
+    "generation_sampler_version": "torch_multinomial_global_v1",
+    "generation_rng_policy": "torch_multinomial_global_v1",
+    "prompt_count": 500,
+    "prompt_corpus_sha256": "7f0b4642b87fdb80988b414cccfc48351358d4a108fc6bc1b3763112cf4765c2",
+    "partition_sha256": "503d1cf93958f0d765606ed3e25aa87a1a777cd08d8f44436b0c6ae9716aa184"
+  },
+  "bookkeeping_note": "The first cache-only replay reused the pre-fix local filename and replaced the detailed production JSON. Raw Modal records and the cost ledger were unaffected. This summary preserves the production telemetry, and subsequent cache-only replays use a _cache-replay suffix."
+}
