@@ -116,6 +116,126 @@ def prepare_online_map_evidence(
     }
 
 
+def prepare_online_adaptive_basis_context(online_key, length: int) -> dict:
+    """Materialize prompt-independent online parity and OTP data once."""
+    from scipy.sparse import csr_matrix
+
+    from online_prc import OnlinePRCKey, materialize_supports, otp_prefix
+
+    if isinstance(online_key, dict):
+        online_key = OnlinePRCKey.from_dict(online_key)
+    if not isinstance(online_key, OnlinePRCKey):
+        raise TypeError("online_key must be OnlinePRCKey or its serialized dict")
+    length = int(length)
+    if length <= 0:
+        raise ValueError("length must be positive")
+    supports = materialize_supports(length, online_key)
+    row_count = int(supports.shape[0])
+    if row_count <= 0:
+        raise ValueError("adaptive online replay requires at least one check")
+    row_indices = np.repeat(np.arange(row_count, dtype=np.int64), supports.shape[1])
+    parity = csr_matrix(
+        (
+            np.ones(supports.size, dtype=np.uint8),
+            (row_indices, supports.reshape(-1)),
+        ),
+        shape=(row_count, length),
+        dtype=np.uint8,
+    )
+    return {
+        "online_key": online_key,
+        "length": length,
+        "supports": supports,
+        "parity_matrix": parity,
+        "one_time_pad": otp_prefix(length, online_key).astype(np.int64),
+    }
+
+
+def prepare_reliability_adaptive_online_map_evidence(
+    online_key,
+    generated_token_ids,
+    partition_probs,
+    partition_map,
+    *,
+    length: int | None = None,
+    erasure_quantiles=DEFAULT_ERASURE_QUANTILES,
+    prepared_context=None,
+) -> dict:
+    """Build adaptive-basis evidence for one online causal prefix.
+
+    The causal parity matrix and OTP are regenerated solely from the compact
+    online key.  Basis selection sees only that public matrix, the saved
+    partition-probability reliabilities, and the channel noise rate.
+    """
+    from online_prc import OnlinePRCKey
+
+    if isinstance(online_key, dict):
+        online_key = OnlinePRCKey.from_dict(online_key)
+    if not isinstance(online_key, OnlinePRCKey):
+        raise TypeError("online_key must be OnlinePRCKey or its serialized dict")
+    probabilities = np.asarray(partition_probs, dtype=np.float64).reshape(-1)
+    replay_length = probabilities.size if length is None else int(length)
+    if replay_length <= 0 or replay_length > probabilities.size:
+        raise ValueError(
+            f"length must be in [1, {probabilities.size}], got {replay_length}"
+        )
+    context = (
+        prepare_online_adaptive_basis_context(online_key, replay_length)
+        if prepared_context is None else prepared_context
+    )
+    if context.get("online_key") != online_key:
+        raise ValueError("prepared adaptive context uses a different online key")
+    if int(context.get("length", -1)) != replay_length:
+        raise ValueError("prepared adaptive context uses a different length")
+
+    bits = tokens_to_bits(generated_token_ids, partition_map)
+    if bits.size < replay_length:
+        raise ValueError(
+            f"tokens have length {bits.size}, need prefix {replay_length}"
+        )
+    prefix_probabilities = probabilities[:replay_length]
+    soft = map_soft_token(bits[:replay_length], prefix_probabilities)
+    reliabilities = bucket_reliability(prefix_probabilities)
+    basis = select_reliability_adaptive_basis(
+        context["parity_matrix"],
+        reliabilities,
+        online_key.noise_rate,
+        erasure_quantiles=erasure_quantiles,
+    )
+    supports = basis["supports"]
+    attenuation = 1.0 - 2.0 * float(online_key.noise_rate)
+    degrees = np.asarray([support.size for support in supports], dtype=np.int64)
+    signal_weights = np.power(attenuation, degrees, dtype=np.float64)
+    check_values = np.asarray(
+        [
+            signal_weights[row] * np.prod(soft[support])
+            for row, support in enumerate(supports)
+        ],
+        dtype=np.float64,
+    )
+    otp = np.asarray(context["one_time_pad"], dtype=np.int64)
+    otp_signs = np.asarray(
+        [np.prod(1 - 2 * otp[support]) for support in supports],
+        dtype=np.float64,
+    )
+    signed = otp_signs * check_values
+    squared = check_values ** 2
+    if not np.all(np.isfinite(signed)) or not np.all(np.isfinite(squared)):
+        raise ValueError("adaptive online MAP evidence contains non-finite values")
+    return {
+        "method": "online_map_reliability_adaptive_basis_evidence_v1",
+        "online_key": online_key,
+        "length": replay_length,
+        "n": replay_length,
+        "T": replay_length,
+        "r": int(len(supports)),
+        "signed_check_values": signed,
+        "check_weights": np.abs(check_values),
+        "squared_check_values": squared,
+        "basis_selection": basis["selection"],
+    }
+
+
 def score_online_map_evidence(
     evidence: dict,
     *,
@@ -666,6 +786,59 @@ def replay_cached_online_map_record(
         false_positive_rate=fpr,
         fpr_policy=fpr_policy,
     )
+    for field in ("prompt_idx", "watermark"):
+        if field in record:
+            result[field] = record[field]
+    return result
+
+
+def replay_cached_online_map_record_phase2(
+    artifact: dict,
+    record: dict,
+    *,
+    length: int | None = None,
+    false_positive_rate: float | None = None,
+    fpr_policy: str = "one_shot",
+    erasure_quantiles=DEFAULT_ERASURE_QUANTILES,
+    prepared_context=None,
+) -> dict:
+    """Replay the adaptive-basis detector on one saved online record."""
+    for field in ("online_key", "partition"):
+        if field not in artifact:
+            raise KeyError(f"artifact is missing {field!r}")
+    for field in ("tokens", "p_trace"):
+        if field not in record:
+            raise KeyError(f"record is missing {field!r}")
+    replay_length = int(
+        artifact.get("T", len(record["p_trace"])) if length is None else length
+    )
+    if false_positive_rate is None:
+        artifact_fpr = artifact.get("target_fpr", artifact.get("fpr"))
+        if artifact_fpr is None:
+            raise ValueError(
+                "false_positive_rate is required when the artifact has no "
+                "target_fpr or fpr field"
+            )
+        fpr = float(artifact_fpr)
+    else:
+        fpr = float(false_positive_rate)
+    evidence = prepare_reliability_adaptive_online_map_evidence(
+        artifact["online_key"],
+        record["tokens"],
+        record["p_trace"],
+        artifact["partition"],
+        length=replay_length,
+        erasure_quantiles=erasure_quantiles,
+        prepared_context=prepared_context,
+    )
+    result = score_online_map_evidence(
+        evidence,
+        false_positive_rate=fpr,
+        fpr_policy=fpr_policy,
+    )
+    result["method"] = "online_map_phase2_adaptive_basis_replay"
+    result["basis_method"] = "reliability_erasure_elimination_v1"
+    result["basis_selection"] = evidence["basis_selection"]
     for field in ("prompt_idx", "watermark"):
         if field in record:
             result[field] = record[field]

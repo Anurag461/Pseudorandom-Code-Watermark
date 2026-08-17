@@ -13,11 +13,14 @@ from detectors import detect_hoeffding, detect_online_hoeffding
 from low_entropy_replay import (
     effective_false_positive_rate,
     prepare_fixed_map_block_evidence,
+    prepare_online_adaptive_basis_context,
     prepare_online_map_evidence,
     prepare_reliability_adaptive_fixed_map_block_evidence,
+    prepare_reliability_adaptive_online_map_evidence,
     replay_cached_fixed_map_record,
     replay_cached_fixed_map_record_phase2,
     replay_cached_online_map_record,
+    replay_cached_online_map_record_phase2,
     score_online_map_evidence,
 )
 from online_prc import OnlinePRCEncoder, OnlinePRCKey, derive_document_seed
@@ -320,3 +323,66 @@ def test_phase2_zero_erasure_candidate_matches_phase1_rademacher_decision():
     assert phase2_rademacher["log_pvalue_upper"] == pytest.approx(
         phase1_rademacher["log_pvalue_upper"]
     )
+
+
+def test_online_phase2_zero_erasure_matches_phase1_decisions():
+    key = _key(seed=2029, weight=3, eta=0.15)
+    record = _record(key, length=64)
+    artifact = {
+        "online_key": key.to_dict(),
+        "partition": _partition(),
+        "T": 64,
+    }
+    context = prepare_online_adaptive_basis_context(key, 64)
+    phase1 = replay_cached_online_map_record(
+        artifact,
+        record,
+        false_positive_rate=1e-3,
+    )
+    phase2 = replay_cached_online_map_record_phase2(
+        artifact,
+        record,
+        false_positive_rate=1e-3,
+        erasure_quantiles=(0.0,),
+        prepared_context=context,
+    )
+    attenuation = (1.0 - 2.0 * key.noise_rate) ** key.check_weight
+    assert phase2["method"] == "online_map_phase2_adaptive_basis_replay"
+    assert phase2["basis_selection"]["basis_rank"] == phase1["r"]
+    assert phase2["statistic"] == pytest.approx(
+        attenuation * phase1["statistic"]
+    )
+    for calibration in ("hoeffding", "weighted_rademacher_chernoff"):
+        first = phase1["calibrations"][calibration]
+        second = phase2["calibrations"][calibration]
+        assert second["threshold"] == pytest.approx(
+            attenuation * first["threshold"]
+        )
+        assert second["decision"] == first["decision"]
+
+
+def test_online_phase2_basis_selection_excludes_observed_bits():
+    key = _key(seed=2030, weight=3, eta=0.15)
+    length = 64
+    probabilities = np.linspace(0.01, 0.99, length)
+    context = prepare_online_adaptive_basis_context(key, length)
+    first = prepare_reliability_adaptive_online_map_evidence(
+        key,
+        torch.zeros(length, dtype=torch.long),
+        probabilities,
+        _partition(),
+        prepared_context=context,
+    )
+    second = prepare_reliability_adaptive_online_map_evidence(
+        key,
+        torch.ones(length, dtype=torch.long),
+        probabilities,
+        _partition(),
+        prepared_context=context,
+    )
+    selection = first["basis_selection"]
+    assert selection["basis_sha256"] == second["basis_selection"][
+        "basis_sha256"
+    ]
+    assert "one_time_pad" in selection["selection_excludes"]
+    assert "token_bucket_observations" in selection["selection_excludes"]

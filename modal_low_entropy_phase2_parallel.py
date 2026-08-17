@@ -92,6 +92,23 @@ def _parallel_result_cache_path(
     )
 
 
+def _online_parallel_result_cache_path(
+    source_tag: str,
+    n: int,
+    fpr: float,
+    generation_model_size: str,
+    num_prompts: int,
+    erasure_quantiles,
+) -> str:
+    grid = _grid_sha256(erasure_quantiles)[:12]
+    return (
+        f"/data/{source_tag}/low_entropy_phase2/online-parallel-v1/"
+        f"prefix-n{int(n)}/fpr-{_fpr_slug(fpr)}/"
+        f"prompts-{int(num_prompts)}/grid-{grid}/"
+        f"{_model_tag(generation_model_size)}_adaptive_basis.json"
+    )
+
+
 def _parallel_shard_cache_path(
     tag: str,
     config_fingerprint: str,
@@ -302,6 +319,173 @@ def resolve_parallel_phase2_run(
     }
 
 
+@app.function(volumes={"/data": data_vol}, cpu=1.0, timeout=600)
+def resolve_parallel_online_phase2_run(
+    source_tag: str,
+    n: int,
+    t: int,
+    eta: float,
+    fpr: float = 1e-3,
+    num_prompts: int = 500,
+    generation_model_size: str = MODEL_SIZE,
+    expected_hoeffding_tp: int = -1,
+    expected_hoeffding_fp: int = -1,
+    erasure_quantiles: tuple[float, ...] = DEFAULT_ERASURE_QUANTILES,
+) -> dict:
+    """Resolve one saved online ceiling and a shorter detection prefix."""
+    import numpy as np
+    import torch
+    import adaptive_parity_basis as basis_module
+    import detectors as detectors_module
+    import low_entropy_replay as replay_module
+    import online_prc as online_module
+    import phase2_parallel as parallel_module
+    import weighted_rademacher as rademacher_module
+    from online_prc import OnlinePRCKey, materialize_supports, target_row_count
+
+    source_tag = str(source_tag).strip().strip("/")
+    if not source_tag or ".." in source_tag.split("/"):
+        raise ValueError("source_tag must be a safe relative Modal volume path")
+    n = int(n)
+    t = int(t)
+    eta = float(eta)
+    fpr = float(fpr)
+    num_prompts = int(num_prompts)
+    generation_model_size = _normalized_model_size(generation_model_size)
+    quantiles = tuple(float(value) for value in erasure_quantiles)
+    if n <= 0 or t <= 0 or num_prompts <= 0:
+        raise ValueError("n, t, and num_prompts must be positive")
+    if not 0.0 <= eta <= 0.5 or not 0.0 < fpr < 1.0:
+        raise ValueError("eta or fpr is outside its valid range")
+    if not quantiles or any(not 0.0 <= value <= 1.0 for value in quantiles):
+        raise ValueError("erasure quantiles must be nonempty and in [0, 1]")
+
+    data_vol.reload()
+    artifact_path = f"/data/{source_tag}/artifacts.pt"
+    wm_directory = f"/data/{source_tag}/wm"
+    if not os.path.isfile(artifact_path):
+        raise FileNotFoundError(artifact_path)
+    artifact = torch.load(artifact_path, weights_only=False, map_location="cpu")
+    actual_fingerprint = str(artifact.get("artifact_fingerprint", ""))
+    if not actual_fingerprint:
+        raise ValueError("online artifact is missing its fingerprint")
+    source_T = int(artifact.get("T", artifact.get("n", -1)))
+    if source_T < n:
+        raise ValueError(
+            f"online source T={source_T} is shorter than requested n={n}"
+        )
+    model_size = _normalized_model_size(
+        artifact.get(
+            "generation_model_size",
+            artifact.get("config_sig", {}).get("generation_model_size", MODEL_SIZE),
+        )
+    )
+    if model_size != generation_model_size:
+        raise ValueError(
+            f"online artifact model is {model_size}, expected "
+            f"{generation_model_size}"
+        )
+    if "online_key" not in artifact or "partition" not in artifact:
+        raise ValueError("online artifact is missing its key or partition")
+    key = OnlinePRCKey.from_dict(artifact["online_key"])
+    if key.check_weight != t or not np.isclose(
+        key.noise_rate, eta, rtol=0.0, atol=1e-12
+    ):
+        raise ValueError("online artifact t or eta does not match the request")
+    supports = materialize_supports(n, key)
+    r = int(target_row_count(n, key))
+    if supports.shape != (r, t):
+        raise ValueError("online prefix support table has the wrong shape")
+    pivots = supports[:, -1] if r else np.empty(0, dtype=np.int64)
+    if r and (
+        np.unique(pivots).size != r
+        or np.any(supports[:, :-1] >= pivots[:, None])
+    ):
+        raise ValueError("online causal supports do not form a full-rank basis")
+
+    watermarked_present = sum(
+        os.path.exists(os.path.join(wm_directory, f"wm_{idx:04d}.pt"))
+        for idx in range(num_prompts)
+    )
+    if watermarked_present != num_prompts:
+        raise FileNotFoundError(
+            f"online watermarked cache has {watermarked_present}/"
+            f"{num_prompts} records"
+        )
+    null_candidates = [
+        candidate
+        for candidate in _null_candidates(n, num_prompts, generation_model_size)
+        if candidate["present"] == num_prompts
+    ]
+    if not null_candidates:
+        raise FileNotFoundError(
+            f"no complete {generation_model_size} null cache with T >= {n}"
+        )
+    null_cache = null_candidates[0]
+
+    code_sha256 = {
+        "modal_low_entropy_phase2_parallel.py": _source_sha256(__file__),
+        "phase2_parallel.py": _source_sha256(parallel_module.__file__),
+        "low_entropy_replay.py": _source_sha256(replay_module.__file__),
+        "adaptive_parity_basis.py": _source_sha256(basis_module.__file__),
+        "weighted_rademacher.py": _source_sha256(rademacher_module.__file__),
+        "detectors.py": _source_sha256(detectors_module.__file__),
+        "online_prc.py": _source_sha256(online_module.__file__),
+    }
+    config = {
+        "construction": "online_causal_prc_v1",
+        "detector": "reliability_adaptive_basis_v1",
+        "source_tag": source_tag,
+        "source_T": source_T,
+        "generation_model": _model_display(generation_model_size),
+        "generation_model_size": generation_model_size,
+        "n": n,
+        "T": n,
+        "t": t,
+        "eta": eta,
+        "r": r,
+        "target_fpr": fpr,
+        "fpr_policy": "one_shot",
+        "num_prompts": num_prompts,
+        "erasure_quantiles": list(quantiles),
+        "online_key_sha256": key.fingerprint,
+    }
+    run_identity = {
+        "parallel_result_schema_version": PHASE2_PARALLEL_RESULT_SCHEMA_VERSION,
+        "shard_schema_version": PHASE2_SHARD_SCHEMA_VERSION,
+        "config": config,
+        "artifact_fingerprint": actual_fingerprint,
+        "null_cache_T": int(null_cache["T"]),
+        "detector_source_sha256": code_sha256,
+    }
+    config_fingerprint = phase2_config_fingerprint(run_identity)
+    return {
+        "config": config,
+        "run_identity": run_identity,
+        "config_fingerprint": config_fingerprint,
+        "tag": source_tag,
+        "artifact_path": artifact_path,
+        "artifact_fingerprint": actual_fingerprint,
+        "wm_directory": wm_directory,
+        "null_directory": null_cache["directory"],
+        "null_cache_T": int(null_cache["T"]),
+        "detector_source_sha256": code_sha256,
+        "expected_hoeffding_tp": int(expected_hoeffding_tp),
+        "expected_hoeffding_fp": int(expected_hoeffding_fp),
+        "authoritative_baseline_registered": bool(
+            expected_hoeffding_tp >= 0 and expected_hoeffding_fp >= 0
+        ),
+        "remote_result_path": _online_parallel_result_cache_path(
+            source_tag,
+            n,
+            fpr,
+            generation_model_size,
+            num_prompts,
+            quantiles,
+        ),
+    }
+
+
 @app.function(volumes={"/data": data_vol}, cpu=1.0, timeout=3600)
 def replay_fixed_phase2_prompt_shard(request: dict) -> dict:
     """Score one resumable CPU prompt shard for both source classes."""
@@ -468,6 +652,261 @@ def replay_fixed_phase2_prompt_shard(request: dict) -> dict:
                     "selected_erasure_quantile": selection[
                         "erasure_quantile"
                     ],
+                    "erased_columns": selection["erased_columns"],
+                    "erased_column_rank": selection["erased_column_rank"],
+                    "erasure_free_rows": selection["erasure_free_rows"],
+                    "log_predicted_J": _finite_or_none(
+                        selection["log_predicted_J"]
+                    ),
+                    "degree_minimum": selection["degree_minimum"],
+                    "degree_mean": selection["degree_mean"],
+                    "degree_median": selection["degree_median"],
+                    "degree_maximum": selection["degree_maximum"],
+                    "basis_sha256": selection["basis_sha256"],
+                    "source_path": path,
+                    "tokens_sha256": _semantic_array_sha256(
+                        record["tokens"][:n], np.int64
+                    ),
+                    "p_trace_sha256": _semantic_array_sha256(
+                        probability_prefix, np.float64
+                    ),
+                }
+            )
+
+    payload = {
+        "shard_schema_version": PHASE2_SHARD_SCHEMA_VERSION,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "config_fingerprint": expected_config,
+        "artifact_fingerprint": setup["artifact_fingerprint"],
+        "detector_source_sha256": setup["detector_source_sha256"],
+        "prompt_indices": prompt_indices,
+        "record_count": len(records),
+        "records_sha256": stable_json_sha256(records),
+        "cpu_seconds": time.perf_counter() - started,
+        "records": records,
+    }
+    validate_phase2_shard_payload(
+        payload,
+        expected_config_fingerprint=expected_config,
+        expected_basis_rank=r,
+    )
+    _atomic_write_json(shard_path, payload)
+    data_vol.commit()
+    return {
+        "remote_shard_path": shard_path,
+        "prompt_indices": prompt_indices,
+        "record_count": len(records),
+        "cached": False,
+        "seconds": payload["cpu_seconds"],
+        "records_sha256": payload["records_sha256"],
+        "config_fingerprint": expected_config,
+    }
+
+
+@app.function(volumes={"/data": data_vol}, cpu=1.0, timeout=3600)
+def replay_online_phase2_prompt_shard(request: dict) -> dict:
+    """Score one resumable online-prefix prompt shard for all four controls."""
+    import numpy as np
+    import torch
+    from detectors import prepare_online_map_prefix_context, tensor_sha256
+    from low_entropy_replay import (
+        prepare_online_adaptive_basis_context,
+        replay_cached_online_map_record,
+        replay_cached_online_map_record_phase2,
+    )
+    from online_prc import OnlinePRCKey
+
+    def _semantic_array_sha256(values, dtype) -> str:
+        if torch.is_tensor(values):
+            array = values.detach().cpu().numpy()
+        else:
+            array = np.asarray(values)
+        array = np.ascontiguousarray(array, dtype=dtype)
+        header = f"{array.dtype}:{array.shape}:".encode()
+        return hashlib.sha256(header + array.tobytes()).hexdigest()
+
+    def _finite_or_none(value):
+        number = float(value)
+        return number if np.isfinite(number) else None
+
+    started = time.perf_counter()
+    setup = request["setup"]
+    prompt_indices = [int(index) for index in request["prompt_indices"]]
+    if (
+        not prompt_indices
+        or prompt_indices != sorted(prompt_indices)
+        or len(set(prompt_indices)) != len(prompt_indices)
+    ):
+        raise ValueError("prompt shard indices must be nonempty and unique")
+    expected_config = phase2_config_fingerprint(setup["run_identity"])
+    if expected_config != setup["config_fingerprint"]:
+        raise ValueError("parallel online Phase 2 setup fingerprint is inconsistent")
+    shard_path = _parallel_shard_cache_path(
+        setup["tag"], expected_config, prompt_indices
+    )
+    data_vol.reload()
+    if bool(request.get("reuse_shards", True)) and os.path.isfile(shard_path):
+        with open(shard_path, "r", encoding="utf-8") as handle:
+            cached = json.load(handle)
+        cached_indices = validate_phase2_shard_payload(
+            cached,
+            expected_config_fingerprint=expected_config,
+            expected_basis_rank=int(setup["config"]["r"]),
+        )
+        if cached_indices != prompt_indices:
+            raise ValueError("cached online Phase 2 shard prompt order changed")
+        return {
+            "remote_shard_path": shard_path,
+            "prompt_indices": prompt_indices,
+            "record_count": len(cached["records"]),
+            "cached": True,
+            "seconds": time.perf_counter() - started,
+            "records_sha256": cached["records_sha256"],
+            "config_fingerprint": expected_config,
+        }
+
+    artifact = torch.load(
+        setup["artifact_path"], weights_only=False, map_location="cpu"
+    )
+    if artifact.get("artifact_fingerprint") != setup["artifact_fingerprint"]:
+        raise ValueError("online artifact changed after run resolution")
+    config = setup["config"]
+    n = int(config["n"])
+    r = int(config["r"])
+    fpr = float(config["target_fpr"])
+    quantiles = tuple(float(value) for value in config["erasure_quantiles"])
+    generation_model_size = str(config["generation_model_size"])
+    online_key = OnlinePRCKey.from_dict(artifact["online_key"])
+    phase1_context = prepare_online_map_prefix_context(online_key, n)
+    phase2_context = prepare_online_adaptive_basis_context(online_key, n)
+    expected_partition_sha256 = tensor_sha256(artifact["partition"])
+
+    records = []
+    for watermark, directory, prefix in (
+        (True, setup["wm_directory"], "wm"),
+        (False, setup["null_directory"], "null"),
+    ):
+        for prompt_idx in prompt_indices:
+            path = os.path.join(directory, f"{prefix}_{prompt_idx:04d}.pt")
+            record = torch.load(path, weights_only=False, map_location="cpu")
+            record_model = record.get("generation_model_size")
+            if record_model is None and generation_model_size != MODEL_SIZE:
+                raise ValueError(f"{path} lacks required 8B model metadata")
+            if record_model is not None and _normalized_model_size(
+                record_model
+            ) != generation_model_size:
+                raise ValueError(
+                    f"{path} belongs to model {record_model}, expected "
+                    f"{generation_model_size}"
+                )
+            if watermark:
+                if record.get("watermark") is not True:
+                    raise ValueError(f"{path} is not marked watermarked")
+                if int(record.get("prompt_idx", -1)) != prompt_idx:
+                    raise ValueError(f"{path} has the wrong prompt index")
+                stored_key = record.get("online_key_sha256")
+                if stored_key is not None and stored_key != online_key.fingerprint:
+                    raise ValueError(f"{path} uses a different online key")
+                stored_artifact = record.get("artifact_fingerprint")
+                if (
+                    stored_artifact is not None
+                    and stored_artifact != setup["artifact_fingerprint"]
+                ):
+                    raise ValueError(f"{path} uses a different online artifact")
+            elif record.get("watermark") not in (False, None):
+                raise ValueError(f"{path} is not a null record")
+            stored_partition = record.get("partition_sha256")
+            if (
+                stored_partition is not None
+                and stored_partition != expected_partition_sha256
+            ):
+                raise ValueError(f"{path} uses a different token partition")
+            stored_prompt = record.get("prompt_token_ids")
+            if stored_prompt is not None:
+                expected_prompt = torch.as_tensor(
+                    artifact["prompt_ids_list"][prompt_idx], dtype=torch.long
+                ).reshape(-1)
+                observed_prompt = torch.as_tensor(
+                    stored_prompt, dtype=torch.long
+                ).reshape(-1)
+                if not torch.equal(observed_prompt, expected_prompt):
+                    raise ValueError(f"{path} has the wrong prompt token IDs")
+            for field in ("tokens", "p_trace"):
+                if field not in record:
+                    raise KeyError(f"{path} is missing required field {field!r}")
+            if len(record["tokens"]) < n or len(record["p_trace"]) < n:
+                raise ValueError(f"{path} is shorter than the required n={n}")
+            probability_prefix = np.asarray(
+                record["p_trace"][:n], dtype=np.float64
+            )
+            if (
+                not np.all(np.isfinite(probability_prefix))
+                or np.any(probability_prefix < 0.0)
+                or np.any(probability_prefix > 1.0)
+            ):
+                raise ValueError(f"{path} contains invalid partition probabilities")
+            record["prompt_idx"] = prompt_idx
+            record["watermark"] = watermark
+            phase1 = replay_cached_online_map_record(
+                artifact,
+                record,
+                length=n,
+                false_positive_rate=fpr,
+                fpr_policy="one_shot",
+                prepared_context=phase1_context,
+            )
+            phase2 = replay_cached_online_map_record_phase2(
+                artifact,
+                record,
+                length=n,
+                false_positive_rate=fpr,
+                fpr_policy="one_shot",
+                erasure_quantiles=quantiles,
+                prepared_context=phase2_context,
+            )
+            phase0_hoeffding = phase1["calibrations"]["hoeffding"]
+            phase1_rademacher = phase1["calibrations"][
+                "weighted_rademacher_chernoff"
+            ]
+            phase2_hoeffding = phase2["calibrations"]["hoeffding"]
+            phase2_rademacher = phase2["calibrations"][
+                "weighted_rademacher_chernoff"
+            ]
+            selection = phase2["basis_selection"]
+            if int(selection["basis_rank"]) != r:
+                raise AssertionError(f"{path} selected a rank-deficient basis")
+            records.append(
+                {
+                    "prompt_idx": prompt_idx,
+                    "watermark": watermark,
+                    "phase0_hoeffding_decision": phase0_hoeffding["decision"],
+                    "phase0_hoeffding_threshold": _finite_or_none(
+                        phase0_hoeffding["threshold"]
+                    ),
+                    "phase1_rademacher_decision": phase1_rademacher["decision"],
+                    "phase1_statistic": _finite_or_none(phase1["statistic"]),
+                    "phase1_V": _finite_or_none(phase1["V"]),
+                    "phase1_threshold": _finite_or_none(
+                        phase1_rademacher["threshold"]
+                    ),
+                    "phase1_log_pvalue_upper": _finite_or_none(
+                        phase1_rademacher["log_pvalue_upper"]
+                    ),
+                    "phase2_hoeffding_decision": phase2_hoeffding["decision"],
+                    "phase2_hoeffding_threshold": _finite_or_none(
+                        phase2_hoeffding["threshold"]
+                    ),
+                    "phase2_adaptive_decision": phase2_rademacher["decision"],
+                    "phase2_statistic": _finite_or_none(phase2["statistic"]),
+                    "phase2_V": _finite_or_none(phase2["V"]),
+                    "phase2_threshold": _finite_or_none(
+                        phase2_rademacher["threshold"]
+                    ),
+                    "phase2_log_pvalue_upper": _finite_or_none(
+                        phase2_rademacher["log_pvalue_upper"]
+                    ),
+                    "basis_rank": int(selection["basis_rank"]),
+                    "selected_erasure_quantile": selection["erasure_quantile"],
                     "erased_columns": selection["erased_columns"],
                     "erased_column_rank": selection["erased_column_rank"],
                     "erasure_free_rows": selection["erasure_free_rows"],
@@ -779,6 +1218,66 @@ def _run_parallel(
     _save_local_result(result, output)
 
 
+def _run_parallel_online(
+    *,
+    source_tag: str,
+    n: int,
+    t: int,
+    eta: float,
+    fpr: float,
+    num_prompts: int,
+    generation_model_size: str,
+    expected_hoeffding_tp: int,
+    expected_hoeffding_fp: int,
+    erasure_quantiles: tuple[float, ...],
+    shard_size: int,
+    max_containers: int,
+    reuse_shards: bool,
+    output: str,
+) -> None:
+    shard_size = int(shard_size)
+    max_containers = int(max_containers)
+    if max_containers <= 0:
+        raise ValueError("max_containers must be positive")
+    setup = resolve_parallel_online_phase2_run.remote(
+        source_tag=source_tag,
+        n=n,
+        t=t,
+        eta=eta,
+        fpr=fpr,
+        num_prompts=num_prompts,
+        generation_model_size=generation_model_size,
+        expected_hoeffding_tp=expected_hoeffding_tp,
+        expected_hoeffding_fp=expected_hoeffding_fp,
+        erasure_quantiles=erasure_quantiles,
+    )
+    prompt_shards = phase2_prompt_shards(num_prompts, shard_size)
+    requests = [
+        {
+            "setup": setup,
+            "prompt_indices": prompt_indices,
+            "reuse_shards": bool(reuse_shards),
+        }
+        for prompt_indices in prompt_shards
+    ]
+    worker = replay_online_phase2_prompt_shard.with_options(
+        max_containers=min(max_containers, len(requests))
+    )
+    started = time.perf_counter()
+    shard_summaries = list(worker.map(requests))
+    wall_seconds = time.perf_counter() - started
+    if len(shard_summaries) != len(prompt_shards):
+        raise AssertionError("parallel online Phase 2 shard count changed")
+    result = aggregate_parallel_phase2_run.remote(
+        setup,
+        shard_summaries,
+        wall_seconds,
+        shard_size,
+        max_containers,
+    )
+    _save_local_result(result, output)
+
+
 @app.local_entrypoint()
 def run(
     n: int,
@@ -813,6 +1312,49 @@ def run(
         num_prompts=num_prompts,
         generation_model_size=generation_model_size,
         expected_artifact_fingerprint=expected_artifact_fingerprint,
+        expected_hoeffding_tp=expected_hoeffding_tp,
+        expected_hoeffding_fp=expected_hoeffding_fp,
+        erasure_quantiles=quantiles,
+        shard_size=shard_size,
+        max_containers=max_containers,
+        reuse_shards=reuse_shards,
+        output=output,
+    )
+
+
+@app.local_entrypoint()
+def run_online(
+    source_tag: str,
+    n: int,
+    t: int,
+    eta: float,
+    generation_model_size: str = MODEL_SIZE,
+    fpr: float = 1e-3,
+    num_prompts: int = 500,
+    erasure_quantiles: str = "0,0.01,0.025,0.05,0.1,0.15,0.2,0.3",
+    shard_size: int = DEFAULT_SHARD_SIZE,
+    max_containers: int = DEFAULT_MAX_CONTAINERS,
+    reuse_shards: bool = True,
+    expected_hoeffding_tp: int = -1,
+    expected_hoeffding_fp: int = -1,
+    output: str = "",
+) -> None:
+    """Replay all four detector controls on a saved online prefix."""
+    quantiles = _parse_quantiles(erasure_quantiles)
+    if not output:
+        model = _model_tag(generation_model_size).replace("qwen3_", "")
+        output = (
+            f"outputs/low_entropy_phase2_online_parallel_n{n}_"
+            f"eta{eta:.2f}_{model}.json"
+        )
+    _run_parallel_online(
+        source_tag=source_tag,
+        n=n,
+        t=t,
+        eta=eta,
+        fpr=fpr,
+        num_prompts=num_prompts,
+        generation_model_size=generation_model_size,
         expected_hoeffding_tp=expected_hoeffding_tp,
         expected_hoeffding_fp=expected_hoeffding_fp,
         erasure_quantiles=quantiles,
