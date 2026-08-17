@@ -109,6 +109,46 @@ The corresponding `verify` and `verify_8b_n749` entry points independently
 check the saved record manifest, result identity count, source hashes, and
 soundness metadata.  Phase 0/1 caches are not overwritten.
 
+### Parallel replay for larger fixed runs
+
+`modal_low_entropy_phase2_parallel.py` distributes prompt shards across
+bounded CPU-only Modal containers.  Each shard scores both the watermarked and
+null record for its prompt indices, writes an immutable versioned shard cache,
+and returns only a compact summary.  A separate aggregation function rejects
+configuration mismatches, gaps, overlaps, checksum changes, duplicate source
+records, and rank-deficient selected bases before writing the final result.
+
+The generic entry point supports new `n`, `eta`, `r`, and model-size settings;
+it does not require the run to be registered in the two authoritative
+baseline fixtures:
+
+```bash
+MODAL_PROFILE=new-prc-watermark modal run \
+  modal_low_entropy_phase2_parallel.py::run \
+  --n 2048 \
+  --t 3 \
+  --eta 0.15 \
+  --r 2028 \
+  --generation-model-size 8B \
+  --shard-size 5 \
+  --max-containers 32
+```
+
+Completed shards are reused by default, so an interrupted run resumes without
+rescoring them.  Changing the artifact, detector source, FPR, erasure grid, or
+experiment configuration changes the shard fingerprint and cannot silently
+reuse stale work.  The aggregate reports all four useful controls in one pass:
+
+- original basis with Hoeffding;
+- original basis with weighted Rademacher;
+- adaptive basis with Hoeffding;
+- adaptive basis with weighted Rademacher.
+
+For moderate `n`, a shard size around 10 amortizes container startup.  For much
+larger `n`, use 2--5 prompts per shard and increase `max_containers` only as far
+as the desired Modal CPU concurrency.  No GPU or language-model loading is
+used during detection.
+
 ## Validity requirements
 
 The Rademacher guarantee conditions on the realized check magnitudes and
