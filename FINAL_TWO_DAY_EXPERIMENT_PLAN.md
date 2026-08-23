@@ -220,8 +220,8 @@ claim. Online PRC smoke TPR was 0%, 60%, then 100% from `T=400` onward; the
 three new baselines were 100% at every smoke prefix. TextSeal and Gumbel-Max
 also showed severe repetition/low distinct-n on several prompts, so their
 detection must be interpreted with quality/diversity. Gumbel-Max was
-seed-deterministic at fixed batch shape, but the released power-form comparison
-path was sensitive to batch shape.
+seed-deterministic at fixed batch shape, with batch-shape sensitivity later
+localized to model-logit/numerical variation rather than the power formula.
 
 Exact integration/smoke campaign spend was `1.39371804` dollars,
 including fail-closed diagnostics and controlled seed checks; it remained well
@@ -233,6 +233,37 @@ for Gumbel-Max. The resulting 500-prompt projection is 14--18 dollars and
 ready, but the 500-prompt comparison remains incomplete and requires separate
 explicit approval. See `controlled_baseline_smoke_report.md` and
 `controlled_baseline_full_run_runbook.md`.
+
+Completed a user-approved five-prompt quality/diversity diagnostic on
+2026-08-22 (2026-08-23 UTC) before requesting scale-up. Cache-only prefix
+analysis generated no tokens. A second complete TextSeal seed reproduced the
+collapse: median distinct-3/repeated-4-gram rate at `T=1024` changed from
+`0.3503/0.6405` to `0.3033/0.6934`. Under the paper decoding regime
+(`temperature=0.8`, `top_p=0.9`, `T=400`), TextSeal's median
+distinct-3/repetition was `0.6910/0.2821` versus vanilla's `0.8920/0.0605`;
+TextSeal was materially worse on three prompts, nearly equal on one, and
+better on one. Repeated TextSeal 4-gram events occurred at lower conditional
+entropy than novel events on all five prompts, an association rather than a
+causal or cross-model result.
+
+The exact log-space Gumbel argmax matched the released power form token for
+token through 400 tokens at batch sizes 1 and 5. The earlier batch-shape
+sensitivity is therefore not a power-form underflow bug; it reflects
+batch-dependent model logits/numerical execution amplified by deterministic
+autoregression. An offline project-Qwen/Hugging-Face check retained a strict
+failure (`8.726e-4` maximum batch-5 JSD versus the predeclared `1e-4` limit),
+while all top-1 tokens agreed and native Hugging Face itself showed larger
+batch-1/batch-5 variation (`1.622e-3` maximum JSD). The discrepancy limits
+bitwise portability but does not invalidate the internally controlled,
+fixed-batch project-Qwen comparison.
+
+Exact diagnostic spend was `0.17113157` dollars (`0.14751330` H100,
+`0.00919542` CPU, `0.01442285` memory), below its 2-dollar cap. The bounded
+generation worker ran `78.234` seconds and peaked at 17,668,689,920 bytes CUDA
+allocated; the dual-model parity check peaked at 33,229,244,928 bytes. No full
+run was launched. The 14--18-dollar, 20--35-minute full-run estimate is
+unchanged. See `controlled_baseline_diagnostic_report.md` and the diagnostic
+cost/artifact manifests in `outputs/`.
 
 Dependency incompatibilities may extend the integration wall time. Stop after
 the smoke rather than launching 500-prompt production automatically; scaling

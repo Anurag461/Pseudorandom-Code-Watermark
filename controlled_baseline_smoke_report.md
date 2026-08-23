@@ -87,8 +87,11 @@ No comparison should treat these p-values as identically calibrated, and PRC
 - Gumbel-Max was deterministic across seeds when prompt and batch shape were
   held fixed: both batch-1 runs had token hash
   `7325894598cca4da9db2d0818fd35103fb43d7d733607e65a958819817c6632f`.
-  The batch-5 prompt-0 hash differed, establishing batch-shape sensitivity in
-  the released power-form `r^(1/p)` comparison path. This is not an RNG failure.
+  The batch-5 prompt-0 hash differed, establishing batch-shape sensitivity.
+  A follow-up diagnostic found the released power form and exact log-space
+  equivalent token-identical at both batch shapes, locating the sensitivity in
+  batch-dependent logits/numerical execution rather than the argmax formula.
+  This is not an RNG failure.
 
 ## Quality sanity check
 

@@ -18,6 +18,12 @@ from baseline_comparison.adapters import (
     TextSealAdapter,
 )
 from baseline_comparison.config import GENERATION_SETTINGS, PREFIX_LENGTHS
+from baseline_comparison.diagnostic import (
+    analyze_sequence,
+    longest_periodic_run,
+    repeated_ngram_events,
+    stable_power_argmax,
+)
 from baseline_comparison.schema import PromptLevelResult
 from baseline_comparison.smoke_runner import _validated_full_request
 from baseline_comparison.scoring import (
@@ -41,6 +47,39 @@ def test_deduplicate_repeated_and_overlapping_context_token_tuples():
     assert deduplicated_positions(tokens, 3) == [4, 5, 6, 7, 9]
     # Explicitly selecting the first mathematically eligible position is supported.
     assert deduplicated_positions(tokens, 3, start_position=3) == [3, 4, 5, 6, 7, 9]
+
+
+def test_diagnostic_repeat_onset_and_periodic_loop_definition():
+    tokens = [90, 91, 1, 2, 3, 1, 2, 3, 1, 2, 3, 77]
+    repeats = repeated_ngram_events(tokens, n=4)
+    assert repeats["first_onset_tokens"] == 9
+    assert repeats["first_recurrence_gap"] == 3
+    loop = longest_periodic_run(tokens)
+    assert loop["found"] is True
+    assert loop["period"] == 3
+    assert loop["onset_index"] == 2
+    assert loop["span_tokens"] == 9
+
+
+def test_diagnostic_entropy_association_is_finite_and_prefix_local():
+    prelude = list(range(100, 112))
+    tokens = prelude + [1, 2, 3] * 20
+    entropies = [2.0] * len(prelude) + [0.25] * (len(tokens) - len(prelude))
+    logprobs = [-1.0] * len(tokens)
+    result = analyze_sequence(tokens, entropies, logprobs)
+    assert result["repeated_4gram"]["event_count"] > 0
+    assert result["longest_periodic_run"]["period"] == 3
+    assert result["longest_periodic_run"]["during_minus_pre_entropy"] < 0
+    assert math.isfinite(result["base_entropy_mean"])
+
+
+def test_stable_gumbel_power_argmax_matches_safe_power_form():
+    probabilities = np.asarray([0.45, 0.30, 0.20, 0.05])
+    uniforms = np.asarray([0.2, 0.8, 0.7, 0.9])
+    expected = int(np.argmax(np.power(uniforms, 1.0 / probabilities)))
+    assert stable_power_argmax(probabilities, uniforms) == expected
+    with pytest.raises(ValueError):
+        stable_power_argmax([0.4, 0.4], [0.1, 0.9])
 
 
 def test_known_gamma_cases_and_threshold():

@@ -61,6 +61,48 @@ image = (
     .add_local_python_source("qwen", "prc", "online_prc", "detectors")
 )
 
+# Hugging Face added native Qwen3 support after the official-baseline image's
+# pinned Transformers release.  Keep the parity reference in an independent,
+# separately pinned image so the TextSeal/SynthID environment remains intact.
+HF_PARITY_DEPENDENCIES = (
+    "torch==2.4.0",
+    "transformers==4.51.3",
+    "tokenizers==0.21.1",
+    "huggingface-hub==0.30.2",
+    "safetensors==0.4.5",
+    "numpy==1.26.0",
+    "scipy==1.14.1",
+)
+HF_PARITY_IMAGE_DEFINITION = {
+    "python": "3.11",
+    "base": "modal.Image.debian_slim",
+    "dependencies": list(HF_PARITY_DEPENDENCIES),
+    "network_model_downloads": False,
+}
+HF_PARITY_IMAGE_SHA256 = hashlib.sha256(
+    json.dumps(HF_PARITY_IMAGE_DEFINITION, sort_keys=True, separators=(",", ":")).encode()
+).hexdigest()
+parity_image = (
+    modal.Image.debian_slim(python_version="3.11")
+    .pip_install(*HF_PARITY_DEPENDENCIES)
+    .env(
+        {
+            "HF_HOME": "/cache/hf",
+            "HF_HUB_CACHE": "/cache/hf",
+            "HF_HUB_OFFLINE": "1",
+            "TRANSFORMERS_OFFLINE": "1",
+            "PRC_MODEL_CACHE_DIR": "/cache/models",
+            "PRC_MODEL_SIZE": "8B",
+            "PRC_MODEL_VARIANT": "base",
+            "TOKENIZERS_PARALLELISM": "false",
+            "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
+        }
+    )
+    .add_local_file("prompts.jsonl", PROMPTS_PATH, copy=True)
+    .add_local_dir("baseline_comparison", "/root/baseline_comparison", copy=True)
+    .add_local_python_source("qwen")
+)
+
 hf_cache = modal.Volume.from_name("prc-hf-cache", create_if_missing=False)
 data_volume = modal.Volume.from_name("prc-data", create_if_missing=False)
 app = modal.App(APP_NAME, image=image)
@@ -495,6 +537,37 @@ def official_reference_checks_remote() -> dict:
 
 
 @app.function(
+    cpu=2.0,
+    memory=4096,
+    volumes={"/data": data_volume},
+    timeout=1800,
+)
+def cache_diagnostic_remote(raw_path: str) -> dict:
+    """Read-only prefix/entropy/loop analysis with no model or generation."""
+    from baseline_comparison.diagnostic import run_cache_diagnostic
+
+    return run_cache_diagnostic(data_volume, raw_path)
+
+
+@app.function(
+    image=parity_image,
+    gpu="H100",
+    cpu=4.0,
+    memory=49_152,
+    volumes={"/cache": hf_cache},
+    timeout=3600,
+)
+def hf_logits_parity_remote() -> dict:
+    """Offline project-Qwen versus native Hugging Face logits parity."""
+    from baseline_comparison.diagnostic import run_hf_logits_parity
+
+    result = run_hf_logits_parity()
+    result["parity_image_definition"] = HF_PARITY_IMAGE_DEFINITION
+    result["parity_image_definition_sha256"] = HF_PARITY_IMAGE_SHA256
+    return result
+
+
+@app.function(
     cpu=4.0,
     memory=8192,
     volumes={"/data": data_volume, "/cache": hf_cache},
@@ -575,6 +648,12 @@ class SmokeWorker:
         from baseline_comparison.smoke_runner import run_stochastic_seed_check
 
         return run_stochastic_seed_check(data_volume, raw_path)
+
+    @modal.method()
+    def scientific_diagnostic(self, raw_path: str) -> dict:
+        from baseline_comparison.diagnostic import run_generation_diagnostic
+
+        return run_generation_diagnostic(data_volume, raw_path)
 
 
 @app.cls(
@@ -1079,6 +1158,115 @@ def resume_smoke_entrypoint(
 @app.local_entrypoint(name="gpu-diagnostic")
 def gpu_diagnostic_entrypoint():
     print(json.dumps(SmokeWorker().diagnose.remote(), indent=2, sort_keys=True))
+
+
+@app.local_entrypoint(name="diagnostic-cache")
+def diagnostic_cache_entrypoint(
+    raw_path: str = (
+        "/data/controlled_baseline_smoke/20260823T020321Z/generated_sequences.pt"
+    ),
+):
+    """Run the authorized no-generation diagnostic phase and write artifacts."""
+    from baseline_comparison.diagnostic import write_cache_diagnostic_artifacts
+
+    cost_gate = {
+        "hard_cap_usd": 2.0,
+        "phase_expected_usd": 0.05,
+        "generation_authorized": False,
+        "passed": True,
+    }
+    if cost_gate["phase_expected_usd"] > cost_gate["hard_cap_usd"]:
+        raise RuntimeError("cache diagnostic estimate exceeds the diagnostic hard cap")
+    payload = cache_diagnostic_remote.remote(raw_path)
+    if payload.get("generation_attempts") != 0:
+        raise AssertionError("cache diagnostic attempted generation")
+    written = write_cache_diagnostic_artifacts(payload, Path.cwd())
+    print(
+        json.dumps(
+            {
+                "status": payload["status"],
+                "mode": payload["mode"],
+                "row_count": len(payload["rows"]),
+                "summary_count": len(payload["summary"]),
+                "artifacts": written,
+                "cost_gate": cost_gate,
+                "billing_status": "pending_exact_modal_dashboard_reconciliation",
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@app.local_entrypoint(name="diagnostic-generation")
+def diagnostic_generation_entrypoint(
+    raw_path: str = (
+        "/data/controlled_baseline_smoke/20260823T020321Z/generated_sequences.pt"
+    ),
+):
+    """Run the authorized bounded H100 diagnostic matrix once."""
+    from baseline_comparison.diagnostic import write_generation_diagnostic_artifacts
+
+    cost_gate = {
+        "campaign_hard_cap_usd": 2.0,
+        "phase_expected_usd": 0.50,
+        "worker_count": 1,
+        "requested_gpu": "H100",
+        "full_500_prompt_run_authorized": False,
+        "passed": True,
+    }
+    if cost_gate["phase_expected_usd"] > cost_gate["campaign_hard_cap_usd"]:
+        raise RuntimeError("generation diagnostic estimate exceeds the diagnostic hard cap")
+    payload = SmokeWorker().scientific_diagnostic.remote(raw_path)
+    written = write_generation_diagnostic_artifacts(payload, Path.cwd())
+    print(
+        json.dumps(
+            {
+                "status": payload["status"],
+                "matrix": payload["matrix"],
+                "runtime": payload["runtime"],
+                "remote_generation_artifact": payload["remote_generation_artifact"],
+                "artifacts": written,
+                "cost_gate": cost_gate,
+                "billing_status": "pending_exact_modal_dashboard_reconciliation",
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@app.local_entrypoint(name="diagnostic-logits-parity")
+def diagnostic_logits_parity_entrypoint():
+    """Run the final authorized Qwen integration parity check."""
+    from baseline_comparison.diagnostic import write_logits_parity_artifact
+
+    cost_gate = {
+        "campaign_hard_cap_usd": 2.0,
+        "phase_expected_usd": 0.30,
+        "requested_gpu": "H100",
+        "worker_count": 1,
+        "network_model_downloads_allowed": False,
+        "passed": True,
+    }
+    if cost_gate["phase_expected_usd"] > cost_gate["campaign_hard_cap_usd"]:
+        raise RuntimeError("logits parity estimate exceeds the diagnostic hard cap")
+    payload = hf_logits_parity_remote.remote()
+    written = write_logits_parity_artifact(payload, Path.cwd())
+    print(
+        json.dumps(
+            {
+                "status": payload["status"],
+                "passed": payload["passed"],
+                "runtime": payload["runtime"],
+                "artifact": written,
+                "cost_gate": cost_gate,
+                "billing_status": "pending_exact_modal_dashboard_reconciliation",
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
 
 
 @app.local_entrypoint(name="gumbel-determinism")

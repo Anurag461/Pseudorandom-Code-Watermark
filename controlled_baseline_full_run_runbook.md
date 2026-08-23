@@ -107,8 +107,16 @@ CUDA allocation/reservation, actual GPU name, image ID, task ID, and app URL.
 - Interpret detection jointly with quality and diversity. In particular,
   inspect TextSeal/Gumbel repetition and distinct-n distributions, not only
   median NLL/perplexity.
-- Gumbel is seed-deterministic at fixed batch shape, but the released power-form
-  path showed batch-shape sensitivity. Keep batch size 5 fixed for production.
+- Gumbel is seed-deterministic at fixed batch shape. The released power form
+  and diagnostic log-space form were token-identical at batch sizes 1 and 5;
+  the remaining batch-shape sensitivity comes from model logits/numerical
+  execution. Keep batch size, prompt grouping/order, hardware, key, and model
+  revision fixed for production.
+- Retain the strict project-Qwen/Hugging-Face parity discrepancy in provenance:
+  maximum batch-5 JSD was `8.726e-4` against a predeclared `1e-4` criterion,
+  though all top-1 tokens agreed and native Hugging Face itself had
+  `1.622e-3` maximum batch-shape JSD. Do not use this check to substitute the
+  Hugging Face implementation for the frozen project-Qwen path.
 
 The 50-prompt x five-seed diversity experiment remains separately unauthorized.
 The utilities `pairwise_token_agreement` and `self_bleu_token_ids` support its
