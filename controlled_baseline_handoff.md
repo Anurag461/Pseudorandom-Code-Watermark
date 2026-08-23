@@ -1,80 +1,85 @@
 # Controlled 8B baseline handoff
 
-Status: five-prompt smoke and batch-50 validation complete; 500-prompt
-generation not launched.
+Status: **500-prompt controlled comparison complete and validated** on branch
+`controlled-baseline-comparison`. The approved run did not launch the 50x5
+diversity experiment, 27B replication, or proxy-model experiments.
 
-The integration is in `baseline_comparison/`; focused local tests are in
-`tests/test_baseline_comparison.py`. The authoritative compact outputs are:
+## Frozen comparison
 
-- `outputs/controlled_baseline_smoke_prompt_level.jsonl` (258 rows);
-- `outputs/controlled_baseline_smoke_prefix_summary.csv` (24 rows);
-- `outputs/controlled_baseline_smoke_quality.csv` (40 rows);
-- `outputs/controlled_baseline_smoke_validation.json`;
-- `outputs/controlled_baseline_smoke_seed_validation.json`;
-- `outputs/controlled_baseline_smoke_cost_ledger.csv`;
-- `outputs/controlled_baseline_smoke_artifact_manifest.json`;
-- `baseline_comparison/pinned_sources_manifest.json`.
+- Run ID: `qwen3-8b-batch50-validation-20260823-v1`.
+- Qwen3-8B-Base revision:
+  `49e3418fbbbca6ecbdf9608b4d22e5a407081db4`.
+- Canonical prompts `0..499`; exactly 1,024 continuation tokens; temperature
+  1.0; top-p 1.0; reasoning off; production batch size 50.
+- Online PRC `t=3, eta=0.05` reused cache only; TextSeal `alpha=0.1`;
+  SynthID-Text depth 10 with the frequentist detector; pinned TextSeal
+  Gumbel-Max comparison path.
+- Context length 3, exact TextSeal-v2 `(context, token)` deduplication, prefixes
+  `128,256,400,512,768,1024`, and nominal `p < 1e-3` decisions.
 
-The follow-up diagnostic adds:
+## Results and artifacts
 
-- `controlled_baseline_diagnostic_report.md`;
-- `outputs/controlled_baseline_diagnostic_cache_analysis.json`;
-- `outputs/controlled_baseline_diagnostic_prefix_rows.jsonl` and summary CSV;
-- `outputs/controlled_baseline_diagnostic_generation.json`;
-- `outputs/controlled_baseline_diagnostic_generation_prefix_rows.jsonl` and
-  summary CSV;
-- `outputs/controlled_baseline_diagnostic_logits_parity.json`;
-- `outputs/controlled_baseline_diagnostic_cost_ledger.csv`;
-- `outputs/controlled_baseline_diagnostic_artifact_manifest.json`.
+The compact scientific report is `controlled_baseline_full_report.md`. The
+authoritative result directory is:
 
-All four methods scored all six prefixes. Official TextSeal and Google SynthID
-checks passed, exact-prefix deltas were zero, and PRC/null cache reuse generated
-zero tokens. TextSeal and SynthID replayed fixed seeds and changed across
-controlled second seeds. Gumbel was deterministic across seeds at equal batch
-shape but sensitive to batch shape. The follow-up diagnostic showed that the
-released power form and exact log-space form produce identical tokens at batch
-sizes 1 and 5, so the difference is attributable to batch-dependent model
-logits/numerical execution rather than power-form underflow.
+`outputs/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/`
 
-The quality fields are finite, but TextSeal and Gumbel show materially high
-repetition/low distinct-n on several smoke prompts. Treat that as part of the
-scientific result, not an adapter failure and not a reason to change settings.
-The TextSeal finding reproduced with a second complete seed and remained on
-three of five prompts at the paper's `temperature=0.8`, `top_p=0.9`, 400-token
-regime. The strict project-Qwen/Hugging-Face batch-5 JSD criterion failed, but
-all top-1 tokens agreed and native Hugging Face showed larger batch-shape
-variation. Full details and the exact `0.17113157`-dollar diagnostic spend are
-in `controlled_baseline_diagnostic_report.md`.
+It contains the 24-row detection summary, 4,000-row prompt-quality CSV,
+quality summaries, exact cost ledger, runtime record, audit, validation, and
+artifact/provenance manifests. The complete 24,000-row prompt-level JSONL is
+also present locally but intentionally not committed because it is 74.9 MB;
+its SHA-256 is
+`7b02c3b6393b4b988a40b3b22456876a89571158898cf93c9c55f4c5cd66d0b1`.
+Raw and scored shards remain on the Modal `prc-data` volume under the run ID.
 
-The standalone batch-50 validation passed all generation, exact-length,
-finite-value, cache-reuse, and SynthID-reference gates. It took 166.386 seconds
-and peaked at 25.93 GiB CUDA reserved on an 80 GB H100. Its finalized spend was
-`0.27034319` dollars. The measured full-run projection is $2.70 for generation
-and $3--4 including CPU scoring, with an 8--15-minute end-to-end estimate on ten
-available H100s. See `controlled_baseline_batch50_validation_report.md` and
-the corresponding validation/cost artifacts in `outputs/`. The cumulative
-controlled-baseline integration, smoke, diagnostic, and batch-validation spend
-was `1.83519280` dollars.
+All 1,500 generated continuations are exactly 1,024 tokens. All 24,000 rows
+pass schema/coverage validation, all 18,000 baseline exact-prefix evidence
+checks have zero delta, TextSeal official/common decisions agree, SynthID's
+official generation/reference check is exact, and PRC/null generation attempts
+are zero.
 
-The saved batch was subsequently scored on Modal CPU for `0.00604867` dollars,
-with zero GPU use or regeneration. All 2,400 rows and reference checks passed.
-Online PRC TPR rose from 18% at T=128 to 98% at T=1,024; the other three methods
-were 100% at all prefixes, and every method had 0/50 null false positives. The
-quality concern is material across the batch: median 1,024-token
-distinct-3/repetition was 0.692/0.275 for TextSeal and 0.463/0.532 for Gumbel,
-versus approximately 0.97/0.012 for PRC, SynthID, and null. See
-`controlled_baseline_batch50_eval_report.md`. Cumulative controlled-baseline
-spend is now `1.84124147` dollars. The remaining run is valid as a joint
-detection-quality-diversity comparison, not a quality-matched detector
-comparison. After a separate full-run approval:
+At prefixes `128,256,400,512,768,1024`, TPR is:
 
-```bash
-modal run baseline_comparison/modal_app.py::app.full-run \
-  --approval-token APPROVE_500_PROMPT_CONTROLLED_BASELINE \
-  --run-id qwen3-8b-controlled-batch50-20260823
-```
+| Method | 128 | 256 | 400 | 512 | 768 | 1024 |
+|---|---:|---:|---:|---:|---:|---:|
+| Online PRC | .136 | .410 | .678 | .800 | .938 | .960 |
+| TextSeal | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 |
+| SynthID-Text | 1.000 | 1.000 | .998 | .998 | 1.000 | 1.000 |
+| Gumbel-Max | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 |
 
-Then run `app.full-score`, download scored shards, and invoke the streaming
-finalizer exactly as documented in `controlled_baseline_full_run_runbook.md`.
-Do not launch the 50x5 diversity experiment or any 27B/proxy work under this
-approval.
+Observed false positives among 500 shared nulls are recorded per prompt and
+prefix in the audit. Five hundred nulls cannot tightly validate nominal 0.1%
+FPR, and the four analytic/frequentist p-value calibrations are not equivalent.
+
+At 1,024 tokens, median distinct-3/repetition is 0.968/0.014 for PRC,
+0.972/0.012 for SynthID, 0.721/0.262 for TextSeal, and 0.361/0.633 for Gumbel,
+versus 0.967/0.014 for null. Treat this as a joint
+detection-quality-diversity result, not a quality-matched detector ranking.
+
+## Runtime and billing
+
+All ten workers used H100 80GB GPUs. Mean 50-prompt shard time was 165.873
+seconds, and peak CUDA reserved memory was 27,839,692,800 bytes (25.93 GiB).
+Exact full comparison generation-and-scoring spend was **$2.65877380**, below
+the approved $5 cap. Cumulative controlled-baseline integration, smoke,
+diagnostic, and full-run spend is **$4.22362341**.
+
+Generation apps:
+
+- shard 0: `https://modal.com/apps/new-prc-watermark/main/ap-INjm5299E4tI0jNgiqOx4U`
+- shards 1--9: `https://modal.com/apps/new-prc-watermark/main/ap-5bAllM2qADIA80FtqwdTpX`
+
+Scoring apps:
+
+- shard 0: `https://modal.com/apps/new-prc-watermark/main/ap-TiyaTghkwGCV6xEcLkk8SU`
+- shards 1--9: `https://modal.com/apps/new-prc-watermark/main/ap-e3ENaI1x4V0MVHvbBTPVqi`
+
+## Reproduction and next approval gate
+
+The exact executed resume, scoring, download, and finalization commands are in
+`controlled_baseline_full_run_runbook.md`. Do not rerun production against this
+run ID: workers fail closed rather than overwrite saved shards.
+
+No further command is required for the controlled 500-prompt result. A new,
+explicit approval is required before launching the 50-prompt x five-seed
+diversity experiment, any 27B replication, or any proxy-model comparison.

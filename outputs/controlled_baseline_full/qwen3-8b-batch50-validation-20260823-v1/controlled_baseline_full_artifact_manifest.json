@@ -1,0 +1,30 @@
+{
+  "artifacts": [
+    {
+      "path": "controlled_baseline_full_prompt_level.jsonl",
+      "sha256": "7b02c3b6393b4b988a40b3b22456876a89571158898cf93c9c55f4c5cd66d0b1",
+      "size_bytes": 74941242
+    },
+    {
+      "path": "controlled_baseline_full_prefix_summary.csv",
+      "sha256": "872deceb4db2fd22bfcf5fea3a816c5d94f6a3acac17096e5a4394b80b251e17",
+      "size_bytes": 3105
+    },
+    {
+      "path": "controlled_baseline_full_quality.csv",
+      "sha256": "9643a475a5acce31589ab2dfa1b40b0a0e03de7bc8f5fa83c0b4559d601eed43",
+      "size_bytes": 1099066
+    },
+    {
+      "path": "controlled_baseline_full_quality_summary.csv",
+      "sha256": "f105ac0d3f8b8aa4e5bd400f8bf6b796134c580bc01d6873d0513b36d31bb34a",
+      "size_bytes": 2149
+    },
+    {
+      "path": "controlled_baseline_full_validation.json",
+      "sha256": "9f319a134a47a0e536085a4e95e333188e83e5c5bce334755d753c83f0513479",
+      "size_bytes": 663
+    }
+  ],
+  "status": "passed"
+}

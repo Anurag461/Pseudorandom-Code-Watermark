@@ -1,0 +1,71 @@
+{
+  "actual_gpu": "NVIDIA H100 80GB HBM3",
+  "aggregate_gpu_function_seconds": 1658.729092823,
+  "batch_size": 50,
+  "generation_app_urls": [
+    "https://modal.com/apps/new-prc-watermark/main/ap-INjm5299E4tI0jNgiqOx4U",
+    "https://modal.com/apps/new-prc-watermark/main/ap-5bAllM2qADIA80FtqwdTpX"
+  ],
+  "method_runtime": {
+    "gumbel_max": {
+      "mean_seconds_per_50_prompt_shard": 43.9719789981,
+      "mean_seconds_per_prompt": 0.879439579962,
+      "mean_tokens_per_second": 1164.4758576136,
+      "range_seconds_per_50_prompt_shard": [
+        43.246012053,
+        44.919788048
+      ]
+    },
+    "synthid_text": {
+      "mean_seconds_per_50_prompt_shard": 68.6968488443,
+      "mean_seconds_per_prompt": 1.373936976886,
+      "mean_tokens_per_second": 745.3502056645113,
+      "range_seconds_per_50_prompt_shard": [
+        67.548386858,
+        69.83995816
+      ]
+    },
+    "textseal": {
+      "mean_seconds_per_50_prompt_shard": 44.6793641848,
+      "mean_seconds_per_prompt": 0.893587283696,
+      "mean_tokens_per_second": 1146.1477435984048,
+      "range_seconds_per_50_prompt_shard": [
+        43.696893835,
+        45.567296726
+      ]
+    }
+  },
+  "model_load_seconds": {
+    "mean": 8.4952398022,
+    "range": [
+      7.634677142,
+      10.039393179
+    ]
+  },
+  "peak_cuda_allocated_bytes": 27704215040,
+  "peak_cuda_reserved_bytes": 27839692800,
+  "requested_gpu": "H100",
+  "run_id": "qwen3-8b-batch50-validation-20260823-v1",
+  "scoring_app_urls": [
+    "https://modal.com/apps/new-prc-watermark/main/ap-TiyaTghkwGCV6xEcLkk8SU",
+    "https://modal.com/apps/new-prc-watermark/main/ap-e3ENaI1x4V0MVHvbBTPVqi"
+  ],
+  "shard_function_seconds": [
+    166.386096582,
+    165.205999431,
+    164.752495104,
+    165.761244528,
+    169.090696439,
+    168.069183311,
+    164.118351795,
+    162.781580178,
+    167.012051695,
+    165.55139376
+  ],
+  "shard_function_seconds_mean": 165.8729092823,
+  "shard_function_seconds_range": [
+    162.781580178,
+    169.090696439
+  ],
+  "status": "passed"
+}

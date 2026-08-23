@@ -197,12 +197,12 @@ for the smoke. No manual researcher implementation is required; the user only
 needs to review scientifically meaningful discrepancies and authorize the
 smoke spend.
 
-| Work | Codex execution time | User involvement | Modal wall time | Expected cost | Cap |
+| Work | Status | User involvement | Modal wall time | Actual cost | Cap |
 | --- | ---: | --- | ---: | ---: | ---: |
-| Pin/integrate official code, tests, and 5-prompt smoke | 2--4 h | approve network/Modal access; review meaningful discrepancies | 20--40 min | $1--3 | $5 |
-| Three new 500-prompt baseline generations to 1024 | 1 h supervision | approve scale-up after smoke | 1--2 h | $15--30 | $45 |
-| 50-prompt x 5-seed diversity subset | 1 h | none after scale-up approval | 30--60 min | $2--5 | $8 |
-| Prefix detection and final analysis | 2--4 h | review conclusions | 30--90 min | <$2 | $5 |
+| Pin/integrate official code, tests, and 5-prompt smoke | complete | discrepancy reviewed | bounded smoke/diagnostic | $1.56484961 | $10 smoke + $2 diagnostic |
+| Three new 500-prompt baseline generations to 1024 | complete | explicitly approved after batch-50 gate | 162.8--169.1 s per shard | $2.65877380 including scoring | $5 |
+| 50-prompt x 5-seed diversity subset | not run | separate approval required | -- | $0 | $8 planned |
+| Prefix detection and final analysis | complete | review conclusions | CPU scoring included above | included above | included above |
 
 Completed integration and five-prompt smoke on 2026-08-22 (runs crossed
 2026-08-23 UTC). TextSeal is pinned to
@@ -229,9 +229,10 @@ below the 10-dollar smoke cap. Peak CUDA memory was 17,668,689,920 bytes
 allocated and 17,702,060,032 bytes reserved. Measured primary batch-5 times
 were 37.006 seconds for TextSeal, 40.504 seconds for SynthID, and 35.554 seconds
 for Gumbel-Max. Scaling those timings gave a prior batch-5 upper-bound
-projection of 14--18 dollars and 20--35 minutes with ten H100 shards. The
-500-prompt comparison remains incomplete and requires separate explicit
-approval. See `controlled_baseline_smoke_report.md` and
+projection of 14--18 dollars and 20--35 minutes with ten H100 shards. At that
+checkpoint, the 500-prompt comparison remained incomplete and required
+separate explicit approval; that approval was subsequently given. See
+`controlled_baseline_smoke_report.md` and
 `controlled_baseline_full_run_runbook.md`.
 
 Completed a user-approved five-prompt quality/diversity diagnostic on
@@ -281,8 +282,8 @@ recommended **$5 hard cap**. With ten H100s available, the measured compute
 floor is 2.77 minutes and practical end-to-end wall time is **8--15 minutes**,
 excluding unusual queue delay. See
 `controlled_baseline_batch50_validation_report.md` and the compact validation
-and cost artifacts in `outputs/`. The batch-50 gate is cleared, but no
-500-prompt generation has been launched; it still requires explicit approval.
+and cost artifacts in `outputs/`. The batch-50 gate cleared; the later approved
+full run reused this exact shard after SHA-256 validation.
 
 CPU-only scoring of that saved batch is also complete: 2,400 schema-valid rows
 cover 50 prompts, four methods, watermarked/shared-null samples, and all six
@@ -299,12 +300,48 @@ TextSeal had repetition above 0.1 on 41/50 prompts; Gumbel did so on 49/50.
 The loss grows with length and is already visible by T=400 for Gumbel. The
 frozen full run remains valid only as a joint detection-quality-diversity
 comparison, not as a quality-matched detector comparison. Exact CPU scoring
-cost was `0.00604867` dollars with zero GPU cost. No remaining generation was
-launched. See `controlled_baseline_batch50_eval_report.md`.
+cost was `0.00604867` dollars with zero GPU cost. At that checkpoint no
+remaining generation had been launched. See
+`controlled_baseline_batch50_eval_report.md`.
 
-Dependency incompatibilities may extend the integration wall time. Stop after
-the smoke rather than launching 500-prompt production automatically; scaling
-requires review of correctness, memory, throughput, and projected cost.
+Completed the explicitly approved 500-prompt controlled comparison on
+2026-08-23. The run reused validated prompt shard `0..49` and generated only
+prompts `50..499`, in nine additional batch-50 H100 workers. All 1,500 new
+TextSeal, SynthID, and Gumbel-Max continuations were exactly 1,024 tokens. The
+final artifact contains 24,000 unique prompt-prefix rows covering four methods,
+watermarked/shared-null samples, all 500 prompt indices, and all six exact
+prefixes. All schema, finite-value, official-reference, exact-prefix,
+deduplication, prompt-coverage, and PRC/null zero-regeneration checks passed.
+
+At `T={128,256,400,512,768,1024}`, online PRC TPR was
+`{0.136,0.410,0.678,0.800,0.938,0.960}`; TextSeal and Gumbel-Max were 1.0 at
+every prefix; SynthID was `{1.0,1.0,0.998,0.998,1.0,1.0}`. Observed false
+positives among 500 shared nulls were zero for PRC; one each for TextSeal at
+T=128 and T=768; one for SynthID at T=128; and one, one, and two for Gumbel at
+T=128, T=256, and T=400. All other method-prefix cells had zero. These counts
+do not tightly validate a nominal 0.1% FPR, and the four calibration types
+remain explicitly non-equivalent.
+
+The full quality result confirms the material tradeoff. Median
+distinct-3/repetition at 1,024 tokens was `0.968/0.014` for online PRC,
+`0.972/0.012` for SynthID, `0.721/0.262` for TextSeal, and `0.361/0.633` for
+Gumbel-Max, versus `0.967/0.014` for null. TextSeal and Gumbel therefore do not
+constitute quality-matched detection wins under this frozen decoding setting.
+
+Exact generation-and-scoring spend for all 500 prompts was `2.65877380`
+dollars, including the reused validation shard. The remaining nine generation
+shards cost `2.31950392` dollars and their CPU scoring cost `0.06287802`
+dollars. Cumulative controlled-baseline integration, smoke, diagnostics, and
+full-run spend is `4.22362341` dollars. Mean 50-prompt worker time was 165.873
+seconds and peak CUDA reserved memory was 27,839,692,800 bytes (25.93 GiB).
+See `controlled_baseline_full_report.md` and
+`outputs/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/`.
+The 50-by-five diversity experiment, 27B replication, and proxy-model
+experiments remain incomplete and unauthorized under this run.
+
+The dependency isolation, smoke, scientific diagnostic, and batch-50 gate were
+completed before production. Production was launched only after the required
+review and explicit approval.
 
 Use the TextSeal paper's frequentist SynthID detector for the main table so all
 methods have a nominal FPR. Validate its generation and g-values on a small
