@@ -1,0 +1,31 @@
+{
+  "artifacts": [
+    {
+      "bytes": 3224868,
+      "location": "modal_volume",
+      "path": "/data/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/generated/shard_00.pt",
+      "sha256": "0b7326fbfa43d55a39088e19cc2d69a696b7c81e8095b3ff6d291254392716da"
+    },
+    {
+      "location": "repository",
+      "path": "outputs/controlled_baseline_batch50_validation.json",
+      "sha256": "78e2eb8db05e03681b5d8ae92f689567131b4b6d86f540439b04e62c1a708055"
+    },
+    {
+      "location": "repository",
+      "path": "outputs/controlled_baseline_batch50_validation_cost_ledger.csv",
+      "sha256": "a2012d471125e55251a0b9008148b9d48ddcaf814eef851305479371655be304"
+    },
+    {
+      "location": "repository",
+      "path": "controlled_baseline_batch50_validation_report.md",
+      "sha256": "3c606f14d90e7c45418bf10277c73a01170e27021bd83369c7569d6abfeb9a42"
+    }
+  ],
+  "image_definition_sha256": "36ef066d906bf9df05801790b9327b8f2a8854d516add87b3f36d47afcd40217",
+  "integration_code_fingerprint": "6f9bc1c40ab864d0098ded7378eb3153c4e17b280dc84e4965108f9c014dbddc",
+  "modal_image_id": "im-eNSSVrVTKC9iLpsiR3gnV2",
+  "model_revision": "49e3418fbbbca6ecbdf9608b4d22e5a407081db4",
+  "run_id": "qwen3-8b-batch50-validation-20260823-v1",
+  "status": "passed"
+}

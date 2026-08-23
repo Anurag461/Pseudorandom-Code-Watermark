@@ -1,6 +1,7 @@
 # Controlled 8B baseline handoff
 
-Status: five-prompt smoke complete; 500-prompt generation not launched.
+Status: five-prompt smoke and batch-50 validation complete; 500-prompt
+generation not launched.
 
 The integration is in `baseline_comparison/`; focused local tests are in
 `tests/test_baseline_comparison.py`. The authoritative compact outputs are:
@@ -45,12 +46,15 @@ all top-1 tokens agreed and native Hugging Face showed larger batch-shape
 variation. Full details and the exact `0.17113157`-dollar diagnostic spend are
 in `controlled_baseline_diagnostic_report.md`.
 
-The old 14--18-dollar, 20--35-minute projection came from batch-5 smoke
-throughput. Production is now configured for batch 50, supported by the prior
-Qwen3-8B batch-125 memory result but not yet validated with all three baseline
-adapters. First run the standalone batch-50 validation in the runbook,
-reconcile its bill, and replace the estimate. The exact integration/smoke spend
-remains `1.39371804` dollars. After validation and separate full-run approval:
+The standalone batch-50 validation passed all generation, exact-length,
+finite-value, cache-reuse, and SynthID-reference gates. It took 166.386 seconds
+and peaked at 25.93 GiB CUDA reserved on an 80 GB H100. Its finalized spend was
+`0.27034319` dollars. The measured full-run projection is $2.70 for generation
+and $3--4 including CPU scoring, with an 8--15-minute end-to-end estimate on ten
+available H100s. See `controlled_baseline_batch50_validation_report.md` and
+the corresponding validation/cost artifacts in `outputs/`. The cumulative
+controlled-baseline integration, smoke, diagnostic, and batch-validation spend
+is `1.83519280` dollars. After separate full-run approval:
 
 ```bash
 modal run baseline_comparison/modal_app.py::app.full-run \

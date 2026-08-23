@@ -18,31 +18,31 @@ provided.
   workers. Each worker makes one generation call per method after one model
   load. Generated shards are committed before CPU scoring.
 
-## Batch-50 validation gate
+## Batch-50 validation gate (completed)
 
-Before requesting approval for all 500 prompts, run one standalone shard on
-prompt rows `0..49` through TextSeal, SynthID, and Gumbel at the frozen
-1,024-token settings:
+The standalone shard on prompt rows `0..49` completed successfully through
+TextSeal, SynthID, and Gumbel at the frozen 1,024-token settings:
 
 ```bash
 modal run baseline_comparison/modal_app.py::app.batch50-validation \
   --approval-token APPROVE_50_PROMPT_BATCH50_VALIDATION \
-  --run-id qwen3-8b-batch50-validation-20260823
+  --run-id qwen3-8b-batch50-validation-20260823-v1
 ```
 
-This validation has a separate 3-dollar cap. It must produce 50 exact-length
-outputs per method and remain at or below 70 GiB peak CUDA reserved memory.
-Reconcile its exact Modal bill and use its runtime to replace the old batch-5
-full-run estimate before requesting 500-prompt approval. If batch 50 fails,
-stop; batch 25 is the manual fallback and requires a fresh validation. Do not
-fall back automatically because Gumbel output depends on batch shape.
+It produced 50 exact-length outputs per method in 166.386 seconds and used
+27,839,692,800 bytes (25.93 GiB) peak CUDA reserved. The exact all-resource
+bill was $0.27034319. The raw artifact, fingerprints, per-method timings, and
+billing split are recorded in `controlled_baseline_batch50_validation_report.md`
+and `outputs/controlled_baseline_batch50_validation.json`.
 
 ## Approval gate
 
-Before generation, report the smoke result and the estimate measured from the
-batch-50 validation, then obtain explicit user approval for the 500-prompt run.
-The earlier 14--18-dollar, 20--35-minute estimate is retained only as the
-batch-5 upper-bound projection. Only then may the literal token below be passed:
+The batch-50 gate passed. The measured projection is $2.70 for generation and
+$3--4 end to end including CPU scoring; use a $5 hard cap. Expected end-to-end
+wall time with ten available H100s is 8--15 minutes, excluding unusual queue
+delay. Explicit user approval for the 500-prompt run is still required. The
+earlier $14--18, 20--35-minute estimate is retained only as the obsolete
+batch-5 upper bound. Only after approval may the literal token below be passed:
 
 `APPROVE_500_PROMPT_CONTROLLED_BASELINE`
 

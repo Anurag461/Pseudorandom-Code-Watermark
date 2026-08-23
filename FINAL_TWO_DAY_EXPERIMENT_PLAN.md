@@ -264,16 +264,25 @@ allocated; the dual-model parity check peaked at 33,229,244,928 bytes. No full
 run was launched. See `controlled_baseline_diagnostic_report.md` and the
 diagnostic cost/artifact manifests in `outputs/`.
 
-Updated the production batching plan after confirming that the earlier online
-PRC Qwen3-8B run completed one batch of 125 continuations to length 1,280 on a
-single H100 with 44,493,176,832 bytes peak CUDA reserved. The baseline target
-is now batch 50: ten workers, 50 prompts per worker, one batch per method.
-Before full approval, run one standalone 50-prompt batch-50 validation across
-TextSeal, SynthID, and Gumbel with a 3-dollar cap and a 70 GiB reserved-memory
-gate. Use its runtime and exact bill to replace the batch-5 projection. If it
-fails, stop and validate batch 25 separately; never fall back automatically
-because Gumbel is batch-shape-sensitive. No batch-50 validation or 500-prompt
-generation has yet been launched.
+The production batching plan is batch 50: ten workers, 50 prompts per worker,
+one batch per method. The standalone batch-50 validation completed successfully
+on prompt indices `0..49` with all 150 TextSeal, SynthID, and Gumbel outputs
+exactly 1,024 tokens. The H100 worker took 166.386 seconds, including an
+8.204-second model load, and peaked at 27,839,692,800 bytes CUDA reserved
+(25.93 GiB). SynthID's pinned-reference check was exact, all saved entropy and
+log-probability values were finite, and the full PRC/null cache preflight made
+zero generation attempts.
+
+The finalized validation bill was `0.27034319` dollars (`0.21751641` H100,
+`0.02631032` CPU, `0.02651646` memory), below its 3-dollar cap. Scaling the
+complete bill across ten shards gives a conservative `2.70343190`-dollar
+generation estimate; allow **$3--4** end to end including CPU scoring, with a
+recommended **$5 hard cap**. With ten H100s available, the measured compute
+floor is 2.77 minutes and practical end-to-end wall time is **8--15 minutes**,
+excluding unusual queue delay. See
+`controlled_baseline_batch50_validation_report.md` and the compact validation
+and cost artifacts in `outputs/`. The batch-50 gate is cleared, but no
+500-prompt generation has been launched; it still requires explicit approval.
 
 Dependency incompatibilities may extend the integration wall time. Stop after
 the smoke rather than launching 500-prompt production automatically; scaling

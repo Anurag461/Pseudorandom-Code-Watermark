@@ -1362,13 +1362,19 @@ def full_run_entrypoint(approval_token: str, run_id: str):
             "500-prompt generation is not authorized; obtain explicit approval and pass "
             f"--approval-token {FULL_RUN_APPROVAL_TOKEN}"
         )
-    # This is the prior batch-5 upper-bound projection. Replace it with the
-    # measured batch-50 estimate reported after the standalone validation.
     projected = {
         "prior_batch5_all_resource_cost_range_usd": [14.0, 18.0],
         "prior_batch5_wall_time_minutes_with_10_gpus": [20, 35],
         "production_batch_size": 50,
-        "batch50_validation_required_before_approval": True,
+        "batch50_validation_run_id": "qwen3-8b-batch50-validation-20260823-v1",
+        "batch50_validation_app_id": "ap-INjm5299E4tI0jNgiqOx4U",
+        "batch50_validation_status": "passed",
+        "measured_function_seconds_per_50_prompt_shard": 166.386096582,
+        "measured_peak_cuda_reserved_bytes": 27_839_692_800,
+        "projected_generation_cost_usd": 2.70343190,
+        "projected_end_to_end_cost_range_usd": [3.0, 4.0],
+        "recommended_hard_cap_usd": 5.0,
+        "projected_end_to_end_wall_minutes_with_10_gpus": [8, 15],
     }
     preflight = preflight_remote.remote()
     references = official_reference_checks_remote.remote()
