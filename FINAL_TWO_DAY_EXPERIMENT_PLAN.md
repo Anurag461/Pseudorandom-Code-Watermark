@@ -204,6 +204,36 @@ smoke spend.
 | 50-prompt x 5-seed diversity subset | 1 h | none after scale-up approval | 30--60 min | $2--5 | $8 |
 | Prefix detection and final analysis | 2--4 h | review conclusions | 30--90 min | <$2 | $5 |
 
+Completed integration and five-prompt smoke on 2026-08-22 (runs crossed
+2026-08-23 UTC). TextSeal is pinned to
+`c60d0d1da2e59f09a698438e218a07ee779b4616`; Google's SynthID-Text is pinned
+to `addb4a158143c7c6851a1308f78b89fceed59683`; Qwen3-8B-Base and its tokenizer
+are pinned to `49e3418fbbbca6ecbdf9608b4d22e5a407081db4`. The isolated image definition
+fingerprint is
+`36ef066d906bf9df05801790b9327b8f2a8854d516add87b3f36d47afcd40217`.
+
+All four methods produced complete scores for prompt rows `0..4` at all six
+prefixes. Official TextSeal/Google SynthID references, exact-prefix scoring,
+deduplication, schema validation, fixed-seed replay, and cache-only PRC/null
+guards passed. Every observed null FPR was `0/5`; this is not a calibration
+claim. Online PRC smoke TPR was 0%, 60%, then 100% from `T=400` onward; the
+three new baselines were 100% at every smoke prefix. TextSeal and Gumbel-Max
+also showed severe repetition/low distinct-n on several prompts, so their
+detection must be interpreted with quality/diversity. Gumbel-Max was
+seed-deterministic at fixed batch shape, but the released power-form comparison
+path was sensitive to batch shape.
+
+Exact integration/smoke campaign spend was `1.39371804` dollars,
+including fail-closed diagnostics and controlled seed checks; it remained well
+below the 10-dollar smoke cap. Peak CUDA memory was 17,668,689,920 bytes
+allocated and 17,702,060,032 bytes reserved. Measured primary batch-5 times
+were 37.006 seconds for TextSeal, 40.504 seconds for SynthID, and 35.554 seconds
+for Gumbel-Max. The resulting 500-prompt projection is 14--18 dollars and
+20--35 minutes with ten 50-prompt H100 shards. The guarded full-run code is
+ready, but the 500-prompt comparison remains incomplete and requires separate
+explicit approval. See `controlled_baseline_smoke_report.md` and
+`controlled_baseline_full_run_runbook.md`.
+
 Dependency incompatibilities may extend the integration wall time. Stop after
 the smoke rather than launching 500-prompt production automatically; scaling
 requires review of correctness, memory, throughput, and projected cost.
