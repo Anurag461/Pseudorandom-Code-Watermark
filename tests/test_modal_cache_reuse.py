@@ -1,5 +1,8 @@
 import numpy as np
 import pytest
+import torch
+
+from detectors import semantic_sha256
 
 from online_prc import OnlinePRCKey, target_row_count
 
@@ -21,6 +24,11 @@ from modal_online_run import (
     artifact_compatibility_error,
     compare_full_audit_results,
     config_tag as online_config_tag,
+    cross_model_entropy_estimation_requests,
+    cross_model_entropy_trace_identity,
+    cross_model_entropy_trace_path,
+    cross_model_null_entropy_dir,
+    cross_model_wm_entropy_dir,
     descending_prefix_grid,
     discover_online_cache_tags,
     evaluate_prepared_map_prefixes,
@@ -31,10 +39,13 @@ from modal_online_run import (
     model_cache_name as online_model_cache_name,
     model_default_batch as online_model_default_batch,
     model_default_gpu as online_model_default_gpu,
+    model_default_memory_mib as online_model_default_memory_mib,
+    model_cls_options as online_model_cls_options,
     model_display as online_model_display,
     normalize_model_size as normalize_online_model_size,
     merge_prepared_map_shards,
     merge_full_audit_shards,
+    merge_cross_model_entropy_audit_shards,
     prepared_map_shard_path,
     prompt_detection_shards,
     rate_strictly_above,
@@ -43,6 +54,7 @@ from modal_online_run import (
     resolve_null_kv_cache_implementation,
     shared_null_dir as online_null_dir,
     summarize_generation_cost,
+    summarize_cross_model_entropy_workload,
     summarize_map_sweep,
     null_cache_manifest_compatibility_error,
     validate_prepared_map_shard,
@@ -51,6 +63,8 @@ from modal_online_run import (
     validate_generation_segments,
     validate_online_null_record,
     validate_online_watermarked_record,
+    validate_cross_model_entropy_trace,
+    validate_cross_model_entropy_audit_shard,
 )
 
 
@@ -156,6 +170,7 @@ def test_online_static_kv_cache_has_an_isolated_versioned_namespace():
 def test_online_generation_model_runtime_and_namespaces_are_isolated():
     point_six_tag = online_config_tag(768, 3, 0.1, 12345, "0.6B")
     eight_b_tag = online_config_tag(768, 3, 0.1, 12345, "8b")
+    fourteen_b_tag = online_config_tag(768, 3, 0.1, 12345, "14b")
 
     assert point_six_tag.startswith(
         "online_causal_prc_v1/qwen3_0p6b_base/"
@@ -163,20 +178,43 @@ def test_online_generation_model_runtime_and_namespaces_are_isolated():
     assert eight_b_tag.startswith(
         "online_causal_prc_v1/qwen3_8b_base/"
     )
-    assert point_six_tag != eight_b_tag
+    assert fourteen_b_tag.startswith(
+        "online_causal_prc_v1/qwen3_14b_base/"
+    )
+    assert len({point_six_tag, eight_b_tag, fourteen_b_tag}) == 3
     assert online_null_dir(768) == "/data/_nulls/T768"
     assert online_null_dir(768, "8") == (
         "/data/_nulls/qwen3_8b_base/T768"
+    )
+    assert online_null_dir(768, "14") == (
+        "/data/_nulls/qwen3_14b_base/T768"
     )
     assert normalize_online_model_size("8") == "8B"
     assert online_model_display("8B") == "Qwen3-8B-Base"
     assert online_model_cache_name("0.6") == "qwen3_0p6b_base"
     assert online_model_default_gpu("8B") == "H100"
     assert online_model_default_batch("8B") == 25
+    assert normalize_online_model_size("14") == "14B"
+    assert online_model_display("14B") == "Qwen3-14B-Base"
+    assert online_model_cache_name("14") == "qwen3_14b_base"
+    assert online_model_default_gpu("14B") == "H100"
+    assert online_model_default_batch("14B") == 10
+    assert online_model_default_memory_mib("14B") == 65_536
+    assert online_model_default_memory_mib("8B") == 0
     assert resolve_model_runtime("8b") == ("8B", 25, "H100")
+    assert resolve_model_runtime("14b") == ("14B", 10, "H100")
     assert resolve_model_runtime("8B", 10, "H100:80GB") == (
         "8B", 10, "H100:80GB"
     )
+    assert online_model_cls_options("14B", "H100", 10) == {
+        "gpu": "H100",
+        "max_containers": 10,
+        "memory": 65_536,
+    }
+    assert online_model_cls_options("8B", "H100", 5) == {
+        "gpu": "H100",
+        "max_containers": 5,
+    }
     with pytest.raises(ValueError, match="must be one of"):
         normalize_online_model_size("4B")
     with pytest.raises(ValueError, match="batch must be nonnegative"):
@@ -1063,3 +1101,152 @@ def test_8b_cache_records_require_matching_model_metadata():
             "null",
             12,
         )
+
+
+def test_online_cross_model_entropy_trace_namespaces_are_model_qualified():
+    source_tag = online_config_tag(
+        1280, 3, 0.05, 12345, "14B", "static"
+    )
+    assert cross_model_wm_entropy_dir(source_tag, 880, "0.6B") == (
+        f"/data/{source_tag}/cross_model_entropy_v1/"
+        "qwen3_0p6b_base/T880/wm"
+    )
+    assert cross_model_null_entropy_dir(1808, "0.6B", "14B") == (
+        "/data/_online_null_cross_model_entropy/qwen3_14b_base/"
+        "qwen3_0p6b_base/T1808"
+    )
+    assert cross_model_entropy_trace_path(
+        "null", 7, 1808, "0.6B", "14B"
+    ).endswith("qwen3_0p6b_base/T1808/null_0007.pt")
+    with pytest.raises(ValueError, match="require source_tag"):
+        cross_model_entropy_trace_path("wm", 7, 880, "0.6B", "14B")
+
+
+def test_online_cross_model_entropy_trace_validation_binds_inputs_and_hash():
+    identity = {
+        "source": "wm",
+        "prompt_index": 3,
+        "trace_T": 4,
+        "generation_model_size": "14B",
+        "entropy_model_size": "0.6B",
+        "partition_sha256": "partition-hash",
+        "prompt_sha256": "prompt-hash",
+        "tokens_sha256": "token-prefix-hash",
+        "source_artifact_fingerprint": "artifact-hash",
+    }
+    probabilities = np.array([0.1, 0.2, 0.8, 0.9], dtype=np.float64)
+    payload = {
+        **cross_model_entropy_trace_identity(**identity),
+        "p_trace": probabilities,
+        "p_trace_sha256": semantic_sha256(probabilities),
+    }
+    assert np.array_equal(
+        validate_cross_model_entropy_trace(payload, **identity),
+        probabilities,
+    )
+    with pytest.raises(ValueError, match="tokens_sha256"):
+        validate_cross_model_entropy_trace(
+            payload, **{**identity, "tokens_sha256": "different"}
+        )
+    with pytest.raises(ValueError, match="hash is inconsistent"):
+        validate_cross_model_entropy_trace(
+            {**payload, "p_trace": probabilities + 0.01}, **identity
+        )
+
+
+def test_online_cross_model_entropy_campaign_uses_one_combined_queue():
+    plan = {
+        "audits": [
+            {
+                "label": "eta0.05-n880",
+                "source_tag": "eta05-source",
+                "prefix_T": 880,
+                "wm_trace_missing": [0, 1, 2],
+            },
+            {
+                "label": "eta0.10-n1808",
+                "source_tag": "eta10-source",
+                "prefix_T": 1808,
+                "wm_trace_missing": [0, 1],
+            },
+        ],
+        "null_T": 1808,
+        "null_trace_missing": [0, 1, 2, 3],
+    }
+    requests = cross_model_entropy_estimation_requests(plan, 2)
+    assert len(requests) == 5
+    assert [request["source"] for request in requests] == [
+        "wm", "wm", "wm", "null", "null"
+    ]
+    assert all(len(request["prompt_indices"]) <= 2 for request in requests)
+    assert summarize_cross_model_entropy_workload(plan) == {
+        "watermarked_teacher_forced_token_positions": 6256,
+        "null_teacher_forced_token_positions": 7232,
+        "teacher_forced_token_positions": 13488,
+        "watermarked_trace_records_missing": 5,
+        "null_trace_records_missing": 4,
+    }
+
+
+def test_online_cross_model_map_entropy_shards_validate_and_merge_order():
+    validation = {
+        "source_tag": "source-tag",
+        "prefix_T": 880,
+        "null_T": 1808,
+        "null_trace_T": 1808,
+        "fpr": 1e-3,
+        "generation_model_size": "14B",
+        "entropy_model_size": "0.6B",
+        "artifact_fingerprint": "artifact",
+        "online_key_sha256": "key",
+        "code_fingerprint_sha256": "code",
+    }
+
+    def shard(index):
+        return {
+            "cross_model_entropy_audit_shard_schema_version": 2,
+            "result_kind": "online_cross_model_map_entropy_prompt_shard",
+            "source_tag": "source-tag",
+            "T": 880,
+            "null_T": 1808,
+            "null_trace_T": 1808,
+            "target_fpr": 1e-3,
+            "fpr_policy": "one_shot",
+            "generation_model_size": "14B",
+            "entropy_model_size": "0.6B",
+            "artifact_fingerprint": "artifact",
+            "online_key_sha256": "key",
+            "code_fingerprint_sha256": "code",
+            "prompt_indices": [index],
+            "num_prompts": 1,
+            "results": [
+                {
+                    "prompt_idx": index,
+                    "watermark": watermark,
+                    "scores": {
+                        "map": {
+                            "decision": watermark,
+                            "length": 880,
+                        },
+                        "entropy": {
+                            "decision": watermark,
+                            "length": 880,
+                        },
+                    },
+                }
+                for watermark in (True, False)
+            ],
+        }
+
+    first, second = shard(0), shard(1)
+    assert validate_cross_model_entropy_audit_shard(
+        first, **validation
+    ) == [0]
+    merged = merge_cross_model_entropy_audit_shards(
+        [second, first], [0, 1]
+    )
+    assert [
+        (result["watermark"], result["prompt_idx"]) for result in merged
+    ] == [(True, 0), (True, 1), (False, 0), (False, 1)]
+    with pytest.raises(ValueError, match="duplicate"):
+        merge_cross_model_entropy_audit_shards([first, first], [0])

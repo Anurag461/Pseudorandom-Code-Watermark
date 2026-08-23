@@ -8,6 +8,8 @@ from qwen import (
     kv_cache_version,
     make_kv_cache,
     normalize_kv_cache_implementation,
+    return_qwen_config,
+    teacher_force_partition_trace_batch,
 )
 
 
@@ -96,3 +98,44 @@ def test_cache_factory_is_opt_in_and_validates_configuration():
         make_kv_cache("static")
     with pytest.raises(ValueError, match="must be one of"):
         make_kv_cache("paged")
+
+
+def test_static_teacher_forcing_matches_concat_and_handles_empty_trace():
+    model = _tiny_qwen()
+    prompt = torch.tensor([[1, 2, 3], [4, 5, 6]])
+    generated = torch.tensor([[7, 9, 11], [8, 10, 12]])
+    part1 = torch.tensor(
+        [0, 1] * 15 + [0], dtype=torch.float32
+    )
+
+    concat = teacher_force_partition_trace_batch(
+        model, prompt, generated, part1, "concat"
+    )
+    static = teacher_force_partition_trace_batch(
+        model, prompt, generated, part1, "static"
+    )
+
+    assert torch.equal(static, concat)
+    assert static.shape == (2, 3)
+    empty = teacher_force_partition_trace_batch(
+        model, prompt, generated[:, :0], part1, "static"
+    )
+    assert empty.shape == (2, 0)
+
+
+def test_qwen3_14b_config_matches_the_base_checkpoint_contract():
+    config = return_qwen_config("14B")
+
+    assert config == {
+        "vocab_size": 151_936,
+        "context_length": 40_960,
+        "emb_dim": 5_120,
+        "n_heads": 40,
+        "n_layers": 40,
+        "hidden_dim": 17_408,
+        "head_dim": 128,
+        "qk_norm": True,
+        "n_kv_groups": 8,
+        "rope_base": 1_000_000.0,
+        "dtype": torch.bfloat16,
+    }

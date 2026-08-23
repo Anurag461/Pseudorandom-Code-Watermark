@@ -257,6 +257,47 @@ def make_kv_cache(implementation="concat", max_length=None):
         raise ValueError("static KV cache requires max_length")
     return StaticKVCache(max_length)
 
+
+def teacher_force_partition_trace_batch(
+    model,
+    prompt_ids_batch,
+    generated_tokens_batch,
+    partition_one_mask,
+    kv_cache_implementation="concat",
+):
+    """Replay cached tokens and return P[token in partition 1] per step."""
+    decode_length = int(generated_tokens_batch.shape[1])
+    if decode_length == 0:
+        return torch.empty(
+            (int(generated_tokens_batch.shape[0]), 0), dtype=torch.float32
+        )
+    cache = make_kv_cache(
+        kv_cache_implementation,
+        max_length=(
+            int(prompt_ids_batch.shape[1]) + max(decode_length - 1, 0)
+        ),
+    )
+    part1 = partition_one_mask.to(prompt_ids_batch.device)
+    steps = []
+    model.eval()
+    with torch.no_grad():
+        logits = model(prompt_ids_batch, cache=cache)[:, -1]
+        for position in range(decode_length):
+            probabilities = torch.softmax(logits, dim=-1)
+            steps.append(
+                (probabilities * part1.to(logits.device))
+                .sum(dim=-1)
+                .detach()
+                .cpu()
+            )
+            # No probability after the final cached token is requested.
+            if position + 1 < decode_length:
+                logits = model(
+                    generated_tokens_batch[:, position:position + 1],
+                    cache=cache,
+                )[:, -1]
+    return torch.stack(steps, dim=1).float()
+
 class GroupedQueryAttention(nn.Module):
     def __init__(
         self, d_in, num_heads, num_kv_groups, head_dim=None, qk_norm=False, dtype=None

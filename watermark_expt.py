@@ -914,6 +914,7 @@ def estimate_partition_trace_batch(
     prompt_ids_batch,
     generated_tokens_batch,
     partition_map,
+    kv_cache_implementation="concat",
 ):
     """Teacher-force generated tokens and estimate P[partition 1] per step.
 
@@ -927,28 +928,36 @@ def estimate_partition_trace_batch(
     pm = partition_map.to(device)
     part1 = pm[1]
 
-    p_steps = []
-    with torch.no_grad():
-        cache = KVCache()
-        logits = model(prompt_ids_batch, cache=cache)[:, -1]
-
-        for pos in range(generated_tokens_batch.shape[1]):
-            probs = torch.softmax(logits, dim=-1)
-            p1 = (probs * part1.to(logits.device)).sum(dim=-1)
-            p_steps.append(p1.detach().cpu())
-
-            next_token = generated_tokens_batch[:, pos:pos + 1]
-            logits = model(next_token, cache=cache)[:, -1]
-
-    return torch.stack(p_steps, dim=1).float().numpy().astype(np.float64)
+    # Teacher forcing has a known final sequence length, so callers doing
+    # large offline replays can preallocate the cache and avoid an O(T^2)
+    # stream of full-history ``torch.cat`` copies.  Keep concat as the default
+    # so existing callers retain their historical behavior.
+    trace = teacher_force_partition_trace_batch(
+        model,
+        prompt_ids_batch,
+        generated_tokens_batch,
+        part1,
+        kv_cache_implementation=kv_cache_implementation,
+    )
+    return trace.numpy().astype(np.float64)
 
 
-def estimate_partition_trace(model, prompt_ids, generated_tokens, partition_map):
+def estimate_partition_trace(
+    model,
+    prompt_ids,
+    generated_tokens,
+    partition_map,
+    kv_cache_implementation="concat",
+):
     """Single-sequence wrapper around estimate_partition_trace_batch."""
     prompt_batch = torch.tensor([prompt_ids], dtype=torch.long, device=device)
     token_batch = generated_tokens.reshape(1, -1).to(device)
     return estimate_partition_trace_batch(
-        model, prompt_batch, token_batch, partition_map
+        model,
+        prompt_batch,
+        token_batch,
+        partition_map,
+        kv_cache_implementation=kv_cache_implementation,
     )[0]
 
 
