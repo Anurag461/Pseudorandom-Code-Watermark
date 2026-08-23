@@ -142,6 +142,9 @@ loads projects about `13.09` dollars of H100 cost. Allowing provider CPU,
 memory, cache validation, CPU scoring, and operational variance gives a
 conservative all-resource estimate of **14--18 dollars**. Ten 50-prompt shards
 project **20--35 minutes** wall time, followed by CPU scoring/finalization.
+This is now retained as the batch-5 upper-bound projection. The current plan
+validates batch 50 on one standalone 50-prompt shard before replacing the cost
+and wall-time estimate.
 
 ## Readiness decision
 

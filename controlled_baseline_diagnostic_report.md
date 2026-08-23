@@ -159,6 +159,7 @@ its claim is framed as detectability jointly with NLL, repetition, distinct-2,
 and distinct-3. The diagnostic does not support a claim that TextSeal has
 quality comparable to PRC on this setting, nor a detection-only winner claim.
 
-The existing estimate remains 14--18 dollars and 20--35 minutes with ten
-fixed 50-prompt H100 shards. The literal full-run approval gate and commands
-remain in `controlled_baseline_full_run_runbook.md`.
+The 14--18-dollar, 20--35-minute estimate is retained as the batch-5 upper
+bound. A standalone batch-50 validation must replace it with a measured
+estimate before full approval. The literal gates and commands remain in
+`controlled_baseline_full_run_runbook.md`.

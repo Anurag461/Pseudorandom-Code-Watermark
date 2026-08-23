@@ -228,10 +228,10 @@ including fail-closed diagnostics and controlled seed checks; it remained well
 below the 10-dollar smoke cap. Peak CUDA memory was 17,668,689,920 bytes
 allocated and 17,702,060,032 bytes reserved. Measured primary batch-5 times
 were 37.006 seconds for TextSeal, 40.504 seconds for SynthID, and 35.554 seconds
-for Gumbel-Max. The resulting 500-prompt projection is 14--18 dollars and
-20--35 minutes with ten 50-prompt H100 shards. The guarded full-run code is
-ready, but the 500-prompt comparison remains incomplete and requires separate
-explicit approval. See `controlled_baseline_smoke_report.md` and
+for Gumbel-Max. Scaling those timings gave a prior batch-5 upper-bound
+projection of 14--18 dollars and 20--35 minutes with ten H100 shards. The
+500-prompt comparison remains incomplete and requires separate explicit
+approval. See `controlled_baseline_smoke_report.md` and
 `controlled_baseline_full_run_runbook.md`.
 
 Completed a user-approved five-prompt quality/diversity diagnostic on
@@ -261,9 +261,19 @@ Exact diagnostic spend was `0.17113157` dollars (`0.14751330` H100,
 `0.00919542` CPU, `0.01442285` memory), below its 2-dollar cap. The bounded
 generation worker ran `78.234` seconds and peaked at 17,668,689,920 bytes CUDA
 allocated; the dual-model parity check peaked at 33,229,244,928 bytes. No full
-run was launched. The 14--18-dollar, 20--35-minute full-run estimate is
-unchanged. See `controlled_baseline_diagnostic_report.md` and the diagnostic
-cost/artifact manifests in `outputs/`.
+run was launched. See `controlled_baseline_diagnostic_report.md` and the
+diagnostic cost/artifact manifests in `outputs/`.
+
+Updated the production batching plan after confirming that the earlier online
+PRC Qwen3-8B run completed one batch of 125 continuations to length 1,280 on a
+single H100 with 44,493,176,832 bytes peak CUDA reserved. The baseline target
+is now batch 50: ten workers, 50 prompts per worker, one batch per method.
+Before full approval, run one standalone 50-prompt batch-50 validation across
+TextSeal, SynthID, and Gumbel with a 3-dollar cap and a 70 GiB reserved-memory
+gate. Use its runtime and exact bill to replace the batch-5 projection. If it
+fails, stop and validate batch 25 separately; never fall back automatically
+because Gumbel is batch-shape-sensitive. No batch-50 validation or 500-prompt
+generation has yet been launched.
 
 Dependency incompatibilities may extend the integration wall time. Stop after
 the smoke rather than launching 500-prompt production automatically; scaling

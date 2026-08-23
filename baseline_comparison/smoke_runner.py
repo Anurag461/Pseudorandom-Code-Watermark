@@ -1514,7 +1514,7 @@ def score_committed_smoke(
 
 FULL_SHARD_COUNT = 10
 FULL_SHARD_SIZE = 50
-FULL_GENERATION_BATCH_SIZE = 5
+FULL_GENERATION_BATCH_SIZE = 50
 
 
 def _validated_full_request(request: dict) -> tuple[str, int, list[int]]:
@@ -1568,6 +1568,8 @@ def generate_full_shard(data_volume, request: dict) -> dict:
             method_outputs.extend(outputs)
         if len(method_outputs) != FULL_SHARD_SIZE:
             raise AssertionError(f"{method} full shard coverage is incomplete")
+        if any(len(output["token_ids"]) != MAX_NEW_TOKENS for output in method_outputs):
+            raise AssertionError(f"{method} full shard contains a non-1024 continuation")
         generated[method] = method_outputs
 
     raw_root = Path("/data/controlled_baseline_full") / run_id / "generated"
@@ -1583,6 +1585,8 @@ def generate_full_shard(data_volume, request: dict) -> dict:
         "image_definition_sha256": IMAGE_DEFINITION_SHA256,
         "integration_code_fingerprint": integration_fingerprint,
         "generation_settings": GENERATION_SETTINGS,
+        "generation_batch_size": FULL_GENERATION_BATCH_SIZE,
+        "generation_attempts": {"online_prc": 0, "null": 0},
         "seed": PRIMARY_SEED,
         "sequences": generated,
         "generation_telemetry": telemetry,
@@ -1608,6 +1612,7 @@ def generate_full_shard(data_volume, request: dict) -> dict:
         "path": str(raw_path),
         "size_bytes": raw_path.stat().st_size,
         "runtime": raw["runtime"],
+        "generation_batch_size": FULL_GENERATION_BATCH_SIZE,
         "modal_task_id": raw["modal_task_id"],
     }
 
@@ -1639,6 +1644,8 @@ def score_full_shard(data_volume, request: dict) -> dict:
         raise AssertionError("full-run shard settings differ")
     if raw.get("model_revision") != _model_revision():
         raise AssertionError("full-run shard model revision differs")
+    if int(raw.get("generation_batch_size", -1)) != FULL_GENERATION_BATCH_SIZE:
+        raise AssertionError("full-run shard generation batch size differs")
 
     integration_fingerprint = _integration_fingerprint()
     prc_fingerprint = _prc_fingerprint()

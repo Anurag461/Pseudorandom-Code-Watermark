@@ -1302,6 +1302,56 @@ def stochastic_seed_check_entrypoint(
 
 
 FULL_RUN_APPROVAL_TOKEN = "APPROVE_500_PROMPT_CONTROLLED_BASELINE"
+BATCH50_VALIDATION_APPROVAL_TOKEN = "APPROVE_50_PROMPT_BATCH50_VALIDATION"
+
+
+@app.local_entrypoint(name="batch50-validation")
+def batch50_validation_entrypoint(approval_token: str, run_id: str):
+    """Run one standalone 50-prompt batch-50 generation validation."""
+    if approval_token != BATCH50_VALIDATION_APPROVAL_TOKEN:
+        raise PermissionError(
+            "batch-50 validation generation is not authorized; obtain explicit approval "
+            f"and pass --approval-token {BATCH50_VALIDATION_APPROVAL_TOKEN}"
+        )
+    cost_gate = {
+        "hard_cap_usd": 3.0,
+        "conservative_expected_total_usd": 1.5,
+        "requested_gpu": "H100",
+        "worker_count": 1,
+        "generated_prompts_per_method": 50,
+        "methods": ["textseal", "synthid_text", "gumbel_max"],
+        "generation_batch_size": 50,
+        "passed": True,
+    }
+    if cost_gate["conservative_expected_total_usd"] > cost_gate["hard_cap_usd"]:
+        raise RuntimeError("projected batch-50 validation cost exceeds its $3 hard cap")
+    preflight = preflight_remote.remote()
+    references = official_reference_checks_remote.remote()
+    full_caches = full_cache_preflight_remote.remote()
+    if not preflight.get("passed") or not references.get("passed") or not full_caches.get("passed"):
+        raise RuntimeError("batch-50 preflight/reference/cache validation did not pass")
+
+    request = {"run_id": run_id, "shard_index": 0}
+    generated = FullRunWorker().run_shard.remote(request)
+    if not generated.get("passed") or int(generated.get("generation_batch_size", -1)) != 50:
+        raise RuntimeError("batch-50 generation shard failed its memory/layout gate")
+    if int(generated["runtime"]["peak_cuda_reserved_bytes"]) > 70 * 1024**3:
+        raise RuntimeError("batch-50 validation exceeded the 70 GiB reserved-memory gate")
+    print(
+        json.dumps(
+            {
+                "passed": True,
+                "run_id": run_id,
+                "cost_gate": cost_gate,
+                "full_cache_preflight": full_caches,
+                "generation": generated,
+                "billing_status": "pending_exact_modal_billing_reconciliation",
+                "next_step": "reconcile billing and update the measured full-run estimate",
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
 
 
 @app.local_entrypoint(name="full-run")
@@ -1312,12 +1362,13 @@ def full_run_entrypoint(approval_token: str, run_id: str):
             "500-prompt generation is not authorized; obtain explicit approval and pass "
             f"--approval-token {FULL_RUN_APPROVAL_TOKEN}"
         )
-    # Measured smoke projection, intentionally conservative and below the
-    # available-credit envelope but not part of this session's authorization.
+    # This is the prior batch-5 upper-bound projection. Replace it with the
+    # measured batch-50 estimate reported after the standalone validation.
     projected = {
-        "gpu_cost_usd": 13.10,
-        "all_resource_cost_range_usd": [14.0, 18.0],
-        "wall_time_minutes_with_10_gpus": [20, 35],
+        "prior_batch5_all_resource_cost_range_usd": [14.0, 18.0],
+        "prior_batch5_wall_time_minutes_with_10_gpus": [20, 35],
+        "production_batch_size": 50,
+        "batch50_validation_required_before_approval": True,
     }
     preflight = preflight_remote.remote()
     references = official_reference_checks_remote.remote()

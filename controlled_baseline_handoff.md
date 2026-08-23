@@ -45,15 +45,17 @@ all top-1 tokens agreed and native Hugging Face showed larger batch-shape
 variation. Full details and the exact `0.17113157`-dollar diagnostic spend are
 in `controlled_baseline_diagnostic_report.md`.
 
-Measured production projection: 14--18 dollars total and 20--35 minutes with
-ten GPUs. The exact spend for this integration/smoke campaign is
-`1.39371804` dollars. No full-run blocker remains, but explicit approval
-is required. After approval, use exactly:
+The old 14--18-dollar, 20--35-minute projection came from batch-5 smoke
+throughput. Production is now configured for batch 50, supported by the prior
+Qwen3-8B batch-125 memory result but not yet validated with all three baseline
+adapters. First run the standalone batch-50 validation in the runbook,
+reconcile its bill, and replace the estimate. The exact integration/smoke spend
+remains `1.39371804` dollars. After validation and separate full-run approval:
 
 ```bash
 modal run baseline_comparison/modal_app.py::app.full-run \
   --approval-token APPROVE_500_PROMPT_CONTROLLED_BASELINE \
-  --run-id qwen3-8b-controlled-20260823
+  --run-id qwen3-8b-controlled-batch50-20260823
 ```
 
 Then run `app.full-score`, download scored shards, and invoke the streaming

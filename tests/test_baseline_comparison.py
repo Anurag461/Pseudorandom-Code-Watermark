@@ -25,7 +25,11 @@ from baseline_comparison.diagnostic import (
     stable_power_argmax,
 )
 from baseline_comparison.schema import PromptLevelResult
-from baseline_comparison.smoke_runner import _validated_full_request
+from baseline_comparison.smoke_runner import (
+    FULL_GENERATION_BATCH_SIZE,
+    FULL_SHARD_SIZE,
+    _validated_full_request,
+)
 from baseline_comparison.scoring import (
     deduplicated_positions,
     distinct_n,
@@ -263,6 +267,7 @@ def test_schema_rejects_nan_and_missing_revision():
 
 
 def test_full_run_shard_partition_is_exact_and_gated_by_shape():
+    assert FULL_SHARD_SIZE == FULL_GENERATION_BATCH_SIZE == 50
     run_id, shard, indices = _validated_full_request(
         {"run_id": "controlled-8b-20260822", "shard_index": 9}
     )

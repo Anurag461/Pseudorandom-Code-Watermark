@@ -14,14 +14,35 @@ provided.
   comparison path.
 - Context length 3 and TextSeal-v2 unique `(context, token)` deduplication.
 - Prefixes `128,256,400,512,768,1024`; nominal decision `p<1e-3`.
-- Ten generation shards of 50 prompts, batch size 5, at most ten `H100`
-  workers. Generated shards are committed before CPU scoring.
+- Ten generation shards of 50 prompts, batch size 50, at most ten `H100`
+  workers. Each worker makes one generation call per method after one model
+  load. Generated shards are committed before CPU scoring.
+
+## Batch-50 validation gate
+
+Before requesting approval for all 500 prompts, run one standalone shard on
+prompt rows `0..49` through TextSeal, SynthID, and Gumbel at the frozen
+1,024-token settings:
+
+```bash
+modal run baseline_comparison/modal_app.py::app.batch50-validation \
+  --approval-token APPROVE_50_PROMPT_BATCH50_VALIDATION \
+  --run-id qwen3-8b-batch50-validation-20260823
+```
+
+This validation has a separate 3-dollar cap. It must produce 50 exact-length
+outputs per method and remain at or below 70 GiB peak CUDA reserved memory.
+Reconcile its exact Modal bill and use its runtime to replace the old batch-5
+full-run estimate before requesting 500-prompt approval. If batch 50 fails,
+stop; batch 25 is the manual fallback and requires a fresh validation. Do not
+fall back automatically because Gumbel output depends on batch shape.
 
 ## Approval gate
 
-Before generation, report the smoke result and measured estimate (14--18
-dollars; 20--35 minutes with ten GPUs) and obtain explicit user approval for
-the 500-prompt run. Only then may the literal token below be passed:
+Before generation, report the smoke result and the estimate measured from the
+batch-50 validation, then obtain explicit user approval for the 500-prompt run.
+The earlier 14--18-dollar, 20--35-minute estimate is retained only as the
+batch-5 upper-bound projection. Only then may the literal token below be passed:
 
 `APPROVE_500_PROMPT_CONTROLLED_BASELINE`
 
@@ -36,22 +57,22 @@ to overwrite an existing shard.
 ```bash
 modal run baseline_comparison/modal_app.py::app.full-run \
   --approval-token APPROVE_500_PROMPT_CONTROLLED_BASELINE \
-  --run-id qwen3-8b-controlled-20260823
+  --run-id qwen3-8b-controlled-batch50-20260823
 ```
 
 This command runs CPU reference checks and validates all 500 online-PRC/null
 cache pairs before launching any GPU. It then maps ten 50-prompt shards across
 up to ten H100s, loads Qwen once per shard, generates each of the three new
-methods in batches of five, and commits raw shards under:
+methods in one batch of 50, and commits raw shards under:
 
-`/data/controlled_baseline_full/qwen3-8b-controlled-20260823/generated/`
+`/data/controlled_baseline_full/qwen3-8b-controlled-batch50-20260823/generated/`
 
 After all ten generation shards pass, score them on Modal CPU:
 
 ```bash
 modal run baseline_comparison/modal_app.py::app.full-score \
   --approval-token APPROVE_500_PROMPT_CONTROLLED_BASELINE \
-  --run-id qwen3-8b-controlled-20260823
+  --run-id qwen3-8b-controlled-batch50-20260823
 ```
 
 This produces ten shared-schema JSONL shards (2,400 rows each; 24,000 total)
@@ -61,16 +82,16 @@ Download only the compact scored artifacts to a new local directory:
 
 ```bash
 modal volume get prc-data \
-  controlled_baseline_full/qwen3-8b-controlled-20260823/scored \
-  /private/tmp/qwen3-8b-controlled-20260823-scored
+  controlled_baseline_full/qwen3-8b-controlled-batch50-20260823/scored \
+  /private/tmp/qwen3-8b-controlled-batch50-20260823-scored
 ```
 
 Stream-validate, merge, and summarize them locally:
 
 ```bash
 python -m baseline_comparison.full_run finalize \
-  --scored-dir /private/tmp/qwen3-8b-controlled-20260823-scored \
-  --output-dir outputs/controlled_baseline_full/qwen3-8b-controlled-20260823
+  --scored-dir /private/tmp/qwen3-8b-controlled-batch50-20260823-scored \
+  --output-dir outputs/controlled_baseline_full/qwen3-8b-controlled-batch50-20260823
 ```
 
 The finalizer requires exactly ten shards, 24,000 unique schema-valid rows,
@@ -87,8 +108,8 @@ modal billing report --for today --resolution h --show-resources --json
 ```
 
 Record CPU, memory, and H100 charges for every full-run app URL. Compare actual
-spend with the 14--18 dollar projection and stop if the approved cap would be
-exceeded. Preserve per-shard function seconds, model-load time, tokens/s, peak
+spend with the post-validation batch-50 projection and stop if the approved cap
+would be exceeded. Preserve per-shard function seconds, model-load time, tokens/s, peak
 CUDA allocation/reservation, actual GPU name, image ID, task ID, and app URL.
 
 ## Required review before interpreting results
@@ -110,8 +131,8 @@ CUDA allocation/reservation, actual GPU name, image ID, task ID, and app URL.
 - Gumbel is seed-deterministic at fixed batch shape. The released power form
   and diagnostic log-space form were token-identical at batch sizes 1 and 5;
   the remaining batch-shape sensitivity comes from model logits/numerical
-  execution. Keep batch size, prompt grouping/order, hardware, key, and model
-  revision fixed for production.
+  execution. Keep batch size 50, prompt grouping/order, hardware, key, and
+  model revision fixed for production.
 - Retain the strict project-Qwen/Hugging-Face parity discrepancy in provenance:
   maximum batch-5 JSD was `8.726e-4` against a predeclared `1e-4` criterion,
   though all top-1 tokens agreed and native Hugging Face itself had
