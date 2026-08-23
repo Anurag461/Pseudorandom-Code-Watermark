@@ -690,6 +690,42 @@ class FullScoreWorker:
 
         return score_full_shard(data_volume, request)
 
+    @modal.method()
+    def validate_generated_shard(
+        self,
+        request: dict,
+        expected_sha256: str | None = None,
+        expected_integration_fingerprint: str | None = None,
+    ) -> dict:
+        from baseline_comparison.resume import validate_generated_shard
+
+        return validate_generated_shard(
+            data_volume,
+            request,
+            expected_sha256=expected_sha256,
+            expected_integration_fingerprint=expected_integration_fingerprint,
+        )
+
+    @modal.method()
+    def validate_scored_shard(
+        self,
+        request: dict,
+        expected_jsonl_sha256: str | None = None,
+        expected_validation_sha256: str | None = None,
+        expected_scoring_integration_fingerprint: str | None = None,
+    ) -> dict:
+        from baseline_comparison.resume import validate_scored_shard
+
+        return validate_scored_shard(
+            data_volume,
+            request,
+            expected_jsonl_sha256=expected_jsonl_sha256,
+            expected_validation_sha256=expected_validation_sha256,
+            expected_scoring_integration_fingerprint=(
+                expected_scoring_integration_fingerprint
+            ),
+        )
+
 
 def _write_json(path: Path, payload) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -1304,6 +1340,22 @@ def stochastic_seed_check_entrypoint(
 FULL_RUN_APPROVAL_TOKEN = "APPROVE_500_PROMPT_CONTROLLED_BASELINE"
 BATCH50_VALIDATION_APPROVAL_TOKEN = "APPROVE_50_PROMPT_BATCH50_VALIDATION"
 BATCH50_SCORE_APPROVAL_TOKEN = "APPROVE_50_PROMPT_BATCH50_EVALUATION"
+REUSED_BATCH50_RUN_ID = "qwen3-8b-batch50-validation-20260823-v1"
+REUSED_BATCH50_RAW_SHA256 = (
+    "0b7326fbfa43d55a39088e19cc2d69a696b7c81e8095b3ff6d291254392716da"
+)
+REUSED_BATCH50_GENERATION_FINGERPRINT = (
+    "6f9bc1c40ab864d0098ded7378eb3153c4e17b280dc84e4965108f9c014dbddc"
+)
+REUSED_BATCH50_SCORED_SHA256 = (
+    "1149134f14c684bf2da9962349e56644beabf0bd5fd76cd775323ec0bd68a71e"
+)
+REUSED_BATCH50_SCORED_VALIDATION_SHA256 = (
+    "0bdc265f7a636734886b5f5809036fe032118fc443e717831abe88e1c406a099"
+)
+REUSED_BATCH50_SCORING_FINGERPRINT = (
+    "b250f74d5e753e7bd26189045b57be5c2e8104597c0cdcbc536a15c5ad84b705"
+)
 
 
 @app.local_entrypoint(name="batch50-validation")
@@ -1406,6 +1458,68 @@ def full_run_entrypoint(approval_token: str, run_id: str):
     )
 
 
+@app.local_entrypoint(name="remaining-run")
+def remaining_run_entrypoint(approval_token: str, run_id: str):
+    """Reuse validated shard 0 and generate only prompt shards 1 through 9."""
+    if approval_token != FULL_RUN_APPROVAL_TOKEN:
+        raise PermissionError(
+            "remaining 500-prompt comparison generation is not authorized; obtain "
+            f"explicit approval and pass --approval-token {FULL_RUN_APPROVAL_TOKEN}"
+        )
+    if run_id != REUSED_BATCH50_RUN_ID:
+        raise ValueError(
+            f"remaining-run must reuse the validated run ID {REUSED_BATCH50_RUN_ID}"
+        )
+    cost_gate = {
+        "hard_cap_usd": 5.0,
+        "projected_remaining_generation_usd": 2.43308871,
+        "requested_gpu": "H100",
+        "worker_count": 9,
+        "generation_batch_size": 50,
+        "generated_prompt_indices": [50, 499],
+        "passed": True,
+    }
+    if cost_gate["projected_remaining_generation_usd"] > cost_gate["hard_cap_usd"]:
+        raise RuntimeError("remaining generation projection exceeds the $5 hard cap")
+
+    preflight = preflight_remote.remote()
+    references = official_reference_checks_remote.remote()
+    full_caches = full_cache_preflight_remote.remote()
+    if not preflight.get("passed") or not references.get("passed") or not full_caches.get("passed"):
+        raise RuntimeError("remaining-run preflight/reference/cache validation did not pass")
+    reused = FullScoreWorker().validate_generated_shard.remote(
+        {"run_id": run_id, "shard_index": 0},
+        REUSED_BATCH50_RAW_SHA256,
+        REUSED_BATCH50_GENERATION_FINGERPRINT,
+    )
+    if not reused.get("passed"):
+        raise RuntimeError("validated batch-50 generation shard could not be reused")
+
+    requests = [{"run_id": run_id, "shard_index": index} for index in range(1, 10)]
+    results = list(FullRunWorker().run_shard.map(requests))
+    if len(results) != 9 or any(not result.get("passed") for result in results):
+        raise RuntimeError("one or more remaining generation shards failed")
+    print(
+        json.dumps(
+            {
+                "passed": True,
+                "run_id": run_id,
+                "approval_token_validated": True,
+                "cost_gate": cost_gate,
+                "full_cache_preflight": full_caches,
+                "reused_shard": reused,
+                "generated_shards": results,
+                "next_command": (
+                    "modal run baseline_comparison/modal_app.py::app.remaining-score "
+                    f"--approval-token {FULL_RUN_APPROVAL_TOKEN} --run-id {run_id}"
+                ),
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
 @app.local_entrypoint(name="full-score")
 def full_score_entrypoint(approval_token: str, run_id: str):
     """CPU-score all ten committed full-run shards without generation."""
@@ -1470,6 +1584,55 @@ def batch50_score_entrypoint(approval_token: str, run_id: str):
                     "modal volume get prc-data "
                     f"controlled_baseline_full/{run_id}/scored "
                     f"/private/tmp/{run_id}-scored"
+                ),
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@app.local_entrypoint(name="remaining-score")
+def remaining_score_entrypoint(approval_token: str, run_id: str):
+    """Reuse scored shard 0 and CPU-score only prompt shards 1 through 9."""
+    if approval_token != FULL_RUN_APPROVAL_TOKEN:
+        raise PermissionError(
+            "remaining full comparison scoring requires the approved full-run token"
+        )
+    if run_id != REUSED_BATCH50_RUN_ID:
+        raise ValueError(
+            f"remaining-score must reuse the validated run ID {REUSED_BATCH50_RUN_ID}"
+        )
+    reused = FullScoreWorker().validate_scored_shard.remote(
+        {"run_id": run_id, "shard_index": 0},
+        REUSED_BATCH50_SCORED_SHA256,
+        REUSED_BATCH50_SCORED_VALIDATION_SHA256,
+        REUSED_BATCH50_SCORING_FINGERPRINT,
+    )
+    if not reused.get("passed") or int(reused.get("record_count", -1)) != 2_400:
+        raise RuntimeError("validated batch-50 scored shard could not be reused")
+    requests = [{"run_id": run_id, "shard_index": index} for index in range(1, 10)]
+    results = list(FullScoreWorker().score_shard.map(requests))
+    if len(results) != 9 or any(not result.get("passed") for result in results):
+        raise RuntimeError("one or more remaining scoring shards failed")
+    record_count = int(reused["record_count"]) + sum(
+        int(result["record_count"]) for result in results
+    )
+    if record_count != 24_000:
+        raise AssertionError(f"full scoring produced {record_count} rows")
+    print(
+        json.dumps(
+            {
+                "passed": True,
+                "run_id": run_id,
+                "record_count": record_count,
+                "generation_attempts": {"online_prc": 0, "null": 0},
+                "reused_shard": reused,
+                "scored_shards": results,
+                "next_command": (
+                    "modal volume get prc-data "
+                    f"controlled_baseline_full/{run_id}/scored "
+                    f"/private/tmp/{run_id}-full-scored"
                 ),
             },
             indent=2,
