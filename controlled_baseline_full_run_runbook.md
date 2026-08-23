@@ -35,6 +35,15 @@ bill was $0.27034319. The raw artifact, fingerprints, per-method timings, and
 billing split are recorded in `controlled_baseline_batch50_validation_report.md`
 and `outputs/controlled_baseline_batch50_validation.json`.
 
+The saved shard was then scored on Modal CPU with no regeneration or model
+load. All 2,400 rows and reference checks passed. Detection was 100% for
+TextSeal, SynthID, and Gumbel at all prefixes; online PRC rose from 18% at T=128
+to 98% at T=1,024. All methods had 0/50 null false positives. At 1,024 tokens,
+however, median distinct-3 was 0.692 for TextSeal and 0.463 for Gumbel versus
+approximately 0.97 for PRC, SynthID, and null. Treat this as a material
+quality-diversity operating-point difference, not as evidence of an adapter
+failure. Full details are in `controlled_baseline_batch50_eval_report.md`.
+
 ## Approval gate
 
 The batch-50 gate passed. The measured projection is $2.70 for generation and
@@ -96,8 +105,8 @@ python -m baseline_comparison.full_run finalize \
 
 The finalizer requires exactly ten shards, 24,000 unique schema-valid rows,
 and complete `0..499` coverage for every method/sample type. It writes the
-prompt-level JSONL, 24-row prefix summary, quality CSV, validation JSON, and
-artifact fingerprint manifest.
+prompt-level JSONL, 24-row prefix summary, prompt-level and aggregate quality
+CSVs, validation JSON, and artifact fingerprint manifest.
 
 ## Billing reconciliation
 

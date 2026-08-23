@@ -54,7 +54,19 @@ and $3--4 including CPU scoring, with an 8--15-minute end-to-end estimate on ten
 available H100s. See `controlled_baseline_batch50_validation_report.md` and
 the corresponding validation/cost artifacts in `outputs/`. The cumulative
 controlled-baseline integration, smoke, diagnostic, and batch-validation spend
-is `1.83519280` dollars. After separate full-run approval:
+was `1.83519280` dollars.
+
+The saved batch was subsequently scored on Modal CPU for `0.00604867` dollars,
+with zero GPU use or regeneration. All 2,400 rows and reference checks passed.
+Online PRC TPR rose from 18% at T=128 to 98% at T=1,024; the other three methods
+were 100% at all prefixes, and every method had 0/50 null false positives. The
+quality concern is material across the batch: median 1,024-token
+distinct-3/repetition was 0.692/0.275 for TextSeal and 0.463/0.532 for Gumbel,
+versus approximately 0.97/0.012 for PRC, SynthID, and null. See
+`controlled_baseline_batch50_eval_report.md`. Cumulative controlled-baseline
+spend is now `1.84124147` dollars. The remaining run is valid as a joint
+detection-quality-diversity comparison, not a quality-matched detector
+comparison. After a separate full-run approval:
 
 ```bash
 modal run baseline_comparison/modal_app.py::app.full-run \

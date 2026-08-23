@@ -1303,6 +1303,7 @@ def stochastic_seed_check_entrypoint(
 
 FULL_RUN_APPROVAL_TOKEN = "APPROVE_500_PROMPT_CONTROLLED_BASELINE"
 BATCH50_VALIDATION_APPROVAL_TOKEN = "APPROVE_50_PROMPT_BATCH50_VALIDATION"
+BATCH50_SCORE_APPROVAL_TOKEN = "APPROVE_50_PROMPT_BATCH50_EVALUATION"
 
 
 @app.local_entrypoint(name="batch50-validation")
@@ -1428,6 +1429,47 @@ def full_score_entrypoint(approval_token: str, run_id: str):
                     "modal volume get prc-data "
                     f"controlled_baseline_full/{run_id}/scored "
                     f"outputs/controlled_baseline_full/{run_id}/scored"
+                ),
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+@app.local_entrypoint(name="batch50-score")
+def batch50_score_entrypoint(approval_token: str, run_id: str):
+    """CPU-score only the committed 50-prompt validation shard."""
+    if approval_token != BATCH50_SCORE_APPROVAL_TOKEN:
+        raise PermissionError(
+            "batch-50 evaluation is not authorized; obtain explicit approval and pass "
+            f"--approval-token {BATCH50_SCORE_APPROVAL_TOKEN}"
+        )
+    cost_gate = {
+        "hard_cap_usd": 0.5,
+        "conservative_expected_total_usd": 0.25,
+        "gpu_workers": 0,
+        "cpu_workers": 1,
+        "passed": True,
+    }
+    result = FullScoreWorker().score_shard.remote(
+        {"run_id": run_id, "shard_index": 0}
+    )
+    if not result.get("passed") or int(result.get("record_count", -1)) != 2_400:
+        raise RuntimeError("batch-50 scoring did not produce 2,400 validated rows")
+    print(
+        json.dumps(
+            {
+                "passed": True,
+                "run_id": run_id,
+                "cost_gate": cost_gate,
+                "generation_attempts": {"online_prc": 0, "null": 0},
+                "shard": result,
+                "billing_status": "pending_exact_modal_billing_reconciliation",
+                "next_command": (
+                    "modal volume get prc-data "
+                    f"controlled_baseline_full/{run_id}/scored "
+                    f"/private/tmp/{run_id}-scored"
                 ),
             },
             indent=2,

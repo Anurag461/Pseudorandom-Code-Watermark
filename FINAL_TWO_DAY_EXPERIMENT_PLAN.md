@@ -284,6 +284,24 @@ excluding unusual queue delay. See
 and cost artifacts in `outputs/`. The batch-50 gate is cleared, but no
 500-prompt generation has been launched; it still requires explicit approval.
 
+CPU-only scoring of that saved batch is also complete: 2,400 schema-valid rows
+cover 50 prompts, four methods, watermarked/shared-null samples, and all six
+prefixes. Online PRC TPR was 18%, 42%, 78%, 80%, 96%, and 98% from T=128 to
+1,024; TextSeal, SynthID, and Gumbel were 100% at every prefix. All methods had
+zero false positives among 50 nulls, which is descriptive only and cannot
+tightly validate a nominal 0.1% FPR. All exact-prefix checks passed, TextSeal
+official/common decisions agreed, and PRC/null generation attempts stayed zero.
+
+The 50-prompt quality result confirms a material method-by-setting tradeoff.
+At 1,024 tokens, median distinct-3/repetition were 0.972/0.012 for online PRC,
+0.969/0.012 for SynthID, 0.692/0.275 for TextSeal, and 0.463/0.532 for Gumbel.
+TextSeal had repetition above 0.1 on 41/50 prompts; Gumbel did so on 49/50.
+The loss grows with length and is already visible by T=400 for Gumbel. The
+frozen full run remains valid only as a joint detection-quality-diversity
+comparison, not as a quality-matched detector comparison. Exact CPU scoring
+cost was `0.00604867` dollars with zero GPU cost. No remaining generation was
+launched. See `controlled_baseline_batch50_eval_report.md`.
+
 Dependency incompatibilities may extend the integration wall time. Stop after
 the smoke rather than launching 500-prompt production automatically; scaling
 requires review of correctness, memory, throughput, and projected cost.
