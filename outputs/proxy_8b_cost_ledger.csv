@@ -1,0 +1,12 @@
+modal_app_id,purpose,status,cpu_cost_usd,memory_cost_usd,gpu_resource,gpu_cost_usd,total_cost_usd,generation_attempts,run_url
+ap-YkcsbxLcUqRD7YON8jdNkV,initial image-ordering test,stopped before GPU,0.00235101,0.00005114,,0,0.00240215,0,https://modal.com/apps/new-prc-watermark/main/ap-YkcsbxLcUqRD7YON8jdNkV
+ap-Zyq13J4Rb1xL40H4Mb0HIP,initial CPU tests,passed,0.00027263,0.00001045,A10G,0,0.00028308,0,https://modal.com/apps/new-prc-watermark/main/ap-Zyq13J4Rb1xL40H4Mb0HIP
+ap-CvWdAY2PlMXjhp6y6uVt8x,cache inventory and plan,passed,0.00684301,0.00054421,,0,0.00738722,0,https://modal.com/apps/new-prc-watermark/main/ap-CvWdAY2PlMXjhp6y6uVt8x
+ap-gioR8berHP83NJMES9Uzr0,pinned CPU tests,passed,0.00293677,0.00006913,,0,0.00300590,0,https://modal.com/apps/new-prc-watermark/main/ap-gioR8berHP83NJMES9Uzr0
+ap-VUs3EVOKSXQ1B0gXNUlYRN,NumPy compatibility preflight,stopped before GPU,0.00007880,0.00000292,,0,0.00008172,0,https://modal.com/apps/new-prc-watermark/main/ap-VUs3EVOKSXQ1B0gXNUlYRN
+ap-4FRB9LAXBpcjaFibxzb20r,sequential long-context benchmark,projection blocked; data retained,0.05114468,0.00645700,A10G,0.81461105,0.87221273,0,https://modal.com/apps/new-prc-watermark/main/ap-4FRB9LAXBpcjaFibxzb20r
+ap-6MhJH7r3KYc5wWfXqApJB0,chunked exact-equivalence tests,passed,0.00042042,0.00001064,,0,0.00043106,0,https://modal.com/apps/new-prc-watermark/main/ap-6MhJH7r3KYc5wWfXqApJB0
+ap-FUUu2HjZx2ZikhkYvdM3tk,chunk-64 benchmark and cost gate,passed,0.00678580,0.00052845,A10G,0.03911112,0.04642537,0,https://modal.com/apps/new-prc-watermark/main/ap-FUUu2HjZx2ZikhkYvdM3tk
+ap-VX13Dm2pjlL3fwJvcZlzHp,full PRC/null/TextSeal replay and PRC scoring,passed,0.18724712,0.01952036,A10G,1.98799203,2.19475951,0,https://modal.com/apps/new-prc-watermark/main/ap-VX13Dm2pjlL3fwJvcZlzHp
+ap-QzUtJrOC5HAdq5PJZPGmiE,official TextSeal proxy scoring,passed,0.05723953,0.01936054,L40S,0,0.07660007,0,https://modal.com/apps/new-prc-watermark/main/ap-QzUtJrOC5HAdq5PJZPGmiE
+ap-1ty06Yemjf2NzbOVU6m7gG,native-8B cached quality aggregation,passed,0.01388250,0.00036509,,0,0.01424759,0,https://modal.com/apps/new-prc-watermark/main/ap-1ty06Yemjf2NzbOVU6m7gG

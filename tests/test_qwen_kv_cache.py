@@ -9,6 +9,7 @@ from qwen import (
     make_kv_cache,
     normalize_kv_cache_implementation,
     return_qwen_config,
+    teacher_force_partition_entropy_trace_batch,
     teacher_force_partition_trace_batch,
 )
 
@@ -121,6 +122,43 @@ def test_static_teacher_forcing_matches_concat_and_handles_empty_trace():
         model, prompt, generated[:, :0], part1, "static"
     )
     assert empty.shape == (2, 0)
+
+
+def test_teacher_forcing_returns_full_vocab_entropy_in_nats():
+    model = _tiny_qwen()
+    prompt = torch.tensor([[1, 2, 3], [4, 5, 6]])
+    generated = torch.tensor([[7, 9], [8, 10]])
+    part1 = torch.tensor([0, 1] * 15 + [0], dtype=torch.float32)
+
+    static_p, static_h = teacher_force_partition_entropy_trace_batch(
+        model, prompt, generated, part1, "static"
+    )
+    concat_p, concat_h = teacher_force_partition_entropy_trace_batch(
+        model, prompt, generated, part1, "concat"
+    )
+
+    assert torch.equal(static_p, concat_p)
+    assert torch.equal(static_h, concat_h)
+    assert static_h.shape == (2, 2)
+    assert torch.all(torch.isfinite(static_h))
+    assert torch.all(static_h > 0)
+
+
+def test_chunked_teacher_forcing_matches_sequential_trace():
+    model = _tiny_qwen()
+    prompt = torch.tensor([[1, 2, 3], [4, 5, 6]])
+    generated = torch.tensor([[7, 9, 11, 13, 15], [8, 10, 12, 14, 16]])
+    part1 = torch.tensor([0, 1] * 15 + [0], dtype=torch.float32)
+
+    sequential_p, sequential_h = teacher_force_partition_entropy_trace_batch(
+        model, prompt, generated, part1, "static", chunk_size=1
+    )
+    chunked_p, chunked_h = teacher_force_partition_entropy_trace_batch(
+        model, prompt, generated, part1, "static", chunk_size=3
+    )
+
+    assert torch.allclose(chunked_p, sequential_p, rtol=1e-6, atol=1e-7)
+    assert torch.allclose(chunked_h, sequential_h, rtol=1e-6, atol=1e-7)
 
 
 def test_qwen3_14b_config_matches_the_base_checkpoint_contract():

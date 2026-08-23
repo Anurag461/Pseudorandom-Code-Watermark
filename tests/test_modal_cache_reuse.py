@@ -1152,6 +1152,22 @@ def test_online_cross_model_entropy_trace_validation_binds_inputs_and_hash():
         validate_cross_model_entropy_trace(
             {**payload, "p_trace": probabilities + 0.01}, **identity
         )
+    with pytest.raises(ValueError, match="missing full-vocabulary entropy"):
+        validate_cross_model_entropy_trace(
+            payload, require_full_entropy=True, **identity
+        )
+    entropies = np.array([1.0, 2.0, 3.0, 4.0], dtype=np.float64)
+    enriched = {
+        **payload,
+        "full_entropy_trace": entropies,
+        "full_entropy_trace_sha256": semantic_sha256(entropies),
+    }
+    assert np.array_equal(
+        validate_cross_model_entropy_trace(
+            enriched, require_full_entropy=True, **identity
+        ),
+        probabilities,
+    )
 
 
 def test_online_cross_model_entropy_campaign_uses_one_combined_queue():
@@ -1161,6 +1177,8 @@ def test_online_cross_model_entropy_campaign_uses_one_combined_queue():
                 "label": "eta0.05-n880",
                 "source_tag": "eta05-source",
                 "prefix_T": 880,
+                "trace_T": 1024,
+                "require_full_entropy": True,
                 "wm_trace_missing": [0, 1, 2],
             },
             {
@@ -1171,6 +1189,7 @@ def test_online_cross_model_entropy_campaign_uses_one_combined_queue():
             },
         ],
         "null_T": 1808,
+        "require_null_full_entropy": True,
         "null_trace_missing": [0, 1, 2, 3],
     }
     requests = cross_model_entropy_estimation_requests(plan, 2)
@@ -1179,10 +1198,13 @@ def test_online_cross_model_entropy_campaign_uses_one_combined_queue():
         "wm", "wm", "wm", "null", "null"
     ]
     assert all(len(request["prompt_indices"]) <= 2 for request in requests)
+    assert requests[0]["trace_T"] == 1024
+    assert requests[0]["require_full_entropy"] is True
+    assert requests[-1]["require_full_entropy"] is True
     assert summarize_cross_model_entropy_workload(plan) == {
-        "watermarked_teacher_forced_token_positions": 6256,
+        "watermarked_teacher_forced_token_positions": 6688,
         "null_teacher_forced_token_positions": 7232,
-        "teacher_forced_token_positions": 13488,
+        "teacher_forced_token_positions": 13920,
         "watermarked_trace_records_missing": 5,
         "null_trace_records_missing": 4,
     }

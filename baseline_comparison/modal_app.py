@@ -58,7 +58,9 @@ image = (
     )
     .add_local_file("prompts.jsonl", PROMPTS_PATH, copy=True)
     .add_local_dir("baseline_comparison", "/root/baseline_comparison", copy=True)
-    .add_local_python_source("qwen", "prc", "online_prc", "detectors")
+    .add_local_python_source(
+        "qwen", "prc", "online_prc", "detectors", "proxy_8b_analysis"
+    )
 )
 
 # Hugging Face added native Qwen3 support after the official-baseline image's
@@ -689,6 +691,14 @@ class FullScoreWorker:
         from baseline_comparison.smoke_runner import score_full_shard
 
         return score_full_shard(data_volume, request)
+
+    @modal.method()
+    def score_textseal_proxy_shard(self, request: dict) -> dict:
+        from baseline_comparison.smoke_runner import (
+            score_textseal_proxy_entropy_shard,
+        )
+
+        return score_textseal_proxy_entropy_shard(data_volume, request)
 
     @modal.method()
     def validate_generated_shard(
@@ -1639,3 +1649,31 @@ def remaining_score_entrypoint(approval_token: str, run_id: str):
             sort_keys=True,
         )
     )
+
+
+@app.local_entrypoint(name="proxy-textseal-score")
+def proxy_textseal_score_entrypoint(approval_token: str):
+    """CPU-only TextSeal sensitivity scoring from committed proxy traces."""
+    from proxy_8b_analysis import APPROVAL_TOKEN, BASELINE_RUN_ID
+
+    if approval_token != APPROVAL_TOKEN:
+        raise PermissionError("8B proxy scoring requires the approved $20 token")
+    requests = [
+        {"run_id": BASELINE_RUN_ID, "shard_index": index}
+        for index in range(10)
+    ]
+    results = list(FullScoreWorker().score_textseal_proxy_shard.map(requests))
+    if len(results) != 10 or any(not result.get("passed") for result in results):
+        raise RuntimeError("one or more TextSeal proxy scoring shards failed")
+    record_count = sum(int(result["record_count"]) for result in results)
+    if record_count != 6_000:
+        raise AssertionError(f"TextSeal proxy scoring produced {record_count} rows")
+    print(json.dumps({
+        "passed": True,
+        "run_id": BASELINE_RUN_ID,
+        "record_count": record_count,
+        "generation_attempts": 0,
+        "proxy_model": "Qwen3-0.6B-Base",
+        "quality_likelihood_model": "Qwen3-8B-Base (unchanged)",
+        "shards": results,
+    }, indent=2, sort_keys=True))

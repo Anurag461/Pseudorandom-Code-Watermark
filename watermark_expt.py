@@ -915,6 +915,7 @@ def estimate_partition_trace_batch(
     generated_tokens_batch,
     partition_map,
     kv_cache_implementation="concat",
+    chunk_size=1,
 ):
     """Teacher-force generated tokens and estimate P[partition 1] per step.
 
@@ -922,6 +923,26 @@ def estimate_partition_trace_batch(
     the generator. It does not sample; it only replays cached generations and
     records the detector model's probability mass on partition 1.
     """
+    trace, _ = estimate_partition_entropy_trace_batch(
+        model,
+        prompt_ids_batch,
+        generated_tokens_batch,
+        partition_map,
+        kv_cache_implementation=kv_cache_implementation,
+        chunk_size=chunk_size,
+    )
+    return trace
+
+
+def estimate_partition_entropy_trace_batch(
+    model,
+    prompt_ids_batch,
+    generated_tokens_batch,
+    partition_map,
+    kv_cache_implementation="concat",
+    chunk_size=1,
+):
+    """Teacher-force tokens and return partition mass plus entropy in nats."""
     model.eval()
     prompt_ids_batch = prompt_ids_batch.to(device)
     generated_tokens_batch = generated_tokens_batch.to(device)
@@ -932,14 +953,20 @@ def estimate_partition_trace_batch(
     # large offline replays can preallocate the cache and avoid an O(T^2)
     # stream of full-history ``torch.cat`` copies.  Keep concat as the default
     # so existing callers retain their historical behavior.
-    trace = teacher_force_partition_trace_batch(
+    from qwen import teacher_force_partition_entropy_trace_batch
+
+    trace, entropy = teacher_force_partition_entropy_trace_batch(
         model,
         prompt_ids_batch,
         generated_tokens_batch,
         part1,
         kv_cache_implementation=kv_cache_implementation,
+        chunk_size=chunk_size,
     )
-    return trace.numpy().astype(np.float64)
+    return (
+        trace.numpy().astype(np.float64),
+        entropy.numpy().astype(np.float64),
+    )
 
 
 def estimate_partition_trace(

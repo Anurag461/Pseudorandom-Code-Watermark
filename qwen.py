@@ -258,19 +258,25 @@ def make_kv_cache(implementation="concat", max_length=None):
     return StaticKVCache(max_length)
 
 
-def teacher_force_partition_trace_batch(
+def teacher_force_partition_entropy_trace_batch(
     model,
     prompt_ids_batch,
     generated_tokens_batch,
     partition_one_mask,
     kv_cache_implementation="concat",
+    chunk_size=1,
+    return_full_entropy=True,
 ):
-    """Replay cached tokens and return P[token in partition 1] per step."""
+    """Replay cached tokens and return partition mass and full-vocab entropy."""
+    chunk_size = int(chunk_size)
+    if chunk_size <= 0:
+        raise ValueError("teacher-forcing chunk_size must be positive")
     decode_length = int(generated_tokens_batch.shape[1])
     if decode_length == 0:
-        return torch.empty(
+        empty = torch.empty(
             (int(generated_tokens_batch.shape[0]), 0), dtype=torch.float32
         )
+        return empty, (empty.clone() if return_full_entropy else None)
     cache = make_kv_cache(
         kv_cache_implementation,
         max_length=(
@@ -278,25 +284,73 @@ def teacher_force_partition_trace_batch(
         ),
     )
     part1 = partition_one_mask.to(prompt_ids_batch.device)
-    steps = []
-    model.eval()
-    with torch.no_grad():
-        logits = model(prompt_ids_batch, cache=cache)[:, -1]
-        for position in range(decode_length):
-            probabilities = torch.softmax(logits, dim=-1)
-            steps.append(
-                (probabilities * part1.to(logits.device))
+    partition_chunks = []
+    entropy_chunks = []
+
+    def append_evidence(step_logits):
+        probabilities = torch.softmax(step_logits, dim=-1)
+        partition_chunks.append(
+            (probabilities * part1.to(step_logits.device))
+            .sum(dim=-1)
+            .detach()
+            .cpu()
+        )
+        if return_full_entropy:
+            log_probabilities = torch.log_softmax(step_logits.float(), dim=-1)
+            full_probabilities = torch.exp(log_probabilities)
+            entropy_chunks.append(
+                -(full_probabilities * log_probabilities)
                 .sum(dim=-1)
                 .detach()
                 .cpu()
             )
-            # No probability after the final cached token is requested.
-            if position + 1 < decode_length:
-                logits = model(
-                    generated_tokens_batch[:, position:position + 1],
-                    cache=cache,
-                )[:, -1]
-    return torch.stack(steps, dim=1).float()
+    model.eval()
+    with torch.no_grad():
+        # The prompt's final logit predicts generated token 0.
+        logits = model(prompt_ids_batch, cache=cache)[:, -1]
+        append_evidence(logits[:, None, :])
+        predicted = 1
+        while predicted < decode_length:
+            count = min(chunk_size, decode_length - predicted)
+            # Input token j predicts generated token j+1. A causal multi-token
+            # forward is mathematically equivalent to count one-token calls.
+            logits = model(
+                generated_tokens_batch[
+                    :, predicted - 1 : predicted - 1 + count
+                ],
+                cache=cache,
+            )
+            append_evidence(logits)
+            predicted += count
+    return (
+        torch.cat(partition_chunks, dim=1).float(),
+        (
+            torch.cat(entropy_chunks, dim=1).float()
+            if return_full_entropy
+            else None
+        ),
+    )
+
+
+def teacher_force_partition_trace_batch(
+    model,
+    prompt_ids_batch,
+    generated_tokens_batch,
+    partition_one_mask,
+    kv_cache_implementation="concat",
+    chunk_size=1,
+):
+    """Replay cached tokens and return P[token in partition 1] per step."""
+    partition_trace, _ = teacher_force_partition_entropy_trace_batch(
+        model,
+        prompt_ids_batch,
+        generated_tokens_batch,
+        partition_one_mask,
+        kv_cache_implementation=kv_cache_implementation,
+        chunk_size=chunk_size,
+        return_full_entropy=False,
+    )
+    return partition_trace
 
 class GroupedQueryAttention(nn.Module):
     def __init__(

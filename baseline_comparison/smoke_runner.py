@@ -1768,3 +1768,241 @@ def score_full_shard(data_volume, request: dict) -> dict:
         "jsonl_path": str(jsonl_path),
         "validation_path": str(validation_path),
     }
+
+
+def score_textseal_proxy_entropy_shard(data_volume, request: dict) -> dict:
+    """Rescore TextSeal with 0.6B entropy weights; preserve native-8B quality."""
+    from textseal.watermarking.detector import TextSealDetector
+    from detectors import semantic_sha256, tensor_sha256
+    from proxy_8b_analysis import (
+        BASELINE_RUN_ID,
+        NULL_TRACE_T,
+        PRC_AUDITS,
+        shared_null_proxy_trace_path,
+        textseal_proxy_trace_path,
+        validate_textseal_proxy_trace,
+    )
+
+    run_id, shard_index, prompt_indices = _validated_full_request(request)
+    if run_id != BASELINE_RUN_ID:
+        raise ValueError("TextSeal proxy scoring received an unexpected run ID")
+    preload_official_runtimes()
+    data_volume.reload()
+    _numpy_pickle_compat()
+
+    raw_path = (
+        Path("/data/controlled_baseline_full")
+        / run_id
+        / "generated"
+        / f"shard_{shard_index:02d}.pt"
+    )
+    native_path = (
+        Path("/data/controlled_baseline_full")
+        / run_id
+        / "scored"
+        / f"shard_{shard_index:02d}.jsonl"
+    )
+    if not raw_path.is_file() or not native_path.is_file():
+        raise FileNotFoundError("TextSeal proxy scoring requires raw and native scored shards")
+    raw = torch.load(raw_path, weights_only=False, map_location="cpu")
+    if [int(index) for index in raw.get("prompt_indices", [])] != prompt_indices:
+        raise ValueError("TextSeal proxy raw shard prompt order differs")
+    outputs = raw.get("sequences", {}).get("textseal")
+    if outputs is None or len(outputs) != len(prompt_indices):
+        raise ValueError("TextSeal proxy raw output coverage differs")
+
+    prompt_rows = [
+        json.loads(line) for line in Path(PROMPTS_PATH).read_text().splitlines() if line
+    ]
+    _, null_records, artifact = _load_cached_sequences_for_indices(
+        prompt_rows, prompt_indices
+    )
+    partition_hash = tensor_sha256(artifact["partition"])
+    native_rows = {}
+    with native_path.open() as handle:
+        for line in handle:
+            row = json.loads(line)
+            if row.get("method") == "textseal":
+                key = (
+                    str(row["sample_type"]),
+                    int(row["prompt_index"]),
+                    int(row["prefix_length"]),
+                )
+                if key in native_rows:
+                    raise ValueError(f"duplicate native TextSeal row {key}")
+                native_rows[key] = row
+
+    records = []
+    validations = []
+    for local_row, prompt_index in enumerate(prompt_indices):
+        prompt_tensor = torch.as_tensor(
+            artifact["prompt_ids_list"][prompt_index], dtype=torch.long
+        ).contiguous()
+        prompt_hash = tensor_sha256(prompt_tensor)
+        for sample_type in ("watermarked", "null"):
+            if sample_type == "watermarked":
+                tokens = list(map(int, outputs[local_row]["token_ids"][:1024]))
+                trace_path = Path(textseal_proxy_trace_path(prompt_index))
+                identity = {
+                    "prompt_index": prompt_index,
+                    "prompt_sha256": prompt_hash,
+                    "tokens_sha256": tensor_sha256(torch.as_tensor(
+                        tokens, dtype=torch.long
+                    )),
+                }
+                trace_payload = torch.load(
+                    trace_path, weights_only=False, map_location="cpu"
+                )
+                entropies = validate_textseal_proxy_trace(
+                    trace_payload, **identity
+                )
+            else:
+                tokens_tensor = torch.as_tensor(
+                    null_records[local_row]["tokens"], dtype=torch.long
+                )[:NULL_TRACE_T].contiguous()
+                if tokens_tensor.numel() != NULL_TRACE_T:
+                    raise ValueError(f"null prompt {prompt_index} is shorter than T={NULL_TRACE_T}")
+                tokens = list(map(int, tokens_tensor[:1024]))
+                trace_path = Path(shared_null_proxy_trace_path(prompt_index))
+                trace_payload = torch.load(
+                    trace_path, weights_only=False, map_location="cpu"
+                )
+                expected = {
+                    "source": "null",
+                    "prompt_idx": prompt_index,
+                    "trace_T": NULL_TRACE_T,
+                    "generation_model_size": "8B",
+                    "entropy_model_size": "0.6B",
+                    "partition_sha256": partition_hash,
+                    "prompt_sha256": prompt_hash,
+                    "tokens_sha256": tensor_sha256(tokens_tensor),
+                }
+                for field, value in expected.items():
+                    if trace_payload.get(field) != value:
+                        raise ValueError(
+                            f"null proxy trace {field}={trace_payload.get(field)!r}; "
+                            f"expected {value!r}"
+                        )
+                entropies = np.asarray(
+                    trace_payload.get("full_entropy_trace"), dtype=np.float64
+                ).reshape(-1)
+                if entropies.size != NULL_TRACE_T:
+                    raise ValueError("null proxy trace length differs")
+                if trace_payload.get("full_entropy_trace_sha256") != semantic_sha256(
+                    entropies
+                ):
+                    raise ValueError("null proxy entropy hash differs")
+                entropies = entropies[:1024]
+
+            if len(tokens) != 1024 or len(entropies) != 1024:
+                raise ValueError("TextSeal proxy scoring requires exact T=1024 traces")
+            reference_deltas = []
+            for prefix in PREFIX_LENGTHS:
+                positions = deduplicated_positions(tokens[:prefix], CONTEXT_LENGTH)
+                evidence = official_textseal_fused_scores(tokens[:prefix], positions)
+                test = textseal_gamma_test(
+                    evidence,
+                    [float(entropies[position]) for position in positions],
+                    alpha=TEXTSEAL_ALPHA,
+                    nominal_fpr=NOMINAL_FPR,
+                )
+                official = TextSealDetector(
+                    None, textseal_config(), scoring_method="v2"
+                )._score_text(
+                    tokens[:prefix],
+                    list(map(float, entropies[1:prefix])),
+                    scoring_method="v2",
+                )
+                reference_delta = abs(
+                    float(official["p_value_weighted"]) - float(test["p_value"])
+                )
+                if not math.isclose(
+                    float(official["p_value_weighted"]),
+                    float(test["p_value"]),
+                    rel_tol=2e-6,
+                    abs_tol=2e-7,
+                ):
+                    raise AssertionError(
+                        f"proxy TextSeal official p mismatch for {sample_type} "
+                        f"prompt {prompt_index} T={prefix}"
+                    )
+                reference_deltas.append(reference_delta)
+                key = (sample_type, prompt_index, prefix)
+                if key not in native_rows:
+                    raise ValueError(f"missing native TextSeal row {key}")
+                row = dict(native_rows[key])
+                row["statistic"] = float(test["statistic"])
+                row["p_value"] = float(test["p_value"])
+                row["threshold"] = float(test["threshold"])
+                row["decision"] = bool(test["decision"])
+                row["intermediate_values"] = {
+                    **dict(test["intermediate"]),
+                    "official_p_value_weighted": float(
+                        official["p_value_weighted"]
+                    ),
+                    "official_common_abs_p_delta": reference_delta,
+                    "native_8b_p_value": float(native_rows[key]["p_value"]),
+                    "entropy_weight_model": "Qwen3-0.6B-Base",
+                }
+                row["method_configuration"] = {
+                    **dict(row["method_configuration"]),
+                    "proxy_detector_sensitivity": True,
+                    "entropy_weight_model": "Qwen3-0.6B-Base",
+                    "quality_likelihood_model": "Qwen3-8B-Base (unchanged)",
+                }
+                row["cache_or_generation_provenance"] = {
+                    **dict(row["cache_or_generation_provenance"]),
+                    "proxy_mode": "cache_only_teacher_forcing_no_generation",
+                    "proxy_entropy_trace": str(trace_path),
+                    "proxy_model": "Qwen3-0.6B-Base",
+                    "generation_attempts": 0,
+                }
+                row["artifact_fingerprint"] = _semantic_fingerprint({
+                    "native_artifact_fingerprint": row["artifact_fingerprint"],
+                    "proxy_entropy_trace_sha256": trace_payload[
+                        "full_entropy_trace_sha256"
+                    ],
+                    "proxy_model": "Qwen3-0.6B-Base",
+                })
+                records.append(row)
+            validations.append({
+                "prompt_index": prompt_index,
+                "sample_type": sample_type,
+                "trace_path": str(trace_path),
+                "max_official_common_p_delta": max(reference_deltas),
+                "prefixes": list(PREFIX_LENGTHS),
+                "generation_attempts": 0,
+            })
+
+    expected_count = len(prompt_indices) * 2 * len(PREFIX_LENGTHS)
+    if len(records) != expected_count:
+        raise AssertionError(f"TextSeal proxy scorer produced {len(records)} rows")
+    output_root = (
+        Path("/data/controlled_baseline_full") / run_id / "proxy_scored" / "textseal"
+    )
+    output_root.mkdir(parents=True, exist_ok=True)
+    jsonl_path = output_root / f"shard_{shard_index:02d}.jsonl"
+    validation_path = output_root / f"shard_{shard_index:02d}_validation.json"
+    with jsonl_path.open("w") as handle:
+        for row in records:
+            handle.write(json.dumps(row, sort_keys=True, allow_nan=False) + "\n")
+    validation_path.write_text(json.dumps({
+        "passed": True,
+        "run_id": run_id,
+        "shard_index": shard_index,
+        "prompt_indices": prompt_indices,
+        "record_count": len(records),
+        "generation_attempts": 0,
+        "proxy_model": "Qwen3-0.6B-Base",
+        "native_quality_fields_preserved": True,
+        "validations": validations,
+    }, indent=2, sort_keys=True, allow_nan=False) + "\n")
+    data_volume.commit()
+    return {
+        "passed": True,
+        "run_id": run_id,
+        "shard_index": shard_index,
+        "record_count": len(records),
+        "jsonl_path": str(jsonl_path),
+        "validation_path": str(validation_path),
+    }

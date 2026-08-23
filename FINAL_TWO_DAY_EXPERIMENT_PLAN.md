@@ -336,8 +336,9 @@ full-run spend is `4.22362341` dollars. Mean 50-prompt worker time was 165.873
 seconds and peak CUDA reserved memory was 27,839,692,800 bytes (25.93 GiB).
 See `controlled_baseline_full_report.md` and
 `outputs/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/`.
-The 50-by-five diversity experiment, 27B replication, and proxy-model
-experiments remain incomplete and unauthorized under this run.
+The 50-by-five diversity experiment and 27B replication remain incomplete and
+unauthorized. The proxy-model analysis was not part of this generation run;
+it was separately approved and subsequently completed cache-only below.
 
 The dependency isolation, smoke, scientific diagnostic, and batch-50 gate were
 completed before production. Production was launched only after the required
@@ -348,17 +349,43 @@ methods have a nominal FPR. Validate its generation and g-values on a small
 smoke against Google's official SynthID reference; do not use the trained
 Bayesian detector.
 
-### Lightweight detector comparison
+### Completed: lightweight detector comparison
 
-After the 8B eta-0.05/0.10 boundaries are selected, teacher-force their cached
-watermarked and null tokens through Qwen3-0.6B-Base and rerun MAP/entropy
-detection. Compare native-8B versus proxy-0.6B TPR/FPR at both selected
-boundaries. Expected cost **$1--3**, wall time **20--45 minutes**.
+Completed the separately approved cache-only Qwen3-8B to Qwen3-0.6B detector
+analysis on 2026-08-23. It generated zero tokens and covered all 500 prompts,
+all four PRC eta values, the selected boundaries/ceiling, and common prefixes
+`T={128,256,400,512,768,1024}`. The eta `.15` cell remains explicitly
+censored at `T=4096` (`n90 > 4096`). TextSeal was rescored with 0.6B entropy
+weights as a labeled detector sensitivity; SynthID frequentist and Gumbel
+exact-Gamma scores were correctly carried unchanged because their detectors do
+not use model probabilities. All quality metrics remain native Qwen3-8B.
 
-The 4B proxy is a stretch goal only if all Priority 0 work and the baseline
-table are complete by the middle of day 2 (estimated $3--7 and 30--60 minutes).
-Do not add Qwen3.5-0.8B in this sprint: it introduces a new architecture and a
-tokenizer/provenance compatibility check for little incremental value.
+At the selected PRC MAP lengths, native-8B to proxy-0.6B TPR changed from
+`90.4%` to `76.2%` for eta `.05`, `90.2%` to `83.0%` for `.10`, `89.6%`
+to `86.4%` at the `.15` censored ceiling, and `90.2%` to `86.6%` for `.20`.
+The eta `.20` MAP null result was `1/500` under both probability models; all
+other selected MAP null cells were `0/500`. Thus the 0.6B proxy is a
+conservative sensitivity analysis, not a drop-in native detector replacement.
+
+At T=1024, TextSeal remained at 100% TPR and 0/500 observed FPs with either
+8B or 0.6B entropy weights; its median watermarked `-log10(p)` changed from
+`280.15` to `271.45`. All 6,000 TextSeal official-reference comparisons
+passed, with maximum absolute p-value difference `3.4802e-7`. The common
+quality table reconfirmed that all PRC eta outputs remain close to shared null
+quality/diversity, while TextSeal and Gumbel retain the controlled run's
+material repetition loss. PRC eta and TextSeal alpha remain unrelated
+operating parameters.
+
+The exact required replay covered 16,863,500 positions. Main full-run wall
+time was 44.1 minutes and peak CUDA reserved memory was 18,614,321,152 bytes
+(17.34 GiB). Exact all-in provider spend, including tests and the safely
+blocked sequential preflight, was **$3.21783640**: `$2.84171420` GPU,
+`$0.32920227` CPU, and `$0.04691993` memory, below the approved $20 cap.
+See `proxy_8b_detector_report.md`, `proxy_8b_detector_runbook.md`, and the
+`outputs/proxy_8b_*` compact summaries/manifests.
+
+The 4B proxy and Qwen3.5-0.8B remain unrun. They are not needed for the
+completed 0.6B detector-sensitivity result and require separate scope.
 
 ## Deferred work
 

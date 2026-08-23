@@ -142,6 +142,16 @@ def _slug(value) -> str:
     return re.sub(r"[^A-Za-z0-9_.-]+", "-", str(value)).strip("-")
 
 
+def _numpy_pickle_compat() -> None:
+    """Read NumPy-2-authored torch payloads in the pinned NumPy 1.26 image."""
+    import sys
+    import numpy as np
+
+    sys.modules.setdefault("numpy._core", np.core)
+    sys.modules.setdefault("numpy._core.multiarray", np.core.multiarray)
+    sys.modules.setdefault("numpy._core.numeric", np.core.numeric)
+
+
 def normalize_model_size(model_size: str = MODEL_SIZE) -> str:
     value = MODEL_SIZE if model_size is None else str(model_size).strip()
     if not value:
@@ -284,24 +294,32 @@ def cross_model_wm_entropy_dir(
     source_tag: str,
     trace_T: int,
     entropy_model_size: str,
+    estimator_chunk_size: int = 1,
 ) -> str:
-    return (
+    directory = (
         f"/data/{source_tag}/cross_model_entropy_v"
         f"{CROSS_MODEL_ENTROPY_TRACE_SCHEMA_VERSION}/"
-        f"{model_cache_name(entropy_model_size)}/T{int(trace_T)}/wm"
+        f"{model_cache_name(entropy_model_size)}"
     )
+    if int(estimator_chunk_size) != 1:
+        directory += f"/chunk{int(estimator_chunk_size)}"
+    return f"{directory}/T{int(trace_T)}/wm"
 
 
 def cross_model_null_entropy_dir(
     trace_T: int,
     entropy_model_size: str,
     generation_model_size: str,
+    estimator_chunk_size: int = 1,
 ) -> str:
-    return (
+    directory = (
         f"/data/_online_null_cross_model_entropy/"
         f"{model_cache_name(generation_model_size)}/"
-        f"{model_cache_name(entropy_model_size)}/T{int(trace_T)}"
+        f"{model_cache_name(entropy_model_size)}"
     )
+    if int(estimator_chunk_size) != 1:
+        directory += f"/chunk{int(estimator_chunk_size)}"
+    return f"{directory}/T{int(trace_T)}"
 
 
 def cross_model_entropy_trace_path(
@@ -311,18 +329,22 @@ def cross_model_entropy_trace_path(
     entropy_model_size: str,
     generation_model_size: str,
     source_tag: str = "",
+    estimator_chunk_size: int = 1,
 ) -> str:
     source = str(source)
     if source == "wm":
         if not source_tag:
             raise ValueError("watermarked entropy traces require source_tag")
         directory = cross_model_wm_entropy_dir(
-            source_tag, trace_T, entropy_model_size
+            source_tag, trace_T, entropy_model_size, estimator_chunk_size
         )
         prefix = "wm"
     elif source == "null":
         directory = cross_model_null_entropy_dir(
-            trace_T, entropy_model_size, generation_model_size
+            trace_T,
+            entropy_model_size,
+            generation_model_size,
+            estimator_chunk_size,
         )
         prefix = "null"
     else:
@@ -341,6 +363,7 @@ def cross_model_entropy_trace_identity(
     prompt_sha256: str,
     tokens_sha256: str,
     source_artifact_fingerprint: str = "",
+    estimator_chunk_size: int = 1,
 ) -> dict:
     """Fields that make an alternate entropy trace safe to reuse."""
     generation_model_size = normalize_model_size(generation_model_size)
@@ -370,6 +393,9 @@ def cross_model_entropy_trace_identity(
             DEFAULT_ENTROPY_KV_CACHE_IMPLEMENTATION
         ),
     }
+    if int(estimator_chunk_size) != 1:
+        identity["estimator_chunk_size"] = int(estimator_chunk_size)
+        identity["estimator_execution"] = "causal_multi_token_chunks_v1"
     if str(source) == "wm":
         if not source_artifact_fingerprint:
             raise ValueError(
@@ -385,6 +411,7 @@ def cross_model_entropy_trace_identity(
 
 def validate_cross_model_entropy_trace(
     payload: dict,
+    require_full_entropy: bool = False,
     **identity_kwargs,
 ):
     """Validate trace identity, length, range, and serialized hash."""
@@ -411,6 +438,30 @@ def validate_cross_model_entropy_trace(
     observed_hash = semantic_sha256(p_trace)
     if payload.get("p_trace_sha256") != observed_hash:
         raise ValueError("cross-model entropy p_trace hash is inconsistent")
+    entropy_value = payload.get("full_entropy_trace")
+    if require_full_entropy and entropy_value is None:
+        raise ValueError("cross-model trace is missing full-vocabulary entropy")
+    if entropy_value is not None:
+        entropy_trace = np.asarray(
+            entropy_value, dtype=np.float64
+        ).reshape(-1)
+        if entropy_trace.size != int(expected["trace_T"]):
+            raise ValueError(
+                "cross-model entropy trace has "
+                f"{entropy_trace.size} full entropies; expected "
+                f"{expected['trace_T']}"
+            )
+        if not np.all(np.isfinite(entropy_trace)) or np.any(entropy_trace < 0):
+            raise ValueError(
+                "cross-model full-vocabulary entropies must be finite and "
+                "nonnegative"
+            )
+        if payload.get("full_entropy_trace_sha256") != semantic_sha256(
+            entropy_trace
+        ):
+            raise ValueError(
+                "cross-model full_entropy_trace hash is inconsistent"
+            )
     return p_trace
 
 
@@ -1790,34 +1841,175 @@ def validate_online_watermarked_record(record: dict, artifact: dict,
 image = (
     modal.Image.debian_slim(python_version="3.11")
     .pip_install(
-        "torch",
-        "transformers",
-        "tokenizers",
-        "safetensors",
-        "huggingface_hub",
-        "scipy",
-        "galois",
-        "numpy",
+        "torch==2.4.0",
+        "transformers==4.51.3",
+        "tokenizers==0.21.1",
+        "safetensors==0.4.5",
+        "huggingface_hub==0.30.2",
+        "scipy==1.14.1",
+        "galois==0.4.2",
+        "numba==0.59.1",
+        "numpy==1.26.0",
+        "pytest==8.3.3",
     )
     .env({
         "HF_HOME": "/cache/hf",
         "HF_HUB_CACHE": "/cache/hf",
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
         "PRC_MODEL_CACHE_DIR": "/cache/models",
         "PRC_MODEL_SIZE": MODEL_SIZE,
         "PRC_MODEL_VARIANT": "base",
         "TOKENIZERS_PARALLELISM": "false",
         "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
     })
-    .add_local_file("prompts.jsonl", "/root/prompts.jsonl")
+    .add_local_file("prompts.jsonl", "/root/prompts.jsonl", copy=True)
+    .add_local_dir("tests", "/root/tests", copy=True)
     .add_local_python_source(
         "prc", "online_prc", "qwen", "constants", "detectors",
-        "watermark_expt",
+        "watermark_expt", "proxy_8b_analysis",
     )
 )
 
 hf_cache = modal.Volume.from_name("prc-hf-cache", create_if_missing=True)
 data_vol = modal.Volume.from_name("prc-data", create_if_missing=True)
 app = modal.App("prc-online-causal", image=image)
+
+
+@app.function(cpu=2.0, timeout=900)
+def proxy_unit_tests_remote() -> dict:
+    """Run only the focused, dependency-heavy proxy replay tests on Modal CPU."""
+    import subprocess
+
+    command = [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "/root/tests/test_qwen_kv_cache.py",
+        "/root/tests/test_proxy_8b_analysis.py",
+    ]
+    completed = subprocess.run(command, text=True, capture_output=True)
+    if completed.returncode:
+        raise RuntimeError(
+            f"proxy Modal CPU tests failed\n{completed.stdout}\n{completed.stderr}"
+        )
+    return {
+        "passed": True,
+        "command": command,
+        "stdout": completed.stdout,
+        "generation_attempts": 0,
+        "gpu_workers": 0,
+    }
+
+
+@app.function(cpu=2.0, volumes={"/data": data_vol}, timeout=1800)
+def proxy_8b_native_quality_shard(prompt_indices: list[int]) -> dict:
+    """Read cached 8B traces and return exact T=1024 quality fields only."""
+    import torch
+    from detectors import tensor_sha256
+    from proxy_8b_analysis import (
+        NULL_TRACE_T,
+        PRC_AUDITS,
+        cached_quality_metrics,
+    )
+
+    _numpy_pickle_compat()
+    indices = [int(index) for index in prompt_indices]
+    if not indices or len(indices) != len(set(indices)):
+        raise ValueError("quality shard indices must be nonempty and unique")
+    if min(indices) < 0 or max(indices) >= CANONICAL_NUM_PROMPTS:
+        raise ValueError("quality shard index is outside the canonical corpus")
+    data_vol.reload()
+    rows = []
+    for audit in PRC_AUDITS:
+        artifact = torch.load(
+            artifact_path(audit["source_tag"]),
+            weights_only=False,
+            map_location="cpu",
+        )
+        for index in indices:
+            record = torch.load(
+                os.path.join(wm_dir(audit["source_tag"]), f"wm_{index:04d}.pt"),
+                weights_only=False,
+                map_location="cpu",
+            )
+            validate_online_watermarked_record(record, artifact, index)
+            tokens = torch.as_tensor(record["tokens"], dtype=torch.long)[:1024]
+            rows.append({
+                "prompt_index": index,
+                "prompt_id": f"prompt-{index}",
+                "method": "online_prc",
+                "eta": float(audit["eta"]),
+                "sample_type": "watermarked",
+                "prefix_length": 1024,
+                "boundary_status": audit["boundary_status"],
+                "quality_likelihood_model": "Qwen3-8B-Base",
+                "generated_token_hash": tensor_sha256(tokens.contiguous()),
+                "source_tag": audit["source_tag"],
+                "generation_attempts": 0,
+                **cached_quality_metrics(
+                    tokens,
+                    record["base_token_logprob"],
+                    prefix_length=1024,
+                ),
+            })
+
+    # The same canonical null texts are shared across all eta values, so emit
+    # each null exactly once rather than pretending there are four samples.
+    reference_artifact = torch.load(
+        artifact_path(PRC_AUDITS[-1]["source_tag"]),
+        weights_only=False,
+        map_location="cpu",
+    )
+    null_manifest = load_null_cache_manifest(NULL_TRACE_T, "8B")
+    if null_manifest is None:
+        raise FileNotFoundError("the canonical 8B null cache manifest is missing")
+    for index in indices:
+        record = torch.load(
+            os.path.join(
+                shared_null_dir(NULL_TRACE_T, "8B"),
+                f"null_{index:04d}.pt",
+            ),
+            weights_only=False,
+            map_location="cpu",
+        )
+        validate_online_null_record(
+            record,
+            reference_artifact,
+            index,
+            1024,
+            source_length=NULL_TRACE_T,
+            expected_kv_cache_implementation=null_manifest[
+                "kv_cache_implementation"
+            ],
+            require_provenance=True,
+        )
+        tokens = torch.as_tensor(record["tokens"], dtype=torch.long)[:1024]
+        rows.append({
+            "prompt_index": index,
+            "prompt_id": f"prompt-{index}",
+            "method": "null",
+            "eta": None,
+            "sample_type": "null",
+            "prefix_length": 1024,
+            "boundary_status": "shared_across_detector_methods",
+            "quality_likelihood_model": "Qwen3-8B-Base",
+            "generated_token_hash": tensor_sha256(tokens.contiguous()),
+            "source_tag": f"shared_null_qwen3_8b_base_T{NULL_TRACE_T}",
+            "generation_attempts": 0,
+            **cached_quality_metrics(
+                tokens,
+                record["base_token_logprob"],
+                prefix_length=1024,
+            ),
+        })
+    return {
+        "prompt_indices": indices,
+        "rows": rows,
+        "generation_attempts": 0,
+        "model_loads": 0,
+    }
 
 
 @app.function(volumes={"/data": data_vol}, timeout=600)
@@ -2392,6 +2584,7 @@ def plan_cross_model_entropy_audits(
     import torch
     from detectors import semantic_sha256, tensor_sha256
 
+    _numpy_pickle_compat()
     data_vol.reload()
     indices = [int(index) for index in prompt_indices]
     if not indices or len(set(indices)) != len(indices):
@@ -2402,12 +2595,16 @@ def plan_cross_model_entropy_audits(
     reference_artifact = None
     shared_null_identity = None
 
-    def trace_status(path, identity):
+    def trace_status(path, identity, require_full_entropy=False):
         if not os.path.isfile(path):
             return False, None
         try:
             payload = torch.load(path, weights_only=False, map_location="cpu")
-            validate_cross_model_entropy_trace(payload, **identity)
+            validate_cross_model_entropy_trace(
+                payload,
+                require_full_entropy=bool(require_full_entropy),
+                **identity,
+            )
             return True, None
         except Exception as exc:
             return False, f"{type(exc).__name__}: {exc}"
@@ -2415,13 +2612,19 @@ def plan_cross_model_entropy_audits(
     for audit in audits:
         source_tag = str(audit["source_tag"])
         prefix_T = int(audit["prefix_T"])
+        trace_T = int(audit.get("trace_T", prefix_T))
+        estimator_chunk_size = int(audit.get("estimator_chunk_size", 1))
+        if estimator_chunk_size <= 0:
+            raise ValueError("cross-model estimator chunk size must be positive")
+        require_full_entropy = bool(audit.get("require_full_entropy", False))
         artifact = torch.load(
             artifact_path(source_tag), weights_only=False, map_location="cpu"
         )
         generation_model_size = artifact_generation_model_size(artifact)
-        if prefix_T <= 0 or prefix_T > int(artifact["T"]):
+        if prefix_T <= 0 or trace_T < prefix_T or trace_T > int(artifact["T"]):
             raise ValueError(
-                f"audit T={prefix_T} exceeds source artifact T="
+                f"audit prefix/trace T={prefix_T}/{trace_T} is incompatible "
+                "with source artifact T="
                 f"{artifact['T']} for {source_tag}"
             )
         partition_hash = tensor_sha256(artifact["partition"])
@@ -2455,12 +2658,12 @@ def plan_cross_model_entropy_audits(
             )
             validate_online_watermarked_record(record, artifact, index)
             tokens = torch.as_tensor(record["tokens"], dtype=torch.long)[
-                :prefix_T
+                :trace_T
             ].contiguous()
             identity = {
                 "source": "wm",
                 "prompt_index": index,
-                "trace_T": prefix_T,
+                "trace_T": trace_T,
                 "generation_model_size": generation_model_size,
                 "entropy_model_size": entropy_model_size,
                 "partition_sha256": partition_hash,
@@ -2471,16 +2674,20 @@ def plan_cross_model_entropy_audits(
                 "source_artifact_fingerprint": artifact[
                     "artifact_fingerprint"
                 ],
+                "estimator_chunk_size": estimator_chunk_size,
             }
             path = cross_model_entropy_trace_path(
                 "wm",
                 index,
-                prefix_T,
+                trace_T,
                 entropy_model_size,
                 generation_model_size,
                 source_tag,
+                estimator_chunk_size,
             )
-            valid, reason = trace_status(path, identity)
+            valid, reason = trace_status(
+                path, identity, require_full_entropy=require_full_entropy
+            )
             if not valid:
                 missing.append(index)
                 if reason is not None:
@@ -2493,6 +2700,9 @@ def plan_cross_model_entropy_audits(
             **dict(audit),
             "source_tag": source_tag,
             "prefix_T": prefix_T,
+            "trace_T": trace_T,
+            "require_full_entropy": require_full_entropy,
+            "estimator_chunk_size": estimator_chunk_size,
             "source_T": int(artifact["T"]),
             "generation_model_size": generation_model_size,
             "artifact_fingerprint": artifact["artifact_fingerprint"],
@@ -2520,6 +2730,15 @@ def plan_cross_model_entropy_audits(
         )
 
     partition_hash = tensor_sha256(reference_artifact["partition"])
+    require_null_full_entropy = any(
+        bool(plan.get("require_full_entropy", False)) for plan in plans
+    )
+    null_chunk_sizes = {
+        int(plan.get("estimator_chunk_size", 1)) for plan in plans
+    }
+    if len(null_chunk_sizes) != 1:
+        raise ValueError("shared null proxy trace requires one estimator chunk size")
+    null_estimator_chunk_size = next(iter(null_chunk_sizes))
     null_missing = []
     null_invalid = []
     for index in indices:
@@ -2560,6 +2779,7 @@ def plan_cross_model_entropy_audits(
                 dtype=torch.long,
             )),
             "tokens_sha256": tensor_sha256(tokens),
+            "estimator_chunk_size": null_estimator_chunk_size,
         }
         path = cross_model_entropy_trace_path(
             "null",
@@ -2567,8 +2787,13 @@ def plan_cross_model_entropy_audits(
             null_T,
             entropy_model_size,
             generation_model_size,
+            estimator_chunk_size=null_estimator_chunk_size,
         )
-        valid, reason = trace_status(path, identity)
+        valid, reason = trace_status(
+            path,
+            identity,
+            require_full_entropy=require_null_full_entropy,
+        )
         if not valid:
             null_missing.append(index)
             if reason is not None:
@@ -2588,8 +2813,102 @@ def plan_cross_model_entropy_audits(
         "null_trace_missing": null_missing,
         "null_trace_invalid": null_invalid,
         "null_trace_cached": len(indices) - len(null_missing),
+        "require_null_full_entropy": require_null_full_entropy,
+        "null_estimator_chunk_size": null_estimator_chunk_size,
         "null_manifest": null_manifest,
         "generation_records_verified": len(indices) * (len(plans) + 1),
+    }
+
+
+@app.function(cpu=1.0, volumes={"/data": data_vol}, timeout=1800)
+def plan_textseal_proxy_entropy(prompt_indices: list[int]) -> dict:
+    """Validate committed TextSeal artifacts and inventory proxy traces."""
+    import torch
+    from detectors import tensor_sha256
+    from proxy_8b_analysis import (
+        BASELINE_RUN_ID,
+        PRC_AUDITS,
+        textseal_proxy_trace_identity,
+        textseal_proxy_trace_path,
+        validate_textseal_proxy_trace,
+    )
+
+    _numpy_pickle_compat()
+    indices = [int(index) for index in prompt_indices]
+    if not indices or len(indices) != len(set(indices)):
+        raise ValueError("TextSeal proxy prompt indices must be nonempty and unique")
+    if min(indices) < 0 or max(indices) >= CANONICAL_NUM_PROMPTS:
+        raise ValueError("TextSeal proxy prompt index is outside the canonical corpus")
+    data_vol.reload()
+    artifact = torch.load(
+        artifact_path(PRC_AUDITS[-1]["source_tag"]),
+        weights_only=False,
+        map_location="cpu",
+    )
+    if artifact_generation_model_size(artifact) != "8B":
+        raise ValueError("canonical proxy prompt artifact is not Qwen3-8B")
+
+    missing_by_shard = {}
+    invalid = []
+    verified = 0
+    for shard_index in sorted({index // 50 for index in indices}):
+        requested = [index for index in indices if index // 50 == shard_index]
+        raw_path = (
+            f"/data/controlled_baseline_full/{BASELINE_RUN_ID}/generated/"
+            f"shard_{shard_index:02d}.pt"
+        )
+        if not os.path.isfile(raw_path):
+            raise FileNotFoundError(raw_path)
+        raw = torch.load(raw_path, weights_only=False, map_location="cpu")
+        shard_indices = [int(index) for index in raw.get("prompt_indices", [])]
+        if shard_indices != list(range(shard_index * 50, shard_index * 50 + 50)):
+            raise ValueError(f"controlled-baseline shard {shard_index} ordering differs")
+        outputs = raw.get("sequences", {}).get("textseal")
+        if outputs is None or len(outputs) != 50:
+            raise ValueError(f"TextSeal shard {shard_index} coverage differs")
+        missing = []
+        for index in requested:
+            tokens = torch.as_tensor(
+                outputs[index - shard_index * 50]["token_ids"], dtype=torch.long
+            )[:1024].contiguous()
+            if tokens.numel() != 1024:
+                raise ValueError(f"TextSeal prompt {index} is not 1024 tokens")
+            identity = {
+                "prompt_index": index,
+                "prompt_sha256": tensor_sha256(torch.as_tensor(
+                    artifact["prompt_ids_list"][index], dtype=torch.long
+                )),
+                "tokens_sha256": tensor_sha256(tokens),
+            }
+            path = textseal_proxy_trace_path(index)
+            try:
+                if not os.path.isfile(path):
+                    raise FileNotFoundError(path)
+                payload = torch.load(path, weights_only=False, map_location="cpu")
+                validate_textseal_proxy_trace(payload, **identity)
+            except Exception as exc:
+                missing.append(index)
+                if not isinstance(exc, FileNotFoundError):
+                    invalid.append({
+                        "prompt_index": index,
+                        "path": path,
+                        "reason": f"{type(exc).__name__}: {exc}",
+                    })
+            verified += 1
+        if missing:
+            missing_by_shard[shard_index] = missing
+    return {
+        "baseline_run_id": BASELINE_RUN_ID,
+        "prompt_indices": indices,
+        "generation_records_verified": verified,
+        "missing_by_shard": missing_by_shard,
+        "missing_trace_records": sum(map(len, missing_by_shard.values())),
+        "cached_trace_records": len(indices) - sum(map(len, missing_by_shard.values())),
+        "invalid_traces": invalid,
+        "teacher_forced_token_positions": 1024 * sum(
+            map(len, missing_by_shard.values())
+        ),
+        "generation_attempts": 0,
     }
 
 
@@ -2655,11 +2974,14 @@ class CrossModelEntropyModel:
         import torch
         from detectors import semantic_sha256, tensor_sha256
 
+        _numpy_pickle_compat()
         started = time.time()
         source = str(request["source"])
         artifact_tag = str(request["artifact_tag"])
         source_tag = str(request.get("source_tag", ""))
         trace_T = int(request["trace_T"])
+        estimator_chunk_size = int(request.get("estimator_chunk_size", 1))
+        require_full_entropy = bool(request.get("require_full_entropy", False))
         indices = [int(index) for index in request["prompt_indices"]]
         if not indices or len(set(indices)) != len(indices):
             raise ValueError("entropy replay batch indices are invalid")
@@ -2757,6 +3079,7 @@ class CrossModelEntropyModel:
                     artifact["prompt_ids_list"][index], dtype=torch.long
                 )),
                 "tokens_sha256": tensor_sha256(tokens),
+                "estimator_chunk_size": estimator_chunk_size,
             }
             if source == "wm":
                 identity["source_artifact_fingerprint"] = source_artifact[
@@ -2769,13 +3092,18 @@ class CrossModelEntropyModel:
                 self.entropy_model_size,
                 self.generation_model_size,
                 source_tag,
+                estimator_chunk_size,
             )
             if os.path.isfile(path):
                 try:
                     existing = torch.load(
                         path, weights_only=False, map_location="cpu"
                     )
-                    validate_cross_model_entropy_trace(existing, **identity)
+                    validate_cross_model_entropy_trace(
+                        existing,
+                        require_full_entropy=require_full_entropy,
+                        **identity,
+                    )
                     continue
                 except Exception:
                     invalid_cached += 1
@@ -2808,12 +3136,15 @@ class CrossModelEntropyModel:
         token_batch = torch.stack(
             [tokens for _, tokens, _, _ in records]
         ).to(self.we.device)
-        p_traces = self.we.estimate_partition_trace_batch(
+        p_traces, full_entropy_traces = (
+            self.we.estimate_partition_entropy_trace_batch(
             self.we.model,
             prompt_batch,
             token_batch,
             partition_cpu,
             kv_cache_implementation=self.trace_kv_cache_implementation,
+            chunk_size=estimator_chunk_size,
+            )
         )
         if torch.cuda.is_available():
             torch.cuda.synchronize()
@@ -2825,13 +3156,24 @@ class CrossModelEntropyModel:
 
         for row, (index, _, identity, path) in enumerate(records):
             p_trace = np.asarray(p_traces[row], dtype=np.float64)
+            full_entropy_trace = np.asarray(
+                full_entropy_traces[row], dtype=np.float64
+            )
             payload = {
                 **cross_model_entropy_trace_identity(**identity),
                 "timestamp_utc": datetime.now(timezone.utc).isoformat(),
                 "p_trace": p_trace,
                 "p_trace_sha256": semantic_sha256(p_trace),
+                "full_entropy_trace": full_entropy_trace,
+                "full_entropy_trace_sha256": semantic_sha256(
+                    full_entropy_trace
+                ),
             }
-            validate_cross_model_entropy_trace(payload, **identity)
+            validate_cross_model_entropy_trace(
+                payload,
+                require_full_entropy=require_full_entropy,
+                **identity,
+            )
             os.makedirs(os.path.dirname(path), exist_ok=True)
             torch.save(payload, path)
         data_vol.commit()
@@ -2856,6 +3198,152 @@ class CrossModelEntropyModel:
             "trace_kv_cache_version": kv_cache_version(
                 self.trace_kv_cache_implementation
             ),
+            "estimator_chunk_size": estimator_chunk_size,
+        }
+
+    @modal.method()
+    def estimate_textseal(self, request: dict) -> dict:
+        """Teacher-force committed TextSeal tokens; never sample new text."""
+        import time
+
+        import numpy as np
+        import torch
+        from detectors import semantic_sha256, tensor_sha256
+        from proxy_8b_analysis import (
+            BASELINE_RUN_ID,
+            ESTIMATOR_CHUNK_SIZE,
+            textseal_proxy_trace_identity,
+            textseal_proxy_trace_path,
+            validate_textseal_proxy_trace,
+        )
+
+        _numpy_pickle_compat()
+        started = time.time()
+        if self.generation_model_size != "8B" or self.entropy_model_size != "0.6B":
+            raise ValueError("TextSeal proxy replay is frozen to 8B -> 0.6B")
+        if str(request.get("run_id")) != BASELINE_RUN_ID:
+            raise ValueError("unexpected controlled-baseline run ID")
+        shard_index = int(request["shard_index"])
+        indices = [int(index) for index in request["prompt_indices"]]
+        if not indices or len(indices) != len(set(indices)):
+            raise ValueError("TextSeal replay indices must be nonempty and unique")
+
+        data_vol.reload()
+        raw_path = (
+            f"/data/controlled_baseline_full/{BASELINE_RUN_ID}/generated/"
+            f"shard_{shard_index:02d}.pt"
+        )
+        if not os.path.isfile(raw_path):
+            raise FileNotFoundError(raw_path)
+        raw = torch.load(raw_path, weights_only=False, map_location="cpu")
+        shard_indices = [int(index) for index in raw.get("prompt_indices", [])]
+        if len(shard_indices) != len(set(shard_indices)):
+            raise ValueError("controlled-baseline shard prompt indices are invalid")
+        row_by_index = {index: row for row, index in enumerate(shard_indices)}
+        if any(index not in row_by_index for index in indices):
+            raise ValueError("TextSeal replay request crosses its raw shard")
+        outputs = raw.get("sequences", {}).get("textseal")
+        if outputs is None or len(outputs) != len(shard_indices):
+            raise ValueError("controlled-baseline TextSeal output coverage differs")
+
+        # The eta=.20 artifact is used only as the validated canonical prompt
+        # token corpus and fixed vocabulary partition. No PRC generation occurs.
+        artifact_tag = str(request["artifact_tag"])
+        artifact = torch.load(
+            artifact_path(artifact_tag), weights_only=False, map_location="cpu"
+        )
+        if artifact_generation_model_size(artifact) != "8B":
+            raise ValueError("canonical prompt artifact is not Qwen3-8B")
+        partition_cpu = artifact["partition"]
+
+        records = []
+        invalid_cached = 0
+        for index in indices:
+            output = outputs[row_by_index[index]]
+            tokens = torch.as_tensor(output["token_ids"], dtype=torch.long)[
+                :1024
+            ].contiguous()
+            if tokens.numel() != 1024:
+                raise ValueError(f"TextSeal prompt {index} is not 1024 tokens")
+            prompt = torch.as_tensor(
+                artifact["prompt_ids_list"][index], dtype=torch.long
+            ).contiguous()
+            identity = {
+                "prompt_index": index,
+                "prompt_sha256": tensor_sha256(prompt),
+                "tokens_sha256": tensor_sha256(tokens),
+            }
+            path = textseal_proxy_trace_path(index)
+            if os.path.isfile(path):
+                try:
+                    cached = torch.load(path, weights_only=False, map_location="cpu")
+                    validate_textseal_proxy_trace(cached, **identity)
+                    continue
+                except Exception:
+                    invalid_cached += 1
+            records.append((index, prompt, tokens, identity, path))
+
+        if not records:
+            return {
+                "source": "textseal",
+                "shard_index": shard_index,
+                "prompt_indices": indices,
+                "estimated": 0,
+                "cached": len(indices),
+                "invalid_cached_replaced": 0,
+                "seconds": time.time() - started,
+                "teacher_forced_token_positions": 0,
+                "model_forward_positions": 0,
+                "peak_cuda_allocated_bytes": 0,
+                "peak_cuda_reserved_bytes": 0,
+            }
+
+        prompt_batch = torch.stack([item[1] for item in records]).to(self.we.device)
+        token_batch = torch.stack([item[2] for item in records]).to(self.we.device)
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            torch.cuda.reset_peak_memory_stats()
+        _, entropy_traces = self.we.estimate_partition_entropy_trace_batch(
+            self.we.model,
+            prompt_batch,
+            token_batch,
+            partition_cpu,
+            kv_cache_implementation=self.trace_kv_cache_implementation,
+            chunk_size=ESTIMATOR_CHUNK_SIZE,
+        )
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            peak_allocated = int(torch.cuda.max_memory_allocated())
+            peak_reserved = int(torch.cuda.max_memory_reserved())
+        else:
+            peak_allocated = peak_reserved = 0
+
+        for row, (index, _, _, identity, path) in enumerate(records):
+            values = np.asarray(entropy_traces[row], dtype=np.float64)
+            payload = {
+                **textseal_proxy_trace_identity(**identity),
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                "full_entropy_trace": values,
+                "full_entropy_trace_sha256": semantic_sha256(values),
+                "source_generation_artifact": raw_path,
+            }
+            validate_textseal_proxy_trace(payload, **identity)
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            torch.save(payload, path)
+        data_vol.commit()
+        prompt_length = int(prompt_batch.shape[1])
+        return {
+            "source": "textseal",
+            "shard_index": shard_index,
+            "prompt_indices": indices,
+            "estimated": len(records),
+            "cached": len(indices) - len(records),
+            "invalid_cached_replaced": invalid_cached,
+            "seconds": time.time() - started,
+            "teacher_forced_token_positions": len(records) * 1024,
+            "model_forward_positions": len(records) * (prompt_length + 1023),
+            "peak_cuda_allocated_bytes": peak_allocated,
+            "peak_cuda_reserved_bytes": peak_reserved,
         }
 
 
@@ -4152,9 +4640,14 @@ def detect_cross_model_entropy_prompt_shard(request: dict) -> dict:
     from detectors import detect_online_hoeffding, tensor_sha256
     from online_prc import OnlinePRCKey
 
+    _numpy_pickle_compat()
     started = time.time()
     source_tag = str(request["source_tag"])
     prefix_T = int(request["prefix_T"])
+    watermarked_trace_T = int(
+        request.get("watermarked_trace_T", prefix_T)
+    )
+    estimator_chunk_size = int(request.get("estimator_chunk_size", 1))
     null_T = int(request["null_T"])
     null_trace_T = int(request["null_trace_T"])
     fpr = float(request["fpr"])
@@ -4171,7 +4664,7 @@ def detect_cross_model_entropy_prompt_shard(request: dict) -> dict:
         artifact_path(source_tag), weights_only=False, map_location="cpu"
     )
     generation_model_size = artifact_generation_model_size(artifact)
-    if not 0 < prefix_T <= int(artifact["T"]):
+    if not 0 < prefix_T <= watermarked_trace_T <= int(artifact["T"]):
         raise ValueError("cross-model detector prefix exceeds source artifact")
     if null_T < prefix_T or null_trace_T < prefix_T:
         raise ValueError("null generation/trace cache is shorter than prefix")
@@ -4229,7 +4722,7 @@ def detect_cross_model_entropy_prompt_shard(request: dict) -> dict:
             if watermark
             else shared_null_dir(null_T, generation_model_size)
         )
-        trace_T = prefix_T if watermark else null_trace_T
+        trace_T = watermarked_trace_T if watermark else null_trace_T
         for index in indices:
             record = torch.load(
                 os.path.join(directory, f"{record_prefix}_{index:04d}.pt"),
@@ -4264,6 +4757,7 @@ def detect_cross_model_entropy_prompt_shard(request: dict) -> dict:
                     artifact["prompt_ids_list"][index], dtype=torch.long
                 )),
                 "tokens_sha256": tensor_sha256(full_tokens),
+                "estimator_chunk_size": estimator_chunk_size,
             }
             if watermark:
                 identity["source_artifact_fingerprint"] = artifact[
@@ -4276,6 +4770,7 @@ def detect_cross_model_entropy_prompt_shard(request: dict) -> dict:
                 entropy_model_size,
                 generation_model_size,
                 source_tag,
+                estimator_chunk_size,
             )
             trace_payload = torch.load(
                 trace_path, weights_only=False, map_location="cpu"
@@ -4319,6 +4814,8 @@ def detect_cross_model_entropy_prompt_shard(request: dict) -> dict:
         "T": prefix_T,
         "null_T": null_T,
         "null_trace_T": null_trace_T,
+        "watermarked_trace_T": watermarked_trace_T,
+        "estimator_chunk_size": estimator_chunk_size,
         "target_fpr": fpr,
         "fpr_policy": FPR_POLICY,
         "generation_model_size": generation_model_size,
@@ -4369,6 +4866,7 @@ def aggregate_cross_model_entropy_audit_shards(
     import torch
     from online_prc import OnlinePRCKey, support_sha256, target_row_count
 
+    _numpy_pickle_compat()
     started = time.time()
     data_vol.reload()
     source_tag = str(audit["source_tag"])
@@ -5469,7 +5967,13 @@ def cross_model_entropy_estimation_requests(
                 "source": "wm",
                 "artifact_tag": audit["source_tag"],
                 "source_tag": audit["source_tag"],
-                "trace_T": int(audit["prefix_T"]),
+                "trace_T": int(audit.get("trace_T", audit["prefix_T"])),
+                "require_full_entropy": bool(
+                    audit.get("require_full_entropy", False)
+                ),
+                "estimator_chunk_size": int(
+                    audit.get("estimator_chunk_size", 1)
+                ),
                 "prompt_indices": chunk,
                 "audit_label": str(audit.get("label", "")),
             })
@@ -5480,6 +5984,12 @@ def cross_model_entropy_estimation_requests(
             "artifact_tag": reference_tag,
             "source_tag": "",
             "trace_T": int(plan["null_T"]),
+            "require_full_entropy": bool(
+                plan.get("require_null_full_entropy", False)
+            ),
+            "estimator_chunk_size": int(
+                plan.get("null_estimator_chunk_size", 1)
+            ),
             "prompt_indices": chunk,
             "audit_label": "shared-null",
         })
@@ -5488,7 +5998,9 @@ def cross_model_entropy_estimation_requests(
 
 def summarize_cross_model_entropy_workload(plan: dict) -> dict:
     wm_positions = sum(
-        len(audit["wm_trace_missing"]) * int(audit["prefix_T"])
+        len(audit["wm_trace_missing"]) * int(
+            audit.get("trace_T", audit["prefix_T"])
+        )
         for audit in plan["audits"]
     )
     null_positions = (
@@ -7229,3 +7741,404 @@ def detect_14b_lower_eta_with_0p6b_map_entropy(
         f"[cross-model-map-entropy] campaign manifest: {manifest_path}",
         flush=True,
     )
+
+
+def _proxy_8b_variable_batch_requests(plan: dict) -> list[dict]:
+    """Use the proven long-context batch 10 and larger short-context batches."""
+    requests = []
+    for audit in plan["audits"]:
+        trace_T = int(audit.get("trace_T", audit["prefix_T"]))
+        batch = 10 if trace_T >= 8192 else 25 if trace_T >= 4096 else 50
+        for chunk in _chunks(audit["wm_trace_missing"], batch):
+            requests.append({
+                "source": "wm",
+                "artifact_tag": audit["source_tag"],
+                "source_tag": audit["source_tag"],
+                "trace_T": trace_T,
+                "require_full_entropy": True,
+                "estimator_chunk_size": int(
+                    audit.get("estimator_chunk_size", 1)
+                ),
+                "prompt_indices": chunk,
+                "audit_label": str(audit["label"]),
+            })
+    reference_tag = str(plan["audits"][-1]["source_tag"])
+    for chunk in _chunks(plan["null_trace_missing"], 10):
+        requests.append({
+            "source": "null",
+            "artifact_tag": reference_tag,
+            "source_tag": "",
+            "trace_T": int(plan["null_T"]),
+            "require_full_entropy": True,
+            "estimator_chunk_size": int(
+                plan.get("null_estimator_chunk_size", 1)
+            ),
+            "prompt_indices": chunk,
+            "audit_label": "shared-null",
+        })
+    return requests
+
+
+@app.local_entrypoint(name="proxy-8b")
+def proxy_8b_entrypoint(
+    mode: str = "plan",
+    approval_token: str = "",
+    gpu: str = "A10G",
+    max_containers: int = 5,
+    detection_max_containers: int = 10,
+):
+    """Plan, benchmark, or run the approved cache-only 8B proxy analysis."""
+    import time
+    from proxy_8b_analysis import (
+        APPROVAL_TOKEN,
+        BASELINE_RUN_ID,
+        COMMON_PREFIXES,
+        HARD_CAP_USD,
+        NOMINAL_FPR,
+        PRC_AUDITS,
+        prc_audits,
+    )
+
+    mode = str(mode).strip().lower()
+    if mode not in {"plan", "benchmark", "full"}:
+        raise ValueError("mode must be plan, benchmark, or full")
+    if mode != "plan" and approval_token != APPROVAL_TOKEN:
+        raise PermissionError("paid proxy replay requires the approved $20 token")
+    if gpu != "A10G":
+        raise ValueError("the approved proxy preflight is frozen to A10G")
+    if max_containers <= 0 or detection_max_containers <= 0:
+        raise ValueError("container limits must be positive")
+
+    all_indices = list(range(CANONICAL_NUM_PROMPTS))
+    full_audits = prc_audits(require_full_entropy=True)
+    full_plan = plan_cross_model_entropy_audits.remote(
+        full_audits, all_indices, "0.6B", 13088
+    )
+    textseal_plan = plan_textseal_proxy_entropy.remote(all_indices)
+    full_workload = summarize_cross_model_entropy_workload(full_plan)
+    total_positions = (
+        int(full_workload["teacher_forced_token_positions"])
+        + int(textseal_plan["teacher_forced_token_positions"])
+    )
+    preflight = {
+        "mode": mode,
+        "generation_mode": "cache_only_no_text_generation",
+        "generation_attempts": 0,
+        "prc": full_plan,
+        "textseal": textseal_plan,
+        "remaining_teacher_forced_token_positions": total_positions,
+        "expected_full_positions_from_empty_cache": 16_863_500,
+        "hard_cap_usd": HARD_CAP_USD,
+    }
+    print(json.dumps({
+        "mode": mode,
+        "generation_attempts": 0,
+        "prc_generation_records_verified": full_plan[
+            "generation_records_verified"
+        ],
+        "prc_missing_trace_records": (
+            full_workload["watermarked_trace_records_missing"]
+            + full_workload["null_trace_records_missing"]
+        ),
+        "textseal_generation_records_verified": textseal_plan[
+            "generation_records_verified"
+        ],
+        "textseal_missing_trace_records": textseal_plan[
+            "missing_trace_records"
+        ],
+        "remaining_teacher_forced_token_positions": total_positions,
+        "hard_cap_usd": HARD_CAP_USD,
+    }, indent=2, sort_keys=True), flush=True)
+    if mode == "plan":
+        return
+
+    estimator = CrossModelEntropyModel.with_options(
+        **model_cls_options("0.6B", gpu, 1 if mode == "benchmark" else max_containers)
+    )(
+        entropy_model_size="0.6B",
+        generation_model_size="8B",
+        trace_kv_cache_implementation="static",
+    )
+    print(f"[proxy-8b] model ready: {estimator.ready.remote()}", flush=True)
+
+    if mode == "benchmark":
+        benchmark_indices = list(range(10))
+        benchmark_plan = plan_cross_model_entropy_audits.remote(
+            [full_audits[-1]], benchmark_indices, "0.6B", 13088
+        )
+        requests = cross_model_entropy_estimation_requests(benchmark_plan, 10)
+        if not requests:
+            raise RuntimeError(
+                "benchmark traces already exist; use their saved benchmark manifest "
+                "or choose uncached indices before projecting"
+            )
+        started = time.time()
+        summaries = list(estimator.estimate.map(requests))
+        wall_seconds = time.time() - started
+        positions = sum(
+            int(item["teacher_forced_token_positions"]) for item in summaries
+        )
+        method_seconds = sum(float(item["seconds"]) for item in summaries)
+        if positions <= 0 or method_seconds <= 0:
+            raise RuntimeError("benchmark did not perform measurable replay work")
+        # Empirical all-in rate from the settled 14B->0.6B replay, with a 25%
+        # guard for startup/long-context variation plus $0.25 CPU allowance.
+        prior_all_in_usd_per_method_second = 1.22189737 / 3270.6197905540466
+        guarded_rate = prior_all_in_usd_per_method_second * 1.25
+        projected_total_usd = (
+            method_seconds / positions * 16_863_500 * guarded_rate + 0.25
+        )
+        payload = {
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "campaign": "qwen3_8b_cache_only_proxy_benchmark",
+            "approval_token_validated": True,
+            "generation_attempts": 0,
+            "gpu": gpu,
+            "batch": 10,
+            "max_containers": 1,
+            "prompt_indices": benchmark_indices,
+            "trace_T": 13088,
+            "summaries": summaries,
+            "teacher_forced_token_positions": positions,
+            "measured_gpu_method_seconds": method_seconds,
+            "wall_seconds": wall_seconds,
+            "peak_cuda_allocated_bytes": max(
+                int(item.get("peak_cuda_allocated_bytes", 0)) for item in summaries
+            ),
+            "peak_cuda_reserved_bytes": max(
+                int(item.get("peak_cuda_reserved_bytes", 0)) for item in summaries
+            ),
+            "projection_basis_positions": 16_863_500,
+            "prior_settled_all_in_usd_per_method_second": (
+                prior_all_in_usd_per_method_second
+            ),
+            "projection_guard_multiplier": 1.25,
+            "projected_total_usd": projected_total_usd,
+            "hard_cap_usd": HARD_CAP_USD,
+            "cost_gate_passed": projected_total_usd <= HARD_CAP_USD,
+            "billing_status": "pending_exact_modal_reconciliation",
+        }
+        os.makedirs("outputs", exist_ok=True)
+        benchmark_path = "outputs/proxy_8b_replay_benchmark.json"
+        with open(benchmark_path, "w") as handle:
+            json.dump(payload, handle, indent=2, sort_keys=True, allow_nan=False)
+        print(json.dumps(payload, indent=2, sort_keys=True), flush=True)
+        if projected_total_usd > HARD_CAP_USD:
+            raise RuntimeError("benchmark projection exceeds the approved $20 cap")
+        return
+
+    benchmark_path = "outputs/proxy_8b_replay_benchmark.json"
+    if not os.path.isfile(benchmark_path):
+        raise FileNotFoundError("run the batch-10 benchmark before the full replay")
+    with open(benchmark_path) as handle:
+        benchmark = json.load(handle)
+    if (
+        not benchmark.get("cost_gate_passed")
+        or float(benchmark.get("projected_total_usd", HARD_CAP_USD + 1)) > HARD_CAP_USD
+    ):
+        raise RuntimeError("saved benchmark does not pass the approved cost gate")
+
+    campaign_started = time.time()
+    requests = _proxy_8b_variable_batch_requests(full_plan)
+    replay_started = time.time()
+    trace_summaries = list(estimator.estimate.map(requests)) if requests else []
+    replay_wall_seconds = time.time() - replay_started
+
+    verified_plan = plan_cross_model_entropy_audits.remote(
+        full_audits, all_indices, "0.6B", 13088
+    )
+    remaining = summarize_cross_model_entropy_workload(verified_plan)
+    if remaining["teacher_forced_token_positions"]:
+        raise RuntimeError(f"PRC proxy traces remain incomplete: {remaining}")
+
+    textseal_verified = plan_textseal_proxy_entropy.remote(all_indices)
+    textseal_requests = []
+    for shard_index, missing in sorted(
+        textseal_verified["missing_by_shard"].items(), key=lambda item: int(item[0])
+    ):
+        for chunk in _chunks(missing, 50):
+            textseal_requests.append({
+                "run_id": BASELINE_RUN_ID,
+                "shard_index": int(shard_index),
+                "artifact_tag": PRC_AUDITS[-1]["source_tag"],
+                "prompt_indices": chunk,
+            })
+    textseal_started = time.time()
+    textseal_summaries = (
+        list(estimator.estimate_textseal.map(textseal_requests))
+        if textseal_requests else []
+    )
+    textseal_wall_seconds = time.time() - textseal_started
+    final_textseal_plan = plan_textseal_proxy_entropy.remote(all_indices)
+    if final_textseal_plan["missing_trace_records"]:
+        raise RuntimeError("TextSeal proxy traces remain incomplete")
+
+    code_fingerprint = _local_code_fingerprint()
+    detection_requests = []
+    labels = []
+    for audit in verified_plan["audits"]:
+        score_prefixes = list(COMMON_PREFIXES)
+        if int(audit["prefix_T"]) not in score_prefixes:
+            score_prefixes.append(int(audit["prefix_T"]))
+        for prefix in score_prefixes:
+            for shard in prompt_detection_shards(all_indices, 50):
+                detection_requests.append({
+                    "source_tag": audit["source_tag"],
+                    "prefix_T": prefix,
+                    "watermarked_trace_T": int(audit["trace_T"]),
+                    "estimator_chunk_size": int(
+                        audit.get("estimator_chunk_size", 1)
+                    ),
+                    "null_T": 13088,
+                    "null_trace_T": 13088,
+                    "fpr": NOMINAL_FPR,
+                    "entropy_model_size": "0.6B",
+                    "code_fingerprint_sha256": code_fingerprint,
+                    "prompt_indices": shard,
+                })
+                labels.append((str(audit["label"]), prefix))
+    detector = detect_cross_model_entropy_prompt_shard.with_options(
+        cpu=1.0,
+        max_containers=min(detection_max_containers, len(detection_requests)),
+    )
+    detection_started = time.time()
+    detection_summaries = list(detector.map(detection_requests))
+    detection_wall_seconds = time.time() - detection_started
+    grouped = {}
+    for label, summary in zip(labels, detection_summaries):
+        grouped.setdefault(label, []).append(summary)
+
+    results = []
+    prompt_rows = []
+    with open("prompts.jsonl") as handle:
+        prompt_rows = [json.loads(line) for line in handle if line.strip()]
+    prompt_jsonl_path = "outputs/proxy_8b_prc_prompt_level.jsonl"
+    with open(prompt_jsonl_path, "w") as prompt_handle:
+        for audit in verified_plan["audits"]:
+            score_prefixes = list(COMMON_PREFIXES)
+            if int(audit["prefix_T"]) not in score_prefixes:
+                score_prefixes.append(int(audit["prefix_T"]))
+            for prefix in score_prefixes:
+                aggregate = aggregate_cross_model_entropy_audit_shards.remote(
+                    {**audit, "prefix_T": prefix},
+                    all_indices,
+                    "0.6B",
+                    13088,
+                    13088,
+                    NOMINAL_FPR,
+                    code_fingerprint,
+                    grouped[(str(audit["label"]), prefix)],
+                    detection_wall_seconds,
+                )["payload"]
+                results.append({
+                    "label": audit["label"],
+                    "eta": audit["eta"],
+                    "prefix_T": prefix,
+                    "boundary_status": audit["boundary_status"],
+                    "counts": aggregate["counts"],
+                })
+                for result in aggregate["results"]:
+                    index = int(result["prompt_idx"])
+                    prompt_handle.write(json.dumps({
+                        "prompt_index": index,
+                        "prompt_id": prompt_rows[index].get("id", f"prompt-{index}"),
+                        "eta": float(audit["eta"]),
+                        "prefix_length": prefix,
+                        "boundary_status": audit["boundary_status"],
+                        "sample_type": (
+                            "watermarked" if result["watermark"] else "null"
+                        ),
+                        "generation_model": "Qwen3-8B-Base",
+                        "detector_probability_model": "Qwen3-0.6B-Base",
+                        "scores": result["scores"],
+                        "source_tag": audit["source_tag"],
+                        "generation_attempts": 0,
+                    }, sort_keys=True, allow_nan=False) + "\n")
+
+    manifest = {
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "campaign": "qwen3_8b_cache_only_proxy_analysis",
+        "approval_token_validated": True,
+        "generation_mode": "cache_only_no_text_generation",
+        "generation_attempts": 0,
+        "benchmark": benchmark,
+        "preflight": preflight,
+        "verified_prc_plan": verified_plan,
+        "verified_textseal_plan": final_textseal_plan,
+        "replay": {
+            "gpu": gpu,
+            "max_containers": max_containers,
+            "prc_trace_batches": trace_summaries,
+            "textseal_trace_batches": textseal_summaries,
+            "prc_replay_wall_seconds": replay_wall_seconds,
+            "textseal_replay_wall_seconds": textseal_wall_seconds,
+            "measured_gpu_method_seconds": sum(
+                float(item.get("seconds", 0.0))
+                for item in trace_summaries + textseal_summaries
+            ),
+            "teacher_forced_token_positions": sum(
+                int(item.get("teacher_forced_token_positions", 0))
+                for item in trace_summaries + textseal_summaries
+            ),
+            "peak_cuda_allocated_bytes": max(
+                [int(item.get("peak_cuda_allocated_bytes", 0))
+                 for item in trace_summaries + textseal_summaries] or [0]
+            ),
+            "peak_cuda_reserved_bytes": max(
+                [int(item.get("peak_cuda_reserved_bytes", 0))
+                 for item in trace_summaries + textseal_summaries] or [0]
+            ),
+        },
+        "detection_wall_seconds": detection_wall_seconds,
+        "local_end_to_end_wall_seconds": time.time() - campaign_started,
+        "results": results,
+        "prompt_level_jsonl": prompt_jsonl_path,
+        "billing_status": "pending_exact_modal_reconciliation",
+    }
+    manifest_path = "outputs/proxy_8b_campaign_manifest.json"
+    with open(manifest_path, "w") as handle:
+        json.dump(manifest, handle, indent=2, sort_keys=True, allow_nan=False)
+    print(json.dumps({
+        "passed": True,
+        "manifest_path": manifest_path,
+        "prompt_level_jsonl": prompt_jsonl_path,
+        "prc_result_cells": len(results),
+        "textseal_proxy_traces": final_textseal_plan["cached_trace_records"],
+        "generation_attempts": 0,
+        "next_command": (
+            "modal run baseline_comparison/modal_app.py::app.proxy-textseal-score "
+            f"--approval-token {APPROVAL_TOKEN}"
+        ),
+    }, indent=2, sort_keys=True), flush=True)
+
+
+@app.local_entrypoint(name="proxy-8b-quality")
+def proxy_8b_quality_entrypoint(approval_token: str):
+    """CPU-only native-8B quality aggregation for the proxy report."""
+    from proxy_8b_analysis import APPROVAL_TOKEN
+
+    if approval_token != APPROVAL_TOKEN:
+        raise PermissionError("proxy quality aggregation needs the approved token")
+    indices = list(range(CANONICAL_NUM_PROMPTS))
+    results = list(
+        proxy_8b_native_quality_shard.map(
+            list(prompt_detection_shards(indices, 50))
+        )
+    )
+    rows = [row for result in results for row in result["rows"]]
+    if len(rows) != 2_500:
+        raise AssertionError(f"quality aggregation produced {len(rows)} rows")
+    if sum(int(row["generation_attempts"]) for row in rows) != 0:
+        raise AssertionError("quality aggregation attempted generation")
+    os.makedirs("outputs", exist_ok=True)
+    path = "outputs/proxy_8b_native_quality_prompt_level.jsonl"
+    with open(path, "w") as handle:
+        for row in rows:
+            handle.write(json.dumps(row, sort_keys=True, allow_nan=False) + "\n")
+    print(json.dumps({
+        "passed": True,
+        "path": path,
+        "rows": len(rows),
+        "generation_attempts": 0,
+        "model_loads": 0,
+    }, indent=2, sort_keys=True))
