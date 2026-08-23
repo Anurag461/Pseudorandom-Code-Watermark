@@ -52,8 +52,8 @@
     },
     {
       "path": "outputs/controlled_baseline_diagnostic_cost_ledger.csv",
-      "sha256": "20f463653bf5a2f48427afc3202ca7cc5ff4a304b62cf82ebaf62afdb82d76f9",
-      "size_bytes": 1665
+      "sha256": "7189c02ac4e6a2bd7ad2112229c1ec0dfcae3d3106c1913efdfe997989983893",
+      "size_bytes": 1666
     }
   ],
   "base_integration_commit": "ef89c69e253cce8378857741427a308af7255b08",

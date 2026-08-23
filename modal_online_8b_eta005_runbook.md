@@ -20,8 +20,9 @@ Final exact boundary: `n90=640`, with strict bracket `(639,640]`:
 
 Completed apps: smoke `ap-OZ5vJFk3MXCbM0RGEFCEMP`, production
 `ap-m3Z3BjXaWd9Cak3MCZpXR3`, refinement `ap-jsUsmTpKZQwGBxMIMBXrK1`, and
-authoritative audit `ap-dFUcHfYvkNzpfiPfX5JErj`. Provider-billed costs still
-need reconciliation from the Modal dashboard.
+authoritative audit `ap-dFUcHfYvkNzpfiPfX5JErj`. Settled provider billing
+before workspace credits was `$1.20659284`: `$1.12447738` H100,
+`$0.07216837` CPU, and `$0.00994709` memory.
 
 ## Frozen experiment
 

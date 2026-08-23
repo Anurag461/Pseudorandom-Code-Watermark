@@ -27,8 +27,8 @@
     },
     {
       "path": "outputs/controlled_baseline_smoke_cost_ledger.csv",
-      "sha256": "9f87990dcbc72334f341afbbdb07e0c8a3a03ca46ca97197750ae00c4135da85",
-      "size_bytes": 5202
+      "sha256": "9758a2ca8518cc36a7d527a6290d2d01b877c2dd9e726fdb9ec1bbb8be9981cc",
+      "size_bytes": 5203
     },
     {
       "path": "outputs/controlled_baseline_smoke_seed_validation.json",

@@ -19,4 +19,4 @@ timestamp_utc,modal_app_url,modal_task_id,run_kind,requested_gpu,actual_gpu,gpu_
 2026-08-23T02:00:00Z,https://modal.com/apps/new-prc-watermark/main/ap-PuWC1IWNDwgUUhdl4UKgSY,ta-01M0P6RXCB0J2WYA39V1Y0643R,textseal_synthid_equal_shape_seed_validation,H100,NVIDIA H100 80GB HBM3,127.857654733,17668689920,17702060032,0.14483431,0.00693738,0.01408009,0.16585178,exact_modal_billing_report
 2026-08-23T02:00:00Z,https://modal.com/apps/new-prc-watermark/main/ap-EhhXaz6djeni1mYxieFFol,,cpu_final_scoring_manifest_writer_typo,,,,,0.00000000,0.00367887,0.00124444,0.00492331,exact_modal_billing_report
 2026-08-23T02:00:00Z,https://modal.com/apps/new-prc-watermark/main/ap-oiu3FlsnEYnpe4clDifycW,ta-01M0P7H5G94M7T0JMR69SRS02R,cpu_final_scoring_and_artifact_finalization_success,,,,,0.00000000,0.00392006,0.00132356,0.00524362,exact_modal_billing_report
-TOTAL,,,all_controlled_baseline_integration_smoke_and_seed_validation,,,,,1.17528391,0.09291019,0.12552394,1.39371804,exact_modal_billing_report
+TOTAL,,,all_controlled_baseline_integration_smoke_and_seed_validation,,,,,,1.17528391,0.09291019,0.12552394,1.39371804,exact_modal_billing_report

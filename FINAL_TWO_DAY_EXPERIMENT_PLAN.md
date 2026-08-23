@@ -2,13 +2,15 @@
 
 ## Scope and decision rules
 
-- Deadline: 48 hours.
-- Modal budget: $550 credits, at most 10 GPUs. Choose concurrency from each
-  validated baseline batch shape. Do not split the fleet across competing
-  long jobs.
-- Expected additional spend for the unfinished work: **$25--50**. Hard stop:
-  **$85 additional spend** without revising this plan. The remaining credits
-  are failure contingency, not a reason to expand scope.
+- Closeout completed 2026-08-23. The approved core sprint is complete; no
+  additional model run is required for the primary conclusions.
+- Modal budget was $550 credits with at most 10 GPUs. The non-overlapping
+  provider-billed total for work launched in this final sprint was
+  **$13.46210068 before workspace credits**. Earlier eta 0.15/0.20 campaigns
+  are excluded from that incremental sprint total and remain documented in
+  their original ledgers.
+- Any deferred experiment below requires a new scope and cost approval. The
+  remaining credits are failure contingency, not a reason to expand scope.
 - Primary model: **Qwen3-8B-Base**. New 14B generation and all Qwen3.5-27B
   work are deferred.
 - Primary threshold: one-shot TPR at nominal FPR `1e-3`; strict 90% crossing
@@ -34,7 +36,9 @@ sweeps, one-token cache-only refinements, authoritative prompt-sharded audits,
 prompt-level watermarked/null decisions, and publication in both summary
 CSVs. Full provenance is in `modal_online_8b_eta005_runbook.md` and
 `modal_online_8b_eta010_runbook.md`. No additional selected-boundary audit is
-scheduled; only provider-cost reconciliation remains for the two new cells.
+scheduled. Settled costs before workspace credits are `$1.20659284` for eta
+0.05 and `$4.75144472` for eta 0.10; app-level details are frozen in their
+respective cost ledgers.
 
 ### Explicitly not scheduled
 
@@ -65,7 +69,8 @@ scores are preserved in
 `outputs/online_causal_n448_t3_eta0.05_prompts500_gen-qwen3_14b_base_sampler-poscdf-v1_kvcache-static-v1_from_n1280.json`
 and
 `outputs/online_causal_n800_t3_eta0.10_prompts500_gen-qwen3_14b_base_sampler-poscdf-v1_kvcache-static-v1_from_n3072.json`.
-Only provider-cost reconciliation remains.
+Settled cache-only provider costs were `$0.00969863` and `$0.00784660`, or
+`$0.01754523` total, with zero GPU charge.
 
 ## Priority 0: determine whether fixed and online differ meaningfully
 
@@ -398,65 +403,61 @@ completed 0.6B detector-sensitivity result and require separate scope.
   later replication cost, but it must be labeled a smoke rather than a paper
   replication.
 - No new 14B generation or detection work remains. The two approved
-  cache-only matched-reference audits are complete; only their provider-cost
-  reconciliation remains.
+  cache-only matched-reference audits and their provider-cost reconciliation
+  are complete.
 
-## Forty-eight-hour schedule
+## Completed forty-eight-hour schedule
 
-### Day 1
+The scheduled work closed as follows:
 
-1. Morning: reconcile provider costs for the completed 8B eta 0.05/0.10
-   campaigns and freeze their manifests; do not rerun generation or audits.
-2. Run the paired fixed-versus-online analysis. Verify the already-published
-   14B cache-only rows while reconciling their provider costs; do not rerun the
-   audits.
-3. In parallel on local CPU: pin TextSeal, build the isolated adapter and
-   prompt/result schema, and add detector-equivalence tests.
-4. Evening: run 5-prompt TextSeal/SynthID/Gumbel smokes and inspect exact costs,
-   tokenizer IDs, context deduplication, p-values, and saved provenance.
-
-### Day 2
-
-1. Morning: run the three 8B baseline generation campaigns sequentially with
-   all 10 H100s; run CPU prefix detection as earlier generations finish.
-2. Midday: run the 0.6B proxy replay and finish any incomplete paired-analysis
-   checks.
-3. Afternoon: produce the final boundary table, fixed-versus-online effect
-   table, baseline prefix curves, and quality/diversity table.
-4. Final 4 hours: rerun only failed/corrupt shards, verify prompt coverage and
-   fingerprints, freeze cost ledgers, and write conclusions. Do not start new
-   model/configuration tracks in this window.
+1. All four 8B online operating-point cells were resolved; eta 0.15 remains an
+   explicitly censored ceiling.
+2. The fixed-versus-online paired analysis, two 14B cache-only rows, official
+   baseline integration/reference checks, five-prompt smoke, controlled
+   500-prompt comparison, quality diagnostic, and 0.6B proxy replay completed.
+3. Prompt coverage, prefix equivalence, deduplication, schema, official
+   reference parity, zero-regeneration guards, runtime, memory, and billing
+   checks passed as documented in the phase reports.
+4. Final figures, the consolidated cost ledger/workbook, limitations, and the
+   closeout validation manifest were produced without new Modal compute.
 
 ## Required final deliverables
 
-- Verify the already-published 8B selected online boundaries, censored cell,
+- [x] Verify the already-published 8B selected online boundaries, censored cell,
   and two 14B cache-only matched-reference rows in
   `hoeffding_results_summary.csv`.
-- A compact online-boundary matrix with exact brackets or explicit lower bounds.
-- A prompt-paired fixed-versus-online statistics artifact and one results table.
-- A separate baseline results CSV/JSONL for PRC/TextSeal/SynthID/Gumbel with
+- [x] A compact online-boundary matrix with exact brackets or explicit lower
+  bounds in `outputs/final_sprint_closeout.xlsx`.
+- [x] A prompt-paired fixed-versus-online statistics artifact and results table.
+- [x] A separate baseline results CSV/JSONL for PRC/TextSeal/SynthID/Gumbel with
   prompt-level scores, p-values, prefixes, quality metrics, code commit, model
   revision, keys/seeds, and costs.
-- One plot of TPR versus prefix length at nominal FPR `1e-3`, plus one
-  detectability-versus-diversity/quality table.
-- A final cost ledger and a short limitations paragraph distinguishing analytic
+- [x] A TPR-versus-prefix plot at nominal FPR `1e-3` and a complementary
+  detectability-versus-diversity figure in `outputs/`.
+- [x] A final cost ledger and limitations statement distinguishing analytic
   bounds, approximate p-values, 500-null empirical resolution, and censored
   boundaries.
+
+The consolidated closeout is `final_sprint_report.md`; machine-readable
+billing and fingerprints are in `outputs/final_sprint_cost_ledger.csv` and
+`outputs/final_sprint_validation_manifest.json`.
 
 ## Cost basis
 
 - Measured 8B batch-50 generation at `T=4096`: $0.68394 and 516.99 H100
   method-seconds for 50 records.
-- Measured 14B matched-boundary cache-only MAP checks: about $0.008--0.010;
-  prior full cache-only audits cost about $0.015.
+- Settled 14B matched-boundary cache-only MAP checks: `$0.00969863` and
+  `$0.00784660`.
 - Existing 8B eta-0.15 production plus null generation/audit: $11.13; the new
   lower-eta runs reuse null caches and are substantially shorter.
 - The 8B eta-0.05 and eta-0.10 generation, exact-boundary refinement, and
-  selected-boundary audits are complete; their provider costs still require
-  final dashboard reconciliation.
+  selected-boundary audits cost `$1.20659284` and `$4.75144472`, respectively.
 - The two 14B matched-reference audits completed cache-only using the existing
   source caches and shared `T=1808` null cache; no GPU or generated tokens were
-  used, and provider-cost reconciliation remains.
+  used. Their settled combined cost was `$0.01754523`.
+- The exact non-overlapping incremental total for this final sprint was
+  `$13.46210068`: `$12.13072943` GPU, `$0.86267835` CPU, and `$0.46869290`
+  memory before workspace credits.
 
 References: [official TextSeal repository](https://github.com/facebookresearch/textseal),
 [official SynthID-Text reference](https://github.com/google-deepmind/synthid-text),
