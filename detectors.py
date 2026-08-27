@@ -435,6 +435,74 @@ def build_prc_generation_record(
     }
 
 
+def _soft_tokens(bits, p_arr, weight):
+    """Per-position soft-token S_j in [-1, 1] (no folding). map is Bayes-optimal;
+    other weights use the symmetric t_j * w(p_j)."""
+    if weight == "map":
+        return map_soft_token(bits, p_arr)
+    return (1 - 2 * bits).astype(np.float64) * weights_from_p(p_arr, weight)
+
+
+def detect_hoeffding_prefix(
+    decoding_key,
+    generated_token_ids,
+    partition_probs,
+    partition_map,
+    fpr=1e-9,
+    weight="map",
+    return_info=False,
+):
+    """Prefix-column Hoeffding detector for short outputs (T = k < n).
+
+    A length-k output only exercises codeword positions 0..k-1 (xi = codeword[pos]
+    for pos < n), so only the parity checks whose t columns ALL fall in [0, k) are
+    fully observed. We score the Hoeffding statistic over exactly those r_eff
+    checks using the k per-position soft-tokens directly -- no cyclic folding of a
+    partial block, no Bonferroni split (a single test), so the FPR <= `fpr`
+    guarantee holds over the random OTP restricted to the used checks.
+    """
+    (_, parity_check_matrix, one_time_pad, _, _, _, _, _, t) = decoding_key
+    r, n = parity_check_matrix.shape
+    bits = tokens_to_bits(generated_token_ids, partition_map)
+    p_arr = np.asarray(partition_probs, dtype=np.float64)
+    if bits.shape != p_arr.shape:
+        raise ValueError(
+            f"tokens length {bits.shape[0]} != p_trace length {p_arr.shape[0]}"
+        )
+    k = bits.shape[0]
+
+    S = _soft_tokens(bits, p_arr, weight)                    # (k,) in [-1, 1]
+    idx = parity_check_matrix.indices.reshape(r, t)          # (r, t) columns/check
+    keep = (idx < k).all(axis=1)                             # checks inside [0, k)
+    r_eff = int(keep.sum())
+    otp = np.asarray(one_time_pad, dtype=np.int64)
+
+    if r_eff == 0:
+        info = {"method": "hoeffding_prefix", "statistic": 0.0,
+                "threshold": float("inf"), "V": 0.0, "r_eff": 0, "k": k, "fpr": fpr}
+        return (False, info) if return_info else False
+
+    idx_k = idx[keep]
+    S_w = np.prod(S[idx_k], axis=1)                          # soft-value per check
+    a_w = np.prod(1 - 2 * otp[idx_k], axis=1).astype(np.float64)  # OTP parity +/-1
+    S_stat = float(np.sum(a_w * S_w))
+    V = float(np.sum(S_w ** 2))
+    tau = float(np.sqrt(2 * V * np.log(1 / fpr))) if V > 0 else float("inf")
+    decision = bool(S_stat >= tau)
+
+    if not return_info:
+        return decision
+    return decision, {
+        "method": "hoeffding_prefix",
+        "statistic": S_stat,
+        "threshold": tau,
+        "V": V,
+        "r_eff": r_eff,
+        "k": k,
+        "fpr": fpr,
+    }
+
+
 def detect_hoeffding(
     decoding_key,
     generated_token_ids,
@@ -486,10 +554,15 @@ def detect_hoeffding(
         )
 
     T = bits.shape[0]
-    if T >= n:
-        slices = [slice(b * n, (b + 1) * n) for b in range(T // n)]
-    else:
-        slices = [slice(0, T)]              # short output: one partial block
+    if T < n:
+        # Short output: detect on the first k=T codeword positions directly, using
+        # only parity checks fully supported on columns [0, k) -- no partial-block
+        # folding. (See detect_hoeffding_prefix.)
+        return detect_hoeffding_prefix(
+            decoding_key, generated_token_ids, partition_probs, partition_map,
+            fpr=fpr, weight=weight, return_info=return_info,
+        )
+    slices = [slice(b * n, (b + 1) * n) for b in range(T // n)]
     num_blocks = len(slices)
     block_fpr = fpr / num_blocks            # Bonferroni: keep overall FPR <= F
 

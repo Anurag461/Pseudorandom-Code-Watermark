@@ -3,26 +3,59 @@ import re
 import numpy as np
 import random
 
-GSM_RE= re.compile(r"#### (\-?[0-9\.\,]+)")
+GSM_RE = re.compile(r"#### (\-?[0-9\.\,]+)")
+
+# A number token, tolerating a leading $ / \$ and thousands separators:
+#   $1,234.50  ->  1,234.50 ;  -18  ->  -18
+_NUM = r"\\?\$?\s*(-?[0-9][0-9,]*(?:\.[0-9]+)?)"
+GSM_BOXED_RE = re.compile(r"\\boxed\{\s*" + _NUM)          # \boxed{$18}, \boxed{18.0 cups}
+GSM_PHRASE_RE = re.compile(                                # "answer is $18", "answer: 20"
+    r"answer\b[^0-9\-]{0,20}?" + _NUM, re.I)
+GSM_NUM_RE = re.compile(_NUM)
+
+
+def _normalize_num(s):
+    """Canonicalize a numeric string for comparison: drop $ , and units, and
+    render whole floats as ints so '18.0' == '18' and '150,000' == '150000'."""
+    if s is None:
+        return None
+    s = s.replace(",", "").replace("$", "").strip().rstrip(".")
+    try:
+        f = float(s)
+    except ValueError:
+        return None
+    return str(int(f)) if f == int(f) else str(f)
+
 
 def extract_answer(completion):
+    """Gold answer: the number after '#### ' in the dataset solution."""
     match = GSM_RE.search(completion)
-    if match:
-        match_str = match.group(1).strip()
-        match_str = match_str.replace(",", "")
-        return match_str
-    else:
-        return None
+    return _normalize_num(match.group(1)) if match else None
 
-GSM_ANSWER_RE = re.compile(r"\\boxed\{\-?([0-9\.\,]+)\}")
+
 def extract_boxed_answer(completion: str):
-    match = GSM_ANSWER_RE.search(completion)
-    if match:
-        ans= match.group(1).strip()
-        ans = ans.replace(",", "")
-        return ans
-    else:
-        return None
+    """Robust prediction extractor for reasoning-model output.
+
+    The 0.6B reasoning model only wraps its answer in \\boxed{} about half the
+    time; otherwise it states 'the answer is $18' or ends on a bare number. We
+    scope to the post-</think> answer, then try, in order: the last \\boxed{}, the
+    last 'answer/total/=' phrase, and finally the last number in that segment.
+    """
+    tail = completion.rsplit("</think>", 1)[-1]
+
+    boxed = GSM_BOXED_RE.findall(tail) or GSM_BOXED_RE.findall(completion)
+    if boxed:
+        return _normalize_num(boxed[-1])
+
+    phrase = GSM_PHRASE_RE.findall(tail)
+    if phrase:
+        return _normalize_num(phrase[-1])
+
+    nums = GSM_NUM_RE.findall(tail)
+    if nums:
+        return _normalize_num(nums[-1])
+
+    return None
     
     
 class GSM(Task):
@@ -68,10 +101,11 @@ Working 50 minutes, she earned 0.2 x 50 = $0.2*50=10.\n#### 10"""
         answer = self.ds[idx]["answer"]
         gt_answer = extract_answer(answer)
         asst_answer = extract_boxed_answer(assistant_response)
-        return int(gt_answer==asst_answer)
+        return int(gt_answer is not None and gt_answer == asst_answer)
 
 if __name__ == "__main__":
     benchmark = GSM(start=0,stop= None, step=1)
+    benchmark.load()
     scores = []
     for i in range(benchmark.num_examples()):
         example = benchmark.get_example(i)

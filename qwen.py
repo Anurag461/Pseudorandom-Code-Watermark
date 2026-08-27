@@ -387,7 +387,7 @@ class Qwen3Model(nn.Module):
         self.cfg = cfg
 
 
-    def forward(self, in_idx, cache=None):
+    def forward(self, in_idx, cache=None, key_padding_mask=None):
         # Forward pass
         tok_embeds = self.tok_emb(in_idx)
         x = tok_embeds
@@ -402,6 +402,26 @@ class Qwen3Model(nn.Module):
         q_pos = torch.arange(pos_offset, total_len, device=x.device)
         k_pos = torch.arange(total_len, device=x.device)
         mask = q_pos.unsqueeze(1) < k_pos.unsqueeze(0)
+
+        # Optional key-padding mask for batched, left-padded prompts.
+        # key_padding_mask: (B, K) bool, True where a key position is padding and
+        # must never be attended. Generated tokens (indices >= K) are always real,
+        # so we right-pad the mask with False to cover the full key axis.
+        if key_padding_mask is not None:
+            kpm = key_padding_mask.to(device=x.device, dtype=torch.bool)
+            if kpm.shape[1] < total_len:
+                extra = torch.zeros(
+                    kpm.shape[0], total_len - kpm.shape[1],
+                    dtype=torch.bool, device=x.device,
+                )
+                kpm = torch.cat([kpm, extra], dim=1)
+            # (B, 1, num_tokens, total_len): causal OR padding.
+            mask = mask.unsqueeze(0).unsqueeze(0) | kpm[:, None, None, :]
+            # A left-pad query row would otherwise be fully masked -> softmax NaN,
+            # and 0*NaN in the value matmul poisons real rows. Let every query
+            # attend to its own absolute position so no row is ever fully masked.
+            diag = q_pos.unsqueeze(1) == k_pos.unsqueeze(0)     # (num_tokens, total_len)
+            mask = mask & ~diag.unsqueeze(0).unsqueeze(0)
 
         for layer_idx, block in enumerate(self.trf_blocks):
             x = block(x, mask, self.cos, self.sin, cache=cache, layer_idx=layer_idx, pos_offset=pos_offset)
