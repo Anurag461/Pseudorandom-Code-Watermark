@@ -1,6 +1,6 @@
-# PRC watermark calibration — reproduction guide
+# PRC watermark — reproduction guide
 
-End-to-end instructions for reproducing the PRC watermark calibration experiments on Qwen3-0.6B-Base, plus the key deviations from the paper that were needed to make detection actually work.
+End-to-end instructions for the PRC watermark experiments on Qwen3-0.6B-Base — watermark detection (TPR/FPR) and benchmark utility — plus the key deviations from the paper that were needed to make detection actually work.
 
 Watermark-detection (TPR/FPR) results live in `hoeffding_results_summary.csv`; benchmark utility results live in `benchmark_utility_results.csv`.
 
@@ -131,5 +131,5 @@ Variant of #4. Within a block, drop any parity check whose `t` token positions i
 | `modal_gsm8k.py` | **(current)** Modal app for benchmark utility evals: `run_eval` (small), `orchestrate_full` (sharded, resumable, deploy+spawn). |
 | `benchmarks/` | Benchmark `Task` classes + `registry.py`. Includes `ifeval_lib/` (vendored Google IFEval verifier). |
 | `benchmark_utility_results.csv` | Watermarked-vs-unwatermarked task accuracy across benchmarks. |
-| `watermark_expt.py` | Sampling (`generate_text_watermark_prc`), batched eval harness (`chat_eval_benchmark_batched`), folds, calibration (`fit_calibration`), detection (`detect_with_threshold`, `detect_syndrome`, `detect_hoeffding`). |
+| `watermark_expt.py` | Sampling (`generate_text_watermark_prc`), batched eval harness (`chat_eval_benchmark_batched`), folds, threshold fitting (`fit_calibration`), detection (`detect_with_threshold`, `detect_syndrome`, `detect_hoeffding`). |
 | `detectors.py` | Model-free detector helpers (folds, `detect_hoeffding`, prefix-column `detect_hoeffding_prefix`, generation-record builder). |
