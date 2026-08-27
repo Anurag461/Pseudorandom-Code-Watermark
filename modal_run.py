@@ -747,6 +747,8 @@ image = (
         "scipy",
         "galois",
         "numpy",
+        "datasets",
+        "aiohttp",
     )
     .env(
         {
@@ -761,7 +763,7 @@ image = (
     )
     .add_local_file("prompts.jsonl", "/root/prompts.jsonl")
     .add_local_python_source(
-        "prc", "qwen", "constants", "detectors", "watermark_expt"
+        "prc", "qwen", "constants", "detectors", "watermark_expt", "benchmarks"
     )
 )
 

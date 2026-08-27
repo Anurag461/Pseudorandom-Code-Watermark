@@ -2,14 +2,35 @@ from benchmarks.task import Task, HFDataset
 import re
 import numpy as np
 
-ARC_RE = re.compile(r"\\boxed\{\(?([A-Ea-e1-4])\)?\}")
+# Reasoning-model outputs put the final label in one of several forms, so we try
+# them in order of specificity. Only the text AFTER the </think> block is the
+# actual answer, so we scope extraction to that to avoid matching option letters
+# that appear inside the reasoning.
+ARC_RE = re.compile(r"\\boxed\{\(?([A-Ea-e1-4])\)?\}")                 # \boxed{X}
+ARC_PHRASE_RE = re.compile(                                            # "answer is X"
+    r"(?:answer|option|choice)\b[^A-Ea-e1-4]{0,20}?\(?([A-Ea-e1-4])\)?\b", re.I)
+ARC_LABEL_RE = re.compile(r"(?:^|\n)\s*\(?([A-Ea-e1-4])\)?\s*[.):-]")  # leading "X."
 
 def extract_answer(completion):
-    match = ARC_RE.search(completion)
-    if match:
-        return match.group(1).strip().upper()
-    else:
-        return None
+    # Scope to the post-reasoning answer when a think block is present.
+    tail = completion.rsplit("</think>", 1)[-1]
+
+    # 1) \boxed{X} -- take the LAST one (models sometimes box intermediates).
+    boxed = ARC_RE.findall(tail) or ARC_RE.findall(completion)
+    if boxed:
+        return boxed[-1].strip().upper()
+
+    # 2) "The answer is X" / "correct option is (X)".
+    m = ARC_PHRASE_RE.search(tail)
+    if m:
+        return m.group(1).strip().upper()
+
+    # 3) A final answer line that just starts with the label, e.g. "B. breathing mask".
+    m = ARC_LABEL_RE.search(tail)
+    if m:
+        return m.group(1).strip().upper()
+
+    return None
 
 class ARCEasy(Task):
     def __init__(self, **kwargs):

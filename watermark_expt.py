@@ -16,6 +16,7 @@ from constants import test_prompts
 import numpy as np
 from prc import KeyGen, Encode, Detect
 from typing import TYPE_CHECKING
+from tqdm import tqdm
 
 if TYPE_CHECKING:
     from benchmarks.task import Task
@@ -266,8 +267,7 @@ def generate_text_watermark_prc(
         # as a PRC codeword.
         return torch.bernoulli(torch.full((n,), 0.5)).to(device)
 
-    print("Watermark Enabled (PRC)" if watermark else "Watermark Disabled",
-          flush=True)
+    #print("Watermark Enabled (PRC)" if watermark else "Watermark Disabled", flush=True)
     codeword = _fresh_codeword()
 
     partition_map = partition_map.to(device)        # (2, vocab)
@@ -603,8 +603,7 @@ def generate_batch_and_collect(
                 for _ in range(B)]
         return torch.stack(rows, dim=0)
 
-    print(f"Watermark Enabled (PRC), batch={B}" if watermark
-          else f"Watermark Disabled, batch={B}", flush=True)
+    #print(f"Watermark Enabled (PRC), batch={B}" if watermark else f"Watermark Disabled, batch={B}", flush=True)
     codeword = _fresh_codewords() if watermark else None
 
     tok_steps, p_steps = [], []
@@ -909,6 +908,117 @@ def generate_batch_and_collect_online(
     return tokens, p_traces, details
 
 
+def left_pad_batch(prompt_id_lists, pad_id):
+    """Left-pad a list of variable-length prompts into a batch.
+
+    Returns:
+        ids      : (B, L) long tensor, each prompt right-aligned with `pad_id`.
+        key_pad  : (B, L) bool tensor, True where the position is padding (to be
+                   masked out of attention).
+    Left-padding keeps every real prompt's tokens contiguous and flush-right, so
+    the first generated token sits at the same absolute position for all rows and
+    RoPE relativity makes the pad offset cancel.
+    """
+    B = len(prompt_id_lists)
+    L = max(len(p) for p in prompt_id_lists)
+    ids = torch.full((B, L), pad_id, dtype=torch.long)
+    key_pad = torch.ones(B, L, dtype=torch.bool)
+    for i, p in enumerate(prompt_id_lists):
+        ids[i, L - len(p):] = torch.tensor(p, dtype=torch.long)
+        key_pad[i, L - len(p):] = False
+    return ids, key_pad
+
+
+def generate_batch_padded_and_collect(
+    model,
+    prompt_ids_batch,
+    key_padding_mask,
+    max_new_tokens,
+    encoding_key,
+    partition_map,
+    eos_token_id=None,
+    watermark=True,
+):
+    """Batched PRC generation over B left-padded, variable-length prompts.
+
+    Same PRC channel as generate_batch_and_collect, but tolerates ragged prompts
+    via the key-padding mask (threaded into the model so padded prefix positions
+    are never attended). Per-row EOS is honored: once a row emits eos it is pinned
+    to eos for the remaining steps, and generation stops early once every row has
+    finished. Truncate each row at its first eos before decoding/evaluating.
+
+    Returns:
+        tokens   : (B, T) long tensor on CPU.
+        p_traces : (B, T) float64 numpy array of LM P[partition 1] per step.
+    """
+    model.eval()
+    B = prompt_ids_batch.shape[0]
+    n = encoding_key[0].shape[0]
+    pm = partition_map.to(device)
+    part1 = pm[1]
+    prompt_ids_batch = prompt_ids_batch.to(device)
+    kpm = key_padding_mask.to(device)
+
+    def _fresh_codewords():
+        rows = [signed_to_bits(Encode(encoding_key)).to(device).float()
+                for _ in range(B)]
+        return torch.stack(rows, dim=0)
+
+    codeword = _fresh_codewords() if watermark else None
+    finished = torch.zeros(B, dtype=torch.bool, device=device)
+
+    tok_steps, p_steps = [], []
+    with torch.no_grad():
+        cache = KVCache()
+        logits = model(prompt_ids_batch, cache=cache,
+                       key_padding_mask=kpm)[:, -1]                  # (B, vocab)
+
+        for pos in range(max_new_tokens):
+            if watermark and pos > 0 and pos % n == 0:
+                codeword = _fresh_codewords()
+
+            probs = torch.softmax(logits, dim=-1)
+            p1 = (probs * part1.to(logits.device)).sum(dim=-1)       # (B,)
+
+            if watermark:
+                xi = codeword[:, pos % n]                            # (B,)
+                bern_p = torch.where(
+                    p1 <= 0.5,
+                    2 * xi * p1,
+                    1 - 2 * (1 - xi) * (1 - p1),
+                ).clamp(0.0, 1.0)
+                b = torch.bernoulli(bern_p).long()                  # (B,)
+                mask = pm[b].to(logits.device)                      # (B, vocab)
+                sample_logits = logits.masked_fill(mask == 0, float("-inf"))
+            else:
+                sample_logits = logits
+
+            sample_probs = torch.softmax(sample_logits.float(), dim=-1)
+            next_token = torch.multinomial(sample_probs, num_samples=1)  # (B,1)
+
+            if eos_token_id is not None:
+                # Pin already-finished rows to eos so the cache stays well-formed
+                # and the trailing tokens are trivially truncated at decode time.
+                next_token = next_token.masked_fill(
+                    finished.unsqueeze(1), eos_token_id
+                )
+
+            tok_steps.append(next_token)
+            p_steps.append(p1.detach().cpu())
+
+            if eos_token_id is not None:
+                finished = finished | (next_token.squeeze(1) == eos_token_id)
+                if bool(finished.all()):
+                    break
+
+            logits = model(next_token, cache=cache,
+                           key_padding_mask=kpm)[:, -1]              # (B, vocab)
+
+    tokens = torch.cat(tok_steps, dim=1).cpu()                       # (B, T)
+    p_traces = torch.stack(p_steps, dim=1).float().numpy().astype(np.float64)
+    return tokens, p_traces
+
+
 def estimate_partition_trace_batch(
     model,
     prompt_ids_batch,
@@ -1167,20 +1277,165 @@ def detect_syndrome(
     return decision
 
 
-def chat_eval_benchmark(benchmark: Task, model: Qwen3Model, tokenizer, log: bool=False):
+def chat_eval_benchmark(benchmark, log_gen: bool=False, limit=100_000, watermark=True):
     scores = []
-    for i in range(benchmark.num_examples()):
+    full_conversations = []
+    encoding_key, decoding_key = KeyGen(n=800, message_length=0, false_positive_rate=0.5, t=3, noise_rate=0.1, r=int(0.99*800))
+    for i in tqdm(range(min(limit, benchmark.num_examples()))):
+        outputs = []
         conversation = benchmark.get_example(i)
-        enc = tokenizer.encode(conversation['messages'])
-        if i==0:
-            print(tokenizer.decode(enc))
-        """ generate_text_watermark_prc(
-            model,
+        token_ids = tokenizer.encode(conversation['messages'][0]['content'])
+        token_ids = torch.Tensor(token_ids).long().to(device)[None, :]
+        #print(token_ids)
+        for next_token, _ in generate_text_watermark_prc(
+            model, #global
             token_ids,
+            1024, #max_new_tokens
+            encoding_key,
+            partition, #global
+            eos_token_id=tokenizer.eos_token_id,
+            watermark=watermark):
+                outputs.append(next_token.detach().cpu())
+                token_ids = torch.cat([token_ids, next_token], -1)
+        #print(outputs)
+        assistant_response = tokenizer.decode(outputs)
+        if i==0 or log_gen:
+            print(conversation)
+            print(assistant_response)
+        score = benchmark.evaluate(i, assistant_response)
+        full_conversations.append(conversation['messages']+[{"role": "assistant", "content": assistant_response}])
+        scores.append(score)
+    print(torch.mean(torch.Tensor(scores)))
+    return full_conversations, scores
+
+def chat_eval_benchmark_batched(
+    benchmark,
+    batch_size: int = 8,
+    log_gen: bool = False,
+    limit=100_000,
+    watermark=True,
+    max_new_tokens: int = 1024,
+    detect: bool = True,
+    fpr: float = 1e-9,
+    indices=None,
+):
+    """Batched utility eval + per-row watermark detection.
+
+    Left-pads variable-length prompts into batches and runs one batched PRC
+    generation per batch. For each row, tokens and the p_trace are truncated to
+    the row's first EOS and kept the SAME length, then fed to detect_hoeffding
+    (proven-FPR, MAP soft-token, handles T < n as one partial block).
+
+    Detection is run on watermarked AND unwatermarked rows: on watermarked runs
+    the detection rate is the true-positive rate (power); on unwatermarked runs
+    it is the empirical false-positive rate (should sit at/below `fpr`).
+
+    Returns (full_conversations, scores, gen_records, decoding_key) where each
+    gen_record is {tokens, p_trace, detected, margin}.
+    """
+    scores = []
+    detections = []
+    full_conversations = []
+    gen_records = []
+    encoding_key, decoding_key = KeyGen(n=800, message_length=0, false_positive_rate=0.5, t=3, noise_rate=0.1, r=int(0.99*800))
+    pad_id = tokenizer.pad_token_id
+    eos_id = tokenizer.eos_token_id
+    # Evaluate an explicit set of dataset indices (for sharding) or the first
+    # `limit` examples by default.
+    if indices is None:
+        indices = list(range(min(limit, benchmark.num_examples())))
+
+    for b0 in tqdm(range(0, len(indices), batch_size)):
+        idxs = indices[b0:b0 + batch_size]
+        convs = [benchmark.get_example(i) for i in idxs]
+        prompt_id_lists = [tokenizer.encode(c['messages'][0]['content']) for c in convs]
+        ids, key_pad = left_pad_batch(prompt_id_lists, pad_id)
+
+        tokens, p_traces = generate_batch_padded_and_collect(
+            model,
+            ids,
+            key_pad,
             max_new_tokens,
             encoding_key,
-            partition_map,
-            eos_token_id=tokenizer.eos_token_id,
-            watermark=True)
-        """
-    return
+            partition,          # global
+            eos_token_id=eos_id,
+            watermark=watermark,
+        )
+
+        for j, i in enumerate(idxs):
+            row = tokens[j].tolist()
+            # Truncate at the first EOS; slice the p_trace to the SAME cutoff so
+            # bits and p_arr stay aligned for detection.
+            cut = row.index(eos_id) if eos_id in row else len(row)
+            gen_tokens = torch.tensor(row[:cut], dtype=torch.long)
+            gen_ptrace = p_traces[j, :cut]
+            assistant_response = tokenizer.decode(row[:cut])
+
+            detected, margin = None, None
+            if detect and cut > 0:
+                dec, info = detect_hoeffding(
+                    decoding_key,
+                    gen_tokens,
+                    gen_ptrace,
+                    partition,       # global
+                    fpr=fpr,
+                    return_info=True,
+                )
+                detected = bool(dec)
+                margin = float(info["statistic"] - info["threshold"])
+                detections.append(detected)
+
+            if (i == 0) or log_gen:
+                print(convs[j])
+                print(assistant_response)
+                if detected is not None:
+                    print(f"[detect] watermarked={watermark} detected={detected} margin={margin:.3f}")
+
+            score = benchmark.evaluate(i, assistant_response)
+            full_conversations.append(
+                convs[j]['messages'] + [{"role": "assistant", "content": assistant_response}]
+            )
+            scores.append(score)
+            gen_records.append({
+                "tokens": gen_tokens,
+                "p_trace": gen_ptrace,
+                "detected": detected,
+                "margin": margin,
+            })
+
+    det_rate = float(np.mean(detections)) if detections else float("nan")
+    label = "TPR/power" if watermark else "FPR"
+    print(f"score={np.mean(scores):.4f}  detection_rate({label})={det_rate:.4f}")
+    return full_conversations, scores, gen_records, decoding_key
+
+
+def run_wm_and_unwm(benchname: str, limit:int, batch_size: int = 8, fpr: float = 1e-4):
+    # Lazy import: keep watermark_expt importable without the benchmarks/datasets
+    # deps (main uses a TYPE_CHECKING-only Task import for the same reason).
+    from benchmarks.registry import get_benchmark
+    benchmark = get_benchmark(benchname, start=0, stop=None, step=1)
+    history, scores, recs_wm, _ = chat_eval_benchmark_batched(benchmark, batch_size=batch_size, limit=limit, fpr=fpr)
+    #print(scores)
+    with open(f"{benchname}_qwen.json", "w") as f:
+        json.dump(history, f)
+    benchmark = get_benchmark(benchname, start=0, stop=None, step=1)
+    history_uwm, scores_uwm, recs_uwm, _ = chat_eval_benchmark_batched(benchmark, batch_size=batch_size, limit=limit, watermark=False, fpr=fpr)
+
+    tpr = float(np.mean([r["detected"] for r in recs_wm if r["detected"] is not None]))
+    fpr_emp = float(np.mean([r["detected"] for r in recs_uwm if r["detected"] is not None]))
+    print(f"Unwatermarked score: {np.mean(scores_uwm)}, Watermarked Score: {np.mean(scores)}")
+    print(f"Detection TPR (watermarked): {tpr:.4f}, empirical FPR (unwatermarked): {fpr_emp:.4f}")
+    return np.mean(scores_uwm), np.mean(scores), tpr, fpr_emp
+
+if __name__== "__main__":
+    benchname = "arc_easy"
+    unwm, wm, tprs, fprs = [], [], [], []
+    for _ in range(5):
+        unwm_score, wm_score, tpr, fpr_emp = run_wm_and_unwm(benchname, limit=5)
+        unwm.append(unwm_score)
+        wm.append(wm_score)
+        tprs.append(tpr)
+        fprs.append(fpr_emp)
+    ret = f"{np.mean(unwm)},{np.mean(wm)},{np.mean(tprs)},{np.mean(fprs)},{benchname}\n"
+    with open("benchmarks_score.csv", "a") as f:
+        f.write(ret)

@@ -6,20 +6,77 @@ Results live in `results_summary.csv` (one row per `(target FPR, n, t, η)` conf
 
 This implementation borrows heavily from the [PRC-Watermark](https://github.com/XuandongZhao/PRC-Watermark) implementation by Sam Gunn, Xuandong Zhao, and Dawn Song.
 
+> **How experiments are actually run today: Modal.** The current, supported
+> workflow runs on [Modal](https://modal.com) — `modal_run.py` for the watermark
+> detection (TPR/FPR) experiments and `modal_gsm8k.py` for benchmark utility
+> evals. See [Running experiments (Modal)](#running-experiments-modal) below.
+> The `run_calibration.py` three-phase local multi-GPU orchestrator described in
+> the later sections is **legacy** — it still documents the algorithm faithfully
+> (bucketing, entropy fold, sampling, syndrome detection) but is no longer how
+> runs are launched.
+
+## Running experiments (Modal)
+
+Everything runs server-side on Modal, so a laptop only needs to dispatch the job
+(`modal run`) or, better, deploy once and fire jobs that survive disconnects
+(`modal deploy` + `.spawn`). Model weights and HF datasets are cached in Modal
+Volumes; results land in the `prc-eval-results` Volume.
+
+**Watermark detection experiments** (`modal_run.py`, RealNews prompts) — sweep
+`n` / `eta` and report MAP/entropy/naive TPR at a target FPR:
+
+```bash
+modal run modal_run.py::main \
+    --num-prompts 500 --n 768 --t 3 --eta 0.1 --fpr 1e-3 \
+    --r-frac 0.99 --max-containers 10
+```
+
+**Benchmark utility evals** (`modal_gsm8k.py`) — measure the task-accuracy cost
+of watermarking (watermarked vs unwatermarked) across benchmarks. Small runs:
+
+```bash
+modal run modal_gsm8k.py::main --benchmark gsm8k --limit 200 --max-new-tokens 4096
+```
+
+Full / large runs are sharded, resumable, and disconnect-proof via deploy+spawn
+(each shard commits to the volume; a `SUMMARY.json` is written at the end):
+
+```bash
+modal deploy modal_gsm8k.py
+# then, fire-and-forget (runs to completion regardless of the client):
+python -c "import modal; modal.Function.from_name('prc-gsm8k-eval','orchestrate_full')\
+    .spawn('mmlu', 16, 4096, 24, 'reasoning', 'full')"   # (benchmark, batch, max_new_tokens, num_shards, variant, run_tag[, limit, sample, sample_seed])
+```
+
+Benchmarks are registered in `benchmarks/registry.py`:
+`gsm8k, arc_easy, arc_challenge, hellaswag, mmlu, ag_news, gpqa_diamond, aime24,
+aime25, ifeval`. GPQA Diamond is a gated HF dataset — provide an `HF_TOKEN` via a
+Modal secret named `huggingface` (`modal secret create huggingface HF_TOKEN=...`).
+Utility results are recorded in `benchmark_utility_results.csv`.
+
 ## Contents
 
-1. [Workspace setup](#workspace-setup)
-2. [Differences from the PRC paper](#differences-from-the-prc-paper)
-3. [How a single run works (3 phases)](#how-a-single-run-works-3-phases)
-4. [Reproducing the headline configs](#reproducing-the-headline-configs)
-5. [Reusing cached generations across detectors](#reusing-cached-generations-across-detectors)
-6. [Sweeping FPR targets and entropy thresholds](#sweeping-fpr-targets-and-entropy-thresholds)
-7. [Producing the results CSV](#producing-the-results-csv)
-8. [Source map](#source-map)
+1. [Running experiments (Modal)](#running-experiments-modal) — the current workflow
+2. [Important Implementation Details](#important-implementation-details) — algorithm (still current)
+3. [Source map](#source-map)
+
+The remaining sections document the **legacy** local `run_calibration.py`
+orchestrator (superseded by Modal, kept for reference): [workspace
+setup](#workspace-setup-legacy), [how a single run works](#how-a-single-run-works-3-phases--legacy),
+[reproducing configs](#reproducing-the-headline-configs--legacy), [reusing cached
+generations](#reusing-cached-generations-across-detectors--legacy), [sweeping
+FPR](#sweeping-fpr-targets-and-entropy-thresholds--legacy), and [producing the
+results CSV](#producing-the-results-csv--legacy).
 
 ---
 
-## Workspace setup
+## Workspace setup (legacy)
+
+> **Legacy.** This and the sections that follow describe the local, Docker /
+> multi-GPU `run_calibration.py` orchestrator. It is superseded by the
+> [Modal workflow](#running-experiments-modal) above and kept only for
+> reference. The [Important Implementation Details](#important-implementation-details)
+> section, by contrast, documents the algorithm and remains current.
 
 You need CUDA 12.x, Python ≥3.10, and PyTorch 2.6+. Pick whichever path matches your environment.
 
@@ -146,7 +203,7 @@ Variant of #4. Within a block, drop any parity check whose `t` token positions i
 
 ---
 
-## How a single run works (3 phases)
+## How a single run works (3 phases) — legacy
 
 `run_calibration.py` orchestrates everything:
 
@@ -184,7 +241,7 @@ reconstructed if it was not saved during generation.
 
 ---
 
-## Reproducing the headline configs
+## Reproducing the headline configs — legacy
 
 Edit the config block at the top of `run_calibration.py` and run it inside the container:
 
@@ -208,7 +265,7 @@ Set `N_CODEWORD`, `T_PARITY`, `G_PARAM`, `NOISE_RATE`, `MAX_NEW_TOKENS`, `WORKDI
 
 ---
 
-## Reusing cached generations across detectors
+## Reusing cached generations across detectors — legacy
 
 The Phase-1 generations are deterministic for a given `(SEED, model, n, t, g, η, prompts)`. To compare detectors on the same generations:
 
@@ -229,7 +286,7 @@ docker exec -w /home/anurakas/nanochat -e CUDA_VISIBLE_DEVICES= nile-nemo-jupyte
 
 ---
 
-## Sweeping FPR targets and entropy thresholds
+## Sweeping FPR targets and entropy thresholds — legacy
 
 Two helper scripts, both read `WORKDIR` artifacts and don't re-run generation:
 
@@ -245,7 +302,7 @@ docker exec -w /home/anurakas/nanochat -e CUDA_VISIBLE_DEVICES= nile-nemo-jupyte
 
 ---
 
-## Producing the results CSV
+## Producing the results CSV — legacy
 
 `results_summary.csv` is the consolidated table (one row per `(target FPR, n, t, η)` × {entropy fold, naive fold, hard-remove syndrome, no-filter syndrome}). It's hand-assembled from:
 
@@ -262,11 +319,16 @@ If you re-run anything, regenerate the relevant rows by editing `results_summary
 | file | role |
 |---|---|
 | `prc.py` | LDPC-PRC₀ key generation, encode, decode (paper-aligned, untouched). |
-| `qwen.py` | Qwen3 model + tokenizer wrapper. |
+| `qwen.py` | Qwen3 model + tokenizer wrapper (+ KV caches, batched left-pad `key_padding_mask`). |
 | `constants.py` | The 30 fixed `test_prompts`. |
-| `watermark_expt.py` | Sampling (`generate_text_watermark_prc`), folds (`fold_naive`, `fold_entropy_weighted`), calibration (`fit_calibration`), and detection (`detect_with_threshold`, `detect_syndrome`). |
-| `run_calibration.py` | Three-phase orchestrator. Edit the top-of-file constants to choose a config + detector. |
-| `worker_generate.py` | Per-GPU generation worker (one job, saves `result_NN.pt`). |
+| `modal_run.py` | **(current)** Modal app for watermark detection experiments (RealNews prompts, sharded generation + detection). |
+| `modal_gsm8k.py` | **(current)** Modal app for benchmark utility evals: `run_eval` (small), `orchestrate_full` (sharded, resumable, deploy+spawn). |
+| `benchmarks/` | Benchmark `Task` classes + `registry.py`. Includes `ifeval_lib/` (vendored Google IFEval verifier). |
+| `benchmark_utility_results.csv` | Watermarked-vs-unwatermarked task accuracy across benchmarks. |
+| `watermark_expt.py` | Sampling (`generate_text_watermark_prc`), batched eval harness (`chat_eval_benchmark_batched`), folds, calibration (`fit_calibration`), detection (`detect_with_threshold`, `detect_syndrome`, `detect_hoeffding`). |
+| `detectors.py` | Model-free detector helpers (folds, `detect_hoeffding`, prefix-column `detect_hoeffding_prefix`, generation-record builder). |
+| `run_calibration.py` | **(legacy)** Three-phase local multi-GPU orchestrator. Edit the top-of-file constants to choose a config + detector. |
+| `worker_generate.py` | **(legacy)** Per-GPU generation worker (one job, saves `result_NN.pt`). |
 | `backfill_results.py` | Run all detectors on a cached `WORKDIR` and print CSV rows. |
 | `fpr_sweep.py`, `fpr_sweep_naive.py` | FPR-target sweeps for fold detectors. |
 | `sweep_syndrome_entropy.py` | Entropy-filter threshold sweep for the syndrome detector. |
