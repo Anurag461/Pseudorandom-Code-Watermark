@@ -1,0 +1,6 @@
+cell_id,model,eta,n,modal_run_url,execution_mode,generated_watermarked_tokens,generated_null_tokens,gpu_worker_launched,gpu_seconds,provider_cost_usd,status,notes
+qwen3_8b_eta0p05_n416,Qwen3-8B-Base,0.05,416,https://modal.com/apps/new-prc-watermark/main/ap-40Ww1xye0BIc0e69A0V3mO,cache_only,0,0,false,0,0.00901523,complete,"Modal billing: CPU $0.00826646 + memory $0.00074877; no GPU resource row"
+qwen3_8b_eta0p05_n749,Qwen3-8B-Base,0.05,749,https://modal.com/apps/new-prc-watermark/main/ap-sAH7cRTUNAluDrH5b9MwH0,cache_only,0,0,false,0,0.00729733,complete,"Modal billing: CPU $0.00669688 + memory $0.00060045; no GPU resource row"
+qwen3_8b_eta0p10_n768,Qwen3-8B-Base,0.10,768,https://modal.com/apps/new-prc-watermark/main/ap-fLzGl1OMJjxmnEPrMroDgI,cache_only,0,0,false,0,0.00863663,complete,"Modal billing: CPU $0.00791993 + memory $0.00071670; no GPU resource row"
+qwen3_8b_eta0p10_n1382,Qwen3-8B-Base,0.10,1382,https://modal.com/apps/new-prc-watermark/main/ap-5YPkVFsTWiUaMSjrPZvD0b,cache_only,0,0,false,0,0.01029872,complete,"Modal billing: CPU $0.00943991 + memory $0.00085881; no GPU resource row"
+qwen3_8b_eta0p10_n1625,Qwen3-8B-Base,0.10,1625,https://modal.com/apps/new-prc-watermark/main/ap-LTHbdZlXRqgra7nEGG1zmq,cache_only,0,0,false,0,0.00981017,complete,"Modal billing: CPU $0.00899660 + memory $0.00081357; no GPU resource row"
