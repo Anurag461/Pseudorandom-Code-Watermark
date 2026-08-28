@@ -1,0 +1,60 @@
+{
+  "status": "passed",
+  "prompt_index": 0,
+  "batch_size": 1,
+  "seeds": [12345, 67890],
+  "generation_artifact": "/data/controlled_baseline_smoke/20260823T020321Z/generated_sequences.pt",
+  "gumbel_max": {
+    "modal_app_url": "https://modal.com/apps/new-prc-watermark/main/ap-baHDIzkDwyiqSy1dX9uXM9",
+    "modal_task_id": "ta-01M0P6K7FEQXQ9WE72X1E5Y1DR",
+    "modal_image_id": "im-8Pjff9397tFdzW3OWCNyMB",
+    "actual_gpu": "NVIDIA H100 80GB HBM3",
+    "fixed_shape_identical_across_seeds": true,
+    "committed_seed_67890_reproduced": true,
+    "batch_shape_sensitivity_observed": true,
+    "batch1_token_hash_seed_12345": "7325894598cca4da9db2d0818fd35103fb43d7d733607e65a958819817c6632f",
+    "batch1_token_hash_seed_67890": "7325894598cca4da9db2d0818fd35103fb43d7d733607e65a958819817c6632f",
+    "committed_batch5_token_hash_seed_12345": "b2ab07f5db6b13b95ac2d533a20847050bfaa95f164a64de5cc77e698bb49af9",
+    "model_load_seconds": 8.811186809,
+    "function_seconds": 56.447421029,
+    "generation_seconds_seed_12345": 24.130828295,
+    "generation_seconds_seed_67890": 23.50053322800001,
+    "peak_cuda_allocated_bytes": 17668689920,
+    "peak_cuda_reserved_bytes": 17702060032
+  },
+  "textseal": {
+    "modal_app_url": "https://modal.com/apps/new-prc-watermark/main/ap-PuWC1IWNDwgUUhdl4UKgSY",
+    "modal_task_id": "ta-01M0P6RXCB0J2WYA39V1Y0643R",
+    "modal_image_id": "im-JbetoQ6DbNz3742LGgoBbT",
+    "actual_gpu": "NVIDIA H100 80GB HBM3",
+    "fixed_seed_reproduced": true,
+    "changed_across_seeds": true,
+    "primary_secondary_token_agreement": 0.0205078125,
+    "token_hash_seed_12345": "052caecff0833cc0679caf25eb2c1cee983bee60c3c8a87a05079696be9b28cc",
+    "token_hash_seed_67890": "8ec16cdf8192732d4b421457d6056a93c2ec9979e3ac888f25189a78e45e53c4"
+  },
+  "synthid_text": {
+    "modal_app_url": "https://modal.com/apps/new-prc-watermark/main/ap-PuWC1IWNDwgUUhdl4UKgSY",
+    "modal_task_id": "ta-01M0P6RXCB0J2WYA39V1Y0643R",
+    "modal_image_id": "im-JbetoQ6DbNz3742LGgoBbT",
+    "actual_gpu": "NVIDIA H100 80GB HBM3",
+    "fixed_seed_reproduced": true,
+    "changed_across_seeds": true,
+    "primary_secondary_token_agreement": 0.0126953125,
+    "token_hash_seed_12345": "ef9dc989bfac3a481bcbb71e85db5f03a9ff37b1b7d800f3ca44993ebc6f6141",
+    "token_hash_seed_67890": "f12b86e3a8ebaa3b359d81f36f2e82fca71f0cb436a031a7539ef237b02af5ad",
+    "official_generation_reference_indices_equal": true,
+    "official_generation_reference_max_abs_score_difference": 0.0
+  },
+  "stochastic_check_runtime": {
+    "model_load_seconds": 8.360158271000001,
+    "function_seconds": 119.32657348400001,
+    "textseal_seconds_seed_12345": 27.61130032,
+    "textseal_seconds_seed_67890": 26.198310454999998,
+    "synthid_seconds_seed_12345": 28.729223032000007,
+    "synthid_seconds_seed_67890": 28.420187776000006,
+    "peak_cuda_allocated_bytes": 17668689920,
+    "peak_cuda_reserved_bytes": 17702060032
+  },
+  "interpretation": "At fixed prompt and batch shape, Gumbel-Max is seed-deterministic; TextSeal and SynthID-Text reproduce fixed seeds and change across seeds. The pinned TextSeal Gumbel comparison path is batch-shape sensitive on Qwen3-8B because its power-form argmax amplifies small batch-dependent floating-point logit differences."
+}

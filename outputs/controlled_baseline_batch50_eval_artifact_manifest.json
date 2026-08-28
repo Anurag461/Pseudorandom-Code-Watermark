@@ -1,0 +1,58 @@
+{
+  "artifacts": [
+    {
+      "bytes": 7486594,
+      "location": "modal_volume",
+      "path": "/data/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/scored/shard_00.jsonl",
+      "sha256": "1149134f14c684bf2da9962349e56644beabf0bd5fd76cd775323ec0bd68a71e"
+    },
+    {
+      "bytes": 395153,
+      "location": "modal_volume",
+      "path": "/data/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/scored/shard_00_validation.json",
+      "sha256": "0bdc265f7a636734886b5f5809036fe032118fc443e717831abe88e1c406a099"
+    },
+    {
+      "bytes": 2996,
+      "location": "repository",
+      "path": "outputs/controlled_baseline_batch50_eval_prefix_summary.csv",
+      "sha256": "ca61b7d1a05b53228be58807ee25cc5fcd1eee6a8d1d93def04ad7e308e96252"
+    },
+    {
+      "bytes": 2119,
+      "location": "repository",
+      "path": "outputs/controlled_baseline_batch50_eval_quality_summary.csv",
+      "sha256": "71618f0a08dbda447e9e8885733d6bf437cfac47f1511ec2937ad8a9c07aa4cc"
+    },
+    {
+      "bytes": 1751,
+      "location": "repository",
+      "path": "outputs/controlled_baseline_batch50_eval_quality_by_prefix.csv",
+      "sha256": "63b129152ab85ce37367cb34bce074e43e7ea757083fe5017d05107f1751eeb0"
+    },
+    {
+      "bytes": 2664,
+      "location": "repository",
+      "path": "outputs/controlled_baseline_batch50_eval_validation.json",
+      "sha256": "766937acd02542198ec2ed415e04d1ebc90d11c6cdfb416036db1181deb7a7ee"
+    },
+    {
+      "bytes": 824,
+      "location": "repository",
+      "path": "outputs/controlled_baseline_batch50_eval_cost_ledger.csv",
+      "sha256": "72a373bb0b61e45738963c56d927455fb2cc6d0a67a940880650fad916a43946"
+    },
+    {
+      "bytes": 3715,
+      "location": "repository",
+      "path": "controlled_baseline_batch50_eval_report.md",
+      "sha256": "a520e07d16099f81992d4db546c4f4813abcb48d621851e0690266646111a56e"
+    }
+  ],
+  "generation_integration_code_fingerprint": "6f9bc1c40ab864d0098ded7378eb3153c4e17b280dc84e4965108f9c014dbddc",
+  "image_definition_sha256": "36ef066d906bf9df05801790b9327b8f2a8854d516add87b3f36d47afcd40217",
+  "modal_app_id": "ap-TiyaTghkwGCV6xEcLkk8SU",
+  "run_id": "qwen3-8b-batch50-validation-20260823-v1",
+  "scoring_integration_code_fingerprint": "b250f74d5e753e7bd26189045b57be5c2e8104597c0cdcbc536a15c5ad84b705",
+  "status": "passed_with_material_quality_tradeoff"
+}

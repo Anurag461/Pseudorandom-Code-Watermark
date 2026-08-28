@@ -1,0 +1,33 @@
+{
+  "calibration_warning": "The four nominal p-values use different calibrations. Observed null false positives are reported separately; 500 nulls cannot tightly validate a 0.1% FPR.",
+  "generation_attempts": {
+    "null": 0,
+    "online_prc": 0
+  },
+  "methods": [
+    "online_prc",
+    "textseal",
+    "synthid_text",
+    "gumbel_max"
+  ],
+  "prefix_lengths": [
+    128,
+    256,
+    400,
+    512,
+    768,
+    1024
+  ],
+  "prompt_count": 500,
+  "prompt_indices": [
+    0,
+    499
+  ],
+  "record_count": 24000,
+  "sample_types": [
+    "watermarked",
+    "null"
+  ],
+  "schema_validation": "all PromptLevelResult.from_dict calls passed",
+  "status": "passed"
+}

@@ -1,0 +1,83 @@
+{
+  "checks": {
+    "all_18000_baseline_exact_prefix_deltas_zero": true,
+    "all_24000_rows_schema_valid_and_json_serializable": true,
+    "all_1500_generated_outputs_exactly_1024_tokens": true,
+    "all_generated_entropies_and_logprobs_finite": true,
+    "all_generation_batches_exactly_50": true,
+    "all_statistics_p_values_and_quality_fields_finite": true,
+    "generation_attempts_null": 0,
+    "generation_attempts_online_prc": 0,
+    "prompt_coverage_exactly_0_through_499": true,
+    "synthid_generation_official_reference_indices_equal": true,
+    "synthid_generation_official_reference_max_abs_score_difference": 0.0,
+    "textseal_all_official_common_decisions_equal": true,
+    "textseal_max_official_common_p_value_difference": 3.7056737051122113e-07
+  },
+  "coverage": {
+    "generated_methods": 3,
+    "generated_sequences": 1500,
+    "methods": 4,
+    "prefixes": 6,
+    "prompt_count": 500,
+    "prompt_indices": [
+      0,
+      499
+    ],
+    "prompt_prefix_records": 24000,
+    "sample_types": [
+      "watermarked",
+      "null"
+    ]
+  },
+  "false_positives": {
+    "gumbel_max": {
+      "T128": [139],
+      "T256": [139],
+      "T400": [76, 139],
+      "T512": [],
+      "T768": [],
+      "T1024": []
+    },
+    "online_prc": {
+      "all_prefixes": []
+    },
+    "synthid_text": {
+      "T128": [52],
+      "other_prefixes": []
+    },
+    "textseal": {
+      "T128": [398],
+      "T768": [277],
+      "other_prefixes": []
+    }
+  },
+  "fingerprints": {
+    "generation_integration": [
+      "6f9bc1c40ab864d0098ded7378eb3153c4e17b280dc84e4965108f9c014dbddc",
+      "df18f41885d7e4d4f056c08fbcda1dfce673002d2be7bc388066b38417289a9f"
+    ],
+    "image_definition_sha256": "36ef066d906bf9df05801790b9327b8f2a8854d516add87b3f36d47afcd40217",
+    "online_prc_artifact": "33a7875f1df3681af9812f310510e14ba2633285f164c73fdd65d95ed39dce81",
+    "prc_qwen_code": "1231d709816c08443130bcfaa33cf89ec65acbb7d93187577608dd28af13dc7f",
+    "scoring_integration": [
+      "b250f74d5e753e7bd26189045b57be5c2e8104597c0cdcbc536a15c5ad84b705",
+      "df18f41885d7e4d4f056c08fbcda1dfce673002d2be7bc388066b38417289a9f"
+    ]
+  },
+  "fingerprint_note": "Shard 0 was generated and scored before the fail-closed resume/finalizer orchestration was added. Shards 1-9 therefore have a different whole-integration tree fingerprint. The generation adapters, smoke_runner generation/scoring algorithms, frozen configuration, qwen.py, PRC code fingerprint, dependency image definition, model revision, batch shape, hardware class, seed, prompt ordering, and keys were unchanged. Shard 0 was reused only after exact raw/scored SHA-256 validation.",
+  "model_revision": "49e3418fbbbca6ecbdf9608b4d22e5a407081db4",
+  "quality_flags": {
+    "gumbel_distinct_3_below_0_8_count": 439,
+    "gumbel_repetition_above_0_1_count": 469,
+    "online_prc_distinct_3_below_0_8_count": 8,
+    "online_prc_repetition_above_0_1_count": 19,
+    "synthid_distinct_3_below_0_8_count": 8,
+    "synthid_repetition_above_0_1_count": 25,
+    "textseal_distinct_3_below_0_8_count": 304,
+    "textseal_repetition_above_0_1_count": 367
+  },
+  "run_id": "qwen3-8b-batch50-validation-20260823-v1",
+  "status": "passed_with_material_quality_tradeoff",
+  "statistical_warning": "Observed false-positive counts over 500 are reported separately. Five hundred nulls cannot tightly validate a nominal 0.1% false-positive rate. The four nominal p-values use distinct calibrations and their raw magnitudes are not directly comparable."
+}

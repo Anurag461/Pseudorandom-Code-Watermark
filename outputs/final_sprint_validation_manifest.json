@@ -1,0 +1,125 @@
+{
+  "baseline_methods": [
+    "gumbel_max",
+    "online_prc",
+    "synthid_text",
+    "textseal"
+  ],
+  "baseline_prefix_rows": 24,
+  "baseline_prefixes": [
+    128,
+    256,
+    400,
+    512,
+    768,
+    1024
+  ],
+  "generated_utc": "2026-08-23T00:00:00Z",
+  "generation_attempts": 0,
+  "limitations": [
+    "PRC, TextSeal, SynthID-Text, and Gumbel-Max p-values use different calibration constructions.",
+    "Five hundred nulls cannot tightly validate a nominal 0.1% false-positive rate.",
+    "The eta=.15 PRC boundary is right-censored at 4096 tokens.",
+    "TextSeal and Gumbel-Max are not quality-matched detection wins under the frozen Qwen3-8B decoding setting."
+  ],
+  "modal_compute_launched": false,
+  "owned_artifacts": {
+    "FINAL_TWO_DAY_EXPERIMENT_PLAN.md": {
+      "bytes": 26871,
+      "sha256": "82bcdba6f4146028959867d4f1678d49ff004311483fc42b399f39a095ea1016"
+    },
+    "final_sprint_closeout.py": {
+      "bytes": 25715,
+      "sha256": "776b25af8a91e01ef2b15fc9971e03d5d61e32ca4207475701d448dc8acdf44c"
+    },
+    "final_sprint_report.md": {
+      "bytes": 8481,
+      "sha256": "a5dea150d3441fd1155616d5f64c9e900790a6ec5230b65aa5966ae039bcbfce"
+    },
+    "modal_online_8b_eta005_runbook.md": {
+      "bytes": 10065,
+      "sha256": "159c91841d47641363dc4cc22f13da4d31be800aaa08d7bc88e1530e586a663a"
+    },
+    "modal_online_8b_eta010_runbook.md": {
+      "bytes": 8836,
+      "sha256": "62a224595a0937fe0d735badd6cec164ea1d016725f3ca1daccaf92cd4da975c"
+    },
+    "outputs/controlled_baseline_diagnostic_artifact_manifest.json": {
+      "bytes": 4243,
+      "sha256": "2f60bbe9d3eacadcb492d105ff6f34e046cce760cebe8bdf34e8300d9d285949"
+    },
+    "outputs/controlled_baseline_diagnostic_cost_ledger.csv": {
+      "bytes": 1666,
+      "sha256": "7189c02ac4e6a2bd7ad2112229c1ec0dfcae3d3106c1913efdfe997989983893"
+    },
+    "outputs/controlled_baseline_smoke_artifact_manifest.json": {
+      "bytes": 1652,
+      "sha256": "5f62d53e99dffaa23a0e7aefb8b7aab19d994edab6e502fe0b9647f6dc3985a5"
+    },
+    "outputs/controlled_baseline_smoke_cost_ledger.csv": {
+      "bytes": 5203,
+      "sha256": "9758a2ca8518cc36a7d527a6290d2d01b877c2dd9e726fdb9ec1bbb8be9981cc"
+    },
+    "outputs/final_detectability_vs_quality.svg": {
+      "bytes": 6755,
+      "sha256": "6dc522a994a82879909c027ad4c2130392229f9aa1e5df1c5d270e4ae2168145"
+    },
+    "outputs/final_sprint_closeout.xlsx": {
+      "bytes": 12681,
+      "sha256": "7ead824d01ece1e31c526bd173161ce7f75ec83a37bec4c6014379b5a717afa3"
+    },
+    "outputs/final_sprint_cost_ledger.csv": {
+      "bytes": 2049,
+      "sha256": "8f180a04464e5c792f224b3985d53f7974a2d348183c335fb23c70299909e1c9"
+    },
+    "outputs/final_tpr_vs_prefix.svg": {
+      "bytes": 7218,
+      "sha256": "8c9434865e59040de278f4a5ba151312a9bd9d8ae413da2d6e278c302b65da2c"
+    },
+    "outputs/online_8b_eta005_cost_ledger.csv": {
+      "bytes": 2268,
+      "sha256": "630c804908430b853208b5f0fa34e0442585e7972f8e250c00e16f5a4b918220"
+    },
+    "outputs/online_8b_eta010_cost_ledger.csv": {
+      "bytes": 2246,
+      "sha256": "473f6800926b5f4b0045ca8783edc41912a27bc5e80b9670bf0484d390271fee"
+    }
+  },
+  "preserved_user_work": {
+    "dirty_before_and_after_closeout": true,
+    "path": "online_causal_results_summary.csv",
+    "treatment": "preserved verbatim; not staged or committed by closeout; fingerprint recorded as provenance only"
+  },
+  "source_artifacts": {
+    "hoeffding_results_summary.csv": {
+      "bytes": 43716,
+      "sha256": "47d17269cb0e1b6a50521ac7667d78fbc5fc5714e126b68095006d27479353d7"
+    },
+    "online_causal_results_summary.csv": {
+      "bytes": 13894,
+      "sha256": "79db692fb0b20e94de7f4a5aca05f2cb2a7349c272a042c1c757a40f138c0476"
+    },
+    "outputs/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/controlled_baseline_full_prefix_summary.csv": {
+      "bytes": 3105,
+      "sha256": "872deceb4db2fd22bfcf5fea3a816c5d94f6a3acac17096e5a4394b80b251e17"
+    },
+    "outputs/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/controlled_baseline_full_quality_summary.csv": {
+      "bytes": 2149,
+      "sha256": "f105ac0d3f8b8aa4e5bd400f8bf6b796134c580bc01d6873d0513b36d31bb34a"
+    },
+    "outputs/fixed_vs_online_cache_only_cost_ledger.csv": {
+      "bytes": 1342,
+      "sha256": "eb7d82c78fc492c74230441de4b4fb0e0e93699250e2822c4242351591e3f0c5"
+    },
+    "outputs/online_14b_lower_eta_full_sweeps_cost_ledger.csv": {
+      "bytes": 3017,
+      "sha256": "dbac0c7083850b2c2bc5a704381a754b7d6c4ba1c8cf4fbeecccfe251080fbed"
+    },
+    "outputs/proxy_8b_cost_ledger.csv": {
+      "bytes": 2129,
+      "sha256": "bb8c8eee776506098a36ef05e1c7c86da8ee435c04708de02ad164d584b01e28"
+    }
+  },
+  "sprint_total_cost_usd": 13.46210068,
+  "status": "passed_exact_billing_and_closeout_validation"
+}

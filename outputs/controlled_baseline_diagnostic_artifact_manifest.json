@@ -1,0 +1,107 @@
+{
+  "artifacts": [
+    {
+      "path": "baseline_comparison/diagnostic.py",
+      "sha256": "0887fae4e80429988f1a49124fc35936c6dd141a105dd59be95eea00ef204b23",
+      "size_bytes": 42880
+    },
+    {
+      "path": "baseline_comparison/modal_app.py",
+      "sha256": "84e4815e300293192572c1f17cc4e625fff244723ddf5f0b8dc27860db8d4e96",
+      "size_bytes": 57106
+    },
+    {
+      "path": "tests/test_baseline_comparison.py",
+      "sha256": "890ff51a6627ae4c6e1a2c947f43994104a16ec930f22a88727b64922c424b9e",
+      "size_bytes": 12020
+    },
+    {
+      "path": "outputs/controlled_baseline_diagnostic_cache_analysis.json",
+      "sha256": "ce02b3b3d4468036abc82eff0cfcf4e3d25eaa77dc8a099f0a4be1d773e045cb",
+      "size_bytes": 273765
+    },
+    {
+      "path": "outputs/controlled_baseline_diagnostic_prefix_rows.jsonl",
+      "sha256": "5fcec6f9ba7a3d9e91622268b3a99270c4443c6898f8d8c120f477e8163aae67",
+      "size_bytes": 205077
+    },
+    {
+      "path": "outputs/controlled_baseline_diagnostic_prefix_summary.csv",
+      "sha256": "b6c2aeabc6d5c3cd4a56f22a45fbca4500d156d61dbe4fa95ccc656ad133400b",
+      "size_bytes": 6043
+    },
+    {
+      "path": "outputs/controlled_baseline_diagnostic_generation.json",
+      "sha256": "03bfba3b25235f4b5f05703a82846e7e96c9e26f335a03f72c9937f224a3d7fc",
+      "size_bytes": 262507
+    },
+    {
+      "path": "outputs/controlled_baseline_diagnostic_generation_prefix_rows.jsonl",
+      "sha256": "773890db2ac3597d335792bebe679e231b3b32b9a158313525774928a7c20a70",
+      "size_bytes": 197382
+    },
+    {
+      "path": "outputs/controlled_baseline_diagnostic_generation_summary.csv",
+      "sha256": "e77a5fa4ffa0848a78c58d5093a70a6984ae632e50c11f20de3380afc55622ef",
+      "size_bytes": 4957
+    },
+    {
+      "path": "outputs/controlled_baseline_diagnostic_logits_parity.json",
+      "sha256": "b2639d030af0b39a40357555e4a0568db19462565e67d02137e540dc2b276490",
+      "size_bytes": 11741
+    },
+    {
+      "path": "outputs/controlled_baseline_diagnostic_cost_ledger.csv",
+      "sha256": "7189c02ac4e6a2bd7ad2112229c1ec0dfcae3d3106c1913efdfe997989983893",
+      "size_bytes": 1666
+    }
+  ],
+  "base_integration_commit": "ef89c69e253cce8378857741427a308af7255b08",
+  "billing": {
+    "campaign_hard_cap_usd": 2.0,
+    "cpu_cost_usd": 0.00919542,
+    "gpu_cost_usd": 0.1475133,
+    "memory_cost_usd": 0.01442285,
+    "provider_total_cost_usd": 0.17113157,
+    "status": "exact_modal_billing_report"
+  },
+  "cache_analysis": {
+    "generation_attempts": 0,
+    "modal_app_url": "https://modal.com/apps/new-prc-watermark/main/ap-VF85izCQULv2NiS8dofayE",
+    "modal_image_id": "im-6D2WDYuEsTomZHErAYa2Nm",
+    "rows": 150,
+    "status": "passed"
+  },
+  "generation_diagnostic": {
+    "modal_app_url": "https://modal.com/apps/new-prc-watermark/main/ap-blPWYEO8LIEdRXLWFPacEr",
+    "modal_image_id": "im-KYs6Gd1nDmo1nuttTlrmHu",
+    "modal_task_id": "ta-01M0PD37JNRA7HX8Q9S9DRW56R",
+    "remote_artifact": {
+      "content_represented_by_local_generation_json": true,
+      "path": "/data/controlled_baseline_diagnostic/20260823T041333Z/generated_diagnostic_sequences.pt",
+      "size_bytes": 243708
+    },
+    "status": "passed"
+  },
+  "image_provenance": {
+    "baseline_image_definition_sha256": "36ef066d906bf9df05801790b9327b8f2a8854d516add87b3f36d47afcd40217",
+    "parity_image_definition_sha256": "cb1315ad505d478d135e53e99675c14f7f56a59fcdac5026be7be12e43ba5dc7",
+    "parity_modal_image_id": "im-OI9H3UaV8CaRPNZ3Lmf00F"
+  },
+  "logits_parity": {
+    "all_top1_equal": true,
+    "batch5_maximum_jensen_shannon_divergence": 0.0008725884836167097,
+    "modal_app_url": "https://modal.com/apps/new-prc-watermark/main/ap-Mpcf4cUXJh5cKjvY9BQub0",
+    "modal_task_id": "ta-01M0PDJPXMV52M90FK1F62SF6R",
+    "predeclared_maximum_jensen_shannon_divergence": 0.0001,
+    "strict_passed": false
+  },
+  "model_revision": "49e3418fbbbca6ecbdf9608b4d22e5a407081db4",
+  "prompt_indices": [0, 1, 2, 3, 4],
+  "source_smoke_artifact": {
+    "path": "/data/controlled_baseline_smoke/20260823T020321Z/generated_sequences.pt",
+    "semantic_fingerprint": "58fa13633cef1e592038cf110f7d3d05de00972145a9a09c983db7e5a87be221",
+    "size_bytes": 389072
+  },
+  "status": "complete_with_documented_numerical_discrepancy"
+}

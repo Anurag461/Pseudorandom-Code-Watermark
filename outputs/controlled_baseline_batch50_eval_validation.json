@@ -1,0 +1,71 @@
+{
+  "app_id": "ap-TiyaTghkwGCV6xEcLkk8SU",
+  "app_url": "https://modal.com/apps/new-prc-watermark/main/ap-TiyaTghkwGCV6xEcLkk8SU",
+  "billing": {
+    "cpu_usd": 0.00451978,
+    "gpu_usd": 0.0,
+    "hard_cap_usd": 0.5,
+    "memory_usd": 0.00152889,
+    "total_usd": 0.00604867
+  },
+  "checks": {
+    "all_1800_baseline_exact_prefix_deltas_zero": true,
+    "all_2400_rows_json_serializable_and_schema_valid": true,
+    "all_four_methods_scored_at_all_six_prefixes": true,
+    "all_statistics_p_values_and_quality_fields_finite": true,
+    "generation_attempts_null": 0,
+    "generation_attempts_online_prc": 0,
+    "synthid_generation_official_reference_indices_equal": true,
+    "synthid_generation_official_reference_max_abs_score_difference": 0.0,
+    "textseal_all_official_common_decisions_equal": true,
+    "textseal_max_official_common_p_value_difference": 3.340031283771694e-07
+  },
+  "coverage": {
+    "methods": [
+      "online_prc",
+      "textseal",
+      "synthid_text",
+      "gumbel_max"
+    ],
+    "prefix_lengths": [
+      128,
+      256,
+      400,
+      512,
+      768,
+      1024
+    ],
+    "prompt_count": 50,
+    "prompt_indices": [
+      0,
+      49
+    ],
+    "record_count": 2400,
+    "sample_types": [
+      "watermarked",
+      "null"
+    ]
+  },
+  "quality_flags": {
+    "gumbel_distinct_3_below_0_8_count": 41,
+    "gumbel_repetition_above_0_1_count": 49,
+    "online_prc_distinct_3_below_0_8_count": 1,
+    "online_prc_repetition_above_0_1_count": 2,
+    "synthid_distinct_3_below_0_8_count": 0,
+    "synthid_repetition_above_0_1_count": 1,
+    "textseal_distinct_3_below_0_8_count": 33,
+    "textseal_repetition_above_0_1_count": 41
+  },
+  "remote_artifacts": {
+    "generation_path": "/data/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/generated/shard_00.pt",
+    "generation_sha256": "0b7326fbfa43d55a39088e19cc2d69a696b7c81e8095b3ff6d291254392716da",
+    "scored_jsonl_path": "/data/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/scored/shard_00.jsonl",
+    "scored_jsonl_sha256": "1149134f14c684bf2da9962349e56644beabf0bd5fd76cd775323ec0bd68a71e",
+    "scored_validation_path": "/data/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/scored/shard_00_validation.json",
+    "scored_validation_sha256": "0bdc265f7a636734886b5f5809036fe032118fc443e717831abe88e1c406a099"
+  },
+  "run_id": "qwen3-8b-batch50-validation-20260823-v1",
+  "status": "passed_with_material_quality_tradeoff",
+  "statistical_warning": "Zero false positives among 50 nulls is descriptive only; 50 nulls cannot tightly validate a nominal 0.1% false-positive rate.",
+  "full_500_prompt_run_authorized": false
+}

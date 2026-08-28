@@ -2,13 +2,15 @@
 
 ## Scope and decision rules
 
-- Deadline: 48 hours.
-- Modal budget: $550 credits, at most 10 GPUs. Choose concurrency from each
-  validated baseline batch shape. Do not split the fleet across competing
-  long jobs.
-- Expected additional spend for the unfinished work: **$25--50**. Hard stop:
-  **$85 additional spend** without revising this plan. The remaining credits
-  are failure contingency, not a reason to expand scope.
+- Closeout completed 2026-08-23. The approved core sprint is complete; no
+  additional model run is required for the primary conclusions.
+- Modal budget was $550 credits with at most 10 GPUs. The non-overlapping
+  provider-billed total for work launched in this final sprint was
+  **$13.46210068 before workspace credits**. Earlier eta 0.15/0.20 campaigns
+  are excluded from that incremental sprint total and remain documented in
+  their original ledgers.
+- Any deferred experiment below requires a new scope and cost approval. The
+  remaining credits are failure contingency, not a reason to expand scope.
 - Primary model: **Qwen3-8B-Base**. New 14B generation and all Qwen3.5-27B
   work are deferred.
 - Primary threshold: one-shot TPR at nominal FPR `1e-3`; strict 90% crossing
@@ -34,7 +36,9 @@ sweeps, one-token cache-only refinements, authoritative prompt-sharded audits,
 prompt-level watermarked/null decisions, and publication in both summary
 CSVs. Full provenance is in `modal_online_8b_eta005_runbook.md` and
 `modal_online_8b_eta010_runbook.md`. No additional selected-boundary audit is
-scheduled; only provider-cost reconciliation remains for the two new cells.
+scheduled. Settled costs before workspace credits are `$1.20659284` for eta
+0.05 and `$4.75144472` for eta 0.10; app-level details are frozen in their
+respective cost ledgers.
 
 ### Explicitly not scheduled
 
@@ -65,7 +69,8 @@ scores are preserved in
 `outputs/online_causal_n448_t3_eta0.05_prompts500_gen-qwen3_14b_base_sampler-poscdf-v1_kvcache-static-v1_from_n1280.json`
 and
 `outputs/online_causal_n800_t3_eta0.10_prompts500_gen-qwen3_14b_base_sampler-poscdf-v1_kvcache-static-v1_from_n3072.json`.
-Only provider-cost reconciliation remains.
+Settled cache-only provider costs were `$0.00969863` and `$0.00784660`, or
+`$0.01754523` total, with zero GPU charge.
 
 ## Priority 0: determine whether fixed and online differ meaningfully
 
@@ -197,33 +202,195 @@ for the smoke. No manual researcher implementation is required; the user only
 needs to review scientifically meaningful discrepancies and authorize the
 smoke spend.
 
-| Work | Codex execution time | User involvement | Modal wall time | Expected cost | Cap |
+| Work | Status | User involvement | Modal wall time | Actual cost | Cap |
 | --- | ---: | --- | ---: | ---: | ---: |
-| Pin/integrate official code, tests, and 5-prompt smoke | 2--4 h | approve network/Modal access; review meaningful discrepancies | 20--40 min | $1--3 | $5 |
-| Three new 500-prompt baseline generations to 1024 | 1 h supervision | approve scale-up after smoke | 1--2 h | $15--30 | $45 |
-| 50-prompt x 5-seed diversity subset | 1 h | none after scale-up approval | 30--60 min | $2--5 | $8 |
-| Prefix detection and final analysis | 2--4 h | review conclusions | 30--90 min | <$2 | $5 |
+| Pin/integrate official code, tests, and 5-prompt smoke | complete | discrepancy reviewed | bounded smoke/diagnostic | $1.56484961 | $10 smoke + $2 diagnostic |
+| Three new 500-prompt baseline generations to 1024 | complete | explicitly approved after batch-50 gate | 162.8--169.1 s per shard | $2.65877380 including scoring | $5 |
+| 50-prompt x 5-seed diversity subset | not run | separate approval required | -- | $0 | $8 planned |
+| Prefix detection and final analysis | complete | review conclusions | CPU scoring included above | included above | included above |
 
-Dependency incompatibilities may extend the integration wall time. Stop after
-the smoke rather than launching 500-prompt production automatically; scaling
-requires review of correctness, memory, throughput, and projected cost.
+Completed integration and five-prompt smoke on 2026-08-22 (runs crossed
+2026-08-23 UTC). TextSeal is pinned to
+`c60d0d1da2e59f09a698438e218a07ee779b4616`; Google's SynthID-Text is pinned
+to `addb4a158143c7c6851a1308f78b89fceed59683`; Qwen3-8B-Base and its tokenizer
+are pinned to `49e3418fbbbca6ecbdf9608b4d22e5a407081db4`. The isolated image definition
+fingerprint is
+`36ef066d906bf9df05801790b9327b8f2a8854d516add87b3f36d47afcd40217`.
+
+All four methods produced complete scores for prompt rows `0..4` at all six
+prefixes. Official TextSeal/Google SynthID references, exact-prefix scoring,
+deduplication, schema validation, fixed-seed replay, and cache-only PRC/null
+guards passed. Every observed null FPR was `0/5`; this is not a calibration
+claim. Online PRC smoke TPR was 0%, 60%, then 100% from `T=400` onward; the
+three new baselines were 100% at every smoke prefix. TextSeal and Gumbel-Max
+also showed severe repetition/low distinct-n on several prompts, so their
+detection must be interpreted with quality/diversity. Gumbel-Max was
+seed-deterministic at fixed batch shape, with batch-shape sensitivity later
+localized to model-logit/numerical variation rather than the power formula.
+
+Exact integration/smoke campaign spend was `1.39371804` dollars,
+including fail-closed diagnostics and controlled seed checks; it remained well
+below the 10-dollar smoke cap. Peak CUDA memory was 17,668,689,920 bytes
+allocated and 17,702,060,032 bytes reserved. Measured primary batch-5 times
+were 37.006 seconds for TextSeal, 40.504 seconds for SynthID, and 35.554 seconds
+for Gumbel-Max. Scaling those timings gave a prior batch-5 upper-bound
+projection of 14--18 dollars and 20--35 minutes with ten H100 shards. At that
+checkpoint, the 500-prompt comparison remained incomplete and required
+separate explicit approval; that approval was subsequently given. See
+`controlled_baseline_smoke_report.md` and
+`controlled_baseline_full_run_runbook.md`.
+
+Completed a user-approved five-prompt quality/diversity diagnostic on
+2026-08-22 (2026-08-23 UTC) before requesting scale-up. Cache-only prefix
+analysis generated no tokens. A second complete TextSeal seed reproduced the
+collapse: median distinct-3/repeated-4-gram rate at `T=1024` changed from
+`0.3503/0.6405` to `0.3033/0.6934`. Under the paper decoding regime
+(`temperature=0.8`, `top_p=0.9`, `T=400`), TextSeal's median
+distinct-3/repetition was `0.6910/0.2821` versus vanilla's `0.8920/0.0605`;
+TextSeal was materially worse on three prompts, nearly equal on one, and
+better on one. Repeated TextSeal 4-gram events occurred at lower conditional
+entropy than novel events on all five prompts, an association rather than a
+causal or cross-model result.
+
+The exact log-space Gumbel argmax matched the released power form token for
+token through 400 tokens at batch sizes 1 and 5. The earlier batch-shape
+sensitivity is therefore not a power-form underflow bug; it reflects
+batch-dependent model logits/numerical execution amplified by deterministic
+autoregression. An offline project-Qwen/Hugging-Face check retained a strict
+failure (`8.726e-4` maximum batch-5 JSD versus the predeclared `1e-4` limit),
+while all top-1 tokens agreed and native Hugging Face itself showed larger
+batch-1/batch-5 variation (`1.622e-3` maximum JSD). The discrepancy limits
+bitwise portability but does not invalidate the internally controlled,
+fixed-batch project-Qwen comparison.
+
+Exact diagnostic spend was `0.17113157` dollars (`0.14751330` H100,
+`0.00919542` CPU, `0.01442285` memory), below its 2-dollar cap. The bounded
+generation worker ran `78.234` seconds and peaked at 17,668,689,920 bytes CUDA
+allocated; the dual-model parity check peaked at 33,229,244,928 bytes. No full
+run was launched. See `controlled_baseline_diagnostic_report.md` and the
+diagnostic cost/artifact manifests in `outputs/`.
+
+The production batching plan is batch 50: ten workers, 50 prompts per worker,
+one batch per method. The standalone batch-50 validation completed successfully
+on prompt indices `0..49` with all 150 TextSeal, SynthID, and Gumbel outputs
+exactly 1,024 tokens. The H100 worker took 166.386 seconds, including an
+8.204-second model load, and peaked at 27,839,692,800 bytes CUDA reserved
+(25.93 GiB). SynthID's pinned-reference check was exact, all saved entropy and
+log-probability values were finite, and the full PRC/null cache preflight made
+zero generation attempts.
+
+The finalized validation bill was `0.27034319` dollars (`0.21751641` H100,
+`0.02631032` CPU, `0.02651646` memory), below its 3-dollar cap. Scaling the
+complete bill across ten shards gives a conservative `2.70343190`-dollar
+generation estimate; allow **$3--4** end to end including CPU scoring, with a
+recommended **$5 hard cap**. With ten H100s available, the measured compute
+floor is 2.77 minutes and practical end-to-end wall time is **8--15 minutes**,
+excluding unusual queue delay. See
+`controlled_baseline_batch50_validation_report.md` and the compact validation
+and cost artifacts in `outputs/`. The batch-50 gate cleared; the later approved
+full run reused this exact shard after SHA-256 validation.
+
+CPU-only scoring of that saved batch is also complete: 2,400 schema-valid rows
+cover 50 prompts, four methods, watermarked/shared-null samples, and all six
+prefixes. Online PRC TPR was 18%, 42%, 78%, 80%, 96%, and 98% from T=128 to
+1,024; TextSeal, SynthID, and Gumbel were 100% at every prefix. All methods had
+zero false positives among 50 nulls, which is descriptive only and cannot
+tightly validate a nominal 0.1% FPR. All exact-prefix checks passed, TextSeal
+official/common decisions agreed, and PRC/null generation attempts stayed zero.
+
+The 50-prompt quality result confirms a material method-by-setting tradeoff.
+At 1,024 tokens, median distinct-3/repetition were 0.972/0.012 for online PRC,
+0.969/0.012 for SynthID, 0.692/0.275 for TextSeal, and 0.463/0.532 for Gumbel.
+TextSeal had repetition above 0.1 on 41/50 prompts; Gumbel did so on 49/50.
+The loss grows with length and is already visible by T=400 for Gumbel. The
+frozen full run remains valid only as a joint detection-quality-diversity
+comparison, not as a quality-matched detector comparison. Exact CPU scoring
+cost was `0.00604867` dollars with zero GPU cost. At that checkpoint no
+remaining generation had been launched. See
+`controlled_baseline_batch50_eval_report.md`.
+
+Completed the explicitly approved 500-prompt controlled comparison on
+2026-08-23. The run reused validated prompt shard `0..49` and generated only
+prompts `50..499`, in nine additional batch-50 H100 workers. All 1,500 new
+TextSeal, SynthID, and Gumbel-Max continuations were exactly 1,024 tokens. The
+final artifact contains 24,000 unique prompt-prefix rows covering four methods,
+watermarked/shared-null samples, all 500 prompt indices, and all six exact
+prefixes. All schema, finite-value, official-reference, exact-prefix,
+deduplication, prompt-coverage, and PRC/null zero-regeneration checks passed.
+
+At `T={128,256,400,512,768,1024}`, online PRC TPR was
+`{0.136,0.410,0.678,0.800,0.938,0.960}`; TextSeal and Gumbel-Max were 1.0 at
+every prefix; SynthID was `{1.0,1.0,0.998,0.998,1.0,1.0}`. Observed false
+positives among 500 shared nulls were zero for PRC; one each for TextSeal at
+T=128 and T=768; one for SynthID at T=128; and one, one, and two for Gumbel at
+T=128, T=256, and T=400. All other method-prefix cells had zero. These counts
+do not tightly validate a nominal 0.1% FPR, and the four calibration types
+remain explicitly non-equivalent.
+
+The full quality result confirms the material tradeoff. Median
+distinct-3/repetition at 1,024 tokens was `0.968/0.014` for online PRC,
+`0.972/0.012` for SynthID, `0.721/0.262` for TextSeal, and `0.361/0.633` for
+Gumbel-Max, versus `0.967/0.014` for null. TextSeal and Gumbel therefore do not
+constitute quality-matched detection wins under this frozen decoding setting.
+
+Exact generation-and-scoring spend for all 500 prompts was `2.65877380`
+dollars, including the reused validation shard. The remaining nine generation
+shards cost `2.31950392` dollars and their CPU scoring cost `0.06287802`
+dollars. Cumulative controlled-baseline integration, smoke, diagnostics, and
+full-run spend is `4.22362341` dollars. Mean 50-prompt worker time was 165.873
+seconds and peak CUDA reserved memory was 27,839,692,800 bytes (25.93 GiB).
+See `controlled_baseline_full_report.md` and
+`outputs/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/`.
+The 50-by-five diversity experiment and 27B replication remain incomplete and
+unauthorized. The proxy-model analysis was not part of this generation run;
+it was separately approved and subsequently completed cache-only below.
+
+The dependency isolation, smoke, scientific diagnostic, and batch-50 gate were
+completed before production. Production was launched only after the required
+review and explicit approval.
 
 Use the TextSeal paper's frequentist SynthID detector for the main table so all
 methods have a nominal FPR. Validate its generation and g-values on a small
 smoke against Google's official SynthID reference; do not use the trained
 Bayesian detector.
 
-### Lightweight detector comparison
+### Completed: lightweight detector comparison
 
-After the 8B eta-0.05/0.10 boundaries are selected, teacher-force their cached
-watermarked and null tokens through Qwen3-0.6B-Base and rerun MAP/entropy
-detection. Compare native-8B versus proxy-0.6B TPR/FPR at both selected
-boundaries. Expected cost **$1--3**, wall time **20--45 minutes**.
+Completed the separately approved cache-only Qwen3-8B to Qwen3-0.6B detector
+analysis on 2026-08-23. It generated zero tokens and covered all 500 prompts,
+all four PRC eta values, the selected boundaries/ceiling, and common prefixes
+`T={128,256,400,512,768,1024}`. The eta `.15` cell remains explicitly
+censored at `T=4096` (`n90 > 4096`). TextSeal was rescored with 0.6B entropy
+weights as a labeled detector sensitivity; SynthID frequentist and Gumbel
+exact-Gamma scores were correctly carried unchanged because their detectors do
+not use model probabilities. All quality metrics remain native Qwen3-8B.
 
-The 4B proxy is a stretch goal only if all Priority 0 work and the baseline
-table are complete by the middle of day 2 (estimated $3--7 and 30--60 minutes).
-Do not add Qwen3.5-0.8B in this sprint: it introduces a new architecture and a
-tokenizer/provenance compatibility check for little incremental value.
+At the selected PRC MAP lengths, native-8B to proxy-0.6B TPR changed from
+`90.4%` to `76.2%` for eta `.05`, `90.2%` to `83.0%` for `.10`, `89.6%`
+to `86.4%` at the `.15` censored ceiling, and `90.2%` to `86.6%` for `.20`.
+The eta `.20` MAP null result was `1/500` under both probability models; all
+other selected MAP null cells were `0/500`. Thus the 0.6B proxy is a
+conservative sensitivity analysis, not a drop-in native detector replacement.
+
+At T=1024, TextSeal remained at 100% TPR and 0/500 observed FPs with either
+8B or 0.6B entropy weights; its median watermarked `-log10(p)` changed from
+`280.15` to `271.45`. All 6,000 TextSeal official-reference comparisons
+passed, with maximum absolute p-value difference `3.4802e-7`. The common
+quality table reconfirmed that all PRC eta outputs remain close to shared null
+quality/diversity, while TextSeal and Gumbel retain the controlled run's
+material repetition loss. PRC eta and TextSeal alpha remain unrelated
+operating parameters.
+
+The exact required replay covered 16,863,500 positions. Main full-run wall
+time was 44.1 minutes and peak CUDA reserved memory was 18,614,321,152 bytes
+(17.34 GiB). Exact all-in provider spend, including tests and the safely
+blocked sequential preflight, was **$3.21783640**: `$2.84171420` GPU,
+`$0.32920227` CPU, and `$0.04691993` memory, below the approved $20 cap.
+See `proxy_8b_detector_report.md`, `proxy_8b_detector_runbook.md`, and the
+`outputs/proxy_8b_*` compact summaries/manifests.
+
+The 4B proxy and Qwen3.5-0.8B remain unrun. They are not needed for the
+completed 0.6B detector-sensitivity result and require separate scope.
 
 ## Deferred work
 
@@ -236,65 +403,61 @@ tokenizer/provenance compatibility check for little incremental value.
   later replication cost, but it must be labeled a smoke rather than a paper
   replication.
 - No new 14B generation or detection work remains. The two approved
-  cache-only matched-reference audits are complete; only their provider-cost
-  reconciliation remains.
+  cache-only matched-reference audits and their provider-cost reconciliation
+  are complete.
 
-## Forty-eight-hour schedule
+## Completed forty-eight-hour schedule
 
-### Day 1
+The scheduled work closed as follows:
 
-1. Morning: reconcile provider costs for the completed 8B eta 0.05/0.10
-   campaigns and freeze their manifests; do not rerun generation or audits.
-2. Run the paired fixed-versus-online analysis. Verify the already-published
-   14B cache-only rows while reconciling their provider costs; do not rerun the
-   audits.
-3. In parallel on local CPU: pin TextSeal, build the isolated adapter and
-   prompt/result schema, and add detector-equivalence tests.
-4. Evening: run 5-prompt TextSeal/SynthID/Gumbel smokes and inspect exact costs,
-   tokenizer IDs, context deduplication, p-values, and saved provenance.
-
-### Day 2
-
-1. Morning: run the three 8B baseline generation campaigns sequentially with
-   all 10 H100s; run CPU prefix detection as earlier generations finish.
-2. Midday: run the 0.6B proxy replay and finish any incomplete paired-analysis
-   checks.
-3. Afternoon: produce the final boundary table, fixed-versus-online effect
-   table, baseline prefix curves, and quality/diversity table.
-4. Final 4 hours: rerun only failed/corrupt shards, verify prompt coverage and
-   fingerprints, freeze cost ledgers, and write conclusions. Do not start new
-   model/configuration tracks in this window.
+1. All four 8B online operating-point cells were resolved; eta 0.15 remains an
+   explicitly censored ceiling.
+2. The fixed-versus-online paired analysis, two 14B cache-only rows, official
+   baseline integration/reference checks, five-prompt smoke, controlled
+   500-prompt comparison, quality diagnostic, and 0.6B proxy replay completed.
+3. Prompt coverage, prefix equivalence, deduplication, schema, official
+   reference parity, zero-regeneration guards, runtime, memory, and billing
+   checks passed as documented in the phase reports.
+4. Final figures, the consolidated cost ledger/workbook, limitations, and the
+   closeout validation manifest were produced without new Modal compute.
 
 ## Required final deliverables
 
-- Verify the already-published 8B selected online boundaries, censored cell,
+- [x] Verify the already-published 8B selected online boundaries, censored cell,
   and two 14B cache-only matched-reference rows in
   `hoeffding_results_summary.csv`.
-- A compact online-boundary matrix with exact brackets or explicit lower bounds.
-- A prompt-paired fixed-versus-online statistics artifact and one results table.
-- A separate baseline results CSV/JSONL for PRC/TextSeal/SynthID/Gumbel with
+- [x] A compact online-boundary matrix with exact brackets or explicit lower
+  bounds in `outputs/final_sprint_closeout.xlsx`.
+- [x] A prompt-paired fixed-versus-online statistics artifact and results table.
+- [x] A separate baseline results CSV/JSONL for PRC/TextSeal/SynthID/Gumbel with
   prompt-level scores, p-values, prefixes, quality metrics, code commit, model
   revision, keys/seeds, and costs.
-- One plot of TPR versus prefix length at nominal FPR `1e-3`, plus one
-  detectability-versus-diversity/quality table.
-- A final cost ledger and a short limitations paragraph distinguishing analytic
+- [x] A TPR-versus-prefix plot at nominal FPR `1e-3` and a complementary
+  detectability-versus-diversity figure in `outputs/`.
+- [x] A final cost ledger and limitations statement distinguishing analytic
   bounds, approximate p-values, 500-null empirical resolution, and censored
   boundaries.
+
+The consolidated closeout is `final_sprint_report.md`; machine-readable
+billing and fingerprints are in `outputs/final_sprint_cost_ledger.csv` and
+`outputs/final_sprint_validation_manifest.json`.
 
 ## Cost basis
 
 - Measured 8B batch-50 generation at `T=4096`: $0.68394 and 516.99 H100
   method-seconds for 50 records.
-- Measured 14B matched-boundary cache-only MAP checks: about $0.008--0.010;
-  prior full cache-only audits cost about $0.015.
+- Settled 14B matched-boundary cache-only MAP checks: `$0.00969863` and
+  `$0.00784660`.
 - Existing 8B eta-0.15 production plus null generation/audit: $11.13; the new
   lower-eta runs reuse null caches and are substantially shorter.
 - The 8B eta-0.05 and eta-0.10 generation, exact-boundary refinement, and
-  selected-boundary audits are complete; their provider costs still require
-  final dashboard reconciliation.
+  selected-boundary audits cost `$1.20659284` and `$4.75144472`, respectively.
 - The two 14B matched-reference audits completed cache-only using the existing
   source caches and shared `T=1808` null cache; no GPU or generated tokens were
-  used, and provider-cost reconciliation remains.
+  used. Their settled combined cost was `$0.01754523`.
+- The exact non-overlapping incremental total for this final sprint was
+  `$13.46210068`: `$12.13072943` GPU, `$0.86267835` CPU, and `$0.46869290`
+  memory before workspace credits.
 
 References: [official TextSeal repository](https://github.com/facebookresearch/textseal),
 [official SynthID-Text reference](https://github.com/google-deepmind/synthid-text),

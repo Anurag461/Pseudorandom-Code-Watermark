@@ -1,0 +1,25 @@
+method,prefix_length,watermarked_prompts,null_prompts,tpr,observed_fpr,median_neg_log10_p_watermarked,median_neg_log10_p_null,median_deduplicated_samples_watermarked,median_deduplicated_samples_null,calibration_type,nominal_decision_rule
+online_prc,128,5,5,0.0,0.0,2.5495317957838024,0.0008730096606319607,128,128,Hoeffding p-value upper bound,p < 0.001
+online_prc,256,5,5,0.6,0.0,3.016818827653504,0.00033713188949864386,256,256,Hoeffding p-value upper bound,p < 0.001
+online_prc,400,5,5,1.0,0.0,5.017942882378257,-0.0,400,400,Hoeffding p-value upper bound,p < 0.001
+online_prc,512,5,5,1.0,0.0,6.2883749823401445,-0.0,512,512,Hoeffding p-value upper bound,p < 0.001
+online_prc,768,5,5,1.0,0.0,10.241117316696162,-0.0,768,768,Hoeffding p-value upper bound,p < 0.001
+online_prc,1024,5,5,1.0,0.0,14.517005663431457,-0.0,1024,1024,Hoeffding p-value upper bound,p < 0.001
+textseal,128,5,5,1.0,0.0,48.27444847572224,0.6564688445198048,124,124,moment-matched Gamma approximation,p < 0.001
+textseal,256,5,5,1.0,0.0,91.73274408348799,0.5324705806951644,250,252,moment-matched Gamma approximation,p < 0.001
+textseal,400,5,5,1.0,0.0,129.5353713104141,0.5383025560142167,343,396,moment-matched Gamma approximation,p < 0.001
+textseal,512,5,5,1.0,0.0,147.42864146581292,0.5373112185767641,363,503,moment-matched Gamma approximation,p < 0.001
+textseal,768,5,5,1.0,0.0,177.65159621111547,0.39268023562625,366,734,moment-matched Gamma approximation,p < 0.001
+textseal,1024,5,5,1.0,0.0,177.65159621111547,0.2913562200598024,366,984,moment-matched Gamma approximation,p < 0.001
+synthid_text,128,5,5,1.0,0.0,24.072429018782774,0.11463765893167459,124,124,normal approximation,p < 0.001
+synthid_text,256,5,5,1.0,0.0,49.30310760363761,0.11038426893828923,252,252,normal approximation,p < 0.001
+synthid_text,400,5,5,1.0,0.0,76.32636388458023,0.0930827886361601,395,396,normal approximation,p < 0.001
+synthid_text,512,5,5,1.0,0.0,98.24779988315191,0.1259429495046725,504,503,normal approximation,p < 0.001
+synthid_text,768,5,5,1.0,0.0,148.15059767790797,0.21594917384562032,759,734,normal approximation,p < 0.001
+synthid_text,1024,5,5,1.0,0.0,209.9091726377772,0.2263953864009955,1007,984,normal approximation,p < 0.001
+gumbel_max,128,5,5,1.0,0.0,39.99617689918274,0.9059019713426792,111,124,exact Gamma test,p < 0.001
+gumbel_max,256,5,5,1.0,0.0,95.59598633018686,0.8041298687692642,235,252,exact Gamma test,p < 0.001
+gumbel_max,400,5,5,1.0,0.0,100.95439161028271,0.3339001594317564,239,396,exact Gamma test,p < 0.001
+gumbel_max,512,5,5,1.0,0.0,124.60059786095054,0.32845023419035696,254,503,exact Gamma test,p < 0.001
+gumbel_max,768,5,5,1.0,0.0,120.26248288792489,0.18196388938500835,310,734,exact Gamma test,p < 0.001
+gumbel_max,1024,5,5,1.0,0.0,122.4622333318956,0.1586614135258311,473,984,exact Gamma test,p < 0.001

@@ -8,6 +8,9 @@ from qwen import (
     kv_cache_version,
     make_kv_cache,
     normalize_kv_cache_implementation,
+    return_qwen_config,
+    teacher_force_partition_entropy_trace_batch,
+    teacher_force_partition_trace_batch,
 )
 
 
@@ -96,3 +99,81 @@ def test_cache_factory_is_opt_in_and_validates_configuration():
         make_kv_cache("static")
     with pytest.raises(ValueError, match="must be one of"):
         make_kv_cache("paged")
+
+
+def test_static_teacher_forcing_matches_concat_and_handles_empty_trace():
+    model = _tiny_qwen()
+    prompt = torch.tensor([[1, 2, 3], [4, 5, 6]])
+    generated = torch.tensor([[7, 9, 11], [8, 10, 12]])
+    part1 = torch.tensor(
+        [0, 1] * 15 + [0], dtype=torch.float32
+    )
+
+    concat = teacher_force_partition_trace_batch(
+        model, prompt, generated, part1, "concat"
+    )
+    static = teacher_force_partition_trace_batch(
+        model, prompt, generated, part1, "static"
+    )
+
+    assert torch.equal(static, concat)
+    assert static.shape == (2, 3)
+    empty = teacher_force_partition_trace_batch(
+        model, prompt, generated[:, :0], part1, "static"
+    )
+    assert empty.shape == (2, 0)
+
+
+def test_teacher_forcing_returns_full_vocab_entropy_in_nats():
+    model = _tiny_qwen()
+    prompt = torch.tensor([[1, 2, 3], [4, 5, 6]])
+    generated = torch.tensor([[7, 9], [8, 10]])
+    part1 = torch.tensor([0, 1] * 15 + [0], dtype=torch.float32)
+
+    static_p, static_h = teacher_force_partition_entropy_trace_batch(
+        model, prompt, generated, part1, "static"
+    )
+    concat_p, concat_h = teacher_force_partition_entropy_trace_batch(
+        model, prompt, generated, part1, "concat"
+    )
+
+    assert torch.equal(static_p, concat_p)
+    assert torch.equal(static_h, concat_h)
+    assert static_h.shape == (2, 2)
+    assert torch.all(torch.isfinite(static_h))
+    assert torch.all(static_h > 0)
+
+
+def test_chunked_teacher_forcing_matches_sequential_trace():
+    model = _tiny_qwen()
+    prompt = torch.tensor([[1, 2, 3], [4, 5, 6]])
+    generated = torch.tensor([[7, 9, 11, 13, 15], [8, 10, 12, 14, 16]])
+    part1 = torch.tensor([0, 1] * 15 + [0], dtype=torch.float32)
+
+    sequential_p, sequential_h = teacher_force_partition_entropy_trace_batch(
+        model, prompt, generated, part1, "static", chunk_size=1
+    )
+    chunked_p, chunked_h = teacher_force_partition_entropy_trace_batch(
+        model, prompt, generated, part1, "static", chunk_size=3
+    )
+
+    assert torch.allclose(chunked_p, sequential_p, rtol=1e-6, atol=1e-7)
+    assert torch.allclose(chunked_h, sequential_h, rtol=1e-6, atol=1e-7)
+
+
+def test_qwen3_14b_config_matches_the_base_checkpoint_contract():
+    config = return_qwen_config("14B")
+
+    assert config == {
+        "vocab_size": 151_936,
+        "context_length": 40_960,
+        "emb_dim": 5_120,
+        "n_heads": 40,
+        "n_layers": 40,
+        "hidden_dim": 17_408,
+        "head_dim": 128,
+        "qk_norm": True,
+        "n_kv_groups": 8,
+        "rope_base": 1_000_000.0,
+        "dtype": torch.bfloat16,
+    }

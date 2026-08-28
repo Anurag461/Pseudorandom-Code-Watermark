@@ -1,0 +1,5 @@
+run_id,app_id,app_url,billing_interval_start_utc,resource,cost_usd,hard_cap_usd,status
+qwen3-8b-batch50-validation-20260823-v1,ap-TiyaTghkwGCV6xEcLkk8SU,https://modal.com/apps/new-prc-watermark/main/ap-TiyaTghkwGCV6xEcLkk8SU,2026-08-23T07:00:00,CPU,0.00451978,0.5,final
+qwen3-8b-batch50-validation-20260823-v1,ap-TiyaTghkwGCV6xEcLkk8SU,https://modal.com/apps/new-prc-watermark/main/ap-TiyaTghkwGCV6xEcLkk8SU,2026-08-23T07:00:00,Memory,0.00152889,0.5,final
+qwen3-8b-batch50-validation-20260823-v1,ap-TiyaTghkwGCV6xEcLkk8SU,https://modal.com/apps/new-prc-watermark/main/ap-TiyaTghkwGCV6xEcLkk8SU,2026-08-23T07:00:00,GPU,0.00000000,0.5,final
+qwen3-8b-batch50-validation-20260823-v1,ap-TiyaTghkwGCV6xEcLkk8SU,https://modal.com/apps/new-prc-watermark/main/ap-TiyaTghkwGCV6xEcLkk8SU,2026-08-23T07:00:00,Total,0.00604867,0.5,final

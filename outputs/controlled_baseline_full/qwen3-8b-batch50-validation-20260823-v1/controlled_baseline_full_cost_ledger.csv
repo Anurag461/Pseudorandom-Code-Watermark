@@ -1,0 +1,16 @@
+phase,app_id,app_url,billing_interval_start_utc,resource,cost_usd,notes
+batch50_generation,ap-INjm5299E4tI0jNgiqOx4U,https://modal.com/apps/new-prc-watermark/main/ap-INjm5299E4tI0jNgiqOx4U,2026-08-23T06:00:00,H100,0.21751641,reused prompt shard 0
+batch50_generation,ap-INjm5299E4tI0jNgiqOx4U,https://modal.com/apps/new-prc-watermark/main/ap-INjm5299E4tI0jNgiqOx4U,2026-08-23T06:00:00,CPU,0.02631032,reused prompt shard 0
+batch50_generation,ap-INjm5299E4tI0jNgiqOx4U,https://modal.com/apps/new-prc-watermark/main/ap-INjm5299E4tI0jNgiqOx4U,2026-08-23T06:00:00,Memory,0.02651646,reused prompt shard 0
+batch50_generation,ap-INjm5299E4tI0jNgiqOx4U,https://modal.com/apps/new-prc-watermark/main/ap-INjm5299E4tI0jNgiqOx4U,2026-08-23T06:00:00,Total,0.27034319,reused prompt shard 0
+batch50_scoring,ap-TiyaTghkwGCV6xEcLkk8SU,https://modal.com/apps/new-prc-watermark/main/ap-TiyaTghkwGCV6xEcLkk8SU,2026-08-23T07:00:00,CPU,0.00451978,reused scored shard 0
+batch50_scoring,ap-TiyaTghkwGCV6xEcLkk8SU,https://modal.com/apps/new-prc-watermark/main/ap-TiyaTghkwGCV6xEcLkk8SU,2026-08-23T07:00:00,Memory,0.00152889,reused scored shard 0
+batch50_scoring,ap-TiyaTghkwGCV6xEcLkk8SU,https://modal.com/apps/new-prc-watermark/main/ap-TiyaTghkwGCV6xEcLkk8SU,2026-08-23T07:00:00,Total,0.00604867,reused scored shard 0
+remaining_generation,ap-5bAllM2qADIA80FtqwdTpX,https://modal.com/apps/new-prc-watermark/main/ap-5bAllM2qADIA80FtqwdTpX,2026-08-23T07:00:00,H100,2.01099032,shards 1 through 9
+remaining_generation,ap-5bAllM2qADIA80FtqwdTpX,https://modal.com/apps/new-prc-watermark/main/ap-5bAllM2qADIA80FtqwdTpX,2026-08-23T07:00:00,CPU,0.10879978,shards 1 through 9
+remaining_generation,ap-5bAllM2qADIA80FtqwdTpX,https://modal.com/apps/new-prc-watermark/main/ap-5bAllM2qADIA80FtqwdTpX,2026-08-23T07:00:00,Memory,0.19971382,shards 1 through 9
+remaining_generation,ap-5bAllM2qADIA80FtqwdTpX,https://modal.com/apps/new-prc-watermark/main/ap-5bAllM2qADIA80FtqwdTpX,2026-08-23T07:00:00,Total,2.31950392,shards 1 through 9
+remaining_scoring,ap-e3ENaI1x4V0MVHvbBTPVqi,https://modal.com/apps/new-prc-watermark/main/ap-e3ENaI1x4V0MVHvbBTPVqi,2026-08-23T07:00:00,CPU,0.04698468,shards 1 through 9
+remaining_scoring,ap-e3ENaI1x4V0MVHvbBTPVqi,https://modal.com/apps/new-prc-watermark/main/ap-e3ENaI1x4V0MVHvbBTPVqi,2026-08-23T07:00:00,Memory,0.01589334,shards 1 through 9
+remaining_scoring,ap-e3ENaI1x4V0MVHvbBTPVqi,https://modal.com/apps/new-prc-watermark/main/ap-e3ENaI1x4V0MVHvbBTPVqi,2026-08-23T07:00:00,Total,0.06287802,shards 1 through 9
+controlled_full_run,all_above,all_above,2026-08-23,Total,2.65877380,all 500 generation and scoring

@@ -1,0 +1,100 @@
+{
+  "app_id": "ap-INjm5299E4tI0jNgiqOx4U",
+  "app_url": "https://modal.com/apps/new-prc-watermark/main/ap-INjm5299E4tI0jNgiqOx4U",
+  "artifact": {
+    "bytes": 3224868,
+    "local_validation_sha256": "0b7326fbfa43d55a39088e19cc2d69a696b7c81e8095b3ff6d291254392716da",
+    "remote_path": "/data/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/generated/shard_00.pt"
+  },
+  "billing": {
+    "billing_interval_start_utc": "2026-08-23T06:00:00",
+    "cpu_usd": 0.02631032,
+    "h100_usd": 0.21751641,
+    "hard_cap_usd": 3.0,
+    "memory_usd": 0.02651646,
+    "provider_report_status": "final_hourly_report_retrieved",
+    "total_usd": 0.27034319
+  },
+  "cache_preflight": {
+    "null_generation_attempts": 0,
+    "null_prompt_count": 500,
+    "online_prc_generation_attempts": 0,
+    "online_prc_prompt_count": 500,
+    "shared_artifact_fingerprint": "33a7875f1df3681af9812f310510e14ba2633285f164c73fdd65d95ed39dce81",
+    "status": "passed"
+  },
+  "checks": {
+    "all_base_entropies_complete_and_finite": true,
+    "all_base_token_logprobs_complete_and_finite": true,
+    "all_methods_have_50_outputs": true,
+    "all_outputs_exactly_1024_tokens": true,
+    "generation_batch_size_is_50": true,
+    "prompt_indices_are_exactly_0_through_49": true,
+    "synthid_official_reference_indices_equal": true,
+    "synthid_official_reference_max_abs_score_difference": 0.0
+  },
+  "generation": {
+    "batch_size": 50,
+    "methods": {
+      "gumbel_max": {
+        "generated_sequences": 50,
+        "generated_tokens": 51200,
+        "method_seconds": 43.890902518,
+        "seconds_per_prompt": 0.87781805036,
+        "tokens_per_second": 1166.5287579584972
+      },
+      "synthid_text": {
+        "generated_sequences": 50,
+        "generated_tokens": 51200,
+        "method_seconds": 68.661328254,
+        "seconds_per_prompt": 1.37322656508,
+        "tokens_per_second": 745.6890407158304
+      },
+      "textseal": {
+        "generated_sequences": 50,
+        "generated_tokens": 51200,
+        "method_seconds": 45.567296726,
+        "seconds_per_prompt": 0.91134593452,
+        "tokens_per_second": 1123.612846903557
+      }
+    },
+    "prompt_count": 50,
+    "seed": 12345,
+    "total_sequences": 150,
+    "total_tokens": 153600
+  },
+  "provenance": {
+    "actual_gpu": "NVIDIA H100 80GB HBM3",
+    "image_definition_sha256": "36ef066d906bf9df05801790b9327b8f2a8854d516add87b3f36d47afcd40217",
+    "integration_code_fingerprint": "6f9bc1c40ab864d0098ded7378eb3153c4e17b280dc84e4965108f9c014dbddc",
+    "modal_image_id": "im-eNSSVrVTKC9iLpsiR3gnV2",
+    "modal_task_id": "ta-01M0PNWB19ZQ60YT0E3ZQB1TVR",
+    "model_revision": "49e3418fbbbca6ecbdf9608b4d22e5a407081db4",
+    "requested_gpu": "H100"
+  },
+  "projection": {
+    "assumptions": "Ten identical 50-prompt shards on up to ten H100s; exact validation app bill scaled by ten is a conservative generation estimate because production runs shared CPU preflights once, not ten times.",
+    "compute_floor_minutes_with_10_gpus": 2.7731016097,
+    "estimated_end_to_end_cost_usd": [
+      3.0,
+      4.0
+    ],
+    "estimated_end_to_end_wall_minutes_with_10_gpus": [
+      8,
+      15
+    ],
+    "projected_generation_cost_usd": 2.7034319,
+    "recommended_full_run_hard_cap_usd": 5.0
+  },
+  "run_id": "qwen3-8b-batch50-validation-20260823-v1",
+  "runtime": {
+    "function_seconds": 166.386096582,
+    "model_load_seconds": 8.203839135,
+    "peak_cuda_allocated_bytes": 27704215040,
+    "peak_cuda_reserved_bytes": 27839692800,
+    "peak_cuda_reserved_gib": 25.927734375
+  },
+  "status": "passed",
+  "validation_scope": "one 50-prompt batch for TextSeal, SynthID-Text, and Gumbel-Max; no prefix scoring and no 500-prompt generation",
+  "full_500_prompt_run_authorized": false
+}

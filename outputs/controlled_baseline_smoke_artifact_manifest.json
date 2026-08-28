@@ -1,0 +1,45 @@
+{
+  "artifacts": [
+    {
+      "path": "outputs/controlled_baseline_smoke_prompt_level.jsonl",
+      "sha256": "3f73d54892f7f3e6453c80d13a8ddd9f31417e166603f5be8c55e713864cfafc",
+      "size_bytes": 811400
+    },
+    {
+      "path": "outputs/controlled_baseline_smoke_prefix_summary.csv",
+      "sha256": "2e466a8bb17701f199d1d9c34cee0cf3116b8514cb66a611562e814886c7b567",
+      "size_bytes": 2797
+    },
+    {
+      "path": "outputs/controlled_baseline_smoke_quality.csv",
+      "sha256": "a5c538531fe9b9e84e9aa2525a589d98e3653e6a5188a6dd0004298950457d86",
+      "size_bytes": 10982
+    },
+    {
+      "path": "baseline_comparison/pinned_sources_manifest.json",
+      "sha256": "d1ff75922e5e416d16d615d816106052eea653fa82eee467c30d53f86a230380",
+      "size_bytes": 16185
+    },
+    {
+      "path": "outputs/controlled_baseline_smoke_validation.json",
+      "sha256": "fc9faeb96cba1aa7edf64c0f47bd574398e4cf6adc5510af8f2b55b3f5c3f901",
+      "size_bytes": 69950
+    },
+    {
+      "path": "outputs/controlled_baseline_smoke_cost_ledger.csv",
+      "sha256": "9758a2ca8518cc36a7d527a6290d2d01b877c2dd9e726fdb9ec1bbb8be9981cc",
+      "size_bytes": 5203
+    },
+    {
+      "path": "outputs/controlled_baseline_smoke_seed_validation.json",
+      "sha256": "4d6a967191f2e17e677c1c7d2ac944ef75951ca2346b0ad9e2d246e02ec8aab7",
+      "size_bytes": 3252
+    }
+  ],
+  "remote_generation_artifact": {
+    "path": "/data/controlled_baseline_smoke/20260823T020321Z/generated_sequences.pt",
+    "semantic_fingerprint": "58fa13633cef1e592038cf110f7d3d05de00972145a9a09c983db7e5a87be221",
+    "size_bytes": 389072
+  },
+  "status": "passed_exact_billing_reconciled"
+}
