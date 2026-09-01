@@ -4267,6 +4267,7 @@ def detect_full_audit_prompt_shard(request: dict) -> dict:
     from detectors import detect_online_hoeffding
     from online_prc import OnlinePRCKey
 
+    _numpy_pickle_compat()
     started = time.time()
     tag = str(request["tag"])
     watermarked_source_tag = str(request["watermarked_source_tag"])
@@ -4471,6 +4472,7 @@ def aggregate_full_audit_shards(
     import torch
     from online_prc import OnlinePRCKey, support_sha256, target_row_count
 
+    _numpy_pickle_compat()
     started = time.time()
     data_vol.reload()
     artifact = torch.load(
