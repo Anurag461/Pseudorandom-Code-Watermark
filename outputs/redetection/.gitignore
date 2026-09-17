@@ -1,0 +1,6 @@
+# Keep detailed exports and local archives out of Git.
+/*
+!/.gitignore
+!/README.md
+!/summary.json
+!/cache_index.json

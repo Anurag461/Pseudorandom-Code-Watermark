@@ -1,0 +1,279 @@
+{
+  "as_of": "2026-09-17",
+  "protocol": "completion_only_raw_abstain_v1",
+  "dtype": "bfloat16",
+  "threshold_policy": "original score-dependent Hoeffding formula, target FPR 0.001",
+  "n640_prompted_control": "matched-execution BF16; historical TPR was 76.2% MAP and 64.0% entropy",
+  "rows": [
+    {
+      "case": "same_0p6b_eta005_n400",
+      "generator": "0.6B",
+      "detector": "0.6B",
+      "n": 400,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "fixed",
+      "weight": "map",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 446,
+      "raw_detected": 430,
+      "prompted_false_positives": 0,
+      "raw_false_positives": 0,
+      "change_pp": -3.2,
+      "controls": {
+        "prompted": {
+          "wm": 446,
+          "null": 0
+        },
+        "prompted_abstain": {
+          "wm": 445,
+          "null": 0
+        },
+        "eot_abstain": {
+          "wm": 430,
+          "null": 0
+        },
+        "raw_abstain": {
+          "wm": 430,
+          "null": 0
+        }
+      }
+    },
+    {
+      "case": "same_0p6b_eta005_n400",
+      "generator": "0.6B",
+      "detector": "0.6B",
+      "n": 400,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "fixed",
+      "weight": "entropy",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 365,
+      "raw_detected": 355,
+      "prompted_false_positives": 0,
+      "raw_false_positives": 0,
+      "change_pp": -2.0,
+      "controls": {
+        "prompted": {
+          "wm": 365,
+          "null": 0
+        },
+        "prompted_abstain": {
+          "wm": 362,
+          "null": 0
+        },
+        "eot_abstain": {
+          "wm": 355,
+          "null": 0
+        },
+        "raw_abstain": {
+          "wm": 355,
+          "null": 0
+        }
+      }
+    },
+    {
+      "case": "cross_8b_0p6b_eta005_n640",
+      "generator": "8B",
+      "detector": "0.6B",
+      "n": 640,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "online",
+      "weight": "map",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 382,
+      "raw_detected": 364,
+      "prompted_false_positives": 0,
+      "raw_false_positives": 0,
+      "change_pp": -3.6,
+      "controls": {
+        "prompted": {
+          "wm": 382,
+          "null": 0
+        },
+        "prompted_abstain": {
+          "wm": 381,
+          "null": 0
+        },
+        "eot_abstain": {
+          "wm": 363,
+          "null": 0
+        },
+        "raw_abstain": {
+          "wm": 364,
+          "null": 0
+        }
+      }
+    },
+    {
+      "case": "cross_8b_0p6b_eta005_n640",
+      "generator": "8B",
+      "detector": "0.6B",
+      "n": 640,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "online",
+      "weight": "entropy",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 321,
+      "raw_detected": 300,
+      "prompted_false_positives": 0,
+      "raw_false_positives": 0,
+      "change_pp": -4.2,
+      "controls": {
+        "prompted": {
+          "wm": 321,
+          "null": 0
+        },
+        "prompted_abstain": {
+          "wm": 316,
+          "null": 0
+        },
+        "eot_abstain": {
+          "wm": 300,
+          "null": 0
+        },
+        "raw_abstain": {
+          "wm": 300,
+          "null": 0
+        }
+      }
+    },
+    {
+      "case": "same_0p6b_eta020_n3104",
+      "generator": "0.6B",
+      "detector": "0.6B",
+      "n": 3104,
+      "eta": 0.2,
+      "t": 3,
+      "construction": "online",
+      "weight": "map",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 454,
+      "raw_detected": 448,
+      "prompted_false_positives": 0,
+      "raw_false_positives": 0,
+      "change_pp": -1.2
+    },
+    {
+      "case": "same_0p6b_eta020_n3104",
+      "generator": "0.6B",
+      "detector": "0.6B",
+      "n": 3104,
+      "eta": 0.2,
+      "t": 3,
+      "construction": "online",
+      "weight": "entropy",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 404,
+      "raw_detected": 402,
+      "prompted_false_positives": 0,
+      "raw_false_positives": 0,
+      "change_pp": -0.4
+    }
+  ],
+  "runs": [
+    {
+      "case": "same_0p6b_eta005_n400",
+      "run_id": "n400-raw-95bc787414afab13",
+      "model_probability_count": 399000,
+      "batch_size": 100,
+      "checks_containing_coordinate1": 2,
+      "checks": 396
+    },
+    {
+      "case": "cross_8b_0p6b_eta005_n640",
+      "run_id": "n640-raw-69d2e3b80f3483ff",
+      "model_probability_count": 639000,
+      "batch_size": 50,
+      "checks_containing_coordinate1": 10,
+      "checks": 634
+    },
+    {
+      "case": "same_0p6b_eta020_n3104",
+      "run_id": "c3df18f562791cbb8a97c00e",
+      "model_probability_count": 3103000,
+      "batch_size": 125,
+      "checks_containing_coordinate1": 15,
+      "checks": 3073
+    }
+  ],
+  "diagnostics": [
+    {
+      "case": "n400_eot_fp32",
+      "counts": {
+        "map": {
+          "wm": 431,
+          "null": 0
+        },
+        "entropy": {
+          "wm": 357,
+          "null": 0
+        }
+      }
+    },
+    {
+      "case": "n400_eot_bf16",
+      "counts": {
+        "map": {
+          "wm": 428,
+          "null": 0
+        },
+        "entropy": {
+          "wm": 356,
+          "null": 0
+        }
+      },
+      "coordinate1_ablation": {
+        "eot_proxy": {
+          "wm": 428,
+          "null": 0
+        },
+        "abstain": {
+          "wm": 430,
+          "null": 0
+        },
+        "hard_fallback": {
+          "wm": 428,
+          "null": 0
+        }
+      }
+    },
+    {
+      "case": "n640_eot_bf16",
+      "counts": {
+        "map": {
+          "wm": 357,
+          "null": 0
+        },
+        "entropy": {
+          "wm": 296,
+          "null": 0
+        }
+      },
+      "coordinate1_ablation": {
+        "eot_proxy": {
+          "wm": 357,
+          "null": 0
+        },
+        "abstain": {
+          "wm": 363,
+          "null": 0
+        },
+        "hard_fallback": {
+          "wm": 356,
+          "null": 0
+        }
+      }
+    }
+  ],
+  "cache_index": "cache_index.json"
+}

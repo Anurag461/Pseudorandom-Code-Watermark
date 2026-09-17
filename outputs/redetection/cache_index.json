@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "modal_profile": "new-prc-watermark",
+  "modal_volume": "prc-completion-only",
+  "detailed_results_archive": {
+    "path": "archives/redetection/detailed-results-e78f61f.tar.gz",
+    "sha256": "82d2872a197b9f45ebd1bb3d1d57592779b6cbe5779dbcec5c301e984e940214",
+    "bytes": 3620261,
+    "files": 93,
+    "source_commit": "e78f61f55e0fa8b533cf280a5a755e8734a35a64",
+    "local_path": ".archive/detailed-results-e78f61f.tar.gz",
+    "contents": "All reports, per-candidate results, provenance and validation files from the original results commit. Raw trace tensors are stored separately under the run roots below."
+  },
+  "path_convention": "local_result_file paths are relative to outputs/redetection, and are also member paths within the archive.",
+  "runs": [
+    {
+      "case": "same_0p6b_eta005_n400",
+      "kind": "current",
+      "run_id": "n400-raw-95bc787414afab13",
+      "local_result_file": "current/same_0p6b_eta005_n400/full.json",
+      "result_sha256": "1a0c1449ae4af1831b484a4e80b5edc9f39c4134c53285b4f7692a4425a41349",
+      "modal_root": "completion_only_raw_abstain_v1/n400/n400-raw-95bc787414afab13",
+      "modal_result_file": "full.json",
+      "local_trace_dir": "current/same_0p6b_eta005_n400/traces",
+      "probabilities": 399000,
+      "batch_size": 100,
+      "trace_checksums_file": "inference.json",
+      "trace_checksums_file_sha256": "6b97a2b8c570f795cd06eb8c3bb5bd41919813c915329a21f3814361ba5dcfc9"
+    },
+    {
+      "case": "cross_8b_0p6b_eta005_n640",
+      "kind": "current",
+      "run_id": "n640-raw-69d2e3b80f3483ff",
+      "local_result_file": "current/cross_8b_0p6b_eta005_n640/full.json",
+      "result_sha256": "4ac07f29706e301797db5669ac91a378445f018939d26c7d9fc29b9cfab94c36",
+      "modal_root": "completion_only_raw_abstain_v1/n640/n640-raw-69d2e3b80f3483ff",
+      "modal_result_file": "full.json",
+      "local_trace_dir": "current/cross_8b_0p6b_eta005_n640/traces",
+      "probabilities": 639000,
+      "batch_size": 50,
+      "trace_checksums_file": "inference.json",
+      "trace_checksums_file_sha256": "f06933a4543ae860a54805b9b79d26daaa0e68b87374f5a3741ab604d62f12a0"
+    },
+    {
+      "case": "same_0p6b_eta020_n3104",
+      "kind": "current",
+      "run_id": "c3df18f562791cbb8a97c00e",
+      "local_result_file": "current/same_0p6b_eta020_n3104/same_0p6b_eta020_n3104/full.json",
+      "result_sha256": "aeaee972989893c3cfe55e8d6fb2d1d4509063795b90857338b5f2c1959cb1f9",
+      "modal_root": "completion_only_raw_abstain_v1/same_0p6b_eta020_n3104/6f8742eed26d10e74c40c324",
+      "modal_result_file": "full.json",
+      "local_trace_dir": "current/same_0p6b_eta020_n3104/cache/completion_only_raw_abstain_v1/same_0p6b_eta020_n3104/6f8742eed26d10e74c40c324/batches",
+      "probabilities": 3103000,
+      "batch_size": 125,
+      "execution_code_commit": "dad704fd56897d7f39945447280bf2603aa310c2",
+      "trace_checksums_file": "full.json",
+      "trace_checksums_file_sha256": "aeaee972989893c3cfe55e8d6fb2d1d4509063795b90857338b5f2c1959cb1f9"
+    },
+    {
+      "case": "n400_eot_fp32",
+      "kind": "diagnostic",
+      "local_result_file": "diagnostics/n400_eot_fp32/full.json",
+      "result_sha256": "b1ce5a313687ba0ca4c2960710964e18b8ce272125fcbc4185c4c459dd980089",
+      "modal_root": "completion_only_eot_v1/qwen3_0p6b_base/n400_t3_eta0.05_T400_r396/34176fae10beaf55",
+      "modal_result_file": "full.json"
+    },
+    {
+      "case": "n400_eot_bf16",
+      "kind": "diagnostic",
+      "local_result_file": "diagnostics/n400_eot_bf16/full.json",
+      "result_sha256": "d6ec83a2cb5dfc71339aea9b30a84c2b99408ec31580f0f6879fd7972b4b615f",
+      "modal_root": "completion_only_eot_v1/qwen3_0p6b_base/n400_t3_eta0.05_T400_r396/bf16-0c95d02abbcb5bbd",
+      "modal_result_file": "full.json"
+    },
+    {
+      "case": "n400_eot_bf16_coordinate1",
+      "kind": "ablation",
+      "local_result_file": "diagnostics/n400_eot_bf16/ablations/coordinate1-83f6e71d6bf0d53b/full.json",
+      "result_sha256": "f0625e31432763e4ecac87e516d9ee712fe85cc8384437b0c6cf92d7b5151506",
+      "modal_root": "completion_only_eot_v1/qwen3_0p6b_base/n400_t3_eta0.05_T400_r396/bf16-0c95d02abbcb5bbd/ablations/coordinate1-83f6e71d6bf0d53b",
+      "modal_result_file": "full.json"
+    },
+    {
+      "case": "n640_eot_bf16",
+      "kind": "diagnostic",
+      "local_result_file": "diagnostics/n640_eot_bf16/full.json",
+      "result_sha256": "5ae8eec604f11e05b3b8f45fb7fcd021080418d4fb09445eda04704a9e5b8815",
+      "modal_root": "completion_only_eot_v1/gen-qwen3_8b_base/detect-qwen3_0p6b_base/n640_t3_eta0.05/8b-n640-bf16-ce27d367a0fbbc3e",
+      "modal_result_file": "full.json"
+    },
+    {
+      "case": "n640_eot_bf16_coordinate1",
+      "kind": "ablation",
+      "local_result_file": "diagnostics/n640_eot_bf16/ablations/coordinate1-6f4bb352b80073a5/full.json",
+      "result_sha256": "306139dd290f2ca9d637950b2fb741039d8e36a792246ffa78f45231fcc4f4af",
+      "modal_root": "completion_only_eot_v1/gen-qwen3_8b_base/detect-qwen3_0p6b_base/n640_t3_eta0.05/8b-n640-bf16-ce27d367a0fbbc3e/ablations/coordinate1-6f4bb352b80073a5",
+      "modal_result_file": "full.json"
+    }
+  ]
+}
