@@ -10,7 +10,7 @@ from prompt_free.core import PROTOCOL
 
 SOURCE_FILES = (
     "prompt_free/__init__.py", "prompt_free/core.py", "prompt_free/manifest.py",
-    "prompt_free/storage.py", "prompt_free/modal_redetect.py",
+    "prompt_free/storage.py", "prompt_free/modal_redetect.py", "prompt_free/validation.py",
     "prompt_free/requirements.txt", "qwen.py", "detectors.py", "prc.py", "online_prc.py",
 )
 

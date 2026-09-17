@@ -42,9 +42,16 @@ This does not certify the legacy generation/EOT experiment runners as prompt-fre
    with the installed Modal class-parameter serializer. The entrypoint uses a
    concrete `str` annotation and has a no-deployment import test.
 9. **Parallel batch execution.** The explicit `--workers` option is bounded to
-   1–4 A10 containers. It changes scheduling only: fixed batch membership,
-   independent KV caches, per-worker validation and distinct atomic shard
-   writes remain unchanged. Each stage records the worker limit locally.
+   1–10 A10 containers. It changes scheduling only: fixed batch membership,
+   independent KV caches and distinct atomic shard writes remain unchanged.
+   Each stage records the worker limit locally.
+10. **Shared full validation.** One safe batch certifies each numerical
+    configuration. Workers reuse a hash-verified certificate and retain all
+    input, probability and memory checks. Prior-run validation is accepted only
+    after its trace, source commit, numerical file hashes, model-loading AST and
+    raw replay statements are checked. Configuration mismatches and incomplete
+    validation records are rejected. A10 and A10G device labels identify the
+    same supported A10 GPU family; other GPU families are rejected.
 
 ## Validation
 
@@ -83,14 +90,14 @@ Git in the original and new results volumes.
 
 ## Execution boundary
 
-The included manifest contains the two verified pilot settings, not every
+The manifests contain the two pilot settings and the n3104 eta=0.2 case, not every
 paper experiment. The common runner supports additional fixed and online
 cases, prefixes and multiple blocks. Remaining paper cases must be frozen in
 reviewed, committed manifests before their campaign is started.
 
-The production runner repeats GPU checks on the first uncached batch of every
-new case/batch-shape configuration, including the actual BF16 execution and
-memory margin. A new length/batch configuration is not numerically certified
+The production runner establishes GPU validation once per numerical batch
+configuration, then shares that evidence across workers. Every batch retains
+its memory margin check. A new length/batch configuration is not numerically certified
 merely because the two pilots passed. Batches are never silently resized or
 converted to another precision on failure. The full paper campaign has not
 been launched as part of preparing this branch.

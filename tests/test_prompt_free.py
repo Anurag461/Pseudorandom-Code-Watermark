@@ -241,3 +241,66 @@ def test_modal_entrypoint_imports_without_launching_a_job():
     # In particular, modal.parameter requires concrete runtime annotations.
     import prompt_free.modal_redetect as runner
     assert runner.Detector is not None
+
+
+def test_validation_profile_excludes_scheduling_but_includes_model_loading():
+    from prompt_free.validation import current_profile, numerical_profile
+    from prompt_free.manifest import source_identity
+    root = Path.cwd()
+    files = source_identity(root)["files"]
+    original = (root/"prompt_free/modal_redetect.py").read_text()
+    assert numerical_profile(files, original.replace("max_containers=workers", "max_containers=1")) == current_profile(root)
+    assert numerical_profile(files, original.replace('self.model.eval().requires_grad_(False)', 'self.model.eval().requires_grad_(True)')) != current_profile(root)
+    changed = dict(files); changed["prompt_free/core.py"] = "0"*64
+    assert numerical_profile(changed, original) != current_profile(root)
+
+
+def test_one_full_validation_can_certify_multiple_batches_but_not_changed_shapes(tmp_path):
+    from prompt_free.manifest import source_identity, file_sha
+    from prompt_free.storage import json_write
+    from prompt_free.validation import current_profile, publish_certificates, check_certificate
+    manifest = fixture_manifest(tmp_path)
+    manifest["cases"][0]["batch_size"] = 2
+    source = source_identity(Path.cwd())
+    profile = current_profile(Path.cwd())
+    prepared = prepare_case(manifest["cases"][0], manifest["model"], source,
+                            {"data": tmp_path/"data"}, tmp_path/"results")
+    first = prepared["batches"][0]
+    directory = tmp_path/"results"/first["root"]
+    data = load_gpu_input(first, tmp_path/"results")
+    trace = recover(tiny_model(2), data["tokens"], data["partition"][1], cache="static")
+    torch.save(trace_payload(trace, first["identity"]), directory/"trace.pt")
+    proof = {"profile": profile, "modal_source_sha256": source["files"]["prompt_free/modal_redetect.py"]}
+    validation = {"passed": True, "validation_run_on_this_batch": False, "raw_inputs_only": True,
+                  "inference_dtype": "bfloat16", "gpu": "NVIDIA A10", "trace_sha256": file_sha(directory/"trace.pt")}
+    json_write(directory/"validation.json", validation)
+    with pytest.raises(ValueError, match="no full validation"):
+        publish_certificates([prepared], [prepared], [proof], tmp_path/"results", profile)
+    validation["validation_run_on_this_batch"] = True
+    json_write(directory/"validation.json", validation)
+    shared = publish_certificates([prepared], [prepared], [proof], tmp_path/"results", profile)[0]
+    assert shared["batches"][0]["validation_reference"] == shared["batches"][1]["validation_reference"]
+    other = shared["batches"][1]
+    assert check_certificate(other["validation_reference"], other["identity"], tmp_path/"results", profile)["passed"]
+    assert check_certificate(other["validation_reference"], other["identity"], tmp_path/"results", profile, "NVIDIA A10G")["passed"]
+    with pytest.raises(ValueError, match="A10-family"):
+        check_certificate(other["validation_reference"], other["identity"], tmp_path/"results", profile, "NVIDIA H100")
+    for field, value in (("actual_batch_size", 1), ("cache", "concat"), ("maximum_length", 10), ("partition_sha256", "0"*64)):
+        with pytest.raises(ValueError, match="configuration"):
+            check_certificate(other["validation_reference"], {**other["identity"], field: value}, tmp_path/"results", profile)
+    damaged = {**other["validation_reference"], "sha256": "0"*64}
+    with pytest.raises(ValueError, match="hash changed"):
+        check_certificate(damaged, other["identity"], tmp_path/"results", profile)
+    # Resume can follow an already-shared proof without revalidating a worker.
+    validation["validation_run_on_this_batch"] = False
+    validation["shared_validation"] = first["validation_reference"]
+    json_write(directory/"validation.json", validation)
+    resumed = publish_certificates([prepared], [prepared], [proof], tmp_path/"results", profile)
+    assert resumed[0]["batches"][0]["validation_reference"] == other["validation_reference"]
+
+
+@pytest.mark.parametrize("workers", [0, 11])
+def test_invalid_worker_limit_fails_before_remote_work(workers):
+    from prompt_free.modal_redetect import main
+    with pytest.raises(ValueError, match="workers must"):
+        main(workers=workers)

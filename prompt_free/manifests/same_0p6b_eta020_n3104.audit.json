@@ -36,6 +36,27 @@
     "initial_smoke_commit": "04c9ce3bf7af0c747ed9af9a1a64ac317d700ff2",
     "initial_result": "Numerical checks passed, but peak reserved GPU memory exceeded the 85% gate; no accepted trace saved.",
     "selected_batch_size": 10,
-    "selected_batch_requires_gpu_validation": true
+    "selected_batch_requires_gpu_validation": false
+  },
+  "batch_validation": {
+    "commit": "a1638016b99a0ce604d49788a19dea612ac6e25b",
+    "app_url": "https://modal.com/apps/new-prc-watermark/main/ap-5hXcEY9huv4KwmxSQqKosg",
+    "root": "completion_only_raw_abstain_v1/same_0p6b_eta020_n3104/a17caf03f9fbe176eacf47c5/batches/000000",
+    "passed": true,
+    "validation_run_on_this_batch": true,
+    "validation_signature": [
+      "a17caf03f9fbe176eacf47c5",
+      10,
+      3104,
+      "static",
+      "503d1cf93958f0d765606ed3e25aa87a1a777cd08d8f44436b0c6ae9716aa184"
+    ],
+    "raw_inputs_only": true,
+    "inference_dtype": "bfloat16",
+    "replay_seconds": 126.153624098,
+    "peak_reserved_bytes": 12708741120,
+    "gpu": "NVIDIA A10G",
+    "trace_sha256": "962816e8da537edbe7e065e54ae9d1ca883b85ada50e38cdedd2df4723ce7e99",
+    "cached": false
   }
 }

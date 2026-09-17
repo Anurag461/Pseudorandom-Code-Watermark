@@ -81,6 +81,7 @@ class Detector:
         from prompt_free.core import recover
         from prompt_free.storage import load_gpu_input, load_pt, trace_payload, validate_trace, json_write
         from qwen import teacher_force_partition_trace_batch
+        from prompt_free.validation import check_certificate, current_profile
         identity = descriptor["identity"]
         if identity["model"] != self.spec or identity["code_sha256"] != self.code_sha:
             raise ValueError("GPU execution model/code differs from prepared batch")
@@ -108,7 +109,10 @@ class Detector:
         # Reject an oversized replay before paying for independent validation.
         check_memory_margin()
         signature = (identity["run_id"], len(tokens), tokens.shape[1], cache, identity["partition_sha256"])
-        validated_now = signature not in self.validated
+        shared = descriptor.get("validation_reference")
+        if shared:
+            check_certificate(shared, identity, "/results", current_profile("/root"), torch.cuda.get_device_name())
+        validated_now = signature not in self.validated and not shared
         if validated_now and tokens.shape[1] > 1:
             independent = teacher_force_partition_trace_batch(
                 self.model, tokens[:, :1], tokens[:, 1:], part,
@@ -140,6 +144,7 @@ class Detector:
         torch.save(value, temporary)
         temporary.replace(path)
         validation = {"passed": True, "validation_run_on_this_batch": validated_now,
+                      "shared_validation": shared,
                       "validation_signature": list(signature), "raw_inputs_only": True,
                       "inference_dtype": "bfloat16", "replay_seconds": replay_seconds,
                       "peak_reserved_bytes": torch.cuda.max_memory_reserved(),
@@ -162,13 +167,24 @@ def finish(prepared):
     return result
 
 
+@app.function(cpu=4, memory=8192, timeout=600, retries=0, scaledown_window=2,
+              include_source=False, volumes={"/results": results})
+def share_validation(prepared, references, proofs):
+    from prompt_free.validation import current_profile, publish_certificates
+    results.reload()
+    prepared = publish_certificates(prepared, references, proofs, "/results", current_profile("/root"))
+    results.commit()
+    return prepared
+
+
 @app.local_entrypoint()
-def main(manifest: str = "prompt_free/manifests/pilots.json", stage: str = "preflight", case: str = "", workers: int = 1):
+def main(manifest: str = "prompt_free/manifests/pilots.json", stage: str = "preflight", case: str = "", workers: int = 1,
+         validation_reference: str = ""):
     from prompt_free.storage import json_write
     if stage not in ("preflight", "smoke", "full"):
         raise ValueError("stage must be preflight, smoke or full")
-    if not 1 <= workers <= 4:
-        raise ValueError("workers must be in [1,4]")
+    if not 1 <= workers <= 10:
+        raise ValueError("workers must be in [1,10]")
     manifest_path = Path(manifest).resolve()
     content = json.loads(manifest_path.read_text())
     validate(content)
@@ -192,6 +208,22 @@ def main(manifest: str = "prompt_free/manifests/pilots.json", stage: str = "pref
         print(f"Preflight complete; no GPU inference launched. Saved {local}", flush=True)
         return
     detector = Detector.with_options(max_containers=workers)(model_json=json.dumps(content["model"], sort_keys=True))
+    if stage == "full":
+        from prompt_free.validation import configuration, reference_proof
+        if validation_reference:
+            references = json.loads(Path(validation_reference).read_text())
+        else:
+            # Establish one certificate per distinct configuration before fanout.
+            configurations = {}
+            for p in prepared:
+                for batch in p["batches"]:
+                    configurations.setdefault(digest_json(configuration(batch["identity"])), batch)
+            for batch in configurations.values():
+                detector.batch.remote(batch)
+            references = prepared
+        proofs = [reference_proof(ROOT, p["identity"]["source"]) for p in references]
+        prepared = share_validation.remote(prepared, references, proofs)
+        json_write(local/"prepared.json", prepared)
     jobs = [p["batches"][0] for p in prepared] if stage == "smoke" else [b for p in prepared for b in p["batches"]]
     # Each worker owns one model. Calls keep fixed batch membership, order and
     # fresh KV caches; worker scheduling cannot combine or resize batches.

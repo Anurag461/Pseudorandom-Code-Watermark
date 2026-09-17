@@ -95,7 +95,7 @@ MODAL_PROFILE=new-prc-watermark python -m modal run --detach \
   --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage smoke
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach \
   -m prompt_free.modal_redetect \
-  --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage full --workers 4
+  --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage full --workers 10
 ```
 
 `freeze_online.py` is a CPU-only preparation utility for existing same-model
@@ -113,20 +113,32 @@ The artifact supplies the existing fixed decoding key or online key.
 
 ## Batching, validation and resume
 
-By default one warm A10 holds the 0.6B model. `--workers 1` through `--workers 4`
+By default one warm A10 holds the 0.6B model. `--workers 1` through `--workers 10`
 sets a bounded GPU worker limit, recorded in the local execution report. Each
-worker uses the identical detector, fixed batch descriptors and validation
-gates; scheduling does not change trace identity or batch membership. Each remote call processes one fixed document
+worker uses the identical detector and fixed batch descriptors; scheduling
+does not change trace identity or batch membership. Each remote call processes one fixed document
 batch, one token per step, with a fresh per-batch KV cache. Final partial batches
 have explicit identities. No padding, automatic batch resizing, precision
 fallback, or automatic retry is used. Additional sequence lengths require an
 appropriate explicit batch size and a successful smoke check before full use.
 
-The first uncached batch of each configuration is checked against independent
+One safe batch of each configuration is checked against independent
 token-step replay, captured raw model inputs, prefix alignment, batch reversal,
-causality and a GPU memory margin. Any failure stops that batch without saving
-an accepted trace. Keys and scoring stay on CPU; GPU payloads contain exactly
+causality and a GPU memory margin. A hash-verified certificate shares that
+completed validation across workers; they do not repeat the full replay.
+Every batch still checks input/probability hashes, alignment and memory margin.
+Any failure stops that batch without saving an accepted trace. Keys and scoring stay on CPU; GPU payloads contain exactly
 `tokens` and `partition`.
+
+`--validation-reference outputs/prompt_free/<prior-run>/prepared.json` can reuse
+a completed validation after orchestration-only changes. The prior trace and
+validation record are verified against their stored hashes, and the prior Git
+source must match every numerical source file, the model-loading function and
+the actual raw-token replay statements. Model, partition, sequence length,
+actual batch size, cache, protocol and A10 GPU family must also match. This
+reuses validation evidence without relabeling old traces as newly generated.
+Without this option, full execution establishes one certificate per distinct
+configuration before distributing the remaining batches.
 
 Each completed batch is saved in `prc-completion-only` under
 `completion_only_raw_abstain_v1/<case>/<run-id>/`. Source caches in `prc-data`
