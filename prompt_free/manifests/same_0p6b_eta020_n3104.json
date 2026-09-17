@@ -30,7 +30,7 @@
         "map",
         "entropy"
       ],
-      "batch_size": 20,
+      "batch_size": 10,
       "cache": "static",
       "records": [
         {"source":"wm","prompt_idx":0,"file":{"volume":"data","path":"online_causal_prc_v1/qwen3_0p6b_base/n4096_T4096_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0000.pt","sha256":"a810e4838914417a94bb2ac6d4c7f68956e234be46e52f17a5a157191ae047b7","bytes":267621},"tokens_sha256":"2124fe288f25b152e1eba5a4eee8e29c2a4aaab620124719ce4a536f4ff11a52"},

@@ -41,6 +41,10 @@ This does not certify the legacy generation/EOT experiment runners as prompt-fre
 8. **Modal class registration.** Postponed string annotations were incompatible
    with the installed Modal class-parameter serializer. The entrypoint uses a
    concrete `str` annotation and has a no-deployment import test.
+9. **Parallel batch execution.** The explicit `--workers` option is bounded to
+   1–4 A10 containers. It changes scheduling only: fixed batch membership,
+   independent KV caches, per-worker validation and distinct atomic shard
+   writes remain unchanged. Each stage records the worker limit locally.
 
 ## Validation
 

@@ -85,7 +85,7 @@ The separate `manifests/same_0p6b_eta020_n3104.json` campaign pins the existing
 0.6B → 0.6B online run at η=0.2, n=3104, t=3 (500 watermarked and 500 null).
 It preserves the n4096 watermarked-cache prefixes, T8192 null-cache prefixes,
 original n3104 key and one-shot FPR .001. Its explicit static-cache batch size
-is 20. `same_0p6b_eta020_n3104.audit.json` records the CPU verification against
+is 10. `same_0p6b_eta020_n3104.audit.json` records the CPU verification against
 all original prompted decisions and statistics before prompt-free inference.
 Run its smoke stage first, then resume those cached batches in the full stage:
 
@@ -95,7 +95,7 @@ MODAL_PROFILE=new-prc-watermark python -m modal run --detach \
   --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage smoke
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach \
   -m prompt_free.modal_redetect \
-  --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage full
+  --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage full --workers 4
 ```
 
 `freeze_online.py` is a CPU-only preparation utility for existing same-model
@@ -113,7 +113,10 @@ The artifact supplies the existing fixed decoding key or online key.
 
 ## Batching, validation and resume
 
-One warm A10 holds the 0.6B model. Each remote call processes one fixed document
+By default one warm A10 holds the 0.6B model. `--workers 1` through `--workers 4`
+sets a bounded GPU worker limit, recorded in the local execution report. Each
+worker uses the identical detector, fixed batch descriptors and validation
+gates; scheduling does not change trace identity or batch membership. Each remote call processes one fixed document
 batch, one token per step, with a fresh per-batch KV cache. Final partial batches
 have explicit identities. No padding, automatic batch resizing, precision
 fallback, or automatic retry is used. Additional sequence lengths require an

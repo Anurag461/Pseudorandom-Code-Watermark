@@ -100,6 +100,13 @@ class Detector:
         trace = recover(self.model, tokens, part, cache=cache)
         torch.cuda.synchronize()
         replay_seconds = time.perf_counter()-t0
+        def check_memory_margin():
+            used = torch.cuda.max_memory_reserved()
+            total = torch.cuda.get_device_properties(0).total_memory
+            if used >= .85*total:
+                raise ValueError(f"batch reserved {used}/{total} GPU bytes; exceeds 85% memory margin; choose and audit a smaller explicit batch")
+        # Reject an oversized replay before paying for independent validation.
+        check_memory_margin()
         signature = (identity["run_id"], len(tokens), tokens.shape[1], cache, identity["partition_sha256"])
         validated_now = signature not in self.validated
         if validated_now and tokens.shape[1] > 1:
@@ -126,8 +133,7 @@ class Detector:
             causal = recover(self.model, changed, part, cache=cache)
             if not torch.equal(prefix[:, :cutoff], causal[:, :cutoff]):
                 raise ValueError("future tokens affected earlier predictions")
-        if torch.cuda.max_memory_reserved() >= .85*torch.cuda.get_device_properties(0).total_memory:
-            raise ValueError("batch exceeds the validated memory margin; choose and audit a smaller explicit batch")
+        check_memory_margin()
         self.validated.add(signature)
         value = trace_payload(trace, identity)
         temporary = path.with_suffix(".partial")
@@ -157,10 +163,12 @@ def finish(prepared):
 
 
 @app.local_entrypoint()
-def main(manifest: str = "prompt_free/manifests/pilots.json", stage: str = "preflight", case: str = ""):
+def main(manifest: str = "prompt_free/manifests/pilots.json", stage: str = "preflight", case: str = "", workers: int = 1):
     from prompt_free.storage import json_write
     if stage not in ("preflight", "smoke", "full"):
         raise ValueError("stage must be preflight, smoke or full")
+    if not 1 <= workers <= 4:
+        raise ValueError("workers must be in [1,4]")
     manifest_path = Path(manifest).resolve()
     content = json.loads(manifest_path.read_text())
     validate(content)
@@ -178,12 +186,15 @@ def main(manifest: str = "prompt_free/manifests/pilots.json", stage: str = "pref
     prepared = preflight.remote(content, source)
     local = ROOT/"outputs/prompt_free"/digest_json({"manifest": content, "source": source})[:24]
     json_write(local/"prepared.json", prepared)
+    json_write(local/(stage+"_execution.json"), {"stage": stage, "maximum_gpu_workers": workers,
+                                               "gpu": "A10G", "source": source})
     if stage == "preflight":
         print(f"Preflight complete; no GPU inference launched. Saved {local}", flush=True)
         return
-    detector = Detector(model_json=json.dumps(content["model"], sort_keys=True))
+    detector = Detector.with_options(max_containers=workers)(model_json=json.dumps(content["model"], sort_keys=True))
     jobs = [p["batches"][0] for p in prepared] if stage == "smoke" else [b for p in prepared for b in p["batches"]]
-    # One warm 0.6B model container; each call is one fixed document batch.
+    # Each worker owns one model. Calls keep fixed batch membership, order and
+    # fresh KV caches; worker scheduling cannot combine or resize batches.
     for done in detector.batch.map(jobs):
         json_write(local/"batches"/(digest_json(done["root"])+".json"), done)
     if stage == "smoke":

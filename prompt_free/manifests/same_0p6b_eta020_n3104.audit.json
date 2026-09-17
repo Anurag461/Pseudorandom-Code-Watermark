@@ -25,10 +25,17 @@
   "eta": 0.2,
   "t": 3,
   "n": 3104,
-  "batch_size": 20,
+  "batch_size": 10,
   "inference_launched": false,
   "prompted_reference": {
     "path": "outputs/online_causal_n3104_t3_eta0.20_prompts500_sampler-poscdf-v1_kvcache-static-v1_from_n4096.json",
     "sha256": "0b03c1efb28835259dce64232bc4994105e419dd6dda825d06545b0545e3d60d"
+  },
+  "batch_selection": {
+    "initial_batch_size": 20,
+    "initial_smoke_commit": "04c9ce3bf7af0c747ed9af9a1a64ac317d700ff2",
+    "initial_result": "Numerical checks passed, but peak reserved GPU memory exceeded the 85% gate; no accepted trace saved.",
+    "selected_batch_size": 10,
+    "selected_batch_requires_gpu_validation": true
   }
 }
