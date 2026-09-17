@@ -25,7 +25,7 @@
   "eta": 0.2,
   "t": 3,
   "n": 3104,
-  "batch_size": 50,
+  "batch_size": 25,
   "inference_launched": false,
   "prompted_reference": {
     "path": "outputs/online_causal_n3104_t3_eta0.20_prompts500_sampler-poscdf-v1_kvcache-static-v1_from_n4096.json",
@@ -35,10 +35,20 @@
     "initial_batch_size": 20,
     "initial_smoke_commit": "04c9ce3bf7af0c747ed9af9a1a64ac317d700ff2",
     "initial_result": "Numerical checks passed, but peak reserved GPU memory exceeded the 85% gate; no accepted trace saved.",
-    "selected_batch_size": 50,
+    "selected_batch_size": 25,
     "selected_batch_requires_gpu_validation": true,
     "selected_gpu": "A100-80GB",
-    "reason": "User requested A100 after the safe A10 batch. A100 receives its own one-time full validation before fanout."
+    "reason": "User requested A100 after the safe A10 batch. A100 receives its own one-time full validation before fanout.",
+    "a100_batch50_attempt": {
+      "commit": "5a807b0b064f79774b8c2dbb1e6b3a6934d00922",
+      "gpu": "A100-80GB",
+      "batch_size": 50,
+      "peak_reserved_bytes": 84427145216,
+      "total_gpu_bytes": 85094825984,
+      "passed": false,
+      "reason": "Exceeded 85% reserved-memory headroom gate after recovery; no accepted trace saved.",
+      "app_url": "https://modal.com/apps/new-prc-watermark/main/ap-AgPzRDmBTOkwc1Z74btTQV"
+    }
   },
   "a10_batch_validation": {
     "commit": "a1638016b99a0ce604d49788a19dea612ac6e25b",
