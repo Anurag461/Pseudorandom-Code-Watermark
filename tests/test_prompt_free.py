@@ -298,7 +298,7 @@ def test_one_full_validation_can_certify_multiple_batches_but_not_changed_shapes
     assert check_certificate(other["validation_reference"], other["identity"], tmp_path/"results", profile, "NVIDIA A10G")["passed"]
     with pytest.raises(ValueError, match="unsupported validation GPU"):
         check_certificate(other["validation_reference"], other["identity"], tmp_path/"results", profile, "NVIDIA H100")
-    for field, value in (("actual_batch_size", 1), ("cache", "concat"), ("maximum_length", 10), ("partition_sha256", "0"*64), ("gpu_type", "A100-80GB")):
+    for field, value in (("actual_batch_size", 1), ("cache", "concat"), ("maximum_length", 10), ("partition_sha256", "0"*64), ("gpu_type", "A100-80GB"), ("allocator_config", "changed")):
         with pytest.raises(ValueError, match="configuration"):
             check_certificate(other["validation_reference"], {**other["identity"], field: value}, tmp_path/"results", profile)
     damaged = {**other["validation_reference"], "sha256": "0"*64}
@@ -332,3 +332,32 @@ def test_a100_is_distinct_from_a10_in_cache_and_validation(tmp_path):
     from prompt_free.modal_redetect import main
     with pytest.raises(ValueError, match="gpu must"):
         main(gpu="H100")
+
+
+def test_original_batch_125_is_allowed_and_nonpositive_batches_are_rejected(tmp_path):
+    manifest = fixture_manifest(tmp_path)
+    manifest["cases"][0]["batch_size"] = 125
+    validate(manifest)
+    for size in (0, -1, True, 125.5):
+        manifest["cases"][0]["batch_size"] = size
+        with pytest.raises(ValueError, match="positive integer"):
+            validate(manifest)
+
+
+def test_unused_reserved_memory_does_not_fail_live_allocation_gate():
+    from prompt_free.validation import memory_report
+    accepted = memory_report(60, 99, 100)
+    assert accepted["within_allocated_memory_margin"]
+    assert accepted["peak_reserved_bytes"] == 99
+    assert not memory_report(86, 99, 100)["within_allocated_memory_margin"]
+
+
+def test_allocator_configuration_changes_cache_identity(tmp_path):
+    from prompt_free.validation import configuration
+    manifest = fixture_manifest(tmp_path)
+    roots = {"data": tmp_path/"data"}
+    source = {"sha256": "a"*64, "gpu_type": "A100-80GB"}
+    old = prepare_case(manifest["cases"][0], manifest["model"], source, roots, tmp_path/"results")
+    new = prepare_case(manifest["cases"][0], manifest["model"], {**source, "allocator_config": "expandable_segments:True"}, roots, tmp_path/"results")
+    assert old["run_id"] != new["run_id"]
+    assert configuration(old["batches"][0]["identity"]) != configuration(new["batches"][0]["identity"])

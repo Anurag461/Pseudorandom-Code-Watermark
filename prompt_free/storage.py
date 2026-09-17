@@ -121,6 +121,7 @@ def prepare_case(case, model, source, source_roots, result_root):
         trace_identity = {"protocol": PROTOCOL, "run_id": run_id, "case_id": case["id"],
                           "model": model, "code_sha256": source["sha256"],
                           "gpu_type": source.get("gpu_type", "A10G"),
+                          "allocator_config": source.get("allocator_config", "unset"),
                           "input_sha256": input_sha, "partition_sha256": tensor_sha256(gpu_input["partition"]),
                           "maximum_length": maximum, "cache": case["cache"], "token_step": 1,
                           "actual_batch_size": len(selected), "requested_batch_size": size,

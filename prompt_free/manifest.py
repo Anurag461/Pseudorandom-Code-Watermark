@@ -8,6 +8,8 @@ import subprocess
 
 from prompt_free.core import PROTOCOL
 
+ALLOCATOR_CONFIG = "expandable_segments:True"
+
 SOURCE_FILES = (
     "prompt_free/__init__.py", "prompt_free/core.py", "prompt_free/manifest.py",
     "prompt_free/storage.py", "prompt_free/modal_redetect.py", "prompt_free/validation.py",
@@ -83,8 +85,8 @@ def validate(manifest):
         lengths = case["lengths"]
         if not isinstance(lengths, list) or not lengths or any(type(n) is not int or not 1 <= n <= 40960 for n in lengths) or len(set(lengths)) != len(lengths):
             raise ValueError("lengths must be unique positive integers within model context")
-        if type(case["batch_size"]) is not int or not 1 <= case["batch_size"] <= 100:
-            raise ValueError("choose an explicit document batch size in [1,100]")
+        if type(case["batch_size"]) is not int or case["batch_size"] <= 0:
+            raise ValueError("choose an explicit positive integer document batch size")
         if case["cache"] not in ("concat", "static"):
             raise ValueError("unsupported cache implementation")
         if not isinstance(case["fpr"], (int, float)) or isinstance(case["fpr"], bool) or not 0 < case["fpr"] < 1:

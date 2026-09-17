@@ -85,7 +85,8 @@ The separate `manifests/same_0p6b_eta020_n3104.json` campaign pins the existing
 0.6B → 0.6B online run at η=0.2, n=3104, t=3 (500 watermarked and 500 null).
 It preserves the n4096 watermarked-cache prefixes, T8192 null-cache prefixes,
 original n3104 key and one-shot FPR .001. Its explicit static-cache batch size
-is 25 on A100 80GB. `same_0p6b_eta020_n3104.audit.json` records the CPU verification against
+is 125 on A100 80GB, matching the original generation batch size.
+`same_0p6b_eta020_n3104.audit.json` records the CPU verification against
 all original prompted decisions and statistics before prompt-free inference.
 Run its smoke stage first, then resume those cached batches in the full stage:
 
@@ -130,6 +131,10 @@ token-step replay, captured raw model inputs, prefix alignment, batch reversal,
 causality and a GPU memory margin. A hash-verified certificate shares that
 completed validation across workers; they do not repeat the full replay.
 Every batch still checks input/probability hashes, alignment and memory margin.
+The original runner's `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` is
+retained and included in cache/validation identity. Both peak allocated and
+reserved CUDA memory are recorded. The 85% headroom gate applies to peak live
+tensor allocation; unused allocator reservation does not cause rejection.
 Any failure stops that batch without saving an accepted trace. Keys and scoring stay on CPU; GPU payloads contain exactly
 `tokens` and `partition`.
 

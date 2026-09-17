@@ -5,12 +5,13 @@ import subprocess
 
 import modal
 
-from prompt_free.manifest import SOURCE_FILES, digest_json, file_sha, plan, source_identity, validate
+from prompt_free.manifest import ALLOCATOR_CONFIG, SOURCE_FILES, digest_json, file_sha, plan, source_identity, validate
 
 ROOT = Path(__file__).resolve().parents[1]
 DEPENDENCIES = (ROOT/"prompt_free/requirements.txt").read_text().splitlines()
 image = (modal.Image.debian_slim(python_version="3.11").pip_install(*DEPENDENCIES)
          .env({"HF_HUB_OFFLINE": "1", "TOKENIZERS_PARALLELISM": "false",
+               "PYTORCH_CUDA_ALLOC_CONF": ALLOCATOR_CONFIG,
                "NUMBA_DISABLE_JIT": "1", "OMP_NUM_THREADS": "1"}))
 # Deploy only the listed committed sources. Historical/untracked experiment
 # packages are neither mounted nor imported by this production entrypoint.
@@ -76,17 +77,20 @@ class Detector:
 
     @modal.method()
     def batch(self, descriptor):
+        import os
         import time
         import torch
         from prompt_free.core import recover
         from prompt_free.storage import load_gpu_input, load_pt, trace_payload, validate_trace, json_write
         from qwen import teacher_force_partition_trace_batch
-        from prompt_free.validation import check_certificate, current_profile, gpu_family
+        from prompt_free.validation import check_certificate, current_profile, gpu_family, memory_report
         identity = descriptor["identity"]
         if identity["model"] != self.spec or identity["code_sha256"] != self.code_sha:
             raise ValueError("GPU execution model/code differs from prepared batch")
         if gpu_family(torch.cuda.get_device_name()) != identity["gpu_type"]:
             raise ValueError("actual GPU differs from prepared batch")
+        if os.environ.get("PYTORCH_CUDA_ALLOC_CONF", "unset") != identity["allocator_config"]:
+            raise ValueError("actual allocator configuration differs from prepared batch")
         results.reload()
         output = Path("/results")/descriptor["root"]
         inputs = load_gpu_input(descriptor, "/results")
@@ -99,23 +103,29 @@ class Detector:
         cache = identity["cache"]
         torch.cuda.empty_cache()
         torch.cuda.reset_peak_memory_stats()
+        print(f"Recovering {len(tokens)} completions of length {tokens.shape[1]} on {torch.cuda.get_device_name()}", flush=True)
         t0 = time.perf_counter()
         trace = recover(self.model, tokens, part, cache=cache)
         torch.cuda.synchronize()
         replay_seconds = time.perf_counter()-t0
         def check_memory_margin():
-            used = torch.cuda.max_memory_reserved()
-            total = torch.cuda.get_device_properties(0).total_memory
-            if used >= .85*total:
-                raise ValueError(f"batch reserved {used}/{total} GPU bytes; exceeds 85% memory margin; choose and audit a smaller explicit batch")
+            measured = memory_report(torch.cuda.max_memory_allocated(), torch.cuda.max_memory_reserved(),
+                                     torch.cuda.get_device_properties(0).total_memory)
+            json_write(output/"memory.json", measured)
+            if not measured["within_allocated_memory_margin"]:
+                results.commit()
+                raise ValueError(f"live CUDA allocation exceeds memory margin: {measured}")
+            return measured
         # Reject an oversized replay before paying for independent validation.
-        check_memory_margin()
+        recovered_memory = check_memory_margin()
+        print(f"Recovery complete in {replay_seconds:.1f}s; peak allocated {recovered_memory['peak_allocated_bytes']/1e9:.2f} GB, reserved {recovered_memory['peak_reserved_bytes']/1e9:.2f} GB", flush=True)
         signature = (identity["run_id"], len(tokens), tokens.shape[1], cache, identity["partition_sha256"])
         shared = descriptor.get("validation_reference")
         if shared:
             check_certificate(shared, identity, "/results", current_profile("/root"), torch.cuda.get_device_name())
         validated_now = signature not in self.validated and not shared
         if validated_now and tokens.shape[1] > 1:
+            print("Running the single independent full-length validation replay", flush=True)
             independent = teacher_force_partition_trace_batch(
                 self.model, tokens[:, :1], tokens[:, 1:], part,
                 kv_cache_implementation=cache, chunk_size=1)
@@ -139,7 +149,7 @@ class Detector:
             causal = recover(self.model, changed, part, cache=cache)
             if not torch.equal(prefix[:, :cutoff], causal[:, :cutoff]):
                 raise ValueError("future tokens affected earlier predictions")
-        check_memory_margin()
+        measured = check_memory_margin()
         self.validated.add(signature)
         value = trace_payload(trace, identity)
         temporary = path.with_suffix(".partial")
@@ -149,7 +159,7 @@ class Detector:
                       "shared_validation": shared,
                       "validation_signature": list(signature), "raw_inputs_only": True,
                       "inference_dtype": "bfloat16", "replay_seconds": replay_seconds,
-                      "peak_reserved_bytes": torch.cuda.max_memory_reserved(),
+                      "allocator_config": identity["allocator_config"], **measured,
                       "gpu": torch.cuda.get_device_name(), "trace_sha256": file_sha(path)}
         json_write(output/"validation.json", validation)
         results.commit()
@@ -194,6 +204,7 @@ def main(manifest: str = "prompt_free/manifests/pilots.json", stage: str = "pref
     validate(content)
     source = source_identity(ROOT, require_commit=True)
     source["gpu_type"] = gpu
+    source["allocator_config"] = ALLOCATOR_CONFIG
     # Manifests must also be reviewable and committed before any remote stage.
     relative = manifest_path.relative_to(ROOT).as_posix()
     committed = subprocess.check_output(["git", "show", f"{source['git_commit']}:{relative}"], cwd=ROOT)

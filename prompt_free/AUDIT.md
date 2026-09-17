@@ -56,6 +56,14 @@ This does not certify the legacy generation/EOT experiment runners as prompt-fre
     validation reuse and unsupported GPU families are rejected.
     Source AST comparisons normalize Python 3.12's empty `type_params` field
     for the Python 3.11 Modal image; nonempty type parameters remain significant.
+11. **Original batching and allocator.** The pilot-derived cap of 100 was
+    unjustified and excluded the original batch size 125. Explicit positive
+    batch sizes are accepted and validated on their selected GPU. The original
+    expandable-segments allocator is restored and enters cache/certificate
+    identity. The former reserved-memory gate incorrectly treated allocator
+    cache as live tensor usage. Both metrics are now reported; only peak live
+    allocation determines the 85% memory-headroom gate. The detector probability
+    calculation and PRC scoring are unchanged.
 
 ## Validation
 

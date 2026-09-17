@@ -64,9 +64,19 @@ def reference_proof(root, source):
 
 
 def configuration(identity):
-    return {"gpu_type": identity.get("gpu_type", "A10G"), **{k: identity[k] for k in (
+    return {"gpu_type": identity.get("gpu_type", "A10G"),
+            "allocator_config": identity.get("allocator_config", "unset"), **{k: identity[k] for k in (
              "protocol", "model", "partition_sha256", "maximum_length",
              "cache", "token_step", "actual_batch_size", "prepended_token_count", "first_coordinate_score")}}
+
+
+def memory_report(peak_allocated, peak_reserved, total):
+    """Gate live tensor allocations; allocator reservation is diagnostic only."""
+    if total <= 0 or not 0 <= peak_allocated <= peak_reserved:
+        raise ValueError("invalid CUDA memory measurements")
+    return {"peak_allocated_bytes": peak_allocated, "peak_reserved_bytes": peak_reserved,
+            "total_gpu_bytes": total, "memory_gate": "peak_allocated_below_85_percent",
+            "within_allocated_memory_margin": peak_allocated < .85*total}
 
 
 def gpu_family(name):

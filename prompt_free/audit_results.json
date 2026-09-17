@@ -7,17 +7,17 @@
     "files": {
       "prompt_free/__init__.py": "baf0c4d7845b535438bba27d8db3b1b0f0af117b6323b86997e48a33b533aae9",
       "prompt_free/core.py": "ad5604f831806bbec3cc6e0f988d45e5b0da4c11f78a8a1caf948bf0fbd54dea",
-      "prompt_free/manifest.py": "28da948b1c23bd7909ec00cc545d27961a7a3c5f67c28eae9054b7ddc428aa73",
-      "prompt_free/storage.py": "bbcc6076cd9590bd0d4c7ea78ebc5f10a16be5215f3481dd93ae2ae616f69ee1",
-      "prompt_free/modal_redetect.py": "04acd30f7c5007cc9fbcfa9c3f31bdfb8fa5243354d40411a085a321a991e5be",
-      "prompt_free/validation.py": "829809d4fcbb37dc82429b52e3f22fdd50c84749cb1c9e94679d85c4d0e8338a",
+      "prompt_free/manifest.py": "ae4fda59d0f28ba22b15e90b3b00d8767b22bbee628b11fe19e8f65809444abe",
+      "prompt_free/storage.py": "987f9562e312a213058d4aecfb300a36fadff654d93d065f89f23c31bfcb4991",
+      "prompt_free/modal_redetect.py": "4598ac30b8b30edaf6427cb8b523eb95fdf0f2a047ab7c7cece41bf4db227fb7",
+      "prompt_free/validation.py": "d3258c41e2ae16f8b55ed56e9c3c326fa551531b7c7db531e05d4a5f9ad79c2e",
       "prompt_free/requirements.txt": "672ecb6fcd55e1acd8f460a17afefacc4a3ccde92aeebb96bf7fb5f448ff8a36",
       "qwen.py": "dee283544298939d678f5e81ab9efe1d6d3b80c876aae2818440b7efcaef04f0",
       "detectors.py": "9b831cf5f0c362f48f7e08c323e5d6e6c3db3fff387949067a534b02599525de",
       "prc.py": "20a731e18640903d82ff0d7bb5a53f87d6206e0d8b3987654c065a816c4fb6bc",
       "online_prc.py": "babe6a7ff1fb2397bf2b3cd76448d82c34ae879c6d1214e386e1285d036ba4cb"
     },
-    "sha256": "7b28846c18de521462b04a79762dd9ec2a2d23c2b5f16192cb6a391024beed7f"
+    "sha256": "bbb6d9e4eaafda614be3dbef4948a308df559b541dd2383754ad9c63831b6d09"
   },
   "cases": {
     "same_0p6b_n400": {
