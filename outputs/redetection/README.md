@@ -46,3 +46,11 @@ tar -xzf outputs/redetection/.archive/detailed-results-e78f61f.tar.gz \
 ```
 
 The archive preserves the original reports and their provenance. No results were recomputed during this cleanup.
+
+The subsequent code refactor integrates replay into `qwen.py`, scoring into
+`detectors.py`, and orchestration into `modal_online_run.py`. Local validation
+passed 109 tests and reproduced all 6,000 saved detector decisions across the
+three settings (3,000 candidates, two weights). Statistics and thresholds agreed
+within 4.6e-13. This used the existing traces; no Modal inference was run.
+The previous implementation and frozen manifests are preserved in the
+implementation archive listed in the cache index.

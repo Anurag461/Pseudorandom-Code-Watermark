@@ -1,10 +1,43 @@
 # PRC watermark — reproduction guide
 
-**Prompt-free paper redetection:** use the dedicated
-[prompt_free runner](prompt_free/README.md), which uses raw completion tokens
-and sets coordinate 1's score to zero. Its sources and frozen manifests must be
-committed before execution. The older experiment commands below retain their
-historical probability-trace behavior and are not the prompt-free rerun path.
+**Prompt-free paper redetection** now runs through the existing Modal app:
+
+```sh
+MODAL_PROFILE=new-prc-watermark python -m modal run --detach \
+  modal_online_run.py::redetect \
+  --manifest outputs/redetection/.archive/manifests/same_0p6b_eta020_n3104.json \
+  --stage full --gpu A100-80GB --max-containers 10
+```
+
+The frozen manifest selects the original candidate files, key, partition,
+lengths and batch size (125 for n=3104). Its sources are hash-checked before
+inference. Execution code must be committed. Use `--stage preflight` for a
+CPU-only input check, or `--stage smoke` for representative validation batches.
+Full execution validates one batch per actual shape, then distributes fixed
+batches across up to 10 workers. Each worker reuses the existing BF16 model
+loader and expandable-segments allocator; completed traces are cached atomically.
+
+The implementation has three entry points: completion-only replay in `qwen.py`,
+`completion_only=True` in the existing `detectors.py` functions, and the
+`redetect` command in `modal_online_run.py`. The GPU receives only raw completion
+tokens and the partition. There is no prepended token; coordinate 1's score is
+zero. Original PRC indices and threshold policies are retained. The older
+experiment commands below keep their historical probability-trace behavior.
+
+[Results and cache index](outputs/redetection/README.md) cover the completed
+runs. Detailed manifests are archived outside Git. On this machine they are
+under `outputs/redetection/.archive/manifests/`. For a fresh checkout, retrieve
+the implementation archive listed in `outputs/redetection/cache_index.json`
+from Modal volume `prc-completion-only`; its `prompt_free/manifests/` members
+contain the frozen inputs. The integrated runner uses a separate `integrated/`
+cache namespace and leaves previous traces and results intact.
+
+Run the focused checks with:
+
+```sh
+NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m pytest \
+  tests/test_prompt_free.py tests/test_qwen_kv_cache.py tests/test_online_prc.py -q
+```
 
 End-to-end instructions for the PRC watermark experiments on Qwen3-0.6B-Base — watermark detection (TPR/FPR) and benchmark utility — plus the key deviations from the paper that were needed to make detection actually work.
 

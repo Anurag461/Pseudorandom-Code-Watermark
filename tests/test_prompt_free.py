@@ -1,363 +1,272 @@
-import copy
-import hashlib
-import json
-from pathlib import Path
-import subprocess
+"""Completion-only behavior through the existing model, detectors and Modal app."""
 
+import hashlib
 import numpy as np
 import pytest
 import torch
 from scipy.sparse import csr_matrix
-
-from detectors import map_soft_token
+from detectors import _soft_tokens, detect_hoeffding, detect_online_hoeffding, map_soft_token
+from modal_online_run import (
+    _prepare_redetection,
+    _recover_redetection_batch,
+    _redetect_inputs,
+    _redetect_load,
+    _redetect_trace,
+    _score_redetection,
+)
 from online_prc import OnlinePRCKey, materialize_supports, otp_prefix
 from prc import Detect
-from prompt_free.core import PROTOCOL, recover, score, soft_scores
-from prompt_free.manifest import plan, validate
-from prompt_free.storage import (
-    TRACE_FIELD, aggregate, load_gpu_input, load_pt, prepare_case,
-    token_sha, trace_payload, validate_trace,
-)
-from qwen import Qwen3Model
+from qwen import Qwen3Model, completion_only_partition_trace_batch, make_kv_cache
 
 
-def tiny_model(vocab=31):
+def tiny_model(vocab=31, dtype=torch.float32):
     torch.manual_seed(19)
-    return Qwen3Model({"vocab_size": vocab, "context_length": 32, "emb_dim": 16,
-        "n_heads": 4, "n_layers": 2, "hidden_dim": 32, "head_dim": 4,
-        "qk_norm": True, "n_kv_groups": 2, "rope_base": 10000.,
-        "dtype": torch.float32}).eval()
+    return Qwen3Model(
+        {
+            "vocab_size": vocab,
+            "context_length": 32,
+            "emb_dim": 16,
+            "n_heads": 4,
+            "n_layers": 2,
+            "hidden_dim": 32,
+            "head_dim": 4,
+            "qk_norm": True,
+            "n_kv_groups": 2,
+            "rope_base": 10000.0,
+            "dtype": dtype,
+        }
+    ).eval()
 
 
-def fixed_artifact(n=4):
-    dense = np.array([[1, 1, 1, 0], [0, 1, 1, 1], [1, 0, 1, 1]]) if n == 4 else np.ones((1, 3))
-    key = (np.zeros((n, 1)), csr_matrix(dense), np.arange(n) % 2, .001, .05, None, 0, 0, 3)
-    return {"decoding_key": key, "partition": torch.tensor([[1, 0], [0, 1]], dtype=torch.bfloat16)}
+def fixed_key():
+    return (
+        np.zeros((4, 1)),
+        csr_matrix([[1, 1, 1, 0], [0, 1, 1, 1], [1, 0, 1, 1]]),
+        np.arange(4) % 2,
+        0.001,
+        0.05,
+        None,
+        0,
+        0,
+        3,
+    )
 
 
 @pytest.mark.parametrize("cache", ["static", "concat"])
-def test_actual_inputs_have_no_prefix_and_logits_predict_next_coordinate(cache):
-    model = tiny_model()
+@pytest.mark.parametrize("dtype", [torch.float32, torch.bfloat16])
+def test_raw_replay_alignment_reference_causality_and_fresh_cache(cache, dtype):
+    model = tiny_model(dtype=dtype)
     tokens = torch.tensor([[3, 6, 9, 12, 15], [4, 7, 10, 13, 16]])
-    part = torch.tensor([0., 1.]*15+[0.])
+    part = torch.tensor([0.0, 1.0] * 15 + [0.0], dtype=dtype)
     received = []
     hook = model.register_forward_pre_hook(lambda m, args: received.append(args[0].clone()))
-    actual = recover(model, tokens, part, cache=cache)
+    actual = completion_only_partition_trace_batch(model, tokens, part, cache)
     hook.remove()
     assert torch.equal(torch.cat(received, 1), tokens[:, :-1])
+    kv = make_kv_cache(cache, max_length=4)
     with torch.no_grad():
-        full = (model(tokens).softmax(-1)*part).sum(-1)[:, :-1]
-    torch.testing.assert_close(actual, full, rtol=1e-6, atol=1e-7)
-    changed = tokens.clone(); changed[:, 2:] = 24
-    future = recover(model, changed, part, cache=cache)
-    torch.testing.assert_close(actual[:, :2], future[:, :2])
-    assert torch.equal(recover(model, tokens, part, cache=cache), actual)
-    assert torch.equal(recover(model, tokens.flip(0), part, cache=cache).flip(0), actual)
-    assert recover(model, tokens[:, :1], part, cache=cache).shape == (2, 0)
+        expected = torch.stack(
+            [(model(tokens[:, i : i + 1], cache=kv)[:, -1].softmax(-1) * part).sum(-1) for i in range(4)], dim=1
+        ).float()
+    assert torch.equal(actual, expected)
+    assert torch.equal(completion_only_partition_trace_batch(model, tokens, part, cache), actual)
+    assert torch.equal(completion_only_partition_trace_batch(model, tokens.flip(0), part, cache).flip(0), actual)
+    changed = tokens.clone()
+    changed[:, 2:] = 24
+    assert torch.equal(completion_only_partition_trace_batch(model, changed, part, cache)[:, :2], actual[:, :2])
+    assert completion_only_partition_trace_batch(model, tokens[:, :1], part, cache).shape == (2, 0)
+    with pytest.raises(TypeError):
+        completion_only_partition_trace_batch(model, tokens, part, prompt_ids=torch.tensor([[999]]))
 
 
 @pytest.mark.parametrize("weight", ["map", "entropy"])
-def test_coordinate_one_only_is_zero_and_original_checks_remain(weight):
-    artifact = fixed_artifact()
-    tokens = torch.tensor([0, 1, 0, 1])
-    p = np.array([.2, .7, .4])
-    soft = soft_scores(tokens.numpy(), p, weight)
-    assert soft[0] == 0 and len(soft) == len(tokens)
-    key = artifact["decoding_key"]
-    saved = key[1].indices.copy()
-    direct, info = Detect(key, soft, false_positive_rate=.001, return_info=True)
-    result = score(artifact, tokens, p, construction="fixed", fpr=.001,
-                   fpr_policy="block_or_bonferroni", weight=weight)
-    assert result["decision"] == direct
+def test_first_coordinate_only_is_zero_and_fixed_statistic_is_unchanged(weight):
+    bits, p = np.array([0, 1, 0, 1]), np.array([0.2, 0.7, 0.4])
+    soft = _soft_tokens(bits, p, weight, completion_only=True)
+    assert soft[0] == 0
+    np.testing.assert_array_equal(soft[1:], _soft_tokens(bits[1:], p, weight))
+    key = fixed_key()
+    supports = key[1].indices.copy()
+    expected, info = Detect(key, soft, false_positive_rate=0.001, return_info=True)
+    actual, scored = detect_hoeffding(
+        key, torch.as_tensor(bits), p, torch.eye(2), fpr=0.001, weight=weight, completion_only=True, return_info=True
+    )
+    assert actual == expected
     for field in ("statistic", "V", "threshold"):
-        assert result["blocks"][0][field] == info[field]
-    np.testing.assert_array_equal(key[1].indices, saved)
+        assert scored[field] == info[field]
+    np.testing.assert_array_equal(key[1].indices, supports)
 
 
-def test_multiblock_only_abstains_once_preserves_bonferroni_and_trailing_policy():
-    artifact = fixed_artifact(); key = artifact["decoding_key"]
-    tokens = torch.tensor([0, 1, 0, 1, 0, 0, 1, 0, 1, 1])
-    p = np.linspace(.1, .9, 9)
-    soft = np.r_[0., map_soft_token(tokens.numpy()[1:], p)]
-    result = score(artifact, tokens, p, construction="fixed", fpr=.001, fpr_policy="block_or_bonferroni")
-    assert result["num_blocks"] == 2 and result["block_fpr"] == .0005
-    assert result["ignored_trailing_tokens"] == 2
+def test_multiblock_abstains_once_and_preserves_bonferroni_and_trailing_policy():
+    bits = np.array([0, 1, 0, 1, 0, 0, 1, 0, 1, 1])
+    p = np.linspace(0.1, 0.9, 9)
+    soft = np.r_[0.0, map_soft_token(bits[1:], p)]
     assert soft[4] != 0
-    for b in range(2):
-        _, expected = Detect(key, soft[b*4:b*4+4], false_positive_rate=.0005, return_info=True)
-        for field in ("statistic", "threshold", "V"):
-            assert result["blocks"][b][field] == expected[field]
+    expected = [
+        Detect(fixed_key(), soft[b * 4 : (b + 1) * 4], false_positive_rate=0.0005, return_info=True) for b in range(2)
+    ]
+    actual, info = detect_hoeffding(
+        fixed_key(), torch.as_tensor(bits), p, torch.eye(2), fpr=0.001, completion_only=True, return_info=True
+    )
+    assert actual == any(dec for dec, _ in expected)
+    assert info["num_blocks"] == 2 and info["block_fpr"] == 0.0005
+    best = max((v for _, v in expected), key=lambda v: v["statistic"] - v["threshold"])
+    for field in ("statistic", "V", "threshold"):
+        assert info[field] == best[field]
 
 
-def test_short_prefix_preserves_supported_checks_without_folding_or_index_shift():
-    dense = np.array([[1, 1, 1, 0, 0], [0, 1, 1, 1, 0], [0, 1, 1, 0, 1]])
-    key = (np.zeros((5, 1)), csr_matrix(dense), np.array([1, 0, 1, 0, 1]), .001, .05, None, 0, 0, 3)
-    artifact = {"decoding_key": key, "partition": fixed_artifact()["partition"]}
-    tokens = torch.tensor([1, 0, 1, 0]); p = np.array([.2, .7, .4])
-    soft = np.r_[0., map_soft_token(tokens.numpy()[1:], p)]
-    result = score(artifact, tokens, p, construction="fixed", fpr=.001, fpr_policy="block_or_bonferroni")
+def test_short_prefix_preserves_original_coordinate_supports():
+    key = (
+        np.zeros((5, 1)),
+        csr_matrix([[1, 1, 1, 0, 0], [0, 1, 1, 1, 0], [0, 1, 1, 0, 1]]),
+        np.array([1, 0, 1, 0, 1]),
+        0.001,
+        0.05,
+        None,
+        0,
+        0,
+        3,
+    )
+    bits, p = np.array([1, 0, 1, 0]), np.array([0.2, 0.7, 0.4])
+    _, info = detect_hoeffding(
+        key, torch.as_tensor(bits), p, torch.eye(2), fpr=0.001, completion_only=True, return_info=True
+    )
+    soft = np.r_[0.0, map_soft_token(bits[1:], p)]
     product = np.prod(soft[[1, 2, 3]])
-    assert result["r"] == 2  # The third row includes unobserved coordinate 5.
-    assert result["statistic"] == -product
-    assert result["V"] == product**2
-    assert result["threshold"] == np.sqrt(2*product**2*np.log(1000))
-
-
-@pytest.mark.parametrize("length", [1, 2, 3])
-def test_fixed_no_evidence_never_detects_even_when_old_zero_threshold_would(length):
-    artifact = fixed_artifact(3)
-    result = score(artifact, torch.zeros(length, dtype=torch.int64), np.full(length-1, .5),
-                   construction="fixed", fpr=.001, fpr_policy="block_or_bonferroni")
-    assert result["decision"] is False
-    info = result["blocks"][0] if "blocks" in result else result
-    assert info["V"] == 0 and info["threshold"] is None
+    otp_sign = np.prod(1 - 2 * key[2][[1, 2, 3]])
+    assert info["r_eff"] == 2 and info["statistic"] == otp_sign * product and info["V"] == product**2
 
 
 @pytest.mark.parametrize("policy", ["one_shot", "alpha_spending_v1"])
-def test_online_original_supports_otp_and_threshold_policy(policy):
-    key = OnlinePRCKey.from_seed(39, check_weight=3, noise_rate=.05)
-    artifact = {"online_key": key.to_dict(), "partition": fixed_artifact()["partition"]}
-    tokens = torch.tensor([0, 1]*8)
-    probabilities = np.linspace(.1, .9, 15)
-    soft = np.r_[0., map_soft_token(tokens.numpy()[1:], probabilities)]
-    supports = materialize_supports(16, key)
+def test_online_supports_otp_and_threshold_policy(policy):
+    key = OnlinePRCKey.from_seed(91, check_weight=3, noise_rate=0.05)
+    bits, p = np.arange(32) % 2, np.linspace(0.1, 0.9, 31)
+    soft = np.r_[0.0, map_soft_token(bits[1:], p)]
+    supports, otp = materialize_supports(32, key), otp_prefix(32, key).astype(np.int64)
     products = np.prod(soft[supports], axis=1)
-    signs = np.prod(1-2*otp_prefix(16, key).astype(np.int64)[supports], axis=1)
-    result = score(artifact, tokens, probabilities, construction="online", fpr=.001, fpr_policy=policy)
-    alpha = .001 if policy == "one_shot" else 6*.001/(np.pi**2*16**2)
-    assert result["statistic"] == np.sum(signs*products)
-    assert result["V"] == np.sum(products**2)
-    assert result["threshold"] == np.sqrt(2*np.sum(products**2)*np.log(1/alpha))
+    statistic = np.sum(np.prod(1 - 2 * otp[supports], axis=1) * products)
+    V = np.sum(products**2)
+    alpha = 0.001 if policy == "one_shot" else 6 * 0.001 / (np.pi**2 * 32**2)
+    _, info = detect_online_hoeffding(
+        key,
+        torch.as_tensor(bits),
+        p,
+        torch.eye(2),
+        fpr=0.001,
+        fpr_policy=policy,
+        completion_only=True,
+        return_info=True,
+    )
+    np.testing.assert_allclose(
+        [info["statistic"], info["V"], info["threshold"]],
+        [statistic, V, np.sqrt(2 * V * np.log(1 / alpha))],
+        rtol=0,
+        atol=1e-12,
+    )
 
 
-def test_refuses_legacy_length_invalid_bits_probabilities_and_fpr_policy():
+@pytest.mark.parametrize("length", [1, 4])
+def test_zero_evidence_never_detects(length):
+    key = list(fixed_key())
+    key[1] = csr_matrix([[1, 1, 1, 0]])
+    decision, info = detect_hoeffding(
+        tuple(key),
+        torch.zeros(length, dtype=torch.long),
+        np.full(length - 1, 0.5),
+        torch.eye(2),
+        completion_only=True,
+        return_info=True,
+    )
+    assert not decision and info["V"] == 0 and np.isinf(info["threshold"])
+
+
+@pytest.mark.parametrize("p", [np.ones(4), np.array([0.2, np.nan, 0.3]), np.array([0.2, 1.1, 0.3])])
+def test_refuses_legacy_or_invalid_probability_vectors(p):
     with pytest.raises(ValueError, match="T-1"):
-        soft_scores([0, 1, 0], [.5]*3)
-    with pytest.raises(ValueError, match="binary"):
-        soft_scores([.2, 1, 0], [.5]*2)
-    for p in [[np.nan, .5], [1.1, .5], [-.1, .5]]:
-        with pytest.raises(ValueError, match="probabilities"):
-            soft_scores([0, 1, 0], p)
-    with pytest.raises(ValueError, match="policy"):
-        score(fixed_artifact(), torch.tensor([0, 1, 0]), [.5]*2,
-              construction="fixed", fpr=.001, fpr_policy="one_shot")
+        detect_hoeffding(fixed_key(), torch.zeros(4, dtype=torch.long), p, torch.eye(2), completion_only=True)
 
 
-def fixture_manifest(tmp_path, construction="fixed"):
-    original = json.loads(Path("prompt_free/manifests/pilots.json").read_text())
-    model = original["model"]
-    data = tmp_path/"data"; data.mkdir()
+def fixture_case(tmp_path, construction):
+    data = tmp_path / "data"
+    data.mkdir()
+
     def save(name, value):
-        path = data/name; torch.save(value, path)
-        raw = path.read_bytes()
-        return {"volume": "data", "path": name, "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw)}
-    artifact = fixed_artifact()
-    if construction == "online":
-        artifact = {"partition": artifact["partition"], "online_key": OnlinePRCKey.from_seed(71, check_weight=3, noise_rate=.05).to_dict()}
-    artifact["prompt_ids_list"] = [[99, 98]]*2
+        path = data / name
+        torch.save(value, path)
+        return {
+            "volume": "data",
+            "path": name,
+            "bytes": path.stat().st_size,
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        }
+
+    artifact = {"partition": torch.eye(2), "prompt_ids_list": [[999]] * 2}
+    if construction == "fixed":
+        artifact["decoding_key"] = fixed_key()
+    else:
+        artifact["online_key"] = OnlinePRCKey.from_seed(71, check_weight=3, noise_rate=0.05).to_dict()
     records = []
     for i, source in enumerate(["wm", "wm", "null", "null"]):
-        tokens = torch.tensor([(j+i) % 2 for j in range(9)])
-        ref = save(f"{i}.pt", {"tokens": tokens, "watermark": source == "wm", "prompt_idx": i % 2,
-                                "prompt_token_ids": [999], "p_trace": np.full(9, np.nan)})
-        records.append({"source": source, "prompt_idx": i % 2, "file": ref, "tokens_sha256": token_sha(tokens)})
-    case = {"id": "test", "generation_model": "Qwen3-8B-Base", "construction": construction,
-            "artifact": save("artifact.pt", artifact), "lengths": [3, 4, 9], "fpr": .001,
-            "fpr_policy": "block_or_bonferroni" if construction == "fixed" else "one_shot",
-            "weights": ["map", "entropy"], "batch_size": 3, "cache": "static", "records": records}
-    return {"schema_version": 1, "protocol": PROTOCOL, "model": model, "cases": [case]}
+        tokens = torch.tensor([(j + i) % 2 for j in range(9)])
+        ref = save(
+            f"{i}.pt",
+            {
+                "tokens": tokens,
+                "watermark": source == "wm",
+                "prompt_idx": i % 2,
+                "prompt_ids": [999],
+                "p_trace": np.full(9, np.nan),
+            },
+        )
+        records.append(
+            {
+                "source": source,
+                "prompt_idx": i % 2,
+                "file": ref,
+                "tokens_sha256": hashlib.sha256(tokens.numpy().tobytes()).hexdigest(),
+            }
+        )
+    return {
+        "id": "test",
+        "generation_model": "Qwen3-8B-Base",
+        "construction": construction,
+        "artifact": save("artifact.pt", artifact),
+        "lengths": [3, 4, 9],
+        "fpr": 0.001,
+        "fpr_policy": "block_or_bonferroni" if construction == "fixed" else "one_shot",
+        "weights": ["map", "entropy"],
+        "batch_size": 3,
+        "cache": "static",
+        "records": records,
+    }
 
 
 @pytest.mark.parametrize("construction", ["fixed", "online"])
-def test_end_to_end_cpu_batch_resume_prefixes_and_no_prompt_leak(tmp_path, construction):
-    manifest = fixture_manifest(tmp_path, construction)
-    assert plan(manifest)["inference_launched"] is False
-    case = manifest["cases"][0]
-    source = {"sha256": "a"*64, "git_commit": "b"*40}
-    roots = {"data": tmp_path/"data"}; results = tmp_path/"results"
-    prepared = prepare_case(case, manifest["model"], source, roots, results)
-    model = tiny_model(2)
-    assert [b["identity"]["actual_batch_size"] for b in prepared["batches"]] == [3, 1]
+def test_batch_cache_resume_and_aggregation_exclude_prompts(tmp_path, construction):
+    case = fixture_case(tmp_path, construction)
+    prepared = _prepare_redetection(case, {"id": "tiny"}, {}, {"data": tmp_path / "data"}, tmp_path / "results")
+    assert [b["identity"]["count"] for b in prepared["batches"]] == [3, 1]
+    model = tiny_model(2, dtype=torch.bfloat16)
     for batch in prepared["batches"]:
-        inputs = load_gpu_input(batch, results)
-        assert set(inputs) == {"tokens", "partition"}
-        trace = recover(model, inputs["tokens"], inputs["partition"][1], cache="static")
-        payload = trace_payload(trace, batch["identity"])
-        path = results/batch["root"]/"trace.pt"; torch.save(payload, path)
-        assert validate_trace(load_pt(path), batch["identity"]).shape[1] == 8
-        with pytest.raises(ValueError, match="legacy"):
-            validate_trace({"p_trace": trace}, batch["identity"])
-        changed = copy.deepcopy(payload); changed[TRACE_FIELD][0, 0] += .01
-        with pytest.raises(ValueError, match="contents"):
-            validate_trace(changed, batch["identity"])
-        changed_id = {**batch["identity"], "cache": "concat"}
-        with pytest.raises(ValueError, match="identity"):
-            validate_trace(payload, changed_id)
-    resumed = prepare_case(case, manifest["model"], source, roots, results)
-    assert resumed == prepared
-    result = aggregate(prepared, results)
-    assert result["passed"]
-    assert all(result["counts"][str(n)]["map"]["wm"]["count"] == 2 for n in case["lengths"])
-    missing = results/prepared["batches"][1]["root"]/"trace.pt"; missing.unlink()
-    with pytest.raises(FileNotFoundError):
-        aggregate(prepared, results)
-
-
-def test_manifest_rejects_duplicates_prompt_inputs_and_execution_changes(tmp_path):
-    original = fixture_manifest(tmp_path)
-    for mutate in [lambda m: m.update(protocol="completion_only_eot_v1"),
-                   lambda m: m["model"].update(dtype="float32"),
-                   lambda m: m["cases"][0].update(prompt="original prompt"),
-                   lambda m: m["cases"][0]["records"].append(m["cases"][0]["records"][0]),
-                   lambda m: m["cases"][0]["artifact"].update(path="../outside.pt")]:
-        changed = copy.deepcopy(original); mutate(changed)
-        with pytest.raises(ValueError):
-            validate(changed)
-
-
-def test_changed_source_bytes_fail_before_any_inference(tmp_path):
-    manifest = fixture_manifest(tmp_path)
-    (tmp_path/"data/0.pt").write_bytes(b"changed cached record")
-    with pytest.raises(ValueError, match="hash/size"):
-        prepare_case(manifest["cases"][0], manifest["model"], {"sha256": "a"*64},
-                     {"data": tmp_path/"data"}, tmp_path/"results")
-
-
-def test_source_guard_requires_exact_committed_files(tmp_path, monkeypatch):
-    import prompt_free.manifest as module
-    monkeypatch.setattr(module, "SOURCE_FILES", ("code.py",))
-    path = tmp_path/"code.py"; path.write_text("value = 1\n")
-    subprocess.run(["git", "init", "--quiet"], cwd=tmp_path, check=True)
-    subprocess.run(["git", "add", "code.py"], cwd=tmp_path, check=True)
-    subprocess.run(["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid",
-                    "-c", "core.hooksPath=/dev/null", "commit", "--quiet", "-m", "fixture"], cwd=tmp_path, check=True)
-    assert len(module.source_identity(tmp_path, require_commit=True)["git_commit"]) == 40
-    path.write_text("value = 2\n")
-    with pytest.raises(ValueError, match="not committed"):
-        module.source_identity(tmp_path, require_commit=True)
-
-
-def test_modal_entrypoint_imports_without_launching_a_job():
-    # In particular, modal.parameter requires concrete runtime annotations.
-    import prompt_free.modal_redetect as runner
-    assert runner.Detector is not None
-
-
-def test_validation_profile_excludes_scheduling_but_includes_model_loading():
-    from prompt_free.validation import current_profile, numerical_profile
-    from prompt_free.manifest import source_identity
-    root = Path.cwd()
-    files = source_identity(root)["files"]
-    original = (root/"prompt_free/modal_redetect.py").read_text()
-    assert numerical_profile(files, original.replace("max_containers=workers", "max_containers=1")) == current_profile(root)
-    assert numerical_profile(files, original.replace('self.model.eval().requires_grad_(False)', 'self.model.eval().requires_grad_(True)')) != current_profile(root)
-    changed = dict(files); changed["prompt_free/core.py"] = "0"*64
-    assert numerical_profile(changed, original) != current_profile(root)
-
-
-def test_validation_ast_matches_python_311_and_312_without_losing_type_parameters():
-    import ast
-    from prompt_free.validation import stable_ast
-    old = ast.parse("def replay(tokens):\n    return model(tokens)\n").body[0]
-    old._fields = tuple(name for name in old._fields if name != "type_params")
-    new = copy.deepcopy(old)
-    new._fields = (*new._fields, "type_params")
-    new.type_params = []
-    assert stable_ast(old) == stable_ast(new)
-    new.type_params = [ast.Name(id="T", ctx=ast.Load())]
-    assert stable_ast(old) != stable_ast(new)
-
-
-def test_one_full_validation_can_certify_multiple_batches_but_not_changed_shapes(tmp_path):
-    from prompt_free.manifest import source_identity, file_sha
-    from prompt_free.storage import json_write
-    from prompt_free.validation import current_profile, publish_certificates, check_certificate
-    manifest = fixture_manifest(tmp_path)
-    manifest["cases"][0]["batch_size"] = 2
-    source = source_identity(Path.cwd())
-    profile = current_profile(Path.cwd())
-    prepared = prepare_case(manifest["cases"][0], manifest["model"], source,
-                            {"data": tmp_path/"data"}, tmp_path/"results")
+        assert set(_redetect_inputs(batch, tmp_path / "results")) == {"tokens", "partition"}
+        _recover_redetection_batch(model, batch, tmp_path / "results", validate=True)
+        assert _recover_redetection_batch(model, batch, tmp_path / "results")["cached"]
+    report = _score_redetection(prepared, tmp_path / "results")
+    assert len(report["records"]) == 4 and report["counts"]["9"]["map"]["wm"]["count"] == 2
     first = prepared["batches"][0]
-    directory = tmp_path/"results"/first["root"]
-    data = load_gpu_input(first, tmp_path/"results")
-    trace = recover(tiny_model(2), data["tokens"], data["partition"][1], cache="static")
-    torch.save(trace_payload(trace, first["identity"]), directory/"trace.pt")
-    proof = {"profile": profile, "modal_source_sha256": source["files"]["prompt_free/modal_redetect.py"]}
-    validation = {"passed": True, "validation_run_on_this_batch": False, "raw_inputs_only": True,
-                  "inference_dtype": "bfloat16", "gpu": "NVIDIA A10", "trace_sha256": file_sha(directory/"trace.pt")}
-    json_write(directory/"validation.json", validation)
-    with pytest.raises(ValueError, match="no full validation"):
-        publish_certificates([prepared], [prepared], [proof], tmp_path/"results", profile)
-    validation["validation_run_on_this_batch"] = True
-    json_write(directory/"validation.json", validation)
-    shared = publish_certificates([prepared], [prepared], [proof], tmp_path/"results", profile)[0]
-    assert shared["batches"][0]["validation_reference"] == shared["batches"][1]["validation_reference"]
-    other = shared["batches"][1]
-    assert check_certificate(other["validation_reference"], other["identity"], tmp_path/"results", profile)["passed"]
-    assert check_certificate(other["validation_reference"], other["identity"], tmp_path/"results", profile, "NVIDIA A10G")["passed"]
-    with pytest.raises(ValueError, match="unsupported validation GPU"):
-        check_certificate(other["validation_reference"], other["identity"], tmp_path/"results", profile, "NVIDIA H100")
-    for field, value in (("actual_batch_size", 1), ("cache", "concat"), ("maximum_length", 10), ("partition_sha256", "0"*64), ("gpu_type", "A100-80GB"), ("allocator_config", "changed")):
-        with pytest.raises(ValueError, match="configuration"):
-            check_certificate(other["validation_reference"], {**other["identity"], field: value}, tmp_path/"results", profile)
-    damaged = {**other["validation_reference"], "sha256": "0"*64}
-    with pytest.raises(ValueError, match="hash changed"):
-        check_certificate(damaged, other["identity"], tmp_path/"results", profile)
-    # Resume can follow an already-shared proof without revalidating a worker.
-    validation["validation_run_on_this_batch"] = False
-    validation["shared_validation"] = first["validation_reference"]
-    json_write(directory/"validation.json", validation)
-    resumed = publish_certificates([prepared], [prepared], [proof], tmp_path/"results", profile)
-    assert resumed[0]["batches"][0]["validation_reference"] == other["validation_reference"]
+    path = tmp_path / "results" / first["root"] / "trace.pt"
+    payload = _redetect_load(path)
+    payload["probabilities_2_to_T"][0, 0] += 0.01
+    torch.save(payload, path)
+    with pytest.raises(ValueError, match="trace"):
+        _redetect_trace(path, first["identity"])
 
 
-@pytest.mark.parametrize("workers", [0, 11])
-def test_invalid_worker_limit_fails_before_remote_work(workers):
-    from prompt_free.modal_redetect import main
-    with pytest.raises(ValueError, match="workers must"):
-        main(workers=workers)
-
-
-def test_a100_is_distinct_from_a10_in_cache_and_validation(tmp_path):
-    from prompt_free.validation import gpu_family, configuration
-    assert gpu_family("NVIDIA A100-SXM4-80GB") == "A100-80GB"
-    assert gpu_family("NVIDIA A100 80GB PCIe") == "A100-80GB"
-    manifest = fixture_manifest(tmp_path)
-    roots = {"data": tmp_path/"data"}
-    a10 = prepare_case(manifest["cases"][0], manifest["model"], {"sha256": "a"*64, "gpu_type": "A10G"}, roots, tmp_path/"results")
-    a100 = prepare_case(manifest["cases"][0], manifest["model"], {"sha256": "a"*64, "gpu_type": "A100-80GB"}, roots, tmp_path/"results")
-    assert a10["run_id"] != a100["run_id"]
-    assert configuration(a10["batches"][0]["identity"]) != configuration(a100["batches"][0]["identity"])
-    from prompt_free.modal_redetect import main
-    with pytest.raises(ValueError, match="gpu must"):
-        main(gpu="H100")
-
-
-def test_original_batch_125_is_allowed_and_nonpositive_batches_are_rejected(tmp_path):
-    manifest = fixture_manifest(tmp_path)
-    manifest["cases"][0]["batch_size"] = 125
-    validate(manifest)
-    for size in (0, -1, True, 125.5):
-        manifest["cases"][0]["batch_size"] = size
-        with pytest.raises(ValueError, match="positive integer"):
-            validate(manifest)
-
-
-def test_unused_reserved_memory_does_not_fail_live_allocation_gate():
-    from prompt_free.validation import memory_report
-    accepted = memory_report(60, 99, 100)
-    assert accepted["within_allocated_memory_margin"]
-    assert accepted["peak_reserved_bytes"] == 99
-    assert not memory_report(86, 99, 100)["within_allocated_memory_margin"]
-
-
-def test_allocator_configuration_changes_cache_identity(tmp_path):
-    from prompt_free.validation import configuration
-    manifest = fixture_manifest(tmp_path)
-    roots = {"data": tmp_path/"data"}
-    source = {"sha256": "a"*64, "gpu_type": "A100-80GB"}
-    old = prepare_case(manifest["cases"][0], manifest["model"], source, roots, tmp_path/"results")
-    new = prepare_case(manifest["cases"][0], manifest["model"], {**source, "allocator_config": "expandable_segments:True"}, roots, tmp_path/"results")
-    assert old["run_id"] != new["run_id"]
-    assert configuration(old["batches"][0]["identity"]) != configuration(new["batches"][0]["identity"])
+def test_changed_sources_fail_before_inference_and_batch_125_is_allowed(tmp_path):
+    case = fixture_case(tmp_path, "fixed")
+    case["batch_size"] = 125
+    prepared = _prepare_redetection(case, {}, {}, {"data": tmp_path / "data"}, tmp_path / "results")
+    assert len(prepared["batches"]) == 1
+    (tmp_path / "data" / "0.pt").write_bytes(b"changed source")
+    with pytest.raises(ValueError, match="source changed"):
+        _prepare_redetection(case, {}, {}, {"data": tmp_path / "data"}, tmp_path / "results")

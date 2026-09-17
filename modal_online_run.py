@@ -2912,9 +2912,296 @@ def plan_textseal_proxy_entropy(prompt_indices: list[int]) -> dict:
     }
 
 
+# Completion-only redetection shares this app's image, model loader and batching.
+REDETECT_PROTOCOL = "completion_only_raw_abstain_v1"
+redetect_results = modal.Volume.from_name("prc-completion-only", create_if_missing=False)
+redetect_archive = modal.Volume.from_name("prc-research-archive", create_if_missing=False)
+
+
+def _redetect_sha(path):
+    with open(path, "rb") as handle:
+        return hashlib.file_digest(handle, "sha256").hexdigest()
+
+
+def _redetect_write(path, value):
+    """Atomic per-batch writes; a failed worker cannot publish half a trace."""
+    from pathlib import Path
+    import torch
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(".partial")
+    if path.suffix == ".pt":
+        torch.save(value, temporary)
+    else:
+        temporary.write_text(json.dumps(value, indent=2, allow_nan=False)+"\n")
+    temporary.replace(path)
+
+
+def _redetect_load(path):
+    import torch
+    _numpy_pickle_compat()
+    return torch.load(path, weights_only=False, map_location="cpu")
+
+
+def _redetect_source(ref, roots):
+    from pathlib import Path, PurePosixPath
+    name = PurePosixPath(ref["path"])
+    if name.is_absolute() or any(p in ("", ".", "..") for p in ref["path"].split("/")):
+        raise ValueError("source path must stay within its volume")
+    path = Path(roots[ref["volume"]])/name
+    if path.stat().st_size != ref["bytes"] or _redetect_sha(path) != ref["sha256"]:
+        raise ValueError(f"cached source changed: {path}")
+    return _redetect_load(path)
+
+
+def _prepare_redetection(case, model, execution, roots, destination):
+    """Verify frozen sources on CPU and export only tokens and partition to GPU."""
+    from concurrent.futures import ThreadPoolExecutor
+    from pathlib import Path
+    import torch
+    from detectors import semantic_sha256, tensor_sha256
+    if (case["construction"], case["fpr_policy"]) not in {
+        ("fixed", "block_or_bonferroni"), ("online", "one_shot"), ("online", "alpha_spending_v1")
+    }:
+        raise ValueError("PRC construction and original FPR policy must agree")
+    size, lengths = case["batch_size"], case["lengths"]
+    if type(size) is not int or size < 1 or not lengths or any(type(n) is not int or n < 1 for n in lengths):
+        raise ValueError("batch size and prefix lengths must be positive integers")
+    ids = [(r["source"], r["prompt_idx"]) for r in case["records"]]
+    if len(set(ids)) != len(ids) or {s for s, _ in ids} != {"wm", "null"}:
+        raise ValueError("require unique watermarked and null candidates")
+    if not 0 < case["fpr"] < 1 or not case["weights"] or any(w not in ("map", "entropy") for w in case["weights"]):
+        raise ValueError("invalid detector weights or FPR")
+    raw = _redetect_source(case["artifact"], roots)
+    key = "online_key" if case["construction"] == "online" else "decoding_key"
+    artifact = {"partition": raw["partition"], key: raw[key]}
+    partition = artifact["partition"].to(torch.bfloat16)
+    if (partition.ndim != 2 or partition.shape[0] != 2
+            or not torch.all((partition == 0) | (partition == 1)) or not torch.all(partition.sum(0) == 1)):
+        raise ValueError("invalid original partition")
+    maximum = max(lengths)
+    if maximum > 40960 or case["cache"] not in ("concat", "static"):
+        raise ValueError("unsupported completion length or KV cache")
+    def extract(ref):
+        record = _redetect_source(ref["file"], roots)
+        tokens = record["tokens"]
+        if (record["prompt_idx"] != ref["prompt_idx"] or record["watermark"] != (ref["source"] == "wm")
+                or tokens.ndim != 1 or tokens.dtype not in (torch.int32, torch.int64) or len(tokens) < maximum):
+            raise ValueError("candidate label, tokens or length changed")
+        tokens = tokens[:maximum].to(torch.int64).clone()
+        digest = hashlib.sha256(tokens.contiguous().numpy().tobytes()).hexdigest()
+        if digest != ref["tokens_sha256"] or torch.any(tokens < 0) or torch.any(tokens >= partition.shape[1]):
+            raise ValueError("candidate tokens differ from frozen inputs")
+        return tokens  # Original prompt and generation probabilities are never exported.
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        tokens = list(pool.map(extract, case["records"]))
+    run = {"protocol": REDETECT_PROTOCOL, "schema_version": 2, "case": case, "model": model, "execution": execution}
+    root = Path(destination)/REDETECT_PROTOCOL/"integrated"/semantic_sha256(run)[:24]
+    _redetect_write(root/"manifest.json", run)
+    _redetect_write(root/"artifact.pt", artifact)
+    batches = []
+    for start in range(0, len(tokens), size):
+        directory = root/"batches"/f"{start:06d}"
+        inputs = {"tokens": torch.stack(tokens[start:start+size]), "partition": partition}
+        identity = {"protocol": REDETECT_PROTOCOL, "run": root.name, "start": start,
+                    "count": len(inputs["tokens"]), "length": maximum, "cache": case["cache"],
+                    "input_sha256": semantic_sha256(inputs)}
+        _redetect_write(directory/"inputs.pt", inputs)
+        batches.append({"root": str(directory.relative_to(destination)), "identity": identity})
+    return {"root": str(root.relative_to(destination)), "run": run, "batches": batches,
+            "artifact_sha256": _redetect_sha(root/"artifact.pt"), "partition_sha256": tensor_sha256(partition)}
+
+
+def _redetect_inputs(batch, destination):
+    from pathlib import Path
+    import torch
+    from detectors import semantic_sha256
+    value = _redetect_load(Path(destination)/batch["root"]/"inputs.pt")
+    identity = batch["identity"]
+    if (set(value) != {"tokens", "partition"} or semantic_sha256(value) != identity["input_sha256"]
+            or value["tokens"].shape != (identity["count"], identity["length"])
+            or value["tokens"].dtype != torch.int64):
+        raise ValueError("GPU inputs changed; only frozen completion tokens and partition are accepted")
+    return value
+
+
+def _redetect_trace(path, identity):
+    import torch
+    from detectors import tensor_sha256
+    payload = _redetect_load(path)
+    if "probabilities_2_to_T" not in payload or payload.get("identity") != identity:
+        raise ValueError("cached trace is not a compatible completion-only trace")
+    trace = payload["probabilities_2_to_T"]
+    if (payload["identity"] != identity or identity["protocol"] != REDETECT_PROTOCOL
+            or trace.shape != (identity["count"], identity["length"]-1) or trace.dtype != torch.float32
+            or not torch.isfinite(trace).all() or torch.any((trace < 0) | (trace > 1))
+            or tensor_sha256(trace) != payload["probabilities_sha256"]):
+        raise ValueError("cached trace has incompatible identity, shape or probabilities")
+    return payload
+
+
+def _recover_redetection_batch(model, batch, destination, validate=False):
+    from pathlib import Path
+    import time
+    import torch
+    from detectors import tensor_sha256
+    from qwen import completion_only_partition_trace_batch, make_kv_cache
+    inputs = _redetect_inputs(batch, destination)
+    path = Path(destination)/batch["root"]/"trace.pt"
+    identity = batch["identity"]
+    if path.exists():
+        saved = _redetect_trace(path, identity)
+        if validate and not saved["full_validation"]:
+            raise ValueError("representative cached batch lacks full validation")
+        return {"root": batch["root"], "cached": True}
+    device = next(model.parameters()).device
+    tokens, part = inputs["tokens"].to(device), inputs["partition"][1].to(device)
+    cuda = device.type == "cuda"
+    if cuda:
+        torch.cuda.empty_cache()
+        torch.cuda.reset_peak_memory_stats()
+    started = time.monotonic()
+    trace = completion_only_partition_trace_batch(model, tokens, part, identity["cache"])
+    if validate and tokens.shape[1] > 1:
+        # One independent token-step replay per batch shape, before fanout.
+        cache = make_kv_cache(identity["cache"], max_length=tokens.shape[1]-1)
+        with torch.no_grad():
+            reference = torch.stack([
+                (model(tokens[:, i:i+1], cache=cache)[:, -1].softmax(-1)*part).sum(-1).cpu()
+                for i in range(tokens.shape[1]-1)
+            ], dim=1).float()
+        if not torch.equal(trace, reference):
+            raise ValueError("completion-only replay differs from independent reference")
+        length = min(65, tokens.shape[1])
+        reverse = completion_only_partition_trace_batch(model, tokens.flip(0)[:, :length], part, identity["cache"])
+        if not torch.equal(reverse.flip(0), trace[:, :length-1]):
+            raise ValueError("batch-order/prefix consistency failed")
+    allocated = torch.cuda.max_memory_allocated() if cuda else 0
+    reserved = torch.cuda.max_memory_reserved() if cuda else 0
+    if cuda and allocated >= .85*torch.cuda.get_device_properties(device).total_memory:
+        raise ValueError("batch exceeds the live GPU memory margin")
+    payload = {"identity": identity, "probabilities_2_to_T": trace,
+               "probabilities_sha256": tensor_sha256(trace), "full_validation": validate,
+               "peak_allocated_bytes": allocated, "peak_reserved_bytes": reserved,
+               "seconds": time.monotonic()-started}
+    _redetect_write(path, payload)
+    _redetect_trace(path, identity)
+    return {"root": batch["root"], "cached": False, "seconds": payload["seconds"]}
+
+
+def _score_redetection(prepared, destination):
+    from pathlib import Path
+    import math
+    from detectors import detect_hoeffding, detect_online_hoeffding
+    root = Path(destination)/prepared["root"]
+    if _redetect_sha(root/"artifact.pt") != prepared["artifact_sha256"]:
+        raise ValueError("original scoring artifact changed")
+    artifact = _redetect_load(root/"artifact.pt")
+    case = prepared["run"]["case"]
+    records, hashes = [], {}
+    for batch in prepared["batches"]:
+        inputs = _redetect_inputs(batch, destination)
+        path = Path(destination)/batch["root"]/"trace.pt"
+        traces = _redetect_trace(path, batch["identity"])["probabilities_2_to_T"].numpy()
+        hashes[batch["root"]] = _redetect_sha(path)
+        for row, p in enumerate(traces):
+            ref = case["records"][batch["identity"]["start"]+row]
+            scores = {}
+            for length in case["lengths"]:
+                scores[str(length)] = {}
+                for weight in case["weights"]:
+                    common = dict(fpr=case["fpr"], weight=weight, return_info=True, completion_only=True)
+                    args = (inputs["tokens"][row, :length], p[:length-1], artifact["partition"])
+                    if case["construction"] == "fixed":
+                        decision, info = detect_hoeffding(artifact["decoding_key"], *args, **common)
+                    else:
+                        decision, info = detect_online_hoeffding(artifact["online_key"], *args, fpr_policy=case["fpr_policy"], **common)
+                    info = {k: None if isinstance(v, float) and not math.isfinite(v) else v for k, v in info.items()}
+                    scores[str(length)][weight] = {"decision": bool(decision), **info}
+            records.append({k: ref[k] for k in ("source", "prompt_idx", "tokens_sha256")} | {"scores": scores})
+    expected = [(r["source"], r["prompt_idx"]) for r in case["records"]]
+    if [(r["source"], r["prompt_idx"]) for r in records] != expected:
+        raise ValueError("incomplete or reordered candidate coverage")
+    counts = {str(n): {w: {s: {"detected": sum(r["scores"][str(n)][w]["decision"] for r in records if r["source"] == s),
+                              "count": sum(r["source"] == s for r in records)}
+                          for s in ("wm", "null")} for w in case["weights"]} for n in case["lengths"]}
+    report = {"passed": True, "protocol": REDETECT_PROTOCOL, "counts": counts,
+              "trace_shard_sha256": hashes, "records": records}
+    _redetect_write(root/"full.json", report)
+    _redetect_write(root/"summary.json", {k: v for k, v in report.items() if k != "records"})
+    return report
+
+
+@app.function(cpu=4, memory=8192, timeout=3600,
+              volumes={"/data": data_vol, "/archive": redetect_archive, "/results": redetect_results})
+def prepare_redetection(case, model, execution):
+    redetect_results.reload()
+    prepared = _prepare_redetection(case, model, execution, {"data": "/data", "archive": "/archive"}, "/results")
+    redetect_results.commit()
+    return prepared
+
+
+@app.function(cpu=4, memory=8192, timeout=3600, volumes={"/results": redetect_results})
+def finish_redetection(prepared):
+    redetect_results.reload()
+    result = _score_redetection(prepared, "/results")
+    redetect_results.commit()
+    return {"root": prepared["root"], "counts": result["counts"]}
+
+
+@app.local_entrypoint()
+def redetect(manifest: str, stage: str = "preflight", gpu: str = "A100-80GB", max_containers: int = 10):
+    """Redetect frozen completions; no text generation or original prompt input."""
+    from pathlib import Path
+    import subprocess
+    from detectors import semantic_sha256
+    if stage not in ("preflight", "smoke", "full") or not 1 <= max_containers <= 10:
+        raise ValueError("choose preflight/smoke/full and 1..10 workers")
+    if gpu not in ("A10G", "A100-80GB"):
+        raise ValueError("choose A10G or A100-80GB")
+    content = json.loads(Path(manifest).read_text())
+    if content["protocol"] != REDETECT_PROTOCOL or content["schema_version"] != 1 or not content["cases"]:
+        raise ValueError("expected a frozen raw-completion manifest")
+    spec = content["model"]
+    if (spec["id"], spec["size"], spec["dtype"]) != ("Qwen/Qwen3-0.6B-Base", "0.6B", "bfloat16"):
+        raise ValueError("redetection currently supports BF16 Qwen3-0.6B-Base")
+    commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    files = ("qwen.py", "detectors.py", "prc.py", "online_prc.py", "modal_online_run.py", "watermark_expt.py", "constants.py")
+    for name in files:
+        if subprocess.check_output(["git", "show", f"{commit}:{name}"]) != Path(name).read_bytes():
+            raise ValueError(f"commit execution code before running: {name}")
+    execution = {"git_commit": commit, "files": {p: _redetect_sha(p) for p in files},
+                 "gpu": gpu, "allocator": "expandable_segments:True"}
+    local = Path("outputs/redetection/.archive/runs")/semantic_sha256({"manifest": content, "execution": execution})[:24]
+    for case in content["cases"]:
+        prepared = prepare_redetection.remote(case, spec, execution)
+        _redetect_write(local/case["id"]/"prepared.json", prepared)
+        print(f"Verified {len(case['records'])} candidates, batch {case['batch_size']}, lengths {case['lengths']}")
+        if stage == "preflight":
+            continue
+        worker = CrossModelEntropyModel.with_options(
+            **{**model_cls_options(spec["size"], gpu, max_containers), "memory": 8192, "scaledown_window": 2},
+        )(entropy_model_size=spec["size"], generation_model_size=case["generation_model"].removeprefix("Qwen3-").removesuffix("-Base"),
+          trace_kv_cache_implementation=case["cache"], completion_model=json.dumps(spec, sort_keys=True))
+        # Validate one representative for each actual shape, including a short tail.
+        representatives = {}
+        for batch in prepared["batches"]:
+            representatives.setdefault(batch["identity"]["count"], batch)
+        for batch in representatives.values():
+            worker.redetect_batch.remote(batch, validate=True)
+        if stage == "smoke":
+            continue
+        for done in worker.redetect_batch.map(prepared["batches"]):
+            print(json.dumps(done), flush=True)
+        result = finish_redetection.remote(prepared)
+        for name in ("full.json", "summary.json"):
+            (local/case["id"]/name).write_bytes(b"".join(redetect_results.read_file(result["root"]+"/"+name)))
+        print(json.dumps(result), flush=True)
+
+
 @app.cls(
     gpu=GPU,
-    volumes={"/data": data_vol, "/cache": hf_cache},
+    volumes={"/data": data_vol, "/cache": hf_cache, "/results": redetect_results},
     timeout=7200,
     max_containers=DEFAULT_MAX_CONTAINERS,
 )
@@ -2923,6 +3210,7 @@ class CrossModelEntropyModel:
     entropy_model_size: str = modal.parameter()
     generation_model_size: str = modal.parameter()
     trace_kv_cache_implementation: str = modal.parameter()
+    completion_model: str = modal.parameter(default="")
 
     @modal.enter()
     def load(self):
@@ -2939,15 +3227,32 @@ class CrossModelEntropyModel:
                 self.trace_kv_cache_implementation
             )
         )
-        if self.trace_kv_cache_implementation != "static":
+        if not self.completion_model and self.trace_kv_cache_implementation != "static":
             raise ValueError(
                 "cross-model entropy replay requires the optimized static "
                 "KV cache"
             )
         os.environ["PRC_MODEL_SIZE"] = self.entropy_model_size
         os.environ["PRC_MODEL_VARIANT"] = "base"
+        if self.completion_model:
+            from pathlib import Path
+            spec = json.loads(self.completion_model)
+            if (spec["size"], spec["dtype"], spec["cache_directory"]) != ("0.6B", "bfloat16", "models/Qwen3-0.6B-Base"):
+                raise ValueError("unsupported completion-only checkpoint")
+            cache = Path("/cache")/spec["cache_directory"]
+            if (_redetect_sha(cache/"model.safetensors") != spec["weights_sha256"]
+                    or _redetect_sha(cache/"tokenizer.json") != spec["tokenizer_sha256"]
+                    or (cache/".cache/huggingface/download/model.safetensors.metadata").read_text().splitlines()[0] != spec["revision"]):
+                raise ValueError("checkpoint differs from frozen detector manifest")
         import watermark_expt as we
         self.we = we
+        if self.completion_model:
+            import torch
+            torch.set_num_threads(1)
+            torch.backends.cuda.matmul.allow_tf32 = False
+            if next(we.model.parameters()).dtype != torch.bfloat16:
+                raise ValueError("completion-only replay requires BF16")
+            we.model.eval().requires_grad_(False)
         hf_cache.commit()
 
     @modal.method()
@@ -2967,7 +3272,18 @@ class CrossModelEntropyModel:
         }
 
     @modal.method()
+    def redetect_batch(self, batch: dict, validate: bool = False) -> dict:
+        if not self.completion_model:
+            raise ValueError("use a pinned completion-only model configuration")
+        redetect_results.reload()
+        result = _recover_redetection_batch(self.we.model, batch, "/results", validate)
+        redetect_results.commit()
+        return result
+
+    @modal.method()
     def estimate(self, request: dict) -> dict:
+        if self.completion_model:
+            raise ValueError("use redetect_batch for completion-only detection")
         import time
 
         import numpy as np

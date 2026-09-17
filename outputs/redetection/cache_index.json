@@ -96,5 +96,14 @@
       "modal_root": "completion_only_eot_v1/gen-qwen3_8b_base/detect-qwen3_0p6b_base/n640_t3_eta0.05/8b-n640-bf16-ce27d367a0fbbc3e/ablations/coordinate1-6f4bb352b80073a5",
       "modal_result_file": "full.json"
     }
-  ]
+  ],
+  "implementation_archive": {
+    "path": "archives/redetection/prompt-free-implementation-401e7d7.tar.gz",
+    "sha256": "cbb004fee546a66ff7c5f4c66f4ef3a47a014853cd79853d99debd13daa69864",
+    "source_commit": "401e7d7779ee784b4d7b1a38b50e31a84e418401",
+    "manifest_members": [
+      "prompt_free/manifests/pilots.json",
+      "prompt_free/manifests/same_0p6b_eta020_n3104.json"
+    ]
+  }
 }
