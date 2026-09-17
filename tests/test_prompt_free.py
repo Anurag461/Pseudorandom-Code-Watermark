@@ -255,6 +255,19 @@ def test_validation_profile_excludes_scheduling_but_includes_model_loading():
     assert numerical_profile(changed, original) != current_profile(root)
 
 
+def test_validation_ast_matches_python_311_and_312_without_losing_type_parameters():
+    import ast
+    from prompt_free.validation import stable_ast
+    old = ast.parse("def replay(tokens):\n    return model(tokens)\n").body[0]
+    old._fields = tuple(name for name in old._fields if name != "type_params")
+    new = copy.deepcopy(old)
+    new._fields = (*new._fields, "type_params")
+    new.type_params = []
+    assert stable_ast(old) == stable_ast(new)
+    new.type_params = [ast.Name(id="T", ctx=ast.Load())]
+    assert stable_ast(old) != stable_ast(new)
+
+
 def test_one_full_validation_can_certify_multiple_batches_but_not_changed_shapes(tmp_path):
     from prompt_free.manifest import source_identity, file_sha
     from prompt_free.storage import json_write

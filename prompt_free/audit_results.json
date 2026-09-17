@@ -10,14 +10,14 @@
       "prompt_free/manifest.py": "28da948b1c23bd7909ec00cc545d27961a7a3c5f67c28eae9054b7ddc428aa73",
       "prompt_free/storage.py": "b0a71f7883290ead38588ea968d8b28f35924c27258c79b47744e6d02e02863d",
       "prompt_free/modal_redetect.py": "d143c29da0aa742d3a1c21e2a24a4219d76d0c33cba8f16f88eadbe32d5fd809",
-      "prompt_free/validation.py": "9cfcd6990757c6ff77d72c030d89fba2c7ce955a6e50b6c35bbfa3ce3f63bacd",
+      "prompt_free/validation.py": "ac8e021d2a8ae969fe3f64c83f4db9b770a3798b9087f64e36ce735639be34eb",
       "prompt_free/requirements.txt": "672ecb6fcd55e1acd8f460a17afefacc4a3ccde92aeebb96bf7fb5f448ff8a36",
       "qwen.py": "dee283544298939d678f5e81ab9efe1d6d3b80c876aae2818440b7efcaef04f0",
       "detectors.py": "9b831cf5f0c362f48f7e08c323e5d6e6c3db3fff387949067a534b02599525de",
       "prc.py": "20a731e18640903d82ff0d7bb5a53f87d6206e0d8b3987654c065a816c4fb6bc",
       "online_prc.py": "babe6a7ff1fb2397bf2b3cd76448d82c34ae879c6d1214e386e1285d036ba4cb"
     },
-    "sha256": "c01a61b82c19e13ce8c42436ad54df07077428e16b46e118a64ddb2dfe11ab56"
+    "sha256": "67d31188b4d327153188a83f4eb10658acfc3b3aa48e7dcf8088c4c79e7dd91e"
   },
   "cases": {
     "same_0p6b_n400": {

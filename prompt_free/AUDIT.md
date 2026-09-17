@@ -52,6 +52,8 @@ This does not certify the legacy generation/EOT experiment runners as prompt-fre
     raw replay statements are checked. Configuration mismatches and incomplete
     validation records are rejected. A10 and A10G device labels identify the
     same supported A10 GPU family; other GPU families are rejected.
+    Source AST comparisons normalize Python 3.12's empty `type_params` field
+    for the Python 3.11 Modal image; nonempty type parameters remain significant.
 
 ## Validation
 

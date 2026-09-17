@@ -11,6 +11,19 @@ NUMERICAL_FILES = ("prompt_free/core.py", "prompt_free/storage.py", "qwen.py",
                    "detectors.py", "online_prc.py", "prc.py", "prompt_free/requirements.txt")
 
 
+def stable_ast(node):
+    """Ignore the empty type-parameter field added by local Python 3.12.
+
+    Modal uses 3.11. Nonempty type parameters still participate in identity.
+    """
+    if isinstance(node, ast.AST):
+        return [type(node).__name__, [[name, stable_ast(value)] for name, value in ast.iter_fields(node)
+                if not (name == "type_params" and value == [])]]
+    if isinstance(node, list):
+        return [stable_ast(value) for value in node]
+    return node
+
+
 def numerical_profile(files, modal_source):
     """Orchestration may change; model loading and actual replay must not."""
     tree = ast.parse(modal_source)
@@ -23,8 +36,8 @@ def numerical_profile(files, modal_source):
     if len(replay) != len(names):
         raise ValueError("unexpected inference statement structure")
     return {"files": {name: files[name] for name in NUMERICAL_FILES},
-            "model_loader": ast.dump(loader, include_attributes=False),
-            "replay": [ast.dump(n, include_attributes=False) for n in replay]}
+            "model_loader": stable_ast(loader),
+            "replay": [stable_ast(n) for n in replay]}
 
 
 def current_profile(root):
