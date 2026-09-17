@@ -1,5 +1,11 @@
 # PRC watermark — reproduction guide
 
+**Prompt-free paper redetection:** use the dedicated
+[prompt_free runner](prompt_free/README.md), which uses raw completion tokens
+and sets coordinate 1's score to zero. Its sources and frozen manifests must be
+committed before execution. The older experiment commands below retain their
+historical probability-trace behavior and are not the prompt-free rerun path.
+
 End-to-end instructions for the PRC watermark experiments on Qwen3-0.6B-Base — watermark detection (TPR/FPR) and benchmark utility — plus the key deviations from the paper that were needed to make detection actually work.
 
 Watermark-detection (TPR/FPR) results live in `hoeffding_results_summary.csv`; benchmark utility results live in `benchmark_utility_results.csv`.

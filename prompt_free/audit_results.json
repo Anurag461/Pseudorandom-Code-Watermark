@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "model_inference_calls": 0,
+  "candidates": 2000,
+  "method_candidate_comparisons": 4000,
+  "source": {
+    "files": {
+      "prompt_free/__init__.py": "baf0c4d7845b535438bba27d8db3b1b0f0af117b6323b86997e48a33b533aae9",
+      "prompt_free/core.py": "ad5604f831806bbec3cc6e0f988d45e5b0da4c11f78a8a1caf948bf0fbd54dea",
+      "prompt_free/manifest.py": "5d2be25eddc0c5354c165079fe15bef6f8eed491f362253bc928e83d66bea860",
+      "prompt_free/storage.py": "b0a71f7883290ead38588ea968d8b28f35924c27258c79b47744e6d02e02863d",
+      "prompt_free/modal_redetect.py": "f151600e11bf94d11165627f6bd1dff0810288ec1606ca4eb419ff9781bfa628",
+      "prompt_free/requirements.txt": "672ecb6fcd55e1acd8f460a17afefacc4a3ccde92aeebb96bf7fb5f448ff8a36",
+      "qwen.py": "dee283544298939d678f5e81ab9efe1d6d3b80c876aae2818440b7efcaef04f0",
+      "detectors.py": "9b831cf5f0c362f48f7e08c323e5d6e6c3db3fff387949067a534b02599525de",
+      "prc.py": "20a731e18640903d82ff0d7bb5a53f87d6206e0d8b3987654c065a816c4fb6bc",
+      "online_prc.py": "babe6a7ff1fb2397bf2b3cd76448d82c34ae879c6d1214e386e1285d036ba4cb"
+    },
+    "sha256": "c779c1c6c61a7419d4c641625a27037f29159e9a093fa2ee82843c2c5fb8918a"
+  },
+  "cases": {
+    "same_0p6b_n400": {
+      "all_1000_candidate_decisions_match_exactly": true,
+      "counts": {
+        "wm": {
+          "map": 430,
+          "entropy": 355
+        },
+        "null": {
+          "map": 0,
+          "entropy": 0
+        }
+      },
+      "max_absolute_statistic_V_threshold_error": 1.1368683772161603e-13,
+      "float64_absolute_tolerance": 1e-12,
+      "baseline_full_sha256": "1a0c1449ae4af1831b484a4e80b5edc9f39c4134c53285b4f7692a4425a41349"
+    },
+    "cross_8b_0p6b_n640": {
+      "all_1000_candidate_decisions_match_exactly": true,
+      "counts": {
+        "wm": {
+          "map": 364,
+          "entropy": 300
+        },
+        "null": {
+          "map": 0,
+          "entropy": 0
+        }
+      },
+      "max_absolute_statistic_V_threshold_error": 5.684341886080802e-14,
+      "float64_absolute_tolerance": 1e-12,
+      "baseline_full_sha256": "4ac07f29706e301797db5669ac91a378445f018939d26c7d9fc29b9cfab94c36"
+    }
+  }
+}
