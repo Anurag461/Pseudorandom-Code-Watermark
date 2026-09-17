@@ -435,7 +435,7 @@ def build_prc_generation_record(
     }
 
 
-def _soft_tokens(bits, p_arr, weight, completion_only=False):
+def _soft_tokens(bits, p_arr, weight, completion_only=True):
     """Per-position soft-token S_j in [-1, 1] (no folding). map is Bayes-optimal;
     other weights use the symmetric t_j * w(p_j)."""
     if completion_only:
@@ -445,7 +445,7 @@ def _soft_tokens(bits, p_arr, weight, completion_only=False):
                 or np.any((p_arr < 0) | (p_arr > 1))):
             raise ValueError("completion-only scoring requires T-1 finite probabilities in [0,1]")
         soft = np.zeros(len(bits), dtype=np.float64)
-        soft[1:] = _soft_tokens(bits[1:], p_arr, weight)
+        soft[1:] = _soft_tokens(bits[1:], p_arr, weight, completion_only=False)
         return soft
     if weight == "map":
         return map_soft_token(bits, p_arr)
@@ -460,7 +460,7 @@ def detect_hoeffding_prefix(
     fpr=1e-9,
     weight="map",
     return_info=False,
-    *, completion_only=False,
+    *, completion_only=True,
 ):
     """Prefix-column Hoeffding detector for short outputs (T = k < n).
 
@@ -471,7 +471,8 @@ def detect_hoeffding_prefix(
     partial block, no Bonferroni split (a single test), so the FPR <= `fpr`
     guarantee holds over the random OTP restricted to the used checks.
 
-    completion_only accepts T-1 response-only probabilities and zeros score 1.
+    By default, accept T-1 response-only probabilities and zero score 1.
+    completion_only=False is only for explicit historical/control scoring.
     """
     (_, parity_check_matrix, one_time_pad, _, _, _, _, _, t) = decoding_key
     r, n = parity_check_matrix.shape
@@ -524,7 +525,7 @@ def detect_hoeffding(
     entropy_weighted=None,
     weight=None,
     return_info=False,
-    *, completion_only=False,
+    *, completion_only=True,
 ):
     """Proven-FPR Hoeffding detector, block-OR over length-n blocks.
 
@@ -543,8 +544,9 @@ def detect_hoeffding(
     which is a uniform improvement over the linear-entropy weight "entropy".
     For backwards compatibility, if weight is None the legacy entropy_weighted
     flag is honored (True->"entropy", False->"naive"); if it too is None -> "map".
-    With completion_only=True, supply T-1 probabilities for coordinates 2..T;
+    By default, supply T-1 response-only probabilities for coordinates 2..T;
     score coordinate 1 is zero, including when the text spans multiple blocks.
+    completion_only=False is only for explicit historical/control scoring.
     """
     if weight is None:
         if entropy_weighted is None:
@@ -627,7 +629,7 @@ def detect_online_hoeffding(
     fpr_policy="one_shot",
     return_info=False,
     numerical_tolerance=1e-15,
-    *, completion_only=False,
+    *, completion_only=True,
 ):
     """Hoeffding detector for one causal prefix with ``T = n = length``.
 
@@ -640,7 +642,8 @@ def detect_online_hoeffding(
     ``alpha_spending_v1`` is available for callers that repeatedly test every
     arriving prefix: alpha_L = 6 alpha / (pi^2 L^2).  Final-only experiments
     should use the default ``one_shot`` policy.
-    completion_only accepts T-1 response-only probabilities and zeros score 1.
+    By default, accept T-1 response-only probabilities and zero score 1.
+    completion_only=False is only for explicit historical/control scoring.
     """
     from online_prc import (
         OnlinePRCKey,
@@ -764,8 +767,9 @@ def prepare_online_map_prefix_trace(
     partition_map,
     maximum_length,
     prepared_context=None,
+    *, completion_only=True,
 ):
-    """Prepare one MAP trace once for adaptive prefix detection.
+    """Prepare one response-only MAP trace once for adaptive prefix detection.
 
     The signed check contribution and squared contribution for every parity
     row through ``maximum_length`` are independent of the eventual stopping
@@ -795,14 +799,17 @@ def prepare_online_map_prefix_trace(
     probabilities = np.asarray(
         partition_probs, dtype=np.float64
     ).reshape(-1)
-    if int(tokens.numel()) < maximum or probabilities.size < maximum:
+    required = maximum - int(completion_only)
+    if int(tokens.numel()) < maximum or probabilities.size < required:
         raise ValueError(
             f"record has {min(int(tokens.numel()), probabilities.size)} values; "
             f"need prefix length {maximum}"
         )
 
     bits = tokens_to_bits(tokens[:maximum], partition_map)
-    soft = map_soft_token(bits, probabilities[:maximum])
+    if completion_only and probabilities.shape != (int(tokens.numel())-1,):
+        raise ValueError("completion-only scoring requires T-1 response-only probabilities")
+    soft = _soft_tokens(bits, probabilities[:required], "map", completion_only)
     longest_supports = context["supports"]
     check_values = np.prod(soft[longest_supports], axis=1)
     signed_check_values = context["otp_signs"] * check_values
@@ -914,6 +921,7 @@ def detect_online_map_prefix_grid(
     fpr=1e-9,
     fpr_policy="one_shot",
     numerical_tolerance=1e-15,
+    *, completion_only=True,
 ):
     """Score MAP detection at several exact prefixes of one online record.
 
@@ -935,6 +943,7 @@ def detect_online_map_prefix_grid(
         partition_probs,
         partition_map,
         max(lengths),
+        completion_only=completion_only,
     )
 
     return [

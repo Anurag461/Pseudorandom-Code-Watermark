@@ -16,13 +16,19 @@ CPU-only input check, or `--stage smoke` for representative validation batches.
 Full execution validates one batch per actual shape, then distributes fixed
 batches across up to 10 workers. Each worker reuses the existing BF16 model
 loader and expandable-segments allocator; completed traces are cached atomically.
+`--gpu` is passed through to Modal, including H100. A100-80GB remains the default;
+the representative validation runs on the selected GPU with the selected batch.
 
 The implementation has three entry points: completion-only replay in `qwen.py`,
-`completion_only=True` in the existing `detectors.py` functions, and the
+the existing `detectors.py` functions (now prompt-free by default), and the
 `redetect` command in `modal_online_run.py`. The GPU receives only raw completion
 tokens and the partition. There is no prepended token; coordinate 1's score is
-zero. Original PRC indices and threshold policies are retained. The older
-experiment commands below keep their historical probability-trace behavior.
+zero. Original PRC indices and threshold policies are retained. The scorer has
+no prompt argument. It requires T-1 response-only probabilities; an old T-length
+generation or prompted trace is rejected. `completion_only=False` is an explicit
+opt-in for historical/control scoring only. Older experiment commands below
+that pass historical probability traces must migrate to this redetection path
+before being used for paper detection.
 
 [Results and cache index](outputs/redetection/README.md) cover the completed
 runs. Detailed manifests are archived outside Git. On this machine they are
@@ -30,7 +36,12 @@ under `outputs/redetection/.archive/manifests/`. For a fresh checkout, retrieve
 the implementation archive listed in `outputs/redetection/cache_index.json`
 from Modal volume `prc-completion-only`; its `prompt_free/manifests/` members
 contain the frozen inputs. The integrated runner uses a separate `integrated/`
-cache namespace and leaves previous traces and results intact.
+cache namespace and leaves previous traces and results intact. Cache reuse
+requires matching protocol, run identity (including model, code and GPU), exact
+completion/partition hashes, T-1 shape and probability checksum. There is no
+fallback to historical generation or EOT caches. These provenance checks and
+the audited raw-token replay establish the conditioning context; probability
+values alone cannot establish it.
 
 Run the focused checks with:
 

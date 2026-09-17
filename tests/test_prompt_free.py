@@ -82,14 +82,14 @@ def test_raw_replay_alignment_reference_causality_and_fresh_cache(cache, dtype):
 @pytest.mark.parametrize("weight", ["map", "entropy"])
 def test_first_coordinate_only_is_zero_and_fixed_statistic_is_unchanged(weight):
     bits, p = np.array([0, 1, 0, 1]), np.array([0.2, 0.7, 0.4])
-    soft = _soft_tokens(bits, p, weight, completion_only=True)
+    soft = _soft_tokens(bits, p, weight)
     assert soft[0] == 0
-    np.testing.assert_array_equal(soft[1:], _soft_tokens(bits[1:], p, weight))
+    np.testing.assert_array_equal(soft[1:], _soft_tokens(bits[1:], p, weight, completion_only=False))
     key = fixed_key()
     supports = key[1].indices.copy()
     expected, info = Detect(key, soft, false_positive_rate=0.001, return_info=True)
     actual, scored = detect_hoeffding(
-        key, torch.as_tensor(bits), p, torch.eye(2), fpr=0.001, weight=weight, completion_only=True, return_info=True
+        key, torch.as_tensor(bits), p, torch.eye(2), fpr=0.001, weight=weight, return_info=True
     )
     assert actual == expected
     for field in ("statistic", "V", "threshold"):
@@ -105,9 +105,7 @@ def test_multiblock_abstains_once_and_preserves_bonferroni_and_trailing_policy()
     expected = [
         Detect(fixed_key(), soft[b * 4 : (b + 1) * 4], false_positive_rate=0.0005, return_info=True) for b in range(2)
     ]
-    actual, info = detect_hoeffding(
-        fixed_key(), torch.as_tensor(bits), p, torch.eye(2), fpr=0.001, completion_only=True, return_info=True
-    )
+    actual, info = detect_hoeffding(fixed_key(), torch.as_tensor(bits), p, torch.eye(2), fpr=0.001, return_info=True)
     assert actual == any(dec for dec, _ in expected)
     assert info["num_blocks"] == 2 and info["block_fpr"] == 0.0005
     best = max((v for _, v in expected), key=lambda v: v["statistic"] - v["threshold"])
@@ -128,9 +126,7 @@ def test_short_prefix_preserves_original_coordinate_supports():
         3,
     )
     bits, p = np.array([1, 0, 1, 0]), np.array([0.2, 0.7, 0.4])
-    _, info = detect_hoeffding(
-        key, torch.as_tensor(bits), p, torch.eye(2), fpr=0.001, completion_only=True, return_info=True
-    )
+    _, info = detect_hoeffding(key, torch.as_tensor(bits), p, torch.eye(2), fpr=0.001, return_info=True)
     soft = np.r_[0.0, map_soft_token(bits[1:], p)]
     product = np.prod(soft[[1, 2, 3]])
     otp_sign = np.prod(1 - 2 * key[2][[1, 2, 3]])
@@ -154,7 +150,6 @@ def test_online_supports_otp_and_threshold_policy(policy):
         torch.eye(2),
         fpr=0.001,
         fpr_policy=policy,
-        completion_only=True,
         return_info=True,
     )
     np.testing.assert_allclose(
@@ -174,7 +169,6 @@ def test_zero_evidence_never_detects(length):
         torch.zeros(length, dtype=torch.long),
         np.full(length - 1, 0.5),
         torch.eye(2),
-        completion_only=True,
         return_info=True,
     )
     assert not decision and info["V"] == 0 and np.isinf(info["threshold"])
@@ -183,7 +177,7 @@ def test_zero_evidence_never_detects(length):
 @pytest.mark.parametrize("p", [np.ones(4), np.array([0.2, np.nan, 0.3]), np.array([0.2, 1.1, 0.3])])
 def test_refuses_legacy_or_invalid_probability_vectors(p):
     with pytest.raises(ValueError, match="T-1"):
-        detect_hoeffding(fixed_key(), torch.zeros(4, dtype=torch.long), p, torch.eye(2), completion_only=True)
+        detect_hoeffding(fixed_key(), torch.zeros(4, dtype=torch.long), p, torch.eye(2))
 
 
 def fixture_case(tmp_path, construction):
@@ -250,7 +244,7 @@ def test_batch_cache_resume_and_aggregation_exclude_prompts(tmp_path, constructi
     for batch in prepared["batches"]:
         assert set(_redetect_inputs(batch, tmp_path / "results")) == {"tokens", "partition"}
         _recover_redetection_batch(model, batch, tmp_path / "results", validate=True)
-        assert _recover_redetection_batch(model, batch, tmp_path / "results")["cached"]
+        assert _recover_redetection_batch(None, batch, tmp_path / "results")["cached"]
     report = _score_redetection(prepared, tmp_path / "results")
     assert len(report["records"]) == 4 and report["counts"]["9"]["map"]["wm"]["count"] == 2
     first = prepared["batches"][0]
@@ -270,3 +264,124 @@ def test_changed_sources_fail_before_inference_and_batch_125_is_allowed(tmp_path
     (tmp_path / "data" / "0.pt").write_bytes(b"changed source")
     with pytest.raises(ValueError, match="source changed"):
         _prepare_redetection(case, {}, {}, {"data": tmp_path / "data"}, tmp_path / "results")
+
+
+@pytest.mark.parametrize("construction", ["fixed", "prefix", "online"])
+def test_default_rejects_legacy_traces_and_has_no_prompt_argument(construction):
+    from detectors import detect_hoeffding_prefix
+
+    detector = {"fixed": detect_hoeffding, "prefix": detect_hoeffding_prefix, "online": detect_online_hoeffding}[
+        construction
+    ]
+    key = OnlinePRCKey.from_seed(91, check_weight=3, noise_rate=0.05) if construction == "online" else fixed_key()
+    tokens = torch.tensor([0, 1, 0, 1])
+    with pytest.raises(ValueError, match="T-1"):
+        detector(key, tokens, np.full(4, 0.5), torch.eye(2))
+    with pytest.raises(TypeError, match="prompt"):
+        detector(key, tokens, np.full(3, 0.5), torch.eye(2), prompt_ids=[999])
+    assert detector(key, tokens, np.full(3, 0.5), torch.eye(2)) == detector(
+        key, tokens, np.full(3, 0.5), torch.eye(2), completion_only=True
+    )
+    # Historical controls remain explicitly available, never selected by default.
+    detector(key, tokens, np.full(4, 0.5), torch.eye(2), completion_only=False)
+
+
+def test_gpu_input_rejects_prompt_even_with_matching_checksum(tmp_path):
+    from detectors import semantic_sha256
+
+    case = fixture_case(tmp_path, "fixed")
+    prepared = _prepare_redetection(case, {}, {}, {"data": tmp_path / "data"}, tmp_path / "results")
+    batch = prepared["batches"][0]
+    path = tmp_path / "results" / batch["root"] / "inputs.pt"
+    payload = _redetect_load(path)
+    payload["prompt_ids"] = torch.tensor([[999]])
+    batch["identity"]["input_sha256"] = semantic_sha256(payload)
+    torch.save(payload, path)
+    with pytest.raises(ValueError, match="only frozen completion tokens"):
+        _redetect_inputs(batch, tmp_path / "results")
+
+
+@pytest.mark.parametrize("mismatch", ["prompted", "eot", "other_run", "wrong_length"])
+def test_cache_rejects_legacy_or_unrelated_traces(tmp_path, mismatch):
+    from detectors import tensor_sha256
+    from modal_online_run import REDETECT_PROTOCOL
+
+    identity = dict(protocol=REDETECT_PROTOCOL, run="raw-run", count=2, length=5)
+    trace = torch.full((2, 4), 0.5)
+    payload = {"identity": identity.copy(), "probabilities_2_to_T": trace, "probabilities_sha256": tensor_sha256(trace)}
+    if mismatch == "prompted":
+        payload = {"p_trace": torch.full((2, 5), 0.5)}
+    elif mismatch == "eot":
+        payload["identity"]["protocol"] = "completion_only_eot_v1"
+    elif mismatch == "other_run":
+        payload["identity"]["run"] = "different-model-or-gpu"
+    else:
+        payload["probabilities_2_to_T"] = torch.full((2, 5), 0.5)
+        payload["probabilities_sha256"] = tensor_sha256(payload["probabilities_2_to_T"])
+    path = tmp_path / "trace.pt"
+    torch.save(payload, path)
+    with pytest.raises(ValueError, match="trace"):
+        _redetect_trace(path, identity)
+
+
+@pytest.mark.parametrize("gpu", ["A100-80GB", "H100", "L40S"])
+def test_runner_passes_gpu_and_validates_once_before_eight_batches(tmp_path, monkeypatch, gpu):
+    """Exercise the real dispatcher with every remote operation replaced locally."""
+    import json
+    import subprocess
+    from pathlib import Path
+    from types import SimpleNamespace
+    import modal_online_run as runner
+
+    monkeypatch.chdir(tmp_path)
+    files = (
+        "qwen.py",
+        "detectors.py",
+        "prc.py",
+        "online_prc.py",
+        "modal_online_run.py",
+        "watermark_expt.py",
+        "constants.py",
+    )
+    for name in files:
+        Path(name).write_text("committed-source")
+    monkeypatch.setattr(
+        subprocess,
+        "check_output",
+        lambda command, **kw: "test-commit" if command[1] == "rev-parse" else b"committed-source",
+    )
+    case = dict(
+        id="test", batch_size=125, lengths=[3104], records=[{}] * 1000, generation_model="Qwen3-8B-Base", cache="static"
+    )
+    manifest = dict(
+        protocol=runner.REDETECT_PROTOCOL,
+        schema_version=1,
+        cases=[case],
+        model=dict(id="Qwen/Qwen3-0.6B-Base", size="0.6B", dtype="bfloat16"),
+    )
+    path = tmp_path / "manifest.json"
+    path.write_text(json.dumps(manifest))
+    batches = [dict(root=f"batch-{i}", identity=dict(count=125)) for i in range(8)]
+    calls = []
+    monkeypatch.setattr(
+        runner, "prepare_redetection", SimpleNamespace(remote=lambda *args: dict(root="run", batches=batches))
+    )
+
+    def validate(batch, validate=False):
+        assert validate
+        calls.append(batch)
+
+    def distribute(received):
+        assert calls == [batches[0]] and received == batches
+        calls.append("distributed")
+        return []
+
+    def with_options(**options):
+        assert options["gpu"] == gpu and options["max_containers"] == 10
+        return lambda **kw: SimpleNamespace(redetect_batch=SimpleNamespace(remote=validate, map=distribute))
+
+    monkeypatch.setattr(runner, "CrossModelEntropyModel", SimpleNamespace(with_options=with_options))
+    monkeypatch.setattr(runner, "finish_redetection", SimpleNamespace(remote=lambda p: dict(root="run", counts={})))
+    monkeypatch.setattr(runner, "redetect_results", SimpleNamespace(read_file=lambda p: [b"{}\n"]))
+    runner.redetect(str(path), stage="full", gpu=gpu)
+    assert calls == [batches[0], "distributed"]

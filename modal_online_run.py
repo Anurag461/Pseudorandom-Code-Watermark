@@ -3018,7 +3018,8 @@ def _redetect_inputs(batch, destination):
     from detectors import semantic_sha256
     value = _redetect_load(Path(destination)/batch["root"]/"inputs.pt")
     identity = batch["identity"]
-    if (set(value) != {"tokens", "partition"} or semantic_sha256(value) != identity["input_sha256"]
+    if (identity["protocol"] != REDETECT_PROTOCOL
+            or set(value) != {"tokens", "partition"} or semantic_sha256(value) != identity["input_sha256"]
             or value["tokens"].shape != (identity["count"], identity["length"])
             or value["tokens"].dtype != torch.int64):
         raise ValueError("GPU inputs changed; only frozen completion tokens and partition are accepted")
@@ -3110,7 +3111,7 @@ def _score_redetection(prepared, destination):
             for length in case["lengths"]:
                 scores[str(length)] = {}
                 for weight in case["weights"]:
-                    common = dict(fpr=case["fpr"], weight=weight, return_info=True, completion_only=True)
+                    common = dict(fpr=case["fpr"], weight=weight, return_info=True)
                     args = (inputs["tokens"][row, :length], p[:length-1], artifact["partition"])
                     if case["construction"] == "fixed":
                         decision, info = detect_hoeffding(artifact["decoding_key"], *args, **common)
@@ -3157,8 +3158,7 @@ def redetect(manifest: str, stage: str = "preflight", gpu: str = "A100-80GB", ma
     from detectors import semantic_sha256
     if stage not in ("preflight", "smoke", "full") or not 1 <= max_containers <= 10:
         raise ValueError("choose preflight/smoke/full and 1..10 workers")
-    if gpu not in ("A10G", "A100-80GB"):
-        raise ValueError("choose A10G or A100-80GB")
+    # Modal validates GPU names; batching is validated on the selected hardware.
     content = json.loads(Path(manifest).read_text())
     if content["protocol"] != REDETECT_PROTOCOL or content["schema_version"] != 1 or not content["cases"]:
         raise ValueError("expected a frozen raw-completion manifest")
