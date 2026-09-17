@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "candidate_count": 1000,
+  "prompted_counts": {
+    "map": {
+      "wm": 454,
+      "null": 0
+    },
+    "entropy": {
+      "wm": 404,
+      "null": 0
+    }
+  },
+  "maximum_absolute_prompted_score_difference": 9.094947017729282e-13,
+  "watermarked_source_artifact": {
+    "volume": "data",
+    "path": "online_causal_prc_v1/qwen3_0p6b_base/n4096_T4096_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/artifacts.pt",
+    "sha256": "bd1ed6529583e45a9399b572080cd4298600625737a03c6b57061d21889fa9e1",
+    "bytes": 687415
+  },
+  "online_key_sha256": "ceb3d5de3db51e3b776ebc8296737fdf2edb1761d6e16326ee443c7611daf2dc",
+  "online_support_sha256": "458de9b34a93d1bb5837ccda55db6ab8dc6a296af68e3556bffe9d54a4ee2c8b",
+  "parity_checks": 3073,
+  "checks_containing_coordinate_one": 15,
+  "eta": 0.2,
+  "t": 3,
+  "n": 3104,
+  "batch_size": 20,
+  "inference_launched": false,
+  "prompted_reference": {
+    "path": "outputs/online_causal_n3104_t3_eta0.20_prompts500_sampler-poscdf-v1_kvcache-static-v1_from_n4096.json",
+    "sha256": "0b03c1efb28835259dce64232bc4994105e419dd6dda825d06545b0545e3d60d"
+  }
+}

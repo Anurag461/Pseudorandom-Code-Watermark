@@ -81,6 +81,28 @@ original artifact references, candidate hashes, target lengths and FPR policy
 before launching the full paper campaign. The runner supports additional
 lengths and generation models using the same audited 0.6B detector.
 
+The separate `manifests/same_0p6b_eta020_n3104.json` campaign pins the existing
+0.6B → 0.6B online run at η=0.2, n=3104, t=3 (500 watermarked and 500 null).
+It preserves the n4096 watermarked-cache prefixes, T8192 null-cache prefixes,
+original n3104 key and one-shot FPR .001. Its explicit static-cache batch size
+is 20. `same_0p6b_eta020_n3104.audit.json` records the CPU verification against
+all original prompted decisions and statistics before prompt-free inference.
+Run its smoke stage first, then resume those cached batches in the full stage:
+
+```sh
+MODAL_PROFILE=new-prc-watermark python -m modal run --detach \
+  -m prompt_free.modal_redetect \
+  --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage smoke
+MODAL_PROFILE=new-prc-watermark python -m modal run --detach \
+  -m prompt_free.modal_redetect \
+  --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage full
+```
+
+`freeze_online.py` is a CPU-only preparation utility for existing same-model
+online audit reports. It compares historical probabilities against prompted
+reference scores solely to establish source identity; it exports no prompts or
+historical probabilities to the production manifest or GPU payloads.
+
 The manifest schema is enforced in `manifest.validate`. Each source reference
 is `{volume, path, sha256, bytes}`, with `volume` equal to `archive` or `data`.
 Each `tokens_sha256` hashes the original int64 completion prefix through the
