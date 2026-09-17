@@ -42,7 +42,7 @@ This does not certify the legacy generation/EOT experiment runners as prompt-fre
    with the installed Modal class-parameter serializer. The entrypoint uses a
    concrete `str` annotation and has a no-deployment import test.
 9. **Parallel batch execution.** The explicit `--workers` option is bounded to
-   1–10 A10 containers. It changes scheduling only: fixed batch membership,
+   1–10 containers. It changes scheduling only: fixed batch membership,
    independent KV caches and distinct atomic shard writes remain unchanged.
    Each stage records the worker limit locally.
 10. **Shared full validation.** One safe batch certifies each numerical
@@ -51,7 +51,9 @@ This does not certify the legacy generation/EOT experiment runners as prompt-fre
     after its trace, source commit, numerical file hashes, model-loading AST and
     raw replay statements are checked. Configuration mismatches and incomplete
     validation records are rejected. A10 and A10G device labels identify the
-    same supported A10 GPU family; other GPU families are rejected.
+    same supported A10 GPU family. A100 80GB is a separate selectable family,
+    with its own cache identity and required full validation. Cross-family
+    validation reuse and unsupported GPU families are rejected.
     Source AST comparisons normalize Python 3.12's empty `type_params` field
     for the Python 3.11 Modal image; nonempty type parameters remain significant.
 

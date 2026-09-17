@@ -296,9 +296,9 @@ def test_one_full_validation_can_certify_multiple_batches_but_not_changed_shapes
     other = shared["batches"][1]
     assert check_certificate(other["validation_reference"], other["identity"], tmp_path/"results", profile)["passed"]
     assert check_certificate(other["validation_reference"], other["identity"], tmp_path/"results", profile, "NVIDIA A10G")["passed"]
-    with pytest.raises(ValueError, match="A10-family"):
+    with pytest.raises(ValueError, match="unsupported validation GPU"):
         check_certificate(other["validation_reference"], other["identity"], tmp_path/"results", profile, "NVIDIA H100")
-    for field, value in (("actual_batch_size", 1), ("cache", "concat"), ("maximum_length", 10), ("partition_sha256", "0"*64)):
+    for field, value in (("actual_batch_size", 1), ("cache", "concat"), ("maximum_length", 10), ("partition_sha256", "0"*64), ("gpu_type", "A100-80GB")):
         with pytest.raises(ValueError, match="configuration"):
             check_certificate(other["validation_reference"], {**other["identity"], field: value}, tmp_path/"results", profile)
     damaged = {**other["validation_reference"], "sha256": "0"*64}
@@ -317,3 +317,18 @@ def test_invalid_worker_limit_fails_before_remote_work(workers):
     from prompt_free.modal_redetect import main
     with pytest.raises(ValueError, match="workers must"):
         main(workers=workers)
+
+
+def test_a100_is_distinct_from_a10_in_cache_and_validation(tmp_path):
+    from prompt_free.validation import gpu_family, configuration
+    assert gpu_family("NVIDIA A100-SXM4-80GB") == "A100-80GB"
+    assert gpu_family("NVIDIA A100 80GB PCIe") == "A100-80GB"
+    manifest = fixture_manifest(tmp_path)
+    roots = {"data": tmp_path/"data"}
+    a10 = prepare_case(manifest["cases"][0], manifest["model"], {"sha256": "a"*64, "gpu_type": "A10G"}, roots, tmp_path/"results")
+    a100 = prepare_case(manifest["cases"][0], manifest["model"], {"sha256": "a"*64, "gpu_type": "A100-80GB"}, roots, tmp_path/"results")
+    assert a10["run_id"] != a100["run_id"]
+    assert configuration(a10["batches"][0]["identity"]) != configuration(a100["batches"][0]["identity"])
+    from prompt_free.modal_redetect import main
+    with pytest.raises(ValueError, match="gpu must"):
+        main(gpu="H100")

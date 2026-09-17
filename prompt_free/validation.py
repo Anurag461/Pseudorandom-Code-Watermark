@@ -64,14 +64,17 @@ def reference_proof(root, source):
 
 
 def configuration(identity):
-    return {k: identity[k] for k in ("protocol", "model", "partition_sha256", "maximum_length",
-             "cache", "token_step", "actual_batch_size", "prepended_token_count", "first_coordinate_score")}
+    return {"gpu_type": identity.get("gpu_type", "A10G"), **{k: identity[k] for k in (
+             "protocol", "model", "partition_sha256", "maximum_length",
+             "cache", "token_step", "actual_batch_size", "prepended_token_count", "first_coordinate_score")}}
 
 
 def gpu_family(name):
-    if name not in ("NVIDIA A10", "NVIDIA A10G"):
-        raise ValueError("shared validation requires an A10-family GPU")
-    return "A10"
+    if name in ("NVIDIA A10", "NVIDIA A10G"):
+        return "A10G"
+    if name.startswith("NVIDIA A100") and "80GB" in name:
+        return "A100-80GB"
+    raise ValueError("unsupported validation GPU family")
 
 
 def check_certificate(reference, identity, root, profile, gpu_name="NVIDIA A10"):
@@ -81,6 +84,7 @@ def check_certificate(reference, identity, root, profile, gpu_name="NVIDIA A10")
     certificate = json.loads(path.read_text())
     if (not certificate["passed"] or certificate["numerical_profile"] != profile
             or certificate["configuration"] != configuration(identity)
+            or gpu_family(gpu_name) != identity.get("gpu_type", "A10G")
             or gpu_family(certificate["gpu"]) != gpu_family(gpu_name)):
         raise ValueError("shared validation does not match this inference configuration")
     return certificate
@@ -109,7 +113,8 @@ def publish_certificates(prepared, references, proofs, root, profile):
             if (not validation["passed"] or not validation["raw_inputs_only"]
                     or validation["inference_dtype"] != "bfloat16"):
                 raise ValueError("prior full validation failed")
-            gpu_family(validation["gpu"])
+            if gpu_family(validation["gpu"]) != batch["identity"].get("gpu_type", "A10G"):
+                raise ValueError("validated GPU differs from batch identity")
             if batch["identity"]["code_sha256"] != source["sha256"]:
                 raise ValueError("validated batch and source identity differ")
             validate_trace(load_pt(directory/"trace.pt"), batch["identity"])

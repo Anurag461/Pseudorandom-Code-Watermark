@@ -81,10 +81,12 @@ class Detector:
         from prompt_free.core import recover
         from prompt_free.storage import load_gpu_input, load_pt, trace_payload, validate_trace, json_write
         from qwen import teacher_force_partition_trace_batch
-        from prompt_free.validation import check_certificate, current_profile
+        from prompt_free.validation import check_certificate, current_profile, gpu_family
         identity = descriptor["identity"]
         if identity["model"] != self.spec or identity["code_sha256"] != self.code_sha:
             raise ValueError("GPU execution model/code differs from prepared batch")
+        if gpu_family(torch.cuda.get_device_name()) != identity["gpu_type"]:
+            raise ValueError("actual GPU differs from prepared batch")
         results.reload()
         output = Path("/results")/descriptor["root"]
         inputs = load_gpu_input(descriptor, "/results")
@@ -179,16 +181,19 @@ def share_validation(prepared, references, proofs):
 
 @app.local_entrypoint()
 def main(manifest: str = "prompt_free/manifests/pilots.json", stage: str = "preflight", case: str = "", workers: int = 1,
-         validation_reference: str = ""):
+         validation_reference: str = "", gpu: str = "A10G"):
     from prompt_free.storage import json_write
     if stage not in ("preflight", "smoke", "full"):
         raise ValueError("stage must be preflight, smoke or full")
     if not 1 <= workers <= 10:
         raise ValueError("workers must be in [1,10]")
+    if gpu not in ("A10G", "A100-80GB"):
+        raise ValueError("gpu must be A10G or A100-80GB")
     manifest_path = Path(manifest).resolve()
     content = json.loads(manifest_path.read_text())
     validate(content)
     source = source_identity(ROOT, require_commit=True)
+    source["gpu_type"] = gpu
     # Manifests must also be reviewable and committed before any remote stage.
     relative = manifest_path.relative_to(ROOT).as_posix()
     committed = subprocess.check_output(["git", "show", f"{source['git_commit']}:{relative}"], cwd=ROOT)
@@ -203,11 +208,11 @@ def main(manifest: str = "prompt_free/manifests/pilots.json", stage: str = "pref
     local = ROOT/"outputs/prompt_free"/digest_json({"manifest": content, "source": source})[:24]
     json_write(local/"prepared.json", prepared)
     json_write(local/(stage+"_execution.json"), {"stage": stage, "maximum_gpu_workers": workers,
-                                               "gpu": "A10G", "source": source})
+                                               "gpu": gpu, "source": source})
     if stage == "preflight":
         print(f"Preflight complete; no GPU inference launched. Saved {local}", flush=True)
         return
-    detector = Detector.with_options(max_containers=workers)(model_json=json.dumps(content["model"], sort_keys=True))
+    detector = Detector.with_options(gpu=gpu, max_containers=workers)(model_json=json.dumps(content["model"], sort_keys=True))
     if stage == "full":
         from prompt_free.validation import configuration, reference_proof
         if validation_reference:

@@ -85,17 +85,17 @@ The separate `manifests/same_0p6b_eta020_n3104.json` campaign pins the existing
 0.6B → 0.6B online run at η=0.2, n=3104, t=3 (500 watermarked and 500 null).
 It preserves the n4096 watermarked-cache prefixes, T8192 null-cache prefixes,
 original n3104 key and one-shot FPR .001. Its explicit static-cache batch size
-is 10. `same_0p6b_eta020_n3104.audit.json` records the CPU verification against
+is 50 on A100 80GB. `same_0p6b_eta020_n3104.audit.json` records the CPU verification against
 all original prompted decisions and statistics before prompt-free inference.
 Run its smoke stage first, then resume those cached batches in the full stage:
 
 ```sh
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach \
   -m prompt_free.modal_redetect \
-  --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage smoke
+  --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage smoke --gpu A100-80GB
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach \
   -m prompt_free.modal_redetect \
-  --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage full --workers 10
+  --manifest prompt_free/manifests/same_0p6b_eta020_n3104.json --stage full --workers 10 --gpu A100-80GB
 ```
 
 `freeze_online.py` is a CPU-only preparation utility for existing same-model
@@ -121,6 +121,9 @@ batch, one token per step, with a fresh per-batch KV cache. Final partial batche
 have explicit identities. No padding, automatic batch resizing, precision
 fallback, or automatic retry is used. Additional sequence lengths require an
 appropriate explicit batch size and a successful smoke check before full use.
+`--gpu A100-80GB` selects A100 80GB instead. GPU type participates in run/cache
+identity and validation configuration. A10 validation cannot certify A100;
+the first A100 batch receives its own full validation before parallel fanout.
 
 One safe batch of each configuration is checked against independent
 token-step replay, captured raw model inputs, prefix alignment, batch reversal,
@@ -135,7 +138,7 @@ a completed validation after orchestration-only changes. The prior trace and
 validation record are verified against their stored hashes, and the prior Git
 source must match every numerical source file, the model-loading function and
 the actual raw-token replay statements. Model, partition, sequence length,
-actual batch size, cache, protocol and A10 GPU family must also match. This
+actual batch size, cache, protocol and GPU family must also match. This
 reuses validation evidence without relabeling old traces as newly generated.
 Without this option, full execution establishes one certificate per distinct
 configuration before distributing the remaining batches.
