@@ -104,3 +104,32 @@ specifies PRC reuse, remaining integration, and the provisional $5–15 core-rep
 budget with a $25 planning ceiling. Existing full-score orchestration still
 calls retired paths and must be migrated before use; this setup does not claim
 to have rebuilt the final comparison tables.
+
+## Cached PRC prefix comparison
+
+`prc_prefix_comparison.py` rescores the published native-8B online PRC n=1024
+cohort to the existing comparison grid: 128, 256, 400, 512, 768, and 1024 tokens.
+It calls the integrated completion-only scorer on the original cached traces,
+keys and partition, and saves a separate
+`outputs/comparison_redetect/prc_prefix_comparison.csv` with old/new posterior
+and entropy-weighted TPRs, new FPRs, and percentage-point changes.
+
+```sh
+NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.prc_prefix_comparison \
+  --generation-cache /tmp/comparison-redetect-cache
+```
+
+The generation cache is the local `prc-data` export produced by the source
+preflight. The indexed native-8B run must also be available locally at the
+location in `outputs/redetection/cache_index.json`, including its prepared
+manifest, artifact, inputs and traces. No remote call or inference is made.
+Use `--lengths` to request another grid through 1024; the script always includes
+1024 as an exact regression check against all saved scores and old decisions.
+
+Each row is a separate one-shot test at nominal FPR 0.001, retaining the
+original online prefix supports and coordinate-1 abstention. This is not an
+OR decision across lengths. The null cohort is the published n=1024 cohort
+(T1382 source); it differs from the full TextSeal comparison's T13088 nulls.
+The adjacent provenance JSON records input/output hashes and validation results.
+Detailed per-candidate scores remain in a separate local archive namespace;
+the original redetection reports and summary CSV are unchanged by this script.
