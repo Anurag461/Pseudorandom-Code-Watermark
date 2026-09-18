@@ -156,3 +156,85 @@ def test_real_hf_qwen_interface_matches_upstream_without_weights_download(upstre
     assert actual["upstream"] == reference.detect(" ".join(map(str, tokens)))
     assert calls == [[tokens], [tokens]]
     hook.remove()
+
+
+def test_prefix_reuse_performs_one_forward_and_matches_direct_upstream(upstream_root):
+    from baseline_comparison.textseal_redetect import run_record
+    model = CausalToyModel()
+    detector = TextSealCompletionDetector(model, source_root=upstream_root)
+    ids, lengths = list(range(24)), [8, 16, 24]
+    row = {"method": "textseal", "prompt_index": 0, "token_ids": ids}
+    result = run_record(detector, row, lengths, False, prefix_strategy="reuse")
+    assert result["forward_lengths"] == [24]
+    assert len(model.calls) == 1
+    assert result["validation"]["performed"] is False
+    for n in lengths:
+        assert result["results"][str(n)] == detector.detect(ids[:n])
+    pilot = run_record(detector, row, lengths, True, prefix_strategy="reuse")
+    assert pilot["forward_lengths"] == [24, 8, 16]
+    assert pilot["validation"]["passed"] is True
+    assert pilot["results"] == result["results"]
+
+
+def test_pilot_detects_shape_dependent_entropy_instead_of_silently_reusing(upstream_root):
+    class ShapeDependent(CausalToyModel):
+        def forward(self, tokens):
+            result = super().forward(tokens)
+            result.logits = result.logits * tokens.shape[1]
+            return result
+    detector = TextSealCompletionDetector(ShapeDependent(), source_root=upstream_root)
+    ids, lengths = list(range(24)), [8, 16, 24]
+    result = detector.detect_prefixes_reusing_longest(ids, prefix_lengths=lengths, validate_prefixes=True)
+    assert result["validation"]["passed"] is False
+    assert result["validation"]["prefixes"]["8"]["max_abs_entropy_difference"] > 0
+    from baseline_comparison.textseal_redetect import run_record
+    row = {"method": "textseal", "prompt_index": 0, "token_ids": ids}
+    direct = run_record(detector, row, lengths, True)
+    assert direct["prefix_strategy"] == "direct"
+    assert direct["validation"]["passed"] is True
+    assert direct["forward_lengths"] == [8, 8, 16, 16, 24, 24]
+    assert direct["entropies_by_prefix"]["8"] != result["entropies_2_to_T"][:7]
+    production = run_record(detector, row, lengths, False)
+    assert production["forward_lengths"] == lengths
+    assert production["results"] == direct["results"]
+    for n in lengths:
+        assert direct["results"][str(n)] == detector.detect(ids[:n])
+
+
+def test_forward_observer_rejects_prepended_prompt(upstream_root):
+    from baseline_comparison.textseal_redetect import run_record
+    class BadAdapter:
+        _detector = SimpleNamespace(model=CausalToyModel())
+        def detect_prefixes(self, ids, **kwargs):
+            self._detector.model(torch.tensor([[99] + ids]))
+    with pytest.raises(ValueError, match="raw completion tokens"):
+        run_record(BadAdapter(), {"method": "null", "prompt_index": 0, "token_ids": [1, 2, 3]}, [3], False)
+
+
+def test_cached_completion_entropy_checksums_and_identity(upstream_root, tmp_path):
+    from baseline_comparison.textseal_modal import cached_record
+    from baseline_comparison.textseal_redetect import digest, run_record, write_json
+    detector = TextSealCompletionDetector(CausalToyModel(), source_root=upstream_root)
+    row = {"method": "null", "prompt_index": 0, "token_ids": list(range(24))}
+    data = run_record(detector, row, [8, 16, 24], True)
+    path, identity = tmp_path / "row.json", {"runtime": "fixture"}
+    payload = {"identity": identity, "data": data, "data_sha256": digest(data)}
+    write_json(path, payload)
+    assert cached_record(path, identity, detector, row, [8, 16, 24], "direct") == data
+    with pytest.raises(ValueError, match="prefix strategy"):
+        cached_record(path, identity, detector, row, [8, 16, 24], "reuse")
+    with pytest.raises(ValueError, match="identity or checksum"):
+        cached_record(path, {"runtime": "changed"}, detector, row, [8, 16, 24])
+    payload["data"]["entropies_by_prefix"]["8"][4] += .1
+    write_json(path, payload)
+    with pytest.raises(ValueError, match="identity or checksum"):
+        cached_record(path, identity, detector, row, [8, 16, 24])
+    payload["data_sha256"] = digest(data)
+    write_json(path, payload)
+    with pytest.raises(ValueError, match="upstream result differs"):
+        cached_record(path, identity, detector, row, [8, 16, 24], "direct")
+    del payload["data"]["entropies_by_prefix"]["8"]
+    payload["data_sha256"] = digest(data)
+    write_json(path, payload)
+    with pytest.raises(ValueError, match="prefix coverage"):
+        cached_record(path, identity, detector, row, [8, 16, 24], "direct")

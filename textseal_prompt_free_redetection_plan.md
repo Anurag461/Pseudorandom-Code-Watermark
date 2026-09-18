@@ -1,9 +1,15 @@
 # TextSeal and PRC prompt-free redetection plan
 
-Prepared 2026-09-17. Status: source/cache preflight complete, shared runner
-renamed, and completion-only upstream TextSeal adapter implemented. All 38
-focused tests pass. No real-checkpoint replay, generation, or paid Modal compute
-job launched. Repeat handling is deferred at the user's request.
+Prepared 2026-09-17. Current status: PRC native-8B shared-null redetection is
+complete, and its six-prefix comparison uses the original shared T13088 nulls.
+TextSeal prefix reuse failed because BF16 linear projections depend on matrix
+shape. Direct per-length replay preserves upstream execution; the replacement
+GPU pilot passed all 60 exact checks. The native-8B full cohort is complete and
+its six rows are published. SynthID/Gumbel cached rows are also added, giving
+24 rows across all four methods without further redetection. Source/cache
+preflight, runner rename and the
+upstream adapter are implemented. The 52 focused tests and six new publication
+guard tests passed. Repeat handling and generation remain deferred.
 Working branch: `comparison-with-redetect`, created directly from `redetection`
 at `1bd7ce2`. All existing working files were preserved when switching branches.
 The branch now includes current `redetection` through `04f34d3`; its new native
@@ -70,7 +76,7 @@ Completed in this task: rename `baseline_comparison/smoke_runner.py` to
 resume, finalizer, test, and documentation references. Keep genuine smoke-test
 function names. Preserve archived source snapshots, manifests, and historical
 fingerprints; the renamed source receives a new integration fingerprint.
-The comparison/proxy tests and new upstream/input-contract tests pass: 38 tests.
+The comparison/proxy and upstream/input-contract/replay/diagnostic tests pass: 52 tests.
 Both historical native and proxy TextSeal entropy-scoring paths now fail closed.
 
 The read-only SDK preflight (`baseline_comparison/textseal_preflight.py`) has
@@ -130,11 +136,16 @@ PRC partition probabilities alone cannot supply TextSeal entropy.
 ## 3. Exact TextSeal redetection
 
 Implemented reference adapter: `baseline_comparison/textseal_completion.py`.
+The native-8B pilot/full worker is `baseline_comparison/textseal_modal.py`;
+`outputs/comparison_redetect/textseal_setup/direct_prefix/REVIEW.md` records the
+current setup. The original reuse pilot failed at n=128; the completed diagnostic
+is in `textseal_setup/prefix_diagnostic/REVIEW.md`. The subsequently authorized native-8B full TextSeal stage is complete;
+the PRC shared-null job is independent.
 It verifies the four pinned upstream source hashes before loading the original
 modules, rejects prompt/cached-entropy inputs, and returns the original result
 dictionary unchanged alongside the comparison decision. Its numerical calls
 match upstream exactly on deterministic fixtures and a small randomly initialized
-HF Qwen3 model; production checkpoint/GPU parity is still pending. The local
+HF Qwen3 model; the replacement H100 pilot passed all 60 exact public-detector checks. The local
 test runtime uses CPU PyTorch 2.5.1, distinct from the planned PyTorch 2.4 runtime.
 
 Construct the real upstream `TextSealDetector` with the existing keys,
@@ -155,9 +166,10 @@ or substitute binary-partition entropy. Full-sequence logits can consume large
 memory, so begin with one completion, then small equal-length batches; benchmark
 before increasing batch size. No left padding is necessary for this corpus.
 
-For every prefix, call `_score_text(ids[:T], H[:T-1], 'v2')` so entropy
-normalization and deduplication are prefix-local. Reuse a longer causal entropy
-trace only after checking it against direct-prefix replay. Do not use the
+For every prefix, compute `H_T = _compute_entropies(ids[:T])` and call
+`_score_text(ids[:T], H_T, 'v2')` so model shape, entropy normalization, and
+deduplication match direct upstream detection. Do not reuse a longer entropy
+trace: the real BF16 checkpoint failed exact prefix parity. Do not use the
 custom `textseal_gamma_test` output as the authoritative result; retain it only
 as a diagnostic reference. Preserve raw upstream outputs, including zero
 p-values, rather than silently clipping them in stored results.
@@ -196,6 +208,12 @@ The new native-8B run used nulls from T=1382, whereas this comparison uses the
 T=13088 shared-null source. Its null scores cannot replace the comparison's
 null scores without matching token identities. Preserve the frozen comparison
 cohort and replay its nulls when the existing traces do not match.
+The identity audit now confirms that all 500 n=1024 null prefixes differ.
+`baseline_comparison/prc_shared_nulls.py` completed the four null-only replay
+batches, preserving all 500 watermarked traces and all 6,000 prefix scores exactly.
+The comparison CSV now uses T13088 shared nulls: both weighting rules have 0/500
+false positives at every prefix. See [the PRC run record](outputs/comparison_redetect/prc_shared_nulls/REVIEW.md)
+and [verification](outputs/comparison_redetect/prc_shared_nulls/verification.json).
 They contain partition probabilities, not the full-vocabulary entropy needed
 for TextSeal. A 640-token trace cannot simply be extended from a probability
 array without reconstructing its model context; budget a full 1,024-token
@@ -309,11 +327,15 @@ next-token positions per model, before compatible-cache reuse. The literal
 upstream entropy method also forwards the
 last token before discarding its final entropy; include that overhead in the
 benchmark. Replaying the shared null once serves both methods when execution
-identity is identical. Scoring six prefixes does not require six full model
-passes once causal-prefix parity has passed. Until then, the new reference
-adapter replays each requested prefix independently; six prefixes total 3,088
-forwarded tokens per TextSeal/null sequence. The pilot must measure this direct
-path before treating a single-pass estimate as achievable.
+identity is identical. TextSeal's tested BF16 execution failed exact causal-prefix
+parity, so it now uses six direct model passes per response: 3,088 forwarded
+tokens total. Its ten-record pilot runs each prefix twice, once through the
+adapter and once through upstream public `detect`: 120 calls / 61,760 tokens.
+The full worker requires that pilot to pass and reuses its ten validated
+records, leaving 990 responses / 5,940 direct-prefix calls. The measured pilot
+cost projection supersedes the original longest-trace estimate; the full stage
+was separately authorized and completed for about $0.86 measured resource time.
+PRC trace reuse is unchanged.
 
 Order: local rename/tests → read-only inventory → pinned upstream reference and
 input-contract validation → costed pilot → core replay and scoring → tables. Reserve measured outstanding worker costs

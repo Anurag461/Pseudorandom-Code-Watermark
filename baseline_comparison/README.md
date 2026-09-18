@@ -43,9 +43,21 @@ weighted evidence yields an abstention/false comparison decision; the upstream
 short-input result remains untouched. The settings retain the original comparison's
 keys 42/12387, ngram 3, alpha 0.1, and scoring method v2.
 
-Call `detect` separately for every requested prefix. Prefix-trace reuse,
-batching, chunking, and alternative model backends require later target-device
-validation and are not implemented in this reference adapter.
+Use `detect_prefixes(completion_ids[:1024])` to run upstream entropy and scoring
+independently at each of the six actual lengths. `validate_prefixes=True` also
+calls upstream's public `detect` separately on the identical raw IDs at each
+length and requires exact entropy and result agreement. Per-prefix entropy
+vectors are stored separately; production manifests reject longest-trace reuse.
+
+The [GPU diagnostic](../outputs/comparison_redetect/textseal_setup/prefix_diagnostic/REVIEW.md)
+identified BF16 matrix-shape dependence: all ten pilot examples differed at
+n=128 when slicing n=1024 entropy. There were no comparison decision flips in
+that small pilot. The first differing activation on null/0000 was layer 0's
+key projection, reproducible with identical input prefixes and weights in an
+isolated linear operation. Same-shape repeats and a causal suffix intervention
+passed. `detect_prefixes_reusing_longest` remains diagnostic-only; matching on
+other lengths in ten examples is not a guarantee for all records. Batching,
+chunking, and alternate model backends remain outside the reference path.
 
 ## Reproducible setup and checks
 
@@ -63,7 +75,7 @@ set `TEXTSEAL_SOURCE_ROOT` to that checkout for tests. All four audited files
 must be present and unchanged. No package downloads occur inside the detector.
 
 Local validation on 2026-09-17 used Python 3.12 / CPU PyTorch 2.5.1 and
-Transformers 4.51.3: 38 tests passed across TextSeal completion/preflight,
+Transformers 4.51.3: 52 tests passed across TextSeal completion/preflight/replay,
 baseline comparison, and proxy analysis. They check exact dictionary equality
 against upstream's public `detect` on ordinary/repeated/short fixtures and a
 small randomly initialized HF Qwen3 model; actual forwarded IDs; prefix causality;
@@ -95,15 +107,26 @@ The existing 0.6B cache lacks `config.json` and `tokenizer_config.json`.
 Stage those files from revision `da87bfb608c14b7cf20ba1ce41287e8de496c0cd`
 before HF replay. The 8B cache revision is
 `49e3418fbbbca6ecbdf9608b4d22e5a407081db4`. Weight-file sizes and download
-metadata were verified; weight bytes were neither loaded nor rehashed.
+metadata were verified during preflight. The later replay also verified all
+weight bytes against the frozen checkpoint hashes before loading.
 
-No real-checkpoint replay or remote compute job has run for this setup.
-Next are pinned-model/device validation and a measured pilot, then the full
-comparison integration. The [redetection plan](../textseal_prompt_free_redetection_plan.md)
+The TextSeal prefix discrepancy is resolved by direct per-length replay. The
+pilot passed all 60 exact upstream checks, and the full 500 TextSeal + 500 shared
+null cohort is complete: TPR is 500/500 at every length; FPR is 0/500 except
+n=768 at 1/500. All 1,000 records and 6,000 prefix results passed readback checks.
+Six TextSeal rows were added to `baseline_comparisons.csv`, preserving all
+original PRC cells. PRC shared-null alignment is complete, as recorded below.
+The native-8B pilot/full worker is defined in `textseal_modal.py`; local setup
+is prepared by `python -m baseline_comparison.textseal_redetect`. The
+[launch review](../outputs/comparison_redetect/textseal_setup/direct_prefix/REVIEW.md) describes
+the frozen manifest, ten-record pilot, exact gates, manual dispatch and costs.
+The pilot never launches the full stage automatically. The
+[redetection plan](../textseal_prompt_free_redetection_plan.md)
 specifies PRC reuse, remaining integration, and the provisional $5–15 core-repair
-budget with a $25 planning ceiling. Existing full-score orchestration still
-calls retired paths and must be migrated before use; this setup does not claim
-to have rebuilt the final comparison tables.
+budget with a $25 planning ceiling. The shared native comparison CSV now
+contains all four methods: PRC, TextSeal, SynthID and GumbelMax. The proxy
+panel remains a separate step; historical full-score orchestration still references retired
+paths and is not used by the new replay/collector/publisher.
 
 ## Cached PRC prefix comparison
 
@@ -116,7 +139,8 @@ and entropy-weighted TPRs, new FPRs, and percentage-point changes.
 
 ```sh
 NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.prc_prefix_comparison \
-  --generation-cache /tmp/comparison-redetect-cache
+  --generation-cache /tmp/comparison-redetect-cache \
+  --output /tmp/prc_original_cohort_prefixes.csv
 ```
 
 The generation cache is the local `prc-data` export produced by the source
@@ -128,8 +152,80 @@ Use `--lengths` to request another grid through 1024; the script always includes
 
 Each row is a separate one-shot test at nominal FPR 0.001, retaining the
 original online prefix supports and coordinate-1 abstention. This is not an
-OR decision across lengths. The null cohort is the published n=1024 cohort
-(T1382 source); it differs from the full TextSeal comparison's T13088 nulls.
+OR decision across lengths. This original-cohort command uses the published
+n=1024 null cohort (T1382 source). The shared comparison CSV now uses the T13088
+nulls after the alignment below; choose a separate output to reproduce T1382.
 The adjacent provenance JSON records input/output hashes and validation results.
 Detailed per-candidate scores remain in a separate local archive namespace;
 the original redetection reports and summary CSV are unchanged by this script.
+
+## Align PRC with the comparison's shared nulls
+
+`prc_shared_nulls.py` prepares a null-only native-8B replay using the existing
+integrated PRC worker and scorer. All 500 T1382 null prefixes differ from the
+original comparison's T13088 prefixes; the indexed native-8B cache cannot be
+relabelled as the shared cohort. All 500 watermarked traces are reusable, with
+exact agreement of all 6,000 per-prefix posterior/entropy score dictionaries.
+
+```sh
+NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.prc_shared_nulls \
+  --stage prepare --generation-cache /tmp/comparison-redetect-cache
+```
+
+Preparation runs locally, verifies the historical token/source identities, and
+freezes the clean inputs, original key/partition and checkpoint. Launch requires
+the exact plan hash via `--stage run --approved-plan-sha256 ...`; see the
+[PRC launch review](../outputs/comparison_redetect/prc_shared_nulls/REVIEW.md).
+Only four null batches of 125 completions reach the GPU, with a validated first
+batch. The n=1024 probabilities supply all six prefixes without further inference.
+`--stage collect` retrieves already computed traces and scores locally; it never
+launches a GPU. Publication checks every watermarked score and updates only
+the six PRC FPR fields/notes and provenance in `baseline_comparisons.csv`.
+The original prefix command refuses to overwrite an already aligned table.
+
+Current status: **completed and validated**. All 500 original T13088 shared nulls
+were replayed without prompts; posterior and entropy-weighted FPRs are 0/500 at
+all six lengths. Every TPR field and all 6,000 watermarked score dictionaries are
+unchanged. See [verification.json](../outputs/comparison_redetect/prc_shared_nulls/verification.json)
+and [execution.json](../outputs/comparison_redetect/prc_shared_nulls/execution.json).
+The reports are archived with verified member checksums on `prc-completion-only`;
+[result_index.json](../outputs/comparison_redetect/prc_shared_nulls/result_index.json)
+gives the `reports.tar.gz` retrieval path and raw trace locations.
+The frozen preparation plan is retained for provenance; rerunning it against the
+aligned table is intentionally rejected. TextSeal native-8B replay is also complete.
+
+## Published TextSeal results
+
+`textseal_results.py` verifies the completed replay without launching compute.
+`publish_textseal_comparison.mjs` appends six rows and common primary-test
+columns to the shared CSV. Generic `TPR`/`FPR` use PRC posterior and TextSeal
+weighted p-values; PRC entropy-aware results remain in their existing columns.
+The publication checks preserve all original PRC cells and source provenance.
+Full replay took 666.49 seconds, approximately $0.86 in measured resource time
+before startup/image/storage overhead. See the [full summary](../outputs/comparison_redetect/textseal_setup/direct_prefix/full_summary.json).
+
+## Reused SynthID and GumbelMax results
+
+The shared CSV contains all 24 method/length rows. `reuse_token_baselines.py`
+verified the 12,000 existing SynthID/Gumbel records against original generation
+shards and the same T13088 nulls, then aggregated their saved decisions.
+`publish_cached_baselines.mjs` appended 12 rows with the existing schema.
+Neither detector uses prompt-conditioned entropy, so no redetection or model
+replay was performed. All preceding PRC and TextSeal values are unchanged.
+See the [reuse audit](../outputs/comparison_redetect/token_baseline_reuse/REVIEW.md).
+
+## Repetition audit
+
+[repetition_audit.json](../outputs/comparison_redetect/repetition_audit.json)
+recomputes repetition and distinct-2/3 on the actual completion prefixes at all
+six lengths for all four methods and the shared nulls. All 2,500 completions
+match the source hashes, including PRC/TextSeal replay inputs; the recalculated
+full-length metrics agree with all 24,000 historical detection records.
+Historical prompt-level quality fields describe the full 1,024-token response
+even when its detection prefix is shorter; the new audit explicitly truncates
+tokens before measuring prefix quality.
+
+At 1,024 tokens, mean repeated-token-4-gram fractions are 2.70% for PRC, 33.04%
+for TextSeal, 2.58% for SynthID, 57.38% for GumbelMax, and 2.89% for the shared
+nulls. Redetection reused generated text, so these metrics are unchanged.
+TextSeal generation-time repeat handling remains disabled.

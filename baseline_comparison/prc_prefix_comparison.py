@@ -31,6 +31,9 @@ def verified_json(path, expected):
 
 
 def compare_prefixes(generation_cache: Path, output: Path, lengths=PREFIX_LENGTHS):
+    existing_provenance = output.with_suffix(".provenance.json")
+    if existing_provenance.exists() and json.loads(existing_provenance.read_text()).get("shared_null_alignment"):
+        raise ValueError("comparison already uses shared nulls; choose a separate --output for the original T1382 cohort")
     import torch
     from detectors import detect_online_hoeffding, semantic_sha256, tensor_sha256
     from modal_run import (
