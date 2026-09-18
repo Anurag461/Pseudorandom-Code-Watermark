@@ -390,3 +390,19 @@ Artifacts are immutable: identical reruns verify existing bytes, while changed
 runtime versions or results require a separate output location. The pinned
 analysis source and original analysis before a figure-layout repair are retained
 inside the archive. No Stage B generation was launched.
+
+**Next setup: repeat-handling ablation.** The pilot used Google's repeated-context
+generation fallback for SynthID and no corresponding fallback for TextSeal or
+Gumbel. The [runbook](repeat_handling_ablation.md) freezes a generation-only
+ablation before the parameter sweep: SynthID depth 10 with fallback off first,
+then TextSeal alpha .1 and Gumbel with fallback on. Each adds 50 prompts × two
+responses, and the original-policy pairs are reused. PRC is unchanged.
+
+`self_bleu_repeat.py` scopes the policy adapters to a single generation call;
+historical generator code and defaults are unchanged. The setup, explicit
+Modal stages and CPU analysis are in `self_bleu_repeat_setup.py`,
+`self_bleu_repeat_modal.py` and `self_bleu_repeat_analysis.py`. The frozen request
+is `outputs/self_bleu_repeat/setup_v1/manifest.json`. Preparing it dispatches
+nothing. Each GPU stage has its own timeout, no retries and source/runtime
+checks; generation also has forced-repeat checks and historical-prefix gates. The analysis preserves
+detector settings and uses paired prompt contrasts against Stage A.

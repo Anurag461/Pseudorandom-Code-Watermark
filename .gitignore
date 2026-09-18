@@ -32,6 +32,10 @@ outputs/self_bleu_pilot/*/prc_report.json
 outputs/self_bleu_pilot/*/textseal_report.json
 outputs/self_bleu_pilot/stage_a_v1/
 
+# Repeat-policy generation, entropy traces and response-level scores.
+outputs/self_bleu_repeat/*/raw/
+outputs/self_bleu_repeat/*/*_report.json
+
 # Online prefix-sweep per-prompt manifests (large, reproducible from cache)
 outputs/online_map_sweep_*_sampler-*.json
 outputs/online_map_sweep_*_sampler-*_increments/
