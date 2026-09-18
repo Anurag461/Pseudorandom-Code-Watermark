@@ -6,7 +6,7 @@ import pytest
 import torch
 from scipy.sparse import csr_matrix
 from detectors import _soft_tokens, detect_hoeffding, detect_online_hoeffding, map_soft_token
-from modal_online_run import (
+from modal_run import (
     _prepare_redetection,
     _recover_redetection_batch,
     _redetect_inputs,
@@ -304,7 +304,7 @@ def test_gpu_input_rejects_prompt_even_with_matching_checksum(tmp_path):
 @pytest.mark.parametrize("mismatch", ["prompted", "eot", "other_run", "wrong_length"])
 def test_cache_rejects_legacy_or_unrelated_traces(tmp_path, mismatch):
     from detectors import tensor_sha256
-    from modal_online_run import REDETECT_PROTOCOL
+    from modal_run import REDETECT_PROTOCOL
 
     identity = dict(protocol=REDETECT_PROTOCOL, run="raw-run", count=2, length=5)
     trace = torch.full((2, 4), 0.5)
@@ -331,18 +331,10 @@ def test_runner_passes_gpu_and_validates_once_before_eight_batches(tmp_path, mon
     import subprocess
     from pathlib import Path
     from types import SimpleNamespace
-    import modal_online_run as runner
+    import modal_run as runner
 
     monkeypatch.chdir(tmp_path)
-    files = (
-        "qwen.py",
-        "detectors.py",
-        "prc.py",
-        "online_prc.py",
-        "modal_online_run.py",
-        "watermark_expt.py",
-        "constants.py",
-    )
+    files = runner.EXECUTION_FILES
     for name in files:
         Path(name).write_text("committed-source")
     monkeypatch.setattr(
@@ -380,30 +372,80 @@ def test_runner_passes_gpu_and_validates_once_before_eight_batches(tmp_path, mon
         assert options["gpu"] == gpu and options["max_containers"] == 10
         return lambda **kw: SimpleNamespace(redetect_batch=SimpleNamespace(remote=validate, map=distribute))
 
-    monkeypatch.setattr(runner, "CrossModelEntropyModel", SimpleNamespace(with_options=with_options))
+    monkeypatch.setattr(runner, "RedetectionModel", SimpleNamespace(with_options=with_options))
     monkeypatch.setattr(runner, "finish_redetection", SimpleNamespace(remote=lambda p: dict(root="run", counts={})))
     monkeypatch.setattr(runner, "redetect_results", SimpleNamespace(read_file=lambda p: [b"{}\n"]))
     runner.redetect(str(path), stage="full", gpu=gpu)
     assert calls == [batches[0], "distributed"]
 
 
-@pytest.mark.parametrize("module_name", ["modal_run", "modal_online_run", "modal_fixed_replicate_run"])
-def test_old_main_is_retired_before_any_remote_work(module_name):
-    import importlib
-    runner = importlib.import_module(module_name)
+@pytest.mark.parametrize("command", ["fixed_main", "online_main", "replicate_main"])
+def test_old_main_is_retired_before_any_remote_work(command):
+    import modal_run as runner
     with pytest.raises(RuntimeError, match="Prompt-dependent detection has been retired"):
-        runner.main()
+        getattr(runner, command)()
 
 
-@pytest.mark.parametrize("module_name,command", [("modal_run", "generate_fixed"),
-                                                ("modal_online_run", "generate_online")])
-def test_generation_only_commands_preserve_cached_inputs_and_do_not_detect(monkeypatch, module_name, command):
-    import importlib
+@pytest.mark.parametrize("construction", ["fixed", "online"])
+def test_generation_only_commands_preserve_cached_inputs_and_do_not_detect(monkeypatch, construction):
     from types import SimpleNamespace
-    runner = importlib.import_module(module_name)
+    import modal_run as runner
     plan = dict(wm_missing=[], null_missing=[], null_T=400, null_root="/data/_nulls",
                 wm_mode="exact", wm_source_T=400, wm_resume_source_T=0, wm_rejected_candidates=[])
-    monkeypatch.setattr(runner, "build_artifacts", SimpleNamespace(remote=lambda *a: dict(reused=True, artifact_fingerprint="original-key")))
-    monkeypatch.setattr(runner, "plan_generation", SimpleNamespace(remote=lambda *a: plan))
-    getattr(runner, command)(n=400)
+    monkeypatch.setattr(runner, construction + "_build_artifacts", SimpleNamespace(remote=lambda *a: dict(reused=True, artifact_fingerprint="original-key")))
+    monkeypatch.setattr(runner, construction + "_plan_generation", SimpleNamespace(remote=lambda *a: plan))
+    def unexpected_gpu(**kw):
+        raise AssertionError("cached generation must not start a GPU")
+    monkeypatch.setattr(runner, construction.title() + "GenerationModel", SimpleNamespace(with_options=unexpected_gpu))
+    getattr(runner, "generate_" + construction)(n=400)
     assert plan["wm_missing"] == [] and plan["null_missing"] == []
+
+
+@pytest.mark.parametrize("construction", ["fixed", "online"])
+def test_separate_generation_commands_keep_batch_and_gpu_settings(monkeypatch, construction):
+    from types import SimpleNamespace
+    import modal_run as runner
+    plan = dict(wm_missing=list(range(500)), null_missing=list(range(500)), null_T=3104,
+                null_root="/data/_nulls", wm_mode="fresh", wm_source_T=0,
+                wm_resume_source_T=0, wm_resume_source_tag="", wm_rejected_candidates=[])
+    built = []
+    def build(*args):
+        built.append(args)
+        return dict(reused=True, artifact_fingerprint="original-key")
+    monkeypatch.setattr(runner, construction + "_build_artifacts", SimpleNamespace(remote=build))
+    monkeypatch.setattr(runner, construction + "_plan_generation", SimpleNamespace(remote=lambda *a: plan))
+    options, batches = [], []
+    def dispatch(requests):
+        chunks = [r["prompt_indices"] if isinstance(r, dict) else r for r in requests]
+        batches.extend(chunks)
+        return [dict(generated=len(c), batch=len(c)) for c in chunks]
+    def with_options(**kw):
+        options.append(kw)
+        return lambda **kw: SimpleNamespace(
+            ready=SimpleNamespace(remote=lambda: dict(generation_model="Qwen3-8B-Base", model_cache_dir="cached")),
+            generate_wm=SimpleNamespace(map=dispatch), generate_null=SimpleNamespace(map=dispatch))
+    monkeypatch.setattr(runner, construction.title() + "GenerationModel", SimpleNamespace(with_options=with_options))
+    getattr(runner, "generate_" + construction)(n=3104, eta=.2, num_prompts=500, batch=125,
+                                               generation_model_size="8B", gpu="H100", max_containers=10)
+    assert options == [dict(gpu="H100", max_containers=10)]
+    assert len(batches) == 8 and all(len(b) == 125 for b in batches)
+    assert sorted(i for b in batches for i in b) == sorted(list(range(500)) * 2)
+    assert len(built) == 1 and "8B" in built[0]
+
+
+def test_one_shared_app_and_no_prompted_replay_implementations():
+    import ast
+    from pathlib import Path
+    import modal_run
+    source = Path(modal_run.__file__)
+    for removed in ("modal_runtime.py", "modal_fixed.py", "modal_online.py", "modal_fixed_replicate_run.py"):
+        assert not (source.parent / removed).exists()
+    tree = ast.parse(source.read_text())
+    called = [n.func.attr for n in ast.walk(tree) if isinstance(n, ast.Call)
+              and isinstance(n.func, ast.Attribute)]
+    assert "estimate_partition_trace_batch" not in called
+    assert "estimate_partition_entropy_trace_batch" not in called
+    functions = modal_run.app.registered_functions
+    for name in ("fixed_build_artifacts", "online_build_artifacts", "replicate_build_artifacts",
+                 "online_plan_generation", "online_audit_continuation", "prepare_redetection", "finish_redetection"):
+        assert name in functions

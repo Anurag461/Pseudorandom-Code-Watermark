@@ -5,17 +5,17 @@ import json
 import pytest
 
 from modal_run import (
-    DETECTION_CHECKPOINT_SCHEMA_VERSION,
-    SHARD_RESULT_SCHEMA_VERSION,
-    _aggregate_shard_payloads,
-    _append_summary_row,
-    _detection_checkpoint_identity,
-    _load_detection_checkpoint,
-    _save_detection_checkpoint,
-    _summary_row_exists,
-    prompt_indices_for_shard,
-    resolve_new_run_r,
-    resolve_r,
+    FIXED_DETECTION_CHECKPOINT_SCHEMA_VERSION as DETECTION_CHECKPOINT_SCHEMA_VERSION,
+    FIXED_SHARD_RESULT_SCHEMA_VERSION as SHARD_RESULT_SCHEMA_VERSION,
+    _fixed_aggregate_shard_payloads as _aggregate_shard_payloads,
+    _fixed_append_summary_row as _append_summary_row,
+    _fixed_detection_checkpoint_identity as _detection_checkpoint_identity,
+    _fixed_load_detection_checkpoint as _load_detection_checkpoint,
+    _fixed_save_detection_checkpoint as _save_detection_checkpoint,
+    _fixed_summary_row_exists as _summary_row_exists,
+    fixed_prompt_indices_for_shard as prompt_indices_for_shard,
+    fixed_resolve_new_run_r as resolve_new_run_r,
+    fixed_resolve_r as resolve_r,
 )
 
 
