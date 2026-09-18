@@ -8,13 +8,13 @@ import math
 from pathlib import Path
 import subprocess
 
-from .config import (
+from baseline_comparison.config import (
     GENERATION_SETTINGS, GUMBEL_KEY, MODEL_ID, PRIMARY_SEED, SECONDARY_SEED,
     SYNTHID_KEYS, TEXTSEAL_KEY_A, TEXTSEAL_KEY_B,
 )
 
 PROTOCOL = "completion_only_raw_abstain_v1"
-REFERENCE_PATH = Path(__file__).with_name("self_bleu_reference.json")
+REFERENCE_PATH = Path(__file__).with_name("reference.json")
 # Extend the historical ten keys once, independently of any experiment output.
 # Each added key is the first 31 bits of SHA256(domain + zero-based layer index).
 SYNTHID_KEY_DOMAIN = "prc-self-bleu/synthid-key-bank/v1/"
@@ -45,7 +45,7 @@ def verify_reference(root: Path | None = None) -> dict:
     The historical result/provenance records must still match byte for byte.
     """
     root = Path(root) if root is not None else REFERENCE_PATH.parent.parent
-    reference = json.loads((root / "baseline_comparison/self_bleu_reference.json").read_text())
+    reference = json.loads((root / "self_bleu/reference.json").read_text())
     if reference["protocol"] != PROTOCOL:
         raise ValueError("reference detector protocol differs")
     for name, expected in reference["source_sha256"].items():

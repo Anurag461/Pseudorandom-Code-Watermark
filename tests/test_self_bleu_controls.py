@@ -14,11 +14,11 @@ import pytest
 import torch
 
 from baseline_comparison.config import SYNTHID_KEYS
-from baseline_comparison.self_bleu_config import (
+from self_bleu.config import (
     REFERENCE_PATH, SYNTHID_KEY_BANK, StudySetting, batch_manifest, pilot_settings,
     verify_reference,
 )
-from baseline_comparison.self_bleu_generation import generate_response_batch
+from self_bleu.generation import generate_response_batch
 from online_prc import derive_document_seed, materialize_supports, otp_prefix
 
 ROOT = Path(__file__).resolve().parents[1]

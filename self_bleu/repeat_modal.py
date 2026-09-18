@@ -8,10 +8,10 @@ import time
 
 import modal
 
-from .self_bleu_validation_modal import generation_image, detector_image, hf_cache, results, checkpoint
-from .self_bleu_validation import save, sha
-from .self_bleu_config import digest
-from .self_bleu_repeat import SETUP, validate, upstream_hashes
+from .validation_modal import generation_image, detector_image, hf_cache, results, checkpoint
+from .validation import save, sha
+from .config import digest
+from .repeat import SETUP, validate, upstream_hashes
 
 app = modal.App("prc-self-bleu-repeat-ablation")
 
@@ -48,9 +48,9 @@ def finish(root, report, started, manifest):
 def generate(manifest, stage):
     import importlib.metadata
     import torch
-    from .comparison_runner import preload_official_runtimes, load_qwen3_8b
-    from .config import PINNED_DEPENDENCIES
-    from .self_bleu_repeat import (RepeatSetting, arm_setting, generate_repeat_batch,
+    from baseline_comparison.comparison_runner import preload_official_runtimes, load_qwen3_8b
+    from baseline_comparison.config import PINNED_DEPENDENCIES
+    from .repeat import (RepeatSetting, arm_setting, generate_repeat_batch,
                                    check_synthid_policy, check_sampler_policy)
     started = time.monotonic()
     root = begin(manifest, stage)
@@ -122,9 +122,9 @@ def other_generators(manifest):
               timeout=300, max_containers=1, retries=0, scaledown_window=2,
               volumes={"/cache": hf_cache, "/results": results})
 def textseal_replay(manifest):
-    from .textseal_modal import DEPENDENCIES, runtime_identity, load_model
-    from .textseal_completion import TextSealCompletionDetector
-    from .textseal_redetect import run_record
+    from baseline_comparison.textseal_modal import DEPENDENCIES, runtime_identity, load_model
+    from baseline_comparison.textseal_completion import TextSealCompletionDetector
+    from baseline_comparison.textseal_redetect import run_record
     started = time.monotonic()
     root = begin(manifest, "textseal_replay")
     request = {"model": manifest["model"], "runtime": {"dependencies": DEPENDENCIES}}

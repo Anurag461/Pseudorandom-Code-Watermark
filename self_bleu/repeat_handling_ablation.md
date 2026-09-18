@@ -97,39 +97,40 @@ validation. The setup's local verification record records the executed checks.
 ## Run sequence
 
 All commands run from the repository root. Use the pinned numerical environment
-and TextSeal/SynthID sources described in the README; `TEXTSEAL_SOURCE_ROOT` is
-needed when TextSeal is available as a checkout rather than an installed package.
-The supplied `setup_v2` manifest is already frozen and should be used directly.
-It replaces the unrun `setup_v1` after code consolidation and the explicit-key
-SynthID scorer fix; experimental settings, reference data and budget are unchanged.
-The earlier manifest is retained for provenance. Historical source bytes are
-verified against Git; dispatch verifies the current source files strictly.
+and TextSeal/SynthID sources described in the [study README](README.md) and
+[shared runtime setup](../baseline_comparison/README.md#reproducible-setup-and-checks).
+Set `TEXTSEAL_SOURCE_ROOT` when TextSeal is a checkout rather than an installed package.
+The supplied `setup_v3` manifest is frozen and should be used directly. It
+replaces the unrun `setup_v2` after moving the study into `self_bleu/`;
+experimental settings, reference data and budget are unchanged. Earlier
+manifests remain for provenance. Historical source bytes are verified against
+Git; dispatch verifies the current source files strictly.
 For a new request, prepare locally in a fresh output directory (preparation
 records the current source commit and refuses to overwrite a different request):
 
 ```sh
-python -m baseline_comparison.self_bleu_repeat prepare --output outputs/self_bleu_repeat/new-setup
+python -m self_bleu.repeat prepare --output outputs/self_bleu_repeat/new-setup
 ```
 
 First paid stage, then inspect its analysis before proceeding:
 
 ```sh
-MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_repeat_modal \
-  --setup outputs/self_bleu_repeat/setup_v2 --stage synthid
+MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m self_bleu.repeat_modal \
+  --setup outputs/self_bleu_repeat/setup_v3 --stage synthid
 NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 MODAL_PROFILE=new-prc-watermark \
-  python -m baseline_comparison.self_bleu_repeat analyze --setup outputs/self_bleu_repeat/setup_v2 \
+  python -m self_bleu.repeat analyze --setup outputs/self_bleu_repeat/setup_v3 \
   --stage synthid --tokenizer /path/to/pinned/tokenizer.json --download
 ```
 
 The follow-up stages are separate commands, never automatically chained:
 
 ```sh
-MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_repeat_modal \
-  --setup outputs/self_bleu_repeat/setup_v2 --stage other_generators
-MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_repeat_modal \
-  --setup outputs/self_bleu_repeat/setup_v2 --stage textseal_replay
+MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m self_bleu.repeat_modal \
+  --setup outputs/self_bleu_repeat/setup_v3 --stage other_generators
+MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m self_bleu.repeat_modal \
+  --setup outputs/self_bleu_repeat/setup_v3 --stage textseal_replay
 NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 MODAL_PROFILE=new-prc-watermark \
-  python -m baseline_comparison.self_bleu_repeat analyze --setup outputs/self_bleu_repeat/setup_v2 \
+  python -m self_bleu.repeat analyze --setup outputs/self_bleu_repeat/setup_v3 \
   --stage all --tokenizer /path/to/pinned/tokenizer.json --download
 ```
 

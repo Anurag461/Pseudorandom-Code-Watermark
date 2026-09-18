@@ -9,10 +9,10 @@ import time
 
 import modal
 
-from baseline_comparison.self_bleu_validation_modal import generation_image, detector_image, hf_cache, data_volume, results, checkpoint
-from baseline_comparison.self_bleu_validation import save, sha
-from baseline_comparison.self_bleu_config import digest
-from baseline_comparison.self_bleu_pilot import validate_request, SETUP
+from self_bleu.validation_modal import generation_image, detector_image, hf_cache, data_volume, results, checkpoint
+from self_bleu.validation import save, sha
+from self_bleu.config import digest
+from self_bleu.pilot import validate_request, SETUP
 
 app = modal.App("prc-self-bleu-stage-a")
 

@@ -11,12 +11,12 @@ from pathlib import Path
 
 import torch
 
-from .self_bleu_config import StudySetting, batch_manifest, digest
+from .config import StudySetting, batch_manifest, digest
 
 
 def implementation_identity():
     root = Path(__file__).resolve().parents[1]
-    names = ("baseline_comparison/self_bleu_config.py", "baseline_comparison/self_bleu_generation.py",
+    names = ("self_bleu/__init__.py", "self_bleu/config.py", "self_bleu/generation.py",
              "baseline_comparison/official.py", "baseline_comparison/comparison_runner.py",
              "baseline_comparison/config.py", "watermark_expt.py", "online_prc.py", "qwen.py")
     return {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in names}
@@ -80,7 +80,7 @@ def generate_response_batch(model, prompts, prompt_indices, *, setting: StudySet
     else:
         if prc_artifact is not None or online_sampler is not None:
             raise ValueError("PRC artifact/sampler is only valid for online_prc")
-        from .comparison_runner import generate_method
+        from baseline_comparison.comparison_runner import generate_method
 
         sequences, telemetry = generate_method(
             model, prompts, method=setting.method, seed=sampling_seed,

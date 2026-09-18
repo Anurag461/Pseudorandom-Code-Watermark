@@ -2,26 +2,26 @@
 
 Prepared 2026-09-15; revised for `comparison-with-redetect` at `4696382`.
 
-Implementation update (2026-09-18): Self-BLEU workflows are consolidated into
-`self_bleu_validation.py`, `self_bleu_pilot.py`, and `self_bleu_repeat.py`, with
+Implementation update (2026-09-18): Self-BLEU workflows now live in the
+`self_bleu/` package, in `validation.py`, `pilot.py`, and `repeat.py`, with
 separate Modal workers and shared configuration/generation modules. See the
-[CLI and source-history notes](baseline_comparison/README.md#self-bleu-code-layout-and-source-history).
-The unrun repeat request is now `outputs/self_bleu_repeat/setup_v2/manifest.json`;
-its experimental settings and budget match setup_v1. Completed results remain
+[CLI and source-history notes](README.md#source-history-and-immutable-results).
+The unrun repeat request is now `outputs/self_bleu_repeat/setup_v3/manifest.json`;
+its experimental settings and budget match setup_v2 and setup_v1. Completed results remain
 immutable. The legacy SynthID scorer now requires explicit keys and derives
 its depth metadata from them, preventing a depth sweep from silently using the
 historical ten-key detector. This does not change the depth-10 pilot findings.
 
 Status: **steps 1–4 complete**, including Stage A analysis on 2026-09-18.
-See the [pilot results](outputs/self_bleu_pilot/stage_a_v2/REPORT.md) and
-[validation report](outputs/self_bleu_validation/step3-v4/REPORT.md).
+See the [pilot results](../outputs/self_bleu_pilot/stage_a_v2/REPORT.md) and
+[validation report](../outputs/self_bleu_validation/step3-v4/REPORT.md).
 Stage A reused saved pairs and completed missing prompt-free detection.
 The cumulative planning charge is **$5.51880 of the initial $10**.
 PRC's diversity advantage over default SynthID is small and uncertain under
 the evaluated implementations. **Repeat-handling ablation now precedes any
 parameter expansion:** the current SynthID generator falls back to ordinary
 sampling on repeated contexts, while TextSeal and Gumbel do not. The ablation
-setup is [repeat_handling_ablation.md](baseline_comparison/repeat_handling_ablation.md).
+setup is [repeat_handling_ablation.md](repeat_handling_ablation.md).
 It is prepared locally; no new GPU jobs have been launched.
 Total incremental Modal budget: **$200**, including validation, CPU, memory,
 generation, scoring, and retries.
@@ -44,7 +44,7 @@ completed default-setting results, including the original shared null cohort.
 
 ## Next steps and implementation boundary
 
-1. **Freeze the completed reference.** `baseline_comparison/self_bleu_reference.json`
+1. **Freeze the completed reference.** `self_bleu/reference.json`
    pins commit `46963822e9d1f89558337c013b1ff0d47fcc0fb2`, source hashes,
    model/prompt identity, PRC artifact and partition hashes, and the completed
    comparison/replay provenance. Preserve the historical results and Modal
@@ -77,15 +77,15 @@ completed default-setting results, including the original shared null cohort.
    prompt, then run the frozen full grid and independent null calibration only
    if justified. The total study ceiling remains $200.
 
-Implemented entry points: `self_bleu_config.StudySetting`, `pilot_settings`,
-`verify_reference`, and `self_bleu_generation.generate_response_batch` in
-`baseline_comparison/`. The latter uses already-loaded models, independent
+Implemented entry points: `self_bleu.config.StudySetting`, `pilot_settings`,
+`verify_reference`, and `self_bleu.generation.generate_response_batch` in
+`self_bleu/`. The latter uses already-loaded models, independent
 sampling seeds and per-response identities; it performs no dispatch or file
 writes. The baseline generator now accepts explicit alpha/key-list controls
 and ordinary sampling while retaining historical defaults. The TextSeal
 detector accepts the same alpha. API examples and validation commands are in
-`baseline_comparison/README.md`. The bounded step-3 worker and source-cache
-audit are in `self_bleu_validation_modal.py` and `self_bleu_validation.py`.
+[self_bleu/README.md](README.md). The bounded step-3 worker and source-cache
+audit are in `validation_modal.py` and `validation.py`.
 The GPU check uses the planned batch of 50 prompts at 1,024 tokens so exact
 cache reproduction and saved pilot outputs have the intended execution shape.
 It verifies two seeds plus an intervening-seed replay, includes the deterministic
@@ -421,7 +421,7 @@ document seeds and produces different codewords without changing that key.
 
 Keep the original key configuration for the primary sweep: PRC key seed 12345
 and existing partition, TextSeal key pair 42/12387, Gumbel key 42, and the
-existing ten SynthID keys. `self_bleu_config.SYNTHID_KEY_BANK` extends these to
+existing ten SynthID keys. `self_bleu.config.SYNTHID_KEY_BANK` extends these to
 30 distinct keys using the first 31 bits of SHA256 over the fixed domain
 `prc-self-bleu/synthid-key-bank/v1/` plus the zero-based layer index, 10–29.
 Use nested prefixes of this list across depths. The chosen
@@ -472,7 +472,7 @@ high-probability loops.
 ## Detection and false-positive comparability
 
 **Required context protocol: `completion_only_raw_abstain_v1`.** The
-[September 17 redetection plan](textseal_prompt_free_redetection_plan.md)
+[September 17 redetection plan](../textseal_prompt_free_redetection_plan.md)
 supersedes this proposal's earlier EOT-seeded protocol. Keep prompts for
 generation and prompt-paired analysis, but exclude them from every detector
 input. Replay saved completion IDs with fresh model state and no prepended
@@ -735,7 +735,7 @@ not a newly established security parameter choice.
 - Runtime and billing:
   `outputs/controlled_baseline_full/qwen3-8b-batch50-validation-20260823-v1/controlled_baseline_full_runtime.json`
   and `controlled_baseline_full_cost_ledger.csv` in the same directory.
-- Frozen current reference: `baseline_comparison/self_bleu_reference.json`;
+- Frozen current reference: `self_bleu/reference.json`;
   `baseline_comparison/README.md`, `textseal_prompt_free_redetection_plan.md`,
   `outputs/comparison_redetect/baseline_comparisons.provenance.json`, and
   `outputs/redetection/cache_index.json`.

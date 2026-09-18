@@ -1,0 +1,87 @@
+{
+  "cli_help_checks": {
+    "local": [
+      "self_bleu.validation",
+      "self_bleu.pilot",
+      "self_bleu.repeat"
+    ],
+    "modal_no_dispatch": [
+      "self_bleu.validation_modal",
+      "self_bleu.pilot_modal",
+      "self_bleu.repeat_modal"
+    ]
+  },
+  "documentation_relative_links_checked": [
+    "README.md",
+    "baseline_comparison/README.md",
+    "self_bleu/README.md",
+    "self_bleu/plan.md",
+    "self_bleu/repeat_handling_ablation.md"
+  ],
+  "experimental_fields_unchanged": true,
+  "gpu_dispatched": false,
+  "gpu_validation_status": "pending first staged run",
+  "limitations": [
+    "CPU checks and saved-data reanalysis; target H100 forced-repeat and native-prefix checks remain mandatory before new generation."
+  ],
+  "local_tests_passed": 80,
+  "manifest_fields_changed": [
+    "code_sha256",
+    "id",
+    "source_commit",
+    "supersedes"
+  ],
+  "manifest_id": "4fbc9ff7a132ca7a6714a1a585b5c81354c365fe6f9b2f0082751b31d79df82a",
+  "modal_package_mounts": {
+    "detector": {
+      "local_directory": "self_bleu",
+      "recursive": true,
+      "remote_directory": "/root/self_bleu"
+    },
+    "generation": {
+      "local_directory": "self_bleu",
+      "recursive": true,
+      "remote_directory": "/root/self_bleu"
+    }
+  },
+  "new_modal_spend_usd": 0,
+  "passed": true,
+  "pilot_reanalysis": {
+    "all_numerical_and_input_fields_exact": true,
+    "changed_fields": [
+      "analysis_code_sha256",
+      "metric_and_evidence_code_sha256"
+    ],
+    "endpoints": 10,
+    "original_summary_sha256": "842558fe4fa101642c3b497097ec4dcd881e46bf7b545f2c0ff5a2ba7ca63631",
+    "paired_contrasts": 6,
+    "recomputed_summary_sha256": "aa5868a9101e47ab3495fd19804483f69b7d11b3c68af2dc4d67c25082a0a471"
+  },
+  "repeat_analysis_wiring": {
+    "all_contrasts_zero_tolerance": 1e-14,
+    "fixture": "Copies of all three original-policy arms; no new generation",
+    "paired_endpoints": 6,
+    "passed": true
+  },
+  "source_identity": {
+    "all_study_python_files_pinned": true,
+    "archived_manifest_file_counts": {
+      "outputs/self_bleu_pilot/stage_a_v2/manifest.json": 20,
+      "outputs/self_bleu_validation/step3-v4/manifest.json": 32
+    },
+    "current_source_files_checked": 25,
+    "pre_move_commit": "7d275d710d4c7b473c9bb1304e3c26bc7cac968a",
+    "reference_file_byte_identical": true,
+    "reference_files_checked": 10,
+    "upstream_files_checked": 4
+  },
+  "superseded_manifest_id": "3558ccff02a852479c851b85054210760929cb847741836b2ec4808037a39bb2",
+  "test_suites": [
+    "tests/test_self_bleu_controls.py",
+    "tests/test_self_bleu_validation.py",
+    "tests/test_self_bleu_pilot.py",
+    "tests/test_self_bleu_repeat.py",
+    "tests/test_textseal_completion.py",
+    "tests/test_baseline_comparison.py"
+  ]
+}

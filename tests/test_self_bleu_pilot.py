@@ -3,9 +3,9 @@ from copy import deepcopy
 
 import pytest
 
-from baseline_comparison.self_bleu_config import digest
-from baseline_comparison.self_bleu_pilot import clean_records, validate_request
-from baseline_comparison.self_bleu_validation import RATE
+from self_bleu.config import digest
+from self_bleu.pilot import clean_records, validate_request
+from self_bleu.validation import RATE
 
 
 def record():
@@ -53,7 +53,7 @@ def test_generation_diagnostics_do_not_enter_detector_request():
 
 def test_paired_bootstrap_keeps_both_responses_in_the_prompt_unit():
     import numpy as np
-    from baseline_comparison.self_bleu_pilot import paired_interval
+    from self_bleu.pilot import paired_interval
     # Perfect within-prompt disagreement: prompt-average detection is .5 for
     # every sampled prompt, so a correct prompt bootstrap has no variation.
     pairs = np.array([[0., 1.]]*50)

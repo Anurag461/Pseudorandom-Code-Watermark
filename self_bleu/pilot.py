@@ -13,24 +13,24 @@ import subprocess
 
 import numpy as np
 
-from .scoring import self_bleu_token_ids, quality_metrics, deduplicated_positions, gumbel_gamma_test, synthid_normal_test
-from .config import PREFIX_LENGTHS
-from .self_bleu_config import digest, verify_reference
-from .self_bleu_validation import ROOT, RATE, save, sha
-from .self_bleu_validation import collect as collect_validation
+from baseline_comparison.scoring import self_bleu_token_ids, quality_metrics, deduplicated_positions, gumbel_gamma_test, synthid_normal_test
+from baseline_comparison.config import PREFIX_LENGTHS
+from .config import digest, verify_reference
+from .validation import ROOT, RATE, save, sha
+from .validation import collect as collect_validation
 
 VALIDATION = ROOT / "outputs/self_bleu_validation/step3-v4"
 RAW = ROOT / "outputs/self_bleu_validation/raw/743658bc40e7f52c910d9538266bbd0ff461bba949e2a842cc8af36fa32507d8"
 SETUP = ROOT / "outputs/self_bleu_pilot/stage_a_v2"
 METHODS = ("online_prc", "textseal", "synthid_text", "gumbel_max", "null")
-CODE = ("baseline_comparison/self_bleu_pilot.py", "baseline_comparison/self_bleu_pilot_modal.py",
-        "baseline_comparison/self_bleu_validation.py", "baseline_comparison/self_bleu_validation_modal.py",
+CODE = ("self_bleu/__init__.py", "self_bleu/pilot.py", "self_bleu/pilot_modal.py",
+        "self_bleu/validation.py", "self_bleu/validation_modal.py",
         "baseline_comparison/textseal_modal.py", "baseline_comparison/textseal_redetect.py",
         "baseline_comparison/textseal_completion.py", "baseline_comparison/textseal_source_audit.json",
         "baseline_comparison/requirements-textseal.txt", "baseline_comparison/modal_app.py",
         "baseline_comparison/comparison_runner.py", "baseline_comparison/config.py",
         "baseline_comparison/official.py", "baseline_comparison/scoring.py",
-        "baseline_comparison/self_bleu_config.py", "baseline_comparison/self_bleu_reference.json",
+        "self_bleu/config.py", "self_bleu/reference.json",
         "qwen.py", "prc.py", "online_prc.py", "detectors.py")
 
 
@@ -61,7 +61,7 @@ def clean_records(batches):
 
 
 def prepare(output=SETUP, failed_attempt_allowance_usd=0.):
-    from .textseal_results import validate_record
+    from baseline_comparison.textseal_results import validate_record
     reference = verify_reference()
     batches, verification = load_pairs()
     rows = clean_records(batches)
@@ -140,7 +140,7 @@ def validate_request(manifest, records, stage, root):
     if manifest["protocol"] != "completion_only_raw_abstain_v1" or manifest["stage"] != "A" or manifest["nominal_fpr"] != .001:
         raise ValueError("pilot protocol differs")
     for name, expected in manifest["code_sha256"].items():
-        if sha(Path(root) / name) != expected:
+        if not (Path(root) / name).is_file() or sha(Path(root) / name) != expected:
             raise ValueError(f"pilot worker source differs: {name}")
     expected = manifest["requests"][stage]
     if len(records) != expected["count"] or digest(records) != expected["sha256"]:
@@ -219,9 +219,9 @@ def diversity(setup, tokenizer_path):
 
 def token_evidence(setup):
     import torch
-    from .config import SYNTHID_COMMIT
-    from .textseal_completion import load_upstream_detector
-    from .official import official_gumbel_scores, synthid_processor
+    from baseline_comparison.config import SYNTHID_COMMIT
+    from baseline_comparison.textseal_completion import load_upstream_detector
+    from baseline_comparison.official import official_gumbel_scores, synthid_processor
     load_upstream_detector(os.environ.get("TEXTSEAL_SOURCE_ROOT"))
     distribution = importlib.metadata.distribution("synthid-text")
     direct = json.loads(distribution.read_text("direct_url.json"))
@@ -290,7 +290,7 @@ def token_evidence(setup):
                     original_method = "synthid_text" if detector == "synthid_historical_mask" else detector
                     if detector in ("gumbel_max", "synthid_historical_mask") and (
                             row["method"] == "shared_null" or (row["method"] == original_method and row["response_index"] == 0)):
-                        from .reuse_token_baselines import token_hash
+                        from baseline_comparison.reuse_token_baselines import token_hash
                         prior = historical[(original_method, "null" if row["method"] == "shared_null" else "watermarked", row["prompt_index"], length)]
                         if prior["generated_token_hash"] != token_hash(ids):
                             raise ValueError("CPU parity record tokens differ")
@@ -513,7 +513,7 @@ def summarize(setup, *, output):
                                "This is an exploratory selected batch and a default-setting comparison, not a parameter-frontier or Bayesian-SynthID comparison."]}
     source_root = output / "raw/analysis_source"
     source_root.mkdir(parents=True, exist_ok=True)
-    for name in ("self_bleu_pilot.py",):
+    for name in ("pilot.py",):
         source = Path(__file__).with_name(name).read_bytes()
         destination = source_root / name
         if destination.exists() and destination.read_bytes() != source:

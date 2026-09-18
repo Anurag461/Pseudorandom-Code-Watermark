@@ -12,7 +12,9 @@ The shared baseline code is in `baseline_comparison/comparison_runner.py`
 documents the TextSeal entropy correction, PRC cache reuse, upstream-code
 requirements, and estimated costs. The [completion-only TextSeal setup](baseline_comparison/README.md)
 calls the pinned upstream detector directly; the source preflight is complete.
-Full model replay remains pending, and repeat handling is deferred.
+The completed replay and shared-null alignment are documented there. The
+[detectability versus diversity study](self_bleu/README.md) now has its own
+package, [plan](self_bleu/plan.md), and [repeat-handling runbook](self_bleu/repeat_handling_ablation.md).
 
 The first cleanup commit, `cf57b46`, retired prompted detection before this
 structural move. Old implementations remain in Git history at `61b1739`;

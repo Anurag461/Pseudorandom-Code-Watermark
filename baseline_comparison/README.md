@@ -1,10 +1,12 @@
-# Completion-only TextSeal comparison
+# Completion-only baseline comparison
 
 The shared historical runner is `comparison_runner.py` (formerly
 `smoke_runner.py`). It served the full comparison as well as smoke runs.
 Its native and proxy TextSeal paths that consumed prompt-conditioned entropy
-are retired and raise an error. Generation behavior is unchanged; repeat
-handling is deferred.
+are retired and raise an error. Generation behavior is unchanged in this
+redetection workflow. The
+[Self-BLEU study](../self_bleu/README.md) owns the separate repeat-handling
+ablation and detectability/diversity experiments.
 
 ## Detector
 
@@ -230,208 +232,10 @@ for TextSeal, 2.58% for SynthID, 57.38% for GumbelMax, and 2.89% for the shared
 nulls. Redetection reused generated text, so these metrics are unchanged.
 TextSeal generation-time repeat handling remains disabled.
 
-## Self-BLEU study controls and bounded validation
+## Detectability versus diversity study
 
-The experiment plan is [detectability_self_bleu_plan.md](../detectability_self_bleu_plan.md).
-`self_bleu_reference.json` freezes the completed comparison at commit `4696382`,
-including 30 source hashes and nine artifact/provenance records. Call
-`self_bleu_config.verify_reference()` locally to verify the historical git blobs
-and result records without changing them. The current study source is allowed
-to differ; each new generation manifest records its own implementation hashes.
-
-`StudySetting` configures online PRC eta/key seed, TextSeal alpha, or SynthID
-depth. Its 30-key SynthID bank preserves the original first ten keys, then
-uses the predeclared SHA256 domain in `self_bleu_config.py`. Generation and
-evidence extraction must use the same key list. `pilot_settings()` returns the
-five Stage A configurations; `pilot_settings("B")` and `pilot_settings("depth30")`
-describe the later checks. Sampling seeds are 12345 and 67890, independent of
-the fixed PRC key seed 12345.
-
-`self_bleu_generation.generate_response_batch` wraps already-loaded models;
-it does not load weights, dispatch Modal jobs, or write caches. For example,
-once the existing generation runtime and original artifact have been loaded:
-
-```python
-from baseline_comparison.self_bleu_config import StudySetting
-from baseline_comparison.self_bleu_generation import generate_response_batch
-
-setting = StudySetting("online_prc", eta=.05, key_seed=12345)
-second_response = generate_response_batch(
-    we.model, prompts, prompt_indices,
-    setting=setting, sampling_seed=67890, response_index=1,
-    execution=actual_runtime_identity,  # record actual versions/device/precision
-    prc_artifact=original_artifact,
-    online_sampler=we.generate_batch_and_collect_online,
-)
-```
-
-The wrapper verifies the artifact key against the setting and passes an
-independent document seed into the existing sampler. It records partition,
-key, ordered prompt hashes, execution, sample seed and response IDs under
-`self_bleu_v1/<batch-hash>`. Existing `modal_run` artifact and cache behavior is
-untouched. Ordinary sampling is supported as `StudySetting("null")`; baseline
-methods use the existing `generate_method` with explicit alpha/keys.
-
-For TextSeal detection, instantiate `TextSealCompletionDetector(model,
-alpha=setting.alpha)` and call `detect_prefixes` on the raw saved completion
-IDs. Preserve direct per-length replay. For SynthID, pass
-`keys=setting.synthid_keys` to both `synthid_processor` and
-`official_synthid_g_values`. The historical alpha .1 / depth 10 defaults remain.
-Eligibility/repeat handling and detector formulas have not changed. Generation
-diagnostics are explicitly separated from completion-only detection inputs.
-
-Local checks require the existing numerical test environment, the pinned
-TextSeal checkout (or installed package), and the pinned SynthID package:
-
-```sh
-python -m pip install --no-deps 'git+https://github.com/google-deepmind/synthid-text.git@addb4a158143c7c6851a1308f78b89fceed59683'
-NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 TEXTSEAL_SOURCE_ROOT=/path/to/pinned/textseal \
-  python -m pytest tests/test_self_bleu_controls.py -q
-```
-
-These CPU checks exercise the original PRC sampler with a small deterministic
-model, upstream parameter propagation, default generation versus the frozen
-function, and identity separation. They are not production GPU validation.
-`self_bleu_validation.py` verifies historical source bytes and freezes the
-step-3 request. `self_bleu_validation_modal.py` explicitly dispatches either
-generation validation or the subsequent TextSeal replay check; neither stage
-dispatches the pilot or full sweep. Use the `new-prc-watermark` Modal profile.
-
-```sh
-python -m baseline_comparison.self_bleu_validation prepare --cache /path/to/downloaded/prc-data --output outputs/self_bleu_validation/new-run
-MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_validation_modal --manifest outputs/self_bleu_validation/new-run/manifest.json --stage generation
-MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_validation_modal --manifest outputs/self_bleu_validation/new-run/manifest.json --stage textseal
-```
-
-Generation checks the same 50-prompt batch at 1,024 tokens, seeds 12345/67890
-and a replay of 12345, with a fixed key for each configuration. It includes
-TextSeal alpha zero as a deterministic control and short parameter checks for
-alpha .5 and SynthID depths 2/20/30. Saved first responses are compared by exact
-token hashes against historical caches; mismatches require the new pair.
-PRC replay observes every actual input and compares an independent token-step
-reference. The separate HF worker checks seven fresh TextSeal/null records
-against upstream direct-prefix detection, including alpha zero and .5.
-
-The workers use existing offline weights and separate paths on
-`prc-completion-only/self_bleu_validation/<manifest-id>`. Successful generation
-batches are saved immediately for reuse. Reports and batch files are immutable;
-retrieve an existing run rather than redispatching it. One H100 per stage,
-no retries, 3,000/600-second timeouts and explicit resource reservations keep
-validation within the initial $10 allocation. Timing-based resource estimates
-exclude image/startup/storage overhead and are not exact billing totals.
-
-**Status: step 3 completed.** See the [validation report](../outputs/self_bleu_validation/step3-v4/REPORT.md).
-All six full-length replicate controls, four short parameter checks, PRC
-completion-only checks and seven TextSeal direct-prefix parity checks passed.
-The 20 local tests pass. The artifact collector verified 27 files containing
-600 full-length and 200 short response records. Stage A subsequently reused
-those pairs for the completed analysis below, with no new generation.
-
-The initial generation run saved every pair before a BF16-to-NumPy conversion
-failed in a diagnostic assertion. The `prc-replay-repair` stage recovered that
-check from verified batches without regenerating responses. Its setup embeds
-the original manifest and permits changes only to validation infrastructure.
-The original generation source and keys are unchanged. The successful combined
-request is `outputs/self_bleu_validation/step3-v4/manifest.json`.
-
-Retrieve and verify the completed artifacts without GPU dispatch:
-
-```sh
-MODAL_PROFILE=new-prc-watermark python -m baseline_comparison.self_bleu_validation collect \
-  --setup outputs/self_bleu_validation/step3-v4 \
-  --raw outputs/self_bleu_validation/raw/743658bc40e7f52c910d9538266bbd0ff461bba949e2a842cc8af36fa32507d8 \
-  --download
-```
-
-Omit `--download` to check an existing local copy. The collector verifies file
-hashes, batch/response identities, fixed-key seed pairs, actual historical
-token matches and every saved SynthID official score-update check.
-
-**Status: Stage A analysis complete.** See the [pilot report](../outputs/self_bleu_pilot/stage_a_v2/REPORT.md).
-PRC preserves ordinary-sampling diversity and detects 97/100 at 1,024 tokens,
-but its Self-BLEU difference from default SynthID is small and uncertain.
-The evidence does not justify immediate expansion to the full sweep. The
-cumulative planning charge, including conservative failure/overhead allowances,
-is $5.51880 of the initial $10; this is not a settled invoice.
-
-`self_bleu_pilot.py` freezes clean completion-only replay requests from the
-verified pairs and imports 53 compatible TextSeal records. Its two Modal stages
-recover 200 PRC traces and 147 missing TextSeal records; neither generates text.
-`self_bleu_pilot.py` also computes symmetric sentence Self-BLEU and official
-keyed token evidence, verifies the 153 replay files, joins scores by response
-identity, computes paired prompt-bootstrap intervals, and renders the figure.
-
-The completed request is explicitly **`stage_a_v2`**. Version 1 failed in a
-verification call before saving usable PRC batches; version 2 changes that
-argument to a tensor and accounts for the failed attempt. Inputs, keys and
-analysis choices are identical. Do not redispatch either completed GPU stage.
-Restore the raw analysis files from the archive recorded in
-`outputs/self_bleu_pilot/stage_a_v2/archive.json` when using a fresh checkout.
-That record gives the local path and the explicitly authorized Modal archive
-location, with its checksum and transfer-verification status.
-Extract its relative `outputs/` paths at the repository root. It includes the
-step-3 raw generation batches and historical score/input files used below.
-Then verify/reproduce locally (SacreBLEU 2.4.3, pinned SynthID package, existing
-numerical environment and model tokenizer required):
-
-```sh
-NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot diversity \
-  --setup outputs/self_bleu_pilot/stage_a_v2 --tokenizer /path/to/pinned/tokenizer.json
-NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot token-evidence \
-  --setup outputs/self_bleu_pilot/stage_a_v2
-NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot summarize \
-  --setup outputs/self_bleu_pilot/stage_a_v2 --output outputs/self_bleu_pilot/reanalysis
-```
-
-Artifacts are immutable: identical reruns verify existing bytes, while changed
-runtime versions or results require a separate output location. The pinned
-analysis source and original analysis before a figure-layout repair are retained
-inside the archive. No Stage B generation was launched.
-
-**Next setup: repeat-handling ablation.** The pilot used Google's repeated-context
-generation fallback for SynthID and no corresponding fallback for TextSeal or
-Gumbel. The [runbook](repeat_handling_ablation.md) freezes a generation-only
-ablation before the parameter sweep: SynthID depth 10 with fallback off first,
-then TextSeal alpha .1 and Gumbel with fallback on. Each adds 50 prompts × two
-responses, and the original-policy pairs are reused. PRC is unchanged.
-
-`self_bleu_repeat.py` scopes the policy adapters to a single generation call;
-historical generator code and defaults are unchanged. Setup and CPU analysis
-share that module; explicit GPU stages remain in
-`self_bleu_repeat_modal.py`. The current frozen request
-is `outputs/self_bleu_repeat/setup_v2/manifest.json`. Preparing it dispatches
-nothing. Each GPU stage has its own timeout, no retries and source/runtime
-checks; generation also has forced-repeat checks and historical-prefix gates.
-The analysis preserves detector settings and uses paired prompt contrasts
-against Stage A.
-
-
-## Self-BLEU code layout and source history
-
-The study has eight Python modules: shared `self_bleu_config.py` and
-`self_bleu_generation.py`, plus one local workflow and one Modal worker module
-for each of validation, pilot, and repeat ablation. Local commands use
-`prepare`/`collect`/analysis subcommands; only the separate `*_modal.py`
-entrypoints dispatch GPU work. To list pilot commands:
-
-```sh
-python -m baseline_comparison.self_bleu_pilot --help
-```
-
-Consolidation replaced five standalone setup/results/analysis modules. Completed
-manifests, scores, archives and source snapshots remain unchanged. Their exact
-source tree is retained at Git commit
-`7bde5c6d54dee444db3b69d96bfce6b09c79ba4c`. Historical readers verify those Git
-bytes against the recorded hashes when a source has moved. Worker validation
-always requires matching **current** source files; it cannot fall back to Git.
-The unrun repeat request was refreshed as `setup_v2`, with the same experimental
-settings, inputs, upstream sources and budget, and a link to the superseded
-`setup_v1` manifest. Reanalysis writes its summary/figure into a separate output
-directory instead of replacing the original pilot report.
-
-SynthID scoring in `comparison_runner._score_baseline_sequence` now requires
-explicit `synthid_keys=setting.synthid_keys` for a study run (including nulls).
-Both full and prefix evidence use those keys; metadata records the actual key
-list, depth and key domain. Omitting keys fails before scoring. The old fixed
-configuration callers explicitly supply `SYNTHID_KEYS`. The historical tuple
-mask is unchanged; Stage A's primary analysis still uses Google's context mask.
+The newer study has its own package and [README](../self_bleu/README.md),
+[experiment plan](../self_bleu/plan.md), and
+[repeat-handling runbook](../self_bleu/repeat_handling_ablation.md).
+It imports shared generation, scoring and completion-only detectors from this
+folder. Study orchestration, analysis and Modal entrypoints live in `self_bleu/`.

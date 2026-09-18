@@ -10,12 +10,15 @@ import modal
 
 from baseline_comparison.modal_app import image as generation_image, hf_cache, data_volume
 from baseline_comparison.textseal_modal import image as detector_image
-from baseline_comparison.self_bleu_validation import save, sha, validate_manifest
+from self_bleu.validation import save, sha, validate_manifest
 
 # Copy the sampler as text, without importing the notebook's top-level model load.
 generation_image = generation_image.add_local_file("watermark_expt.py", "/root/watermark_expt.py", copy=False)
 for name in ("prompts.jsonl", "qwen.py", "prc.py", "online_prc.py", "detectors.py", "watermark_expt.py"):
     detector_image = detector_image.add_local_file(name, f"/root/{name}", copy=True)
+# Both runtimes need the study package as well as the shared baseline package.
+generation_image = generation_image.add_local_dir("self_bleu", "/root/self_bleu", copy=False)
+detector_image = detector_image.add_local_dir("self_bleu", "/root/self_bleu", copy=False)
 results = modal.Volume.from_name("prc-completion-only", create_if_missing=False)
 app = modal.App("prc-self-bleu-validation")
 
@@ -77,9 +80,9 @@ def generation(manifest):
     import torch
     from baseline_comparison.comparison_runner import preload_official_runtimes, load_qwen3_8b, _numpy_pickle_compat
     from baseline_comparison.config import PINNED_DEPENDENCIES
-    from baseline_comparison.self_bleu_config import StudySetting, pilot_settings
-    from baseline_comparison.self_bleu_generation import generate_response_batch
-    from baseline_comparison.self_bleu_validation import load_online_sampler, compare_replicates
+    from self_bleu.config import StudySetting, pilot_settings
+    from self_bleu.generation import generate_response_batch
+    from self_bleu.validation import load_online_sampler, compare_replicates
     started = time.monotonic()
     validate_manifest(manifest, "/root")
     root = Path("/results/self_bleu_validation") / manifest["id"]

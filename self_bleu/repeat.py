@@ -14,9 +14,9 @@ import types
 import torch
 import numpy as np
 
-from .self_bleu_config import StudySetting, digest
-from .self_bleu_pilot import load_pairs, paired_interval, score_rows
-from .self_bleu_validation import ROOT, RATE, save, sha, verify_source_hashes
+from .config import StudySetting, digest
+from .pilot import CODE as PILOT_CODE, load_pairs, paired_interval, score_rows
+from .validation import ROOT, RATE, save, sha, verify_source_hashes
 
 FALLBACK_SEED_DOMAIN = "prc-self-bleu/repeat-fallback/v1"
 ARMS = {"synthid_off": ("synthid_text", False), "textseal_on": ("textseal", True),
@@ -135,7 +135,7 @@ class SamplerRepeatPolicy:
 @contextmanager
 def install_policy(setting, sampling_seed, prompt_indices):
     """Scope factories to this single-threaded ablation call; always restore them."""
-    from . import comparison_runner as runner
+    from baseline_comparison import comparison_runner as runner
     names = ("synthid_processor", "textseal_generator", "gumbel_generator")
     original = {name: getattr(runner, name) for name in names}
     created = []
@@ -166,7 +166,7 @@ def install_policy(setting, sampling_seed, prompt_indices):
 
 def generate_repeat_batch(model, prompts, indices, *, setting, sampling_seed, response_index,
                           execution, max_new_tokens=1024, device="cuda"):
-    from .self_bleu_generation import generate_response_batch
+    from .generation import generate_response_batch
     if not isinstance(setting, RepeatSetting):
         raise ValueError("explicit repeat policy required")
     if max_new_tokens > 1024:
@@ -192,7 +192,7 @@ def generate_repeat_batch(model, prompts, indices, *, setting, sampling_seed, re
 
 def check_synthid_policy(device="cpu"):
     """Forced repeated contexts exercise the real upstream math, also on H100."""
-    from .official import synthid_processor
+    from baseline_comparison.official import synthid_processor
     native = synthid_processor(device)
     on, off = (SynthIDRepeatPolicy(synthid_processor(device), flag) for flag in (True, False))
     logits = torch.linspace(-3, 3, 32, device=device)[None].repeat(2, 1)
@@ -222,7 +222,7 @@ def check_synthid_policy(device="cpu"):
 
 
 def check_sampler_policy(method, device="cpu"):
-    from .official import textseal_generator, gumbel_generator
+    from baseline_comparison.official import textseal_generator, gumbel_generator
     factory = textseal_generator if method == "textseal" else gumbel_generator
     # Released TextSeal's CPU PRF broadcasts only a single context against all
     # candidates; its CUDA helper supports batches. Preserve both upstream paths.
@@ -250,14 +250,14 @@ def check_sampler_policy(method, device="cpu"):
 
 
 PILOT = ROOT / "outputs/self_bleu_pilot/stage_a_v2"
-SETUP = ROOT / "outputs/self_bleu_repeat/setup_v2"
+SETUP = ROOT / "outputs/self_bleu_repeat/setup_v3"
 TIMEOUTS = {"synthid": 600, "other_generators": 900, "textseal_replay": 300}
-NEW_CODE = ("baseline_comparison/self_bleu_repeat.py", "baseline_comparison/self_bleu_repeat_modal.py")
+NEW_CODE = ("self_bleu/repeat.py", "self_bleu/repeat_modal.py")
 
 
 def upstream_hashes():
     from synthid_text import logits_processing, hashing_function
-    from .textseal_completion import load_upstream_detector
+    from baseline_comparison.textseal_completion import load_upstream_detector
     import os
     load_upstream_detector(os.environ.get("TEXTSEAL_SOURCE_ROOT"))
     from textseal.watermarking import generator, core
@@ -279,7 +279,7 @@ def validate(manifest, root=ROOT):
             or cost["total_reserved_with_prior_usd"] > 10):
         raise ValueError("repeat ablation exceeds initial allocation")
     for name, expected in manifest["code_sha256"].items():
-        if sha(Path(root)/name) != expected:
+        if not (Path(root)/name).is_file() or sha(Path(root)/name) != expected:
             raise ValueError(f"ablation source changed: {name}")
     if sha(Path(root)/"prompts.jsonl") != manifest["prompt_sha256"]:
         raise ValueError("canonical prompts changed")
@@ -304,14 +304,14 @@ def prepare(output):
                 "completion_sha256": [r["completion_sha256"] for r in batch["responses"]]}
     generation_report = ROOT/"outputs/self_bleu_validation/step3-v4/generation_report.json"
     old_runtime = json.loads(generation_report.read_text())["execution"]
-    names = sorted(set(pilot["code_sha256"]) | set(NEW_CODE) |
-                   {"baseline_comparison/self_bleu_generation.py", "watermark_expt.py"})
+    names = sorted(set(PILOT_CODE) | set(NEW_CODE) |
+                   {"self_bleu/generation.py", "watermark_expt.py"})
     previous_cost = previous["total_planning_charge_usd"]
     manifest = {
         "schema_version": 1, "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-        "supersedes": {"path": "outputs/self_bleu_repeat/setup_v1/manifest.json",
-                       "sha256": sha(ROOT/"outputs/self_bleu_repeat/setup_v1/manifest.json"),
-                       "reason": "Consolidated local workflows and explicit SynthID scorer keys; experimental settings unchanged."},
+        "supersedes": {"path": "outputs/self_bleu_repeat/setup_v2/manifest.json",
+                       "sha256": sha(ROOT/"outputs/self_bleu_repeat/setup_v2/manifest.json"),
+                       "reason": "Moved study code and documentation to self_bleu; experimental settings unchanged."},
         "protocol": pilot["protocol"], "pilot_id": pilot["id"], "model": pilot["model"],
         "prompt_indices": list(range(50)), "prompt_sha256": sha(ROOT/"prompts.jsonl"),
         "length": 1024, "control_tokens": 64, "seeds": [12345, 67890],
@@ -389,8 +389,8 @@ def analyze(setup, stage, tokenizer_path, download=False):
     import sacrebleu
     from sacrebleu.metrics import BLEU
     from tokenizers import Tokenizer
-    from .official import synthid_processor, official_gumbel_scores
-    from .scoring import deduplicated_positions, synthid_normal_test, gumbel_gamma_test
+    from baseline_comparison.official import synthid_processor, official_gumbel_scores
+    from baseline_comparison.scoring import deduplicated_positions, synthid_normal_test, gumbel_gamma_test
     manifest, reports, files = collect(setup, stage, download)
     if upstream_hashes() != manifest["upstream_sha256"]:
         raise ValueError("upstream token-scoring sources changed")

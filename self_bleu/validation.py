@@ -9,8 +9,8 @@ import json
 from pathlib import Path, PurePosixPath
 import subprocess
 
-from .config import ONLINE_PRC_SOURCE_TAG, PREFIX_LENGTHS
-from .self_bleu_config import digest, verify_reference
+from baseline_comparison.config import ONLINE_PRC_SOURCE_TAG, PREFIX_LENGTHS
+from .config import digest, verify_reference
 
 ROOT = Path(__file__).resolve().parents[1]
 RUN = "qwen3-8b-batch50-validation-20260823-v1"
@@ -73,7 +73,7 @@ def load_online_sampler(path, *, device):
 
 def audit_sources(cache):
     import torch
-    from .comparison_runner import _numpy_pickle_compat
+    from baseline_comparison.comparison_runner import _numpy_pickle_compat
     _numpy_pickle_compat()
     reference = verify_reference()
     preflight = json.loads((ROOT / "outputs/comparison_redetect/preflight/preflight.json").read_text())
@@ -148,8 +148,9 @@ def prepare(cache, output, resume=None):
     audit = audit_sources(cache)
     save(output / "source_audit.json", audit)
     textseal = json.loads((ROOT / "outputs/comparison_redetect/textseal_setup/direct_prefix/native8b_manifest.json").read_text())
-    code = sorted(str(p.relative_to(ROOT)) for p in (ROOT / "baseline_comparison").glob("*.py"))
-    code += ["baseline_comparison/self_bleu_reference.json", "baseline_comparison/textseal_source_audit.json",
+    code = sorted(str(p.relative_to(ROOT)) for package in ("baseline_comparison", "self_bleu")
+                  for p in (ROOT / package).glob("*.py"))
+    code += ["self_bleu/reference.json", "baseline_comparison/textseal_source_audit.json",
              "baseline_comparison/requirements-textseal.txt", "qwen.py", "prc.py", "online_prc.py",
              "detectors.py", "watermark_expt.py"]
     # The legacy paper-figure drafts are unrelated to this worker.
@@ -172,7 +173,7 @@ def prepare(cache, output, resume=None):
         for field in ("model", "prompt_sha256", "prompt_indices", "length", "prefix_lengths", "seeds", "artifact", "source_audit"):
             if previous[field] != manifest[field]:
                 raise ValueError(f"resume would change study inputs: {field}")
-        allowed = {"baseline_comparison/self_bleu_validation.py", "baseline_comparison/self_bleu_validation_modal.py"}
+        allowed = {"self_bleu/validation.py", "self_bleu/validation_modal.py"}
         if {p for p, h in previous["code_sha256"].items() if manifest["code_sha256"].get(p) != h} - allowed:
             raise ValueError("resume would change generation or detector implementation")
         manifest.update(resume_from_manifest=previous, generation_timeout=600,
