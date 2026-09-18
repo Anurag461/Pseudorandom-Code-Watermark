@@ -81,8 +81,16 @@ verified hashes. Model-dependent replay is separate from generation.
 Use the original SacreBLEU 2.4.3 symmetric sentence metric and 2,000 paired
 prompt-bootstrap draws. Report **new policy minus original policy** separately
 for each method and primary length, alongside absolute Self-BLEU and TPR.
-Record fallback frequency, first fallback position, first repeated context and
-first token divergence from the original response. Rare activations can change
+Record both original and modified responses: repeat/fallback counts and positions,
+fractions encountering either event, first repeat/fallback position, and first
+token divergence. Positions are zero-based completion-token indices; null means
+the event never occurs. Reconstruct original SynthID traces with upstream context
+hashing, its zero-context warmup and zero-filled history. Verify reconstruction
+against the native GPU control traces and full modified generation traces.
+Require no token divergence before the first repeated context across all 1,024
+tokens; a reference response with no repeat must remain identical throughout.
+Save diagnostics before stopping if any causal/trace check fails. The generation
+repeat mask is distinct from the detector mask. Rare activations can change
 the subsequent trajectory; trigger counts do not by themselves measure impact.
 Retain the existing FPR limitations and do not claim matched empirical FPR or
 perfect detection from degenerate all-success bootstrap intervals.
@@ -100,9 +108,9 @@ All commands run from the repository root. Use the pinned numerical environment
 and TextSeal/SynthID sources described in the [study README](README.md) and
 [shared runtime setup](../baseline_comparison/README.md#reproducible-setup-and-checks).
 Set `TEXTSEAL_SOURCE_ROOT` when TextSeal is a checkout rather than an installed package.
-The supplied `setup_v3` manifest is frozen and should be used directly. It
-replaces the unrun `setup_v2` after moving the study into `self_bleu/`;
-experimental settings, reference data and budget are unchanged. Earlier
+The supplied `setup_v4` manifest is frozen and should be used directly. It
+replaces the unrun `setup_v3` to pin the added trajectory checks;
+generation settings, reference data and budget are unchanged. Earlier
 manifests remain for provenance. Historical source bytes are verified against
 Git; dispatch verifies the current source files strictly.
 For a new request, prepare locally in a fresh output directory (preparation
@@ -116,9 +124,9 @@ First paid stage, then inspect its analysis before proceeding:
 
 ```sh
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m self_bleu.repeat_modal \
-  --setup outputs/self_bleu_repeat/setup_v3 --stage synthid
+  --setup outputs/self_bleu_repeat/setup_v4 --stage synthid
 NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 MODAL_PROFILE=new-prc-watermark \
-  python -m self_bleu.repeat analyze --setup outputs/self_bleu_repeat/setup_v3 \
+  python -m self_bleu.repeat analyze --setup outputs/self_bleu_repeat/setup_v4 \
   --stage synthid --tokenizer /path/to/pinned/tokenizer.json --download
 ```
 
@@ -126,15 +134,16 @@ The follow-up stages are separate commands, never automatically chained:
 
 ```sh
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m self_bleu.repeat_modal \
-  --setup outputs/self_bleu_repeat/setup_v3 --stage other_generators
+  --setup outputs/self_bleu_repeat/setup_v4 --stage other_generators
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m self_bleu.repeat_modal \
-  --setup outputs/self_bleu_repeat/setup_v3 --stage textseal_replay
+  --setup outputs/self_bleu_repeat/setup_v4 --stage textseal_replay
 NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 MODAL_PROFILE=new-prc-watermark \
-  python -m self_bleu.repeat analyze --setup outputs/self_bleu_repeat/setup_v3 \
+  python -m self_bleu.repeat analyze --setup outputs/self_bleu_repeat/setup_v4 \
   --stage all --tokenizer /path/to/pinned/tokenizer.json --download
 ```
 
-The analysis creates `synthid_analysis.json` or `all_analysis.json`, plus raw
+The analysis creates `synthid_analysis.json` or `all_analysis.json`,
+`synthid_trajectory.json`, and `synthid_response_diagnostics.json`, plus raw
 prompt metrics, scores and generation-policy diagnostics in the ignored `raw/`
 directory. Reuse Stage A's restored archive and original generation artifacts.
 The analysis checks their frozen hashes before joining responses.
@@ -156,3 +165,7 @@ the repeat handler is not supported as the main explanation in this cohort.
 Either outcome is useful. Reassess the parameter sweep after the results;
 do not silently replace the original pilot or select the repeat policy that
 makes PRC look best.
+
+Only the SynthID-off stage is authorized for the next run. Inspect its paired
+results before dispatching TextSeal/Gumbel. Either outcome leaves native
+fallback-on SynthID as the main-comparison configuration.

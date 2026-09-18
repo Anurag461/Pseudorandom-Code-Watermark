@@ -6,7 +6,7 @@ Implementation update (2026-09-18): Self-BLEU workflows now live in the
 `self_bleu/` package, in `validation.py`, `pilot.py`, and `repeat.py`, with
 separate Modal workers and shared configuration/generation modules. See the
 [CLI and source-history notes](README.md#source-history-and-immutable-results).
-The unrun repeat request is now `outputs/self_bleu_repeat/setup_v3/manifest.json`;
+The unrun repeat request is now `outputs/self_bleu_repeat/setup_v4/manifest.json`;
 its experimental settings and budget match setup_v2 and setup_v1. Completed results remain
 immutable. The legacy SynthID scorer now requires explicit keys and derives
 its depth metadata from them, preventing a depth sweep from silently using the

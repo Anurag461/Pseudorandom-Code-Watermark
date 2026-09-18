@@ -250,7 +250,7 @@ def check_sampler_policy(method, device="cpu"):
 
 
 PILOT = ROOT / "outputs/self_bleu_pilot/stage_a_v2"
-SETUP = ROOT / "outputs/self_bleu_repeat/setup_v3"
+SETUP = ROOT / "outputs/self_bleu_repeat/setup_v4"
 TIMEOUTS = {"synthid": 600, "other_generators": 900, "textseal_replay": 300}
 NEW_CODE = ("self_bleu/repeat.py", "self_bleu/repeat_modal.py")
 
@@ -309,9 +309,9 @@ def prepare(output):
     previous_cost = previous["total_planning_charge_usd"]
     manifest = {
         "schema_version": 1, "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-        "supersedes": {"path": "outputs/self_bleu_repeat/setup_v2/manifest.json",
-                       "sha256": sha(ROOT/"outputs/self_bleu_repeat/setup_v2/manifest.json"),
-                       "reason": "Moved study code and documentation to self_bleu; experimental settings unchanged."},
+        "supersedes": {"path": "outputs/self_bleu_repeat/setup_v3/manifest.json",
+                       "sha256": sha(ROOT/"outputs/self_bleu_repeat/setup_v3/manifest.json"),
+                       "reason": "Add paired full-trajectory repeat/fallback diagnostics and causal validation; generation settings unchanged."},
         "protocol": pilot["protocol"], "pilot_id": pilot["id"], "model": pilot["model"],
         "prompt_indices": list(range(50)), "prompt_sha256": sha(ROOT/"prompts.jsonl"),
         "length": 1024, "control_tokens": 64, "seeds": [12345, 67890],
@@ -324,7 +324,9 @@ def prepare(output):
             "decision_thresholds": "original method-native nominal p < 0.001, unchanged",
             "detector_masks": "unchanged within method; SynthID context mask, TextSeal/Gumbel native tuple mask",
             "nulls": "reuse the 100 fresh ordinary-sampling slots from Stage A; no new calibration",
-            "repeat_reporting": "within-response fallback positions/counts, first trigger, and token divergence from saved response",
+            "repeat_reporting": "both original and modified responses: native generation-context repeat/fallback positions, counts, fractions and first token divergence",
+            "trajectory_check": "all 1024 tokens: no divergence before first repeat; no-repeat reference responses must stay identical; reconstructed traces must match recorded traces",
+            "position_convention": "zero-based generated-token positions; null if event never occurs; initial context is native, not detector-mask initialization",
             "scope": "generation-policy ablation; native context initialization retained, not full implementation harmonization",
         },
         "upstream_sha256": upstream_hashes(), "code_sha256": {name: sha(ROOT/name) for name in names},
@@ -384,6 +386,155 @@ def paired_contrast(new_bleu, old_bleu, new_detection, old_detection, draws):
             "tpr_difference": paired_interval(np.asarray(new_detection)-old_detection, draws)}
 
 
+def synthid_repeat_masks(token_rows, *, keys):
+    """Reconstruct generation-time repeats, including native warmup and sentinel.
+
+    This is not the detector mask. Generation hashes a zero context at position
+    zero, then appends generated tokens; its history is initially filled with
+    zero hash sentinels. Use upstream hashing and the actual key-derived IV.
+    At <= history_size steps no previously observed context has been evicted.
+    No logits, model inference, sampling, or prompt tokens are needed.
+    """
+    from baseline_comparison.official import synthid_processor
+    processor = synthid_processor("cpu", keys=keys)
+    ids = torch.tensor(token_rows, dtype=torch.long)
+    if ids.ndim != 2 or not 0 < ids.shape[1] <= processor.context_history_size:
+        raise ValueError("repeat reconstruction requires equal lengths within native history capacity")
+    width = processor.ngram_len - 1
+    padded = torch.cat((torch.zeros((len(ids), width), dtype=torch.long), ids), dim=1)
+    contexts = padded.unfold(1, width, 1)[:, :ids.shape[1]].reshape(-1, width)
+    _, hashes = processor._compute_keys(contexts, torch.zeros((len(contexts), 1), dtype=torch.long))
+    masks = []
+    for row in hashes.reshape(ids.shape).tolist():
+        seen, repeated = {0}, []
+        for value in row:
+            repeated.append(value in seen)
+            seen.add(value)
+        masks.append(repeated)
+    return masks
+
+
+def trajectory_pair(original, modified, original_repeats, modified_repeats):
+    """Describe both SynthID trajectories and test the causal prefix invariant."""
+    old_ids, new_ids = original["token_ids"], modified["token_ids"]
+    if not len(old_ids) == len(new_ids) == len(original_repeats) == len(modified_repeats):
+        raise ValueError("trajectory lengths differ")
+    for name in ("prompt_index", "response_index"):
+        if original[name] != modified[name]:
+            raise ValueError("trajectory pairing differs")
+    divergence = next((j for j, (a, b) in enumerate(zip(old_ids, new_ids)) if a != b), None)
+
+    def describe(row, repeats, enabled):
+        positions = [j for j, repeated in enumerate(repeats) if repeated]
+        applied = positions if enabled else []
+        return {"response_id": row["response_id"], "completion_sha256": digest(row["token_ids"]),
+                "fallback_enabled": enabled, "repeat_positions": positions, "fallback_positions": applied,
+                "repeat_count": len(positions), "fallback_count": len(applied),
+                "first_repeat_position": next(iter(positions), None),
+                "first_fallback_position": next(iter(applied), None),
+                "first_token_divergence": divergence}
+
+    before, after = describe(original, original_repeats, True), describe(modified, modified_repeats, False)
+    first_repeat = before["first_repeat_position"]
+    through = len(old_ids) if divergence is None else divergence + 1
+    recorded = modified["generation_diagnostics"]
+    checks = {
+        "no_divergence_before_first_repeat": divergence is None or (first_repeat is not None and divergence >= first_repeat),
+        "no_repeat_reference_stays_identical": first_repeat is not None or divergence is None,
+        "first_repeat_positions_agree": first_repeat == after["first_repeat_position"],
+        "repeat_history_agrees_through_divergence": original_repeats[:through] == modified_repeats[:through],
+        "modified_repeat_trace_matches_reconstruction": recorded["repeated_context"] == modified_repeats,
+        "modified_fallback_trace_is_off": recorded["fallback_applied"] == [False]*len(new_ids)
+                                              and recorded["first_fallback_position"] is None,
+    }
+    return {"prompt_index": original["prompt_index"], "response_index": original["response_index"],
+            "first_token_divergence": divergence, "original": before, "modified": after,
+            "checks": checks, "passed": all(checks.values())}
+
+
+def trajectory_summary(pairs, lengths):
+    """Counts use response slots; diagnostic means are not independent trials."""
+    summaries = []
+    for length in lengths:
+        variants = {}
+        for variant in ("original", "modified"):
+            repeats = [sum(p < length for p in row[variant]["repeat_positions"]) for row in pairs]
+            fallbacks = [sum(p < length for p in row[variant]["fallback_positions"]) for row in pairs]
+            first = [row[variant]["first_repeat_position"] for row in pairs
+                     if row[variant]["first_repeat_position"] is not None and row[variant]["first_repeat_position"] < length]
+            variants[variant] = {"responses": len(pairs), "responses_with_repeat": sum(n > 0 for n in repeats),
+                "fraction_responses_with_repeat": sum(n > 0 for n in repeats)/len(pairs),
+                "repeat_count_total": sum(repeats), "repeat_count_mean": float(np.mean(repeats)),
+                "repeat_count_median": float(np.median(repeats)), "repeat_count_max": max(repeats),
+                "responses_with_fallback": sum(n > 0 for n in fallbacks),
+                "fraction_responses_with_fallback": sum(n > 0 for n in fallbacks)/len(pairs),
+                "fallback_count_total": sum(fallbacks), "fallback_count_mean": float(np.mean(fallbacks)),
+                "fallback_count_median": float(np.median(fallbacks)), "fallback_count_max": max(fallbacks),
+                "first_repeat_position_median_among_affected": float(np.median(first)) if first else None}
+        divergences = [r["first_token_divergence"] for r in pairs
+                       if r["first_token_divergence"] is not None and r["first_token_divergence"] < length]
+        summaries.append({"length": length, **variants, "pairs_with_divergence": len(divergences),
+            "fraction_pairs_with_divergence": len(divergences)/len(pairs),
+            "first_token_divergence_median_among_diverged": float(np.median(divergences)) if divergences else None})
+    return summaries
+
+
+def check_synthid_trajectories(rows, old_inputs, setup, manifest):
+    """Save auditable traces before failing a causal or instrumentation check."""
+    keys = manifest["arms"]["synthid_off"]["keys"]
+    ordered = sorted(rows)
+    original = [old_inputs[("synthid_text", *key)] for key in ordered]
+    modified = [rows[key] for key in ordered]
+    old_masks = synthid_repeat_masks([r["token_ids"] for r in original], keys=keys)
+    new_masks = synthid_repeat_masks([r["token_ids"] for r in modified], keys=keys)
+    pairs = [trajectory_pair(a, b, am, bm) for a, b, am, bm in zip(original, modified, old_masks, new_masks)]
+    # Native-on prefixes have recorded GPU traces; independently verify the
+    # reconstruction on them as well as the entire modified off trajectories.
+    control_checks = 0
+    for response in (0, 1):
+        path = setup/"raw/synthid/controls"/f"synthid_off_r{response}.json"
+        control = json.loads(path.read_text())
+        for row in control["responses"]:
+            i = ordered.index((row["prompt_index"], response))
+            if row["token_ids"] != original[i]["token_ids"][:manifest["control_tokens"]]:
+                raise ValueError("native control tokens differ from reference")
+            expected = old_masks[i][:manifest["control_tokens"]]
+            trace = row["generation_diagnostics"]
+            if (trace["repeated_context"] != expected or trace["fallback_applied"] != expected
+                    or trace["first_fallback_position"] != next((j for j, value in enumerate(expected) if value), None)):
+                raise ValueError("native control repeat/fallback trace differs from reconstruction")
+            control_checks += 1
+    if control_checks != 100:
+        raise ValueError("native control trajectory coverage differs")
+    checks = {name: sum(row["checks"][name] for row in pairs) for name in pairs[0]["checks"]}
+    report = {"passed": all(row["passed"] for row in pairs), "response_pairs": len(pairs),
+        "checks_passed": checks, "native_prefix_traces_verified": control_checks,
+        "position_convention": "zero-based generated-token positions; null if event never occurs",
+        "original_trace_provenance": "Reconstructed from saved tokens with upstream generation-context hashing, zero-context warmup and zero-filled history; cross-checked against native GPU prefix traces.",
+        "modified_trace_provenance": "Full recorded generation traces independently checked against token-based reconstruction.",
+        "summaries": trajectory_summary(pairs, manifest["primary_lengths"]),
+        "failed_pairs": [{"prompt_index": row["prompt_index"], "response_index": row["response_index"],
+                          "checks": row["checks"]} for row in pairs if not row["passed"]]}
+    compact = []
+    for row in pairs:
+        record = {key: row[key] for key in ("prompt_index", "response_index", "first_token_divergence", "passed")}
+        record["sampling_seed"] = manifest["seeds"][row["response_index"]]
+        for variant in ("original", "modified"):
+            values = row[variant]
+            record[variant] = {k: v for k, v in values.items() if k not in ("repeat_positions", "fallback_positions")}
+            record[variant]["counts_by_prefix"] = {str(n): {
+                "repeat_count": sum(p < n for p in values["repeat_positions"]),
+                "fallback_count": sum(p < n for p in values["fallback_positions"])} for n in manifest["primary_lengths"]}
+        compact.append(record)
+    save(setup/"raw/synthid_trajectory_pairs.json", pairs)
+    save(setup/"synthid_response_diagnostics.json", {"manifest_id": manifest["id"],
+         "position_convention": report["position_convention"], "rows": compact})
+    save(setup/"synthid_trajectory.json", report)
+    if not report["passed"]:
+        raise ValueError("full-trajectory causal or trace check failed; inspect synthid_trajectory.json before interpreting results")
+    return report
+
+
 def analyze(setup, stage, tokenizer_path, download=False):
     import torch
     import sacrebleu
@@ -407,6 +558,7 @@ def analyze(setup, stage, tokenizer_path, download=False):
     draws = np.random.default_rng(manifest["analysis"]["bootstrap_seed"]).integers(0, 50, (2000, 50))
     arms = ["synthid_off"] if stage == "synthid" else list(manifest["arms"])
     summaries, metric_rows, score_records, diagnostics = [], [], [], []
+    trajectory = None
     ts = {r["response_id"]: r for r in reports.get("textseal_replay", {}).get("rows", [])}
     for arm in arms:
         generation_stage = "synthid" if arm == "synthid_off" else "other_generators"
@@ -414,15 +566,20 @@ def analyze(setup, stage, tokenizer_path, download=False):
         rows = {}
         for response in (0, 1):
             batch = json.loads((setup/"raw"/generation_stage/"batches"/f"{arm}_r{response}.json").read_text())
-            if batch["manifest"]["setting"] != manifest["arms"][arm] or len(batch["responses"]) != 50:
+            if (batch["manifest"]["setting"] != manifest["arms"][arm] or len(batch["responses"]) != 50
+                    or batch["manifest"]["sampling_seed"] != manifest["seeds"][response]):
                 raise ValueError("ablation generation configuration or coverage differs")
             for row in batch["responses"]:
                 key = (row["prompt_index"], row["response_index"])
-                if key in rows or key[1] != response or digest(row["token_ids"]) != row["completion_sha256"]:
+                if (key in rows or key[1] != response or len(row["token_ids"]) != manifest["length"]
+                        or row["sampling_seed"] != manifest["seeds"][response]
+                        or digest(row["token_ids"]) != row["completion_sha256"]):
                     raise ValueError("duplicate or mismatched ablation response")
                 rows[key] = row
         if set(rows) != {(i, r) for i in range(50) for r in (0, 1)}:
             raise ValueError("missing ablation pair")
+        if method == "synthid_text":
+            trajectory = check_synthid_trajectories(rows, old_inputs, setup, manifest)
         scored = {}
         for key, row in rows.items():
             ids = row["token_ids"]
@@ -469,7 +626,7 @@ def analyze(setup, stage, tokenizer_path, download=False):
     cost = manifest["cost"]["previous_planning_charge_usd"] + .5 + sum(r["measured_resource_usd"] for r in reports.values())
     output = {"manifest_id": manifest["id"], "stage": stage, "results": summaries,
               "bootstrap_draws_sha256": digest(draws.tolist()), "bleu_signature": str(metric.get_signature()),
-              "planning_charge_usd": cost, "verified_files": files,
+              "planning_charge_usd": cost, "verified_files": files, "synthid_trajectory": trajectory,
               "limitations": ["50 paired prompt clusters; nominal thresholds, not matched empirical FPR.",
                               "All-success bootstrap intervals do not prove perfect detection.",
                               "Within-method generation-policy contrasts; method-native detector masks and context initialization retained."]}

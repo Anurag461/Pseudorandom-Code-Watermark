@@ -133,3 +133,77 @@ def test_repeat_request_rejects_scope_budget_and_changed_source(tmp_path):
     valid=request(); (tmp_path/"prompts.jsonl").write_text("changed")
     with pytest.raises(ValueError,match="prompts"):
         validate(valid,tmp_path)
+
+
+@pytest.mark.parametrize("enabled", [True, False])
+def test_token_reconstruction_matches_actual_upstream_generation_history(enabled):
+    from baseline_comparison.official import synthid_processor
+    from self_bleu.repeat import SynthIDRepeatPolicy, synthid_repeat_masks
+    tokens = [[0]*16, [1, 2, 3]*5 + [4], list(range(20, 36))]
+    keys = StudySetting("synthid_text").synthid_keys
+    policy = SynthIDRepeatPolicy(synthid_processor("cpu", keys=keys), enabled)
+    for position in range(16):
+        previous = torch.tensor([[row[position-1] if position else 7] for row in tokens])
+        policy.watermarked_call(previous, torch.zeros((3, 32)))
+    expected = np.asarray(policy.repeated).T.tolist()
+    actual = synthid_repeat_masks(tokens, keys=keys)
+    assert actual == expected
+    assert actual[0] == [False] + [True]*15  # includes zero-context warmup
+    assert actual[1] == [False]*6 + [True]*10
+    assert actual[2] == [False]*16
+    assert np.asarray(policy.applied).T.tolist() == (expected if enabled else [[False]*16]*3)
+    with pytest.raises(ValueError, match="history capacity"):
+        synthid_repeat_masks([[0]*1025], keys=keys)
+
+
+def trajectory_fixture(old_ids, new_ids, prompt=0):
+    from self_bleu.repeat import synthid_repeat_masks, trajectory_pair
+    old_mask, new_mask = synthid_repeat_masks([old_ids, new_ids], keys=StudySetting("synthid_text").synthid_keys)
+    old = {"token_ids": old_ids, "response_id": f"old/{prompt}", "prompt_index": prompt, "response_index": 0}
+    new = {**old, "token_ids": new_ids, "response_id": f"new/{prompt}",
+           "generation_diagnostics": {"repeated_context": new_mask, "fallback_applied": [False]*len(new_ids),
+                                      "first_fallback_position": None}}
+    return trajectory_pair(old, new, old_mask, new_mask)
+
+
+def test_full_trajectory_guard_accepts_at_repeat_and_rejects_earlier_divergence():
+    old = [1, 2, 3]*5 + [4]
+    for pos, expected in ((6, True), (5, False)):
+        new = old.copy(); new[pos] = 9
+        result = trajectory_fixture(old, new)
+        assert result["first_token_divergence"] == pos
+        assert result["passed"] is expected
+        assert result["checks"]["no_divergence_before_first_repeat"] is expected
+    assert trajectory_fixture(old, old)["passed"]  # a repeat need not change the draw
+    plain = list(range(20, 36))
+    identical = trajectory_fixture(plain, plain)
+    assert identical["passed"] and identical["original"]["first_repeat_position"] is None
+    changed = plain.copy(); changed[10] = 90
+    bad = trajectory_fixture(plain, changed)
+    assert not bad["passed"] and not bad["checks"]["no_repeat_reference_stays_identical"]
+
+
+def test_repeat_summary_includes_both_policies_and_correct_prefix_denominators():
+    from self_bleu.repeat import trajectory_summary
+    old = [1, 2, 3]*5 + [4]
+    new = old.copy(); new[6] = 9
+    plain = list(range(20, 36))
+    pairs = [trajectory_fixture(old, new), trajectory_fixture(plain, plain, prompt=1)]
+    short, full = trajectory_summary(pairs, [6, 16])
+    assert short["original"]["repeat_count_total"] == short["pairs_with_divergence"] == 0
+    assert full["original"]["fraction_responses_with_repeat"] == .5
+    assert full["original"]["repeat_count_total"] == full["original"]["fallback_count_total"] == 10
+    assert full["modified"]["fallback_count_total"] == 0
+    assert full["fraction_pairs_with_divergence"] == .5
+    assert full["first_token_divergence_median_among_diverged"] == 6
+
+
+def test_trajectory_guard_rejects_false_online_diagnostics():
+    from self_bleu.repeat import synthid_repeat_masks, trajectory_pair
+    tokens = [1, 2, 3]*5 + [4]
+    mask = synthid_repeat_masks([tokens], keys=StudySetting("synthid_text").synthid_keys)[0]
+    row = {"token_ids": tokens, "response_id": "fixture", "prompt_index": 0, "response_index": 0}
+    new = {**row, "generation_diagnostics": {"repeated_context": [False]*16,
+                 "fallback_applied": [False]*16, "first_fallback_position": None}}
+    result = trajectory_pair(row, new, mask, mask)
+    assert not result["passed"] and not result["checks"]["modified_repeat_trace_matches_reconstruction"]

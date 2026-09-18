@@ -7,7 +7,7 @@ them rather than duplicating their implementations.
 
 Start with the [experiment plan](plan.md) for the rationale and the
 [repeat-handling runbook](repeat_handling_ablation.md) for the next experiment.
-Stage A is complete. The repeat ablation is prepared as `setup_v3`; no ablation
+Stage A is complete. The repeat ablation is prepared as `setup_v4`; no ablation
 GPU stage has run. All commands below run from the repository root.
 
 | Files | Responsibility |
@@ -193,7 +193,7 @@ responses, and the original-policy pairs are reused. PRC is unchanged.
 historical generator code and defaults are unchanged. Setup and CPU analysis
 share that module; explicit GPU stages remain in
 `repeat_modal.py`. The current frozen request
-is `outputs/self_bleu_repeat/setup_v3/manifest.json`. Preparing it dispatches
+is `outputs/self_bleu_repeat/setup_v4/manifest.json`. Preparing it dispatches
 nothing. Each GPU stage has its own timeout, no retries and source/runtime
 checks; generation also has forced-repeat checks and historical-prefix gates.
 The analysis preserves detector settings and uses paired prompt contrasts
@@ -209,9 +209,10 @@ layout before this move is at `7d275d710d4c7b473c9bb1304e3c26bc7cac968a`.
 Historical readers verify the recorded source hashes against the original Git
 bytes when files have moved. Workers require matching **current** source files.
 
-The unrun repeat request is now `setup_v3`, with unchanged experimental settings,
-input data, upstream sources and budget. Its manifest links to the superseded
-`setup_v2`; earlier setups remain historical records and must not be dispatched
+The unrun repeat request is now `setup_v4`, with unchanged experimental settings,
+input data, upstream sources and budget. It adds full-trajectory repeat/fallback
+diagnostics and a no-divergence-before-first-repeat check. Its manifest links to the superseded
+`setup_v3`; earlier setups remain historical records and must not be dispatched
 with the current code. Reanalysis writes a summary and figure into a separate
 output directory instead of replacing the original pilot report.
 
