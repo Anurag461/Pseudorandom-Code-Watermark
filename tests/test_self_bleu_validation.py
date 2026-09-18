@@ -49,3 +49,24 @@ def test_saved_validation_artifacts_cannot_be_overwritten(tmp_path):
     save(path, {"passed": True})
     with pytest.raises(FileExistsError):
         save(path, {"passed": False})
+
+
+def test_archived_sources_are_only_accepted_for_reading_old_artifacts():
+    import json
+    from baseline_comparison.self_bleu_validation import ROOT, verify_source_hashes
+    old = json.loads((ROOT / "outputs/self_bleu_validation/step3-v4/manifest.json").read_text())
+    # The exact pre-consolidation tree remains available, including removed files.
+    validate_manifest(old, ROOT, allow_archived=True)
+    with pytest.raises(ValueError, match="source changed"):
+        validate_manifest(old, ROOT)
+    with pytest.raises(ValueError, match="source changed"):
+        verify_source_hashes({"baseline_comparison/self_bleu_validation_results.py": "0"*64}, allow_archived=True)
+
+
+def test_pilot_worker_does_not_accept_historical_source_instead_of_current_code():
+    import json
+    from baseline_comparison.self_bleu_pilot import validate_request
+    from baseline_comparison.self_bleu_validation import ROOT
+    old = json.loads((ROOT / "outputs/self_bleu_pilot/stage_a_v2/manifest.json").read_text())
+    with pytest.raises(ValueError, match="worker source differs"):
+        validate_request(old, [], "prc", ROOT)

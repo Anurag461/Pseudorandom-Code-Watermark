@@ -210,6 +210,50 @@ def test_synthid_depth_reaches_real_upstream_generation_and_evidence(depth):
     assert actual.shape == (3, depth)
 
 
+@pytest.mark.parametrize("depth", [2, 10, 20, 30])
+def test_legacy_synthid_scorer_uses_requested_keys_and_records_actual_depth(depth):
+    from baseline_comparison.comparison_runner import _score_baseline_sequence
+    from baseline_comparison.config import PREFIX_LENGTHS
+    from baseline_comparison.official import official_synthid_g_values
+    from baseline_comparison.scoring import deduplicated_positions, synthid_normal_test
+
+    keys = StudySetting("synthid_text", depth=depth).synthid_keys
+    tokens = list(range(1024))
+    args = dict(method="synthid_text", sequence={"token_ids": tokens,
+                "base_token_logprobs": [-1.]*1024, "base_entropies": [1.]*1024},
+                prompt_row={"doc_index": 0, "prompt_tokens": [10, 11]}, prompt_index=0,
+                sample_type="watermarked", seed=12345, model_revision="fixture",
+                integration_fingerprint="fixture", prc_fingerprint="fixture",
+                provenance={"mode": "CPU fixture"}, runtime_seconds=0.)
+    with pytest.raises(ValueError, match="explicit keys"):
+        _score_baseline_sequence(**args)
+    rows, checks = _score_baseline_sequence(**args, synthid_keys=keys)
+    assert len(rows) == len(PREFIX_LENGTHS)
+    for row, length in zip(rows, PREFIX_LENGTHS):
+        evidence = official_synthid_g_values(tokens[:length], deduplicated_positions(tokens[:length]), keys=keys)
+        expected = synthid_normal_test(evidence)
+        assert evidence.shape[1] == depth
+        assert row["statistic"] == expected["statistic"]
+        assert row["p_value"] == expected["p_value"]
+        assert row["decision"] == expected["decision"]
+        assert row["method_configuration"]["keys"] == list(keys)
+        assert row["method_configuration"]["depth"] == depth
+        assert row["key_seed"] == keys[0]
+        assert f"{depth}-key domain" in row["key_domain"]
+    assert all(check["max_abs_delta"] == 0 for check in checks["exact_prefix_checks"])
+    # Shared nulls must be evaluated under the same requested detector keys.
+    null_rows, _ = _score_baseline_sequence(**{**args, "sample_type": "null"}, synthid_keys=keys)
+    assert [r["p_value"] for r in null_rows] == [r["p_value"] for r in rows]
+    # Distinct keys at equal depth must not silently select the default bank.
+    alternate = tuple(k + 1 for k in keys)
+    other, _ = _score_baseline_sequence(**args, synthid_keys=alternate)
+    assert other[0]["method_configuration"]["keys"] == list(alternate)
+    assert other[0]["artifact_fingerprint"] != rows[0]["artifact_fingerprint"]
+    expected = synthid_normal_test(official_synthid_g_values(
+        tokens[:PREFIX_LENGTHS[0]], deduplicated_positions(tokens[:PREFIX_LENGTHS[0]]), keys=alternate))
+    assert other[0]["statistic"] == expected["statistic"]
+
+
 @pytest.mark.parametrize("method", ["textseal", "synthid_text", "gumbel_max"])
 def test_default_generation_matches_frozen_function_on_cpu(upstream, monkeypatch, method):
     # Execute the historical function itself. Only device and requested length

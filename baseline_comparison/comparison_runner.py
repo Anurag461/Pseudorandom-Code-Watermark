@@ -37,7 +37,6 @@ from .config import (
     SMOKE_PROMPT_INDICES,
     SYNTHID_COMMIT,
     SYNTHID_CONTEXT_HISTORY_SIZE,
-    SYNTHID_DEPTH,
     SYNTHID_KEYS,
     SYNTHID_REPOSITORY,
     TEMPERATURE,
@@ -50,6 +49,7 @@ from .config import (
     TOP_P,
 )
 from .official import (
+    _synthid_keys,
     gumbel_generator,
     official_gumbel_scores,
     official_synthid_g_values,
@@ -688,7 +688,9 @@ def _load_cached_sequences(prompt_rows: Sequence[dict]) -> tuple[list[dict], lis
     return _load_cached_sequences_for_indices(prompt_rows, SMOKE_PROMPT_INDICES)
 
 
-def _method_configuration(method: str) -> tuple[dict, int | None, str, str, str]:
+def _method_configuration(
+    method: str, *, synthid_keys: Sequence[int] | None = None,
+) -> tuple[dict, int | None, str, str, str]:
     if method == "textseal":
         return (
             {
@@ -704,10 +706,13 @@ def _method_configuration(method: str) -> tuple[dict, int | None, str, str, str]
             TEXTSEAL_COMMIT,
         )
     if method == "synthid_text":
+        if synthid_keys is None:
+            raise ValueError("SynthID scoring requires explicit keys from the generation setting")
+        keys = _synthid_keys(synthid_keys)
         return (
             {
-                "depth": SYNTHID_DEPTH,
-                "keys": list(SYNTHID_KEYS),
+                "depth": len(keys),
+                "keys": list(keys),
                 "ngram_len": CONTEXT_LENGTH + 1,
                 "context_length": CONTEXT_LENGTH,
                 "context_history_size": SYNTHID_CONTEXT_HISTORY_SIZE,
@@ -717,8 +722,8 @@ def _method_configuration(method: str) -> tuple[dict, int | None, str, str, str]
                 "deduplication": "unique (context_3, token), released TextSeal v2 position convention",
                 "generation_repeated_context_mask": "Google official context-only mask enabled",
             },
-            SYNTHID_KEYS[0],
-            "Google official 10-key domain; all keys recorded in method configuration",
+            keys[0],
+            f"Google official {len(keys)}-key domain; all keys recorded in method configuration",
             SYNTHID_REPOSITORY,
             SYNTHID_COMMIT,
         )
@@ -772,8 +777,9 @@ def _result(
     provenance: dict,
     runtime_seconds: float,
     diversity_fields: dict | None = None,
+    synthid_keys: Sequence[int] | None = None,
 ) -> dict:
-    config, key_seed, key_domain, repo, commit = _method_configuration(method)
+    config, key_seed, key_domain, repo, commit = _method_configuration(method, synthid_keys=synthid_keys)
     tokens = list(map(int, token_ids))
     quality = quality_metrics(tokens, base_logprobs)
     result = PromptLevelResult(
@@ -835,6 +841,7 @@ def _score_baseline_sequence(
     provenance: dict,
     runtime_seconds: float,
     diversity_fields: dict | None = None,
+    synthid_keys: Sequence[int] | None = None,
 ) -> tuple[list[dict], dict]:
     if method == "textseal":
         raise ValueError(
@@ -842,6 +849,12 @@ def _score_baseline_sequence(
             "Use baseline_comparison.textseal_completion.TextSealCompletionDetector "
             "with raw completion IDs and a fresh detector model."
         )
+    if method not in ("synthid_text", "gumbel_max"):
+        raise ValueError(f"unsupported token detector: {method}")
+    if method == "synthid_text":
+        if synthid_keys is None:
+            raise ValueError("SynthID scoring requires explicit keys from the generation setting")
+        synthid_keys = _synthid_keys(synthid_keys)
     tokens = list(map(int, sequence["token_ids"][:MAX_NEW_TOKENS]))
     logprobs = list(map(float, sequence["base_token_logprobs"][:MAX_NEW_TOKENS]))
     entropies = list(map(float, sequence["base_entropies"][:MAX_NEW_TOKENS]))
@@ -855,6 +868,7 @@ def _score_baseline_sequence(
             "seed": seed,
             "token_hash": token_hash,
             "provenance": provenance,
+            **({"synthid_keys": list(synthid_keys)} if method == "synthid_text" else {}),
         }
     )
     results = []
@@ -864,7 +878,7 @@ def _score_baseline_sequence(
     if method == "gumbel_max":
         full_evidence = official_gumbel_scores(tokens, full_positions)
     else:
-        full_evidence = official_synthid_g_values(tokens, full_positions)
+        full_evidence = official_synthid_g_values(tokens, full_positions, keys=synthid_keys)
 
     for prefix in PREFIX_LENGTHS:
         prefix_tokens = tokens[:prefix]
@@ -875,7 +889,7 @@ def _score_baseline_sequence(
             exact_delta = float(np.max(np.abs(direct - selected))) if len(direct) else 0.0
             test = gumbel_gamma_test(direct, nominal_fpr=NOMINAL_FPR)
         else:
-            direct = official_synthid_g_values(prefix_tokens, positions)
+            direct = official_synthid_g_values(prefix_tokens, positions, keys=synthid_keys)
             selected = full_evidence[: len(positions)]
             exact_delta = float(np.max(np.abs(direct - selected))) if direct.size else 0.0
             if not np.array_equal(direct, selected):
@@ -914,6 +928,7 @@ def _score_baseline_sequence(
                 provenance=provenance,
                 runtime_seconds=runtime_seconds,
                 diversity_fields=diversity_fields,
+                synthid_keys=synthid_keys,
             )
         )
     return results, {
@@ -1094,6 +1109,7 @@ def _score_generated_payload(
                 diversity["seed_effect_interpretable"] = False
             scored, checked = _score_baseline_sequence(
                 method=method,
+                synthid_keys=SYNTHID_KEYS,
                 sequence=sequence,
                 prompt_row=prompt_rows[prompt_index],
                 prompt_index=prompt_index,
@@ -1130,6 +1146,7 @@ def _score_generated_payload(
             }
             scored, checked = _score_baseline_sequence(
                 method=method,
+                synthid_keys=SYNTHID_KEYS,
                 sequence=sequence,
                 prompt_row=prompt_rows[prompt_index],
                 prompt_index=prompt_index,
@@ -1158,6 +1175,7 @@ def _score_generated_payload(
         secondary_sequence = generated[(method, SECONDARY_SEED)][0]
         secondary_scored, secondary_checked = _score_baseline_sequence(
             method=method,
+            synthid_keys=SYNTHID_KEYS,
             sequence=secondary_sequence,
             prompt_row=prompt_rows[0],
             prompt_index=0,
@@ -1634,6 +1652,7 @@ def score_full_shard(data_volume, request: dict) -> dict:
             sequence = outputs[row]
             scored, checked = _score_baseline_sequence(
                 method=method,
+                synthid_keys=SYNTHID_KEYS,
                 sequence=sequence,
                 prompt_row=prompt_rows[prompt_index],
                 prompt_index=prompt_index,
@@ -1668,6 +1687,7 @@ def score_full_shard(data_volume, request: dict) -> dict:
             }
             scored, checked = _score_baseline_sequence(
                 method=method,
+                synthid_keys=SYNTHID_KEYS,
                 sequence=sequence,
                 prompt_row=prompt_rows[prompt_index],
                 prompt_index=prompt_index,

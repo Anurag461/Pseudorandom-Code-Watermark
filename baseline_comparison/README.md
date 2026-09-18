@@ -298,7 +298,7 @@ generation validation or the subsequent TextSeal replay check; neither stage
 dispatches the pilot or full sweep. Use the `new-prc-watermark` Modal profile.
 
 ```sh
-python -m baseline_comparison.self_bleu_validation --cache /path/to/downloaded/prc-data --output outputs/self_bleu_validation/new-run
+python -m baseline_comparison.self_bleu_validation prepare --cache /path/to/downloaded/prc-data --output outputs/self_bleu_validation/new-run
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_validation_modal --manifest outputs/self_bleu_validation/new-run/manifest.json --stage generation
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_validation_modal --manifest outputs/self_bleu_validation/new-run/manifest.json --stage textseal
 ```
@@ -337,7 +337,7 @@ request is `outputs/self_bleu_validation/step3-v4/manifest.json`.
 Retrieve and verify the completed artifacts without GPU dispatch:
 
 ```sh
-MODAL_PROFILE=new-prc-watermark python -m baseline_comparison.self_bleu_validation_results \
+MODAL_PROFILE=new-prc-watermark python -m baseline_comparison.self_bleu_validation collect \
   --setup outputs/self_bleu_validation/step3-v4 \
   --raw outputs/self_bleu_validation/raw/743658bc40e7f52c910d9538266bbd0ff461bba949e2a842cc8af36fa32507d8 \
   --download
@@ -357,12 +357,9 @@ is $5.51880 of the initial $10; this is not a settled invoice.
 `self_bleu_pilot.py` freezes clean completion-only replay requests from the
 verified pairs and imports 53 compatible TextSeal records. Its two Modal stages
 recover 200 PRC traces and 147 missing TextSeal records; neither generates text.
-`self_bleu_pilot_analysis.py` computes symmetric sentence Self-BLEU and official
-keyed token evidence. `self_bleu_pilot_results.py` verifies the 153 replay files,
-joins scores by response identity, computes paired prompt-bootstrap intervals,
-and renders the figure. Four additional tests cover clean request boundaries,
-budget limits and the correct resampling unit (24 control/validation/pilot
-tests pass in total).
+`self_bleu_pilot.py` also computes symmetric sentence Self-BLEU and official
+keyed token evidence, verifies the 153 replay files, joins scores by response
+identity, computes paired prompt-bootstrap intervals, and renders the figure.
 
 The completed request is explicitly **`stage_a_v2`**. Version 1 failed in a
 verification call before saving usable PRC batches; version 2 changes that
@@ -378,12 +375,12 @@ Then verify/reproduce locally (SacreBLEU 2.4.3, pinned SynthID package, existing
 numerical environment and model tokenizer required):
 
 ```sh
-NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot_analysis \
-  --setup outputs/self_bleu_pilot/stage_a_v2 --stage diversity --tokenizer /path/to/pinned/tokenizer.json
-NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot_analysis \
-  --setup outputs/self_bleu_pilot/stage_a_v2 --stage token-evidence
-NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot_results \
+NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot diversity \
+  --setup outputs/self_bleu_pilot/stage_a_v2 --tokenizer /path/to/pinned/tokenizer.json
+NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot token-evidence \
   --setup outputs/self_bleu_pilot/stage_a_v2
+NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot summarize \
+  --setup outputs/self_bleu_pilot/stage_a_v2 --output outputs/self_bleu_pilot/reanalysis
 ```
 
 Artifacts are immutable: identical reruns verify existing bytes, while changed
@@ -399,10 +396,42 @@ then TextSeal alpha .1 and Gumbel with fallback on. Each adds 50 prompts × two
 responses, and the original-policy pairs are reused. PRC is unchanged.
 
 `self_bleu_repeat.py` scopes the policy adapters to a single generation call;
-historical generator code and defaults are unchanged. The setup, explicit
-Modal stages and CPU analysis are in `self_bleu_repeat_setup.py`,
-`self_bleu_repeat_modal.py` and `self_bleu_repeat_analysis.py`. The frozen request
-is `outputs/self_bleu_repeat/setup_v1/manifest.json`. Preparing it dispatches
+historical generator code and defaults are unchanged. Setup and CPU analysis
+share that module; explicit GPU stages remain in
+`self_bleu_repeat_modal.py`. The current frozen request
+is `outputs/self_bleu_repeat/setup_v2/manifest.json`. Preparing it dispatches
 nothing. Each GPU stage has its own timeout, no retries and source/runtime
-checks; generation also has forced-repeat checks and historical-prefix gates. The analysis preserves
-detector settings and uses paired prompt contrasts against Stage A.
+checks; generation also has forced-repeat checks and historical-prefix gates.
+The analysis preserves detector settings and uses paired prompt contrasts
+against Stage A.
+
+
+## Self-BLEU code layout and source history
+
+The study has eight Python modules: shared `self_bleu_config.py` and
+`self_bleu_generation.py`, plus one local workflow and one Modal worker module
+for each of validation, pilot, and repeat ablation. Local commands use
+`prepare`/`collect`/analysis subcommands; only the separate `*_modal.py`
+entrypoints dispatch GPU work. To list pilot commands:
+
+```sh
+python -m baseline_comparison.self_bleu_pilot --help
+```
+
+Consolidation replaced five standalone setup/results/analysis modules. Completed
+manifests, scores, archives and source snapshots remain unchanged. Their exact
+source tree is retained at Git commit
+`7bde5c6d54dee444db3b69d96bfce6b09c79ba4c`. Historical readers verify those Git
+bytes against the recorded hashes when a source has moved. Worker validation
+always requires matching **current** source files; it cannot fall back to Git.
+The unrun repeat request was refreshed as `setup_v2`, with the same experimental
+settings, inputs, upstream sources and budget, and a link to the superseded
+`setup_v1` manifest. Reanalysis writes its summary/figure into a separate output
+directory instead of replacing the original pilot report.
+
+SynthID scoring in `comparison_runner._score_baseline_sequence` now requires
+explicit `synthid_keys=setting.synthid_keys` for a study run (including nulls).
+Both full and prefix evidence use those keys; metadata records the actual key
+list, depth and key domain. Omitting keys fails before scoring. The old fixed
+configuration callers explicitly supply `SYNTHID_KEYS`. The historical tuple
+mask is unchanged; Stage A's primary analysis still uses Google's context mask.

@@ -68,7 +68,8 @@ ordinary fallback, first-occurrence behavior and the native RNG stream. Then
 reproduce the saved original-policy **64-token prefixes for all 50 prompts at
 both seeds**. Any mismatch stops the arm. This is a prefix reproduction gate,
 not a new claim of full-length cache equivalence; the unchanged historical
-source hashes and runtime are also required.
+source bytes remain verified in Git; current worker hashes and the original
+runtime are also required.
 
 Save each completed 50-response batch immediately under
 `prc-completion-only/self_bleu_repeat/<manifest-id>/`. Never overwrite historical
@@ -98,21 +99,25 @@ validation. The setup's local verification record records the executed checks.
 All commands run from the repository root. Use the pinned numerical environment
 and TextSeal/SynthID sources described in the README; `TEXTSEAL_SOURCE_ROOT` is
 needed when TextSeal is available as a checkout rather than an installed package.
-The supplied `setup_v1` manifest is already frozen and should be used directly.
+The supplied `setup_v2` manifest is already frozen and should be used directly.
+It replaces the unrun `setup_v1` after code consolidation and the explicit-key
+SynthID scorer fix; experimental settings, reference data and budget are unchanged.
+The earlier manifest is retained for provenance. Historical source bytes are
+verified against Git; dispatch verifies the current source files strictly.
 For a new request, prepare locally in a fresh output directory (preparation
 records the current source commit and refuses to overwrite a different request):
 
 ```sh
-python -m baseline_comparison.self_bleu_repeat_setup --output outputs/self_bleu_repeat/new-setup
+python -m baseline_comparison.self_bleu_repeat prepare --output outputs/self_bleu_repeat/new-setup
 ```
 
 First paid stage, then inspect its analysis before proceeding:
 
 ```sh
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_repeat_modal \
-  --setup outputs/self_bleu_repeat/setup_v1 --stage synthid
+  --setup outputs/self_bleu_repeat/setup_v2 --stage synthid
 NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 MODAL_PROFILE=new-prc-watermark \
-  python -m baseline_comparison.self_bleu_repeat_analysis --setup outputs/self_bleu_repeat/setup_v1 \
+  python -m baseline_comparison.self_bleu_repeat analyze --setup outputs/self_bleu_repeat/setup_v2 \
   --stage synthid --tokenizer /path/to/pinned/tokenizer.json --download
 ```
 
@@ -120,11 +125,11 @@ The follow-up stages are separate commands, never automatically chained:
 
 ```sh
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_repeat_modal \
-  --setup outputs/self_bleu_repeat/setup_v1 --stage other_generators
+  --setup outputs/self_bleu_repeat/setup_v2 --stage other_generators
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_repeat_modal \
-  --setup outputs/self_bleu_repeat/setup_v1 --stage textseal_replay
+  --setup outputs/self_bleu_repeat/setup_v2 --stage textseal_replay
 NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 MODAL_PROFILE=new-prc-watermark \
-  python -m baseline_comparison.self_bleu_repeat_analysis --setup outputs/self_bleu_repeat/setup_v1 \
+  python -m baseline_comparison.self_bleu_repeat analyze --setup outputs/self_bleu_repeat/setup_v2 \
   --stage all --tokenizer /path/to/pinned/tokenizer.json --download
 ```
 

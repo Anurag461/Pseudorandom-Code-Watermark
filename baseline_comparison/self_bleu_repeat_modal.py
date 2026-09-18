@@ -11,7 +11,7 @@ import modal
 from .self_bleu_validation_modal import generation_image, detector_image, hf_cache, results, checkpoint
 from .self_bleu_validation import save, sha
 from .self_bleu_config import digest
-from .self_bleu_repeat_setup import SETUP, validate, upstream_hashes
+from .self_bleu_repeat import SETUP, validate, upstream_hashes
 
 app = modal.App("prc-self-bleu-repeat-ablation")
 

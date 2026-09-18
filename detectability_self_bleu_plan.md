@@ -1,6 +1,17 @@
 # Detectability versus Self-BLEU: proposed experiment
 
 Prepared 2026-09-15; revised for `comparison-with-redetect` at `4696382`.
+
+Implementation update (2026-09-18): Self-BLEU workflows are consolidated into
+`self_bleu_validation.py`, `self_bleu_pilot.py`, and `self_bleu_repeat.py`, with
+separate Modal workers and shared configuration/generation modules. See the
+[CLI and source-history notes](baseline_comparison/README.md#self-bleu-code-layout-and-source-history).
+The unrun repeat request is now `outputs/self_bleu_repeat/setup_v2/manifest.json`;
+its experimental settings and budget match setup_v1. Completed results remain
+immutable. The legacy SynthID scorer now requires explicit keys and derives
+its depth metadata from them, preventing a depth sweep from silently using the
+historical ten-key detector. This does not change the depth-10 pilot findings.
+
 Status: **steps 1–4 complete**, including Stage A analysis on 2026-09-18.
 See the [pilot results](outputs/self_bleu_pilot/stage_a_v2/REPORT.md) and
 [validation report](outputs/self_bleu_validation/step3-v4/REPORT.md).

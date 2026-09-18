@@ -103,7 +103,7 @@ def test_policy_identity_rejects_unrelated_parameter_changes():
 
 
 def test_paired_policy_contrast_keeps_prompt_units():
-    from baseline_comparison.self_bleu_repeat_analysis import paired_contrast
+    from baseline_comparison.self_bleu_repeat import paired_contrast
     draws = np.random.default_rng(20260918).integers(0,50,(2000,50))
     old = np.linspace(0,.1,50)
     result = paired_contrast(old,old,[.5]*50,[.5]*50,draws)
@@ -113,7 +113,7 @@ def test_paired_policy_contrast_keeps_prompt_units():
 
 def test_repeat_request_rejects_scope_budget_and_changed_source(tmp_path):
     from baseline_comparison.self_bleu_repeat import ARMS
-    from baseline_comparison.self_bleu_repeat_setup import validate,TIMEOUTS,RATE
+    from baseline_comparison.self_bleu_repeat import validate,TIMEOUTS,RATE
     from baseline_comparison.self_bleu_validation import sha
     (tmp_path/"prompts.jsonl").write_text("fixture")
     def request(previous=5.52):
