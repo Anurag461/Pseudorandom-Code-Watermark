@@ -171,7 +171,7 @@ def test_online_detector_matches_direct_fixed_matrix_score_without_folding():
     encoder = OnlinePRCEncoder(key, [derive_document_seed(42, 0)])
     noisy = encoder.encode_to_length(length)[0]
     tokens = torch.as_tensor(noisy, dtype=torch.long)
-    probabilities = np.linspace(0.15, 0.85, length)
+    probabilities = np.linspace(0.15, 0.85, length - 1)
 
     decision, info = detect_online_hoeffding(
         key, tokens, probabilities, _partition(), fpr=1e-3,
@@ -196,7 +196,7 @@ def test_online_detector_matches_direct_fixed_matrix_score_without_folding():
         key.check_weight,
     )
     observed = tokens.numpy()
-    soft = map_soft_token(observed, probabilities)
+    soft = np.r_[0.0, map_soft_token(observed[1:], probabilities)]
     fixed_decision, fixed_info = Detect(
         decoding_key, soft, false_positive_rate=1e-3, return_info=True
     )
@@ -214,7 +214,7 @@ def test_online_map_prefix_grid_matches_individual_detector_calls():
     encoder = OnlinePRCEncoder(key, [derive_document_seed(91, 0)])
     noisy = encoder.encode_to_length(maximum)[0]
     tokens = torch.as_tensor(noisy, dtype=torch.long)
-    probabilities = np.linspace(0.03, 0.97, maximum)
+    probabilities = np.linspace(0.03, 0.97, maximum - 1)
     lengths = [64, 48, 32, 3, 2]
 
     grid = detect_online_map_prefix_grid(
@@ -230,7 +230,7 @@ def test_online_map_prefix_grid_matches_individual_detector_calls():
         decision, direct = detect_online_hoeffding(
             key,
             tokens[:length],
-            probabilities[:length],
+            probabilities[:length - 1],
             _partition(),
             fpr=1e-3,
             weight="map",
@@ -264,13 +264,17 @@ def test_online_map_prefix_grid_rejects_invalid_lengths():
         detect_online_map_prefix_grid(
             key, tokens, probabilities, _partition(), [9], fpr=1e-3
         )
+    with pytest.raises(ValueError, match="T-1"):
+        detect_online_map_prefix_grid(
+            key, tokens, probabilities, _partition(), [8], fpr=1e-3
+        )
 
 
 def test_online_map_prompt_shard_context_is_exactly_reusable():
     key = _key(813)
     maximum = 32
     tokens = torch.arange(maximum, dtype=torch.long) % 2
-    probabilities = np.linspace(0.05, 0.95, maximum)
+    probabilities = np.linspace(0.05, 0.95, maximum - 1)
     context = prepare_online_map_prefix_context(key, maximum)
 
     standalone = prepare_online_map_prefix_trace(
@@ -307,7 +311,7 @@ def test_online_map_prompt_shard_context_is_exactly_reusable():
 def test_detector_handles_startup_zero_variance_and_anytime_policy():
     key = _key(44)
     decision, info = detect_online_hoeffding(
-        key, torch.tensor([0, 1]), np.array([0.5, 0.5]), _partition(),
+        key, torch.tensor([0, 1]), np.array([0.5]), _partition(),
         fpr=1e-3, return_info=True,
     )
     assert not decision
@@ -315,14 +319,14 @@ def test_detector_handles_startup_zero_variance_and_anytime_policy():
     assert np.isinf(info["threshold"])
 
     decision, info = detect_online_hoeffding(
-        key, torch.tensor([0, 1, 0]), np.array([0.0, 1.0, 0.0]),
+        key, torch.tensor([0, 1, 0]), np.array([1.0, 0.0]),
         _partition(), fpr=1e-3, weight="entropy", return_info=True,
     )
     assert not decision
     assert info["status"] == "insufficient_evidence_zero_variance"
 
     tokens = torch.tensor([0, 1, 0, 1] * 16)
-    probabilities = np.full(64, 0.5)
+    probabilities = np.full(63, 0.5)
     _, one_shot = detect_online_hoeffding(
         key, tokens, probabilities, _partition(), fpr=1e-3,
         return_info=True,
@@ -342,14 +346,15 @@ def test_strong_synthetic_watermark_detects_at_n256():
     decision, info = detect_online_hoeffding(
         key,
         torch.as_tensor(noisy, dtype=torch.long),
-        np.full(256, 0.5),
+        np.full(255, 0.5),
         _partition(),
         fpr=1e-3,
         return_info=True,
     )
     assert decision
-    assert info["statistic"] == pytest.approx(253.0)
-    assert info["V"] == pytest.approx(253.0)
+    unaffected = np.count_nonzero((materialize_supports(256, key) != 0).all(axis=1))
+    assert info["statistic"] == pytest.approx(float(unaffected))
+    assert info["V"] == pytest.approx(float(unaffected))
 
 
 def test_validation_rejects_bad_configs_and_bad_inputs():
@@ -361,9 +366,9 @@ def test_validation_rejects_bad_configs_and_bad_inputs():
     key = _key()
     with pytest.raises(ValueError, match="is free"):
         parent_indices(0, key)
-    with pytest.raises(ValueError, match="tokens length"):
+    with pytest.raises(ValueError, match="T-1"):
         detect_online_hoeffding(
-            key, torch.tensor([0, 1]), np.array([0.5]), _partition()
+            key, torch.tensor([0, 1]), np.array([0.5, 0.5]), _partition()
         )
     with pytest.raises(ValueError, match="fpr_policy"):
         detect_online_hoeffding(

@@ -1,4 +1,6 @@
-from modal_run import CSV_COLUMNS
+from modal_run import (
+    FIXED_CSV_COLUMNS as CSV_COLUMNS,
+)
 
 
 def test_summary_schema_keeps_experiment_fields_first():

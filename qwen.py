@@ -332,6 +332,34 @@ def teacher_force_partition_entropy_trace_batch(
     )
 
 
+def completion_only_partition_trace_batch(
+    model, completion_tokens, partition_one_mask, kv_cache_implementation="static",
+):
+    """Recover P(B=1) for coordinates 2..T from raw completion tokens only.
+
+    Coordinate 1 has no model probability. The first completion token starts
+    a fresh KV cache at position zero; no prompt or special token is added.
+    Token-step replay preserves the BF16 calculation used by generation.
+    """
+    if (not isinstance(completion_tokens, torch.Tensor)
+            or completion_tokens.dtype != torch.int64
+            or completion_tokens.ndim != 2 or min(completion_tokens.shape) == 0):
+        raise ValueError("expected nonempty int64 B x T completion tokens")
+    if (partition_one_mask.ndim != 1
+            or not torch.all((partition_one_mask == 0) | (partition_one_mask == 1))
+            or torch.any(completion_tokens < 0)
+            or torch.any(completion_tokens >= partition_one_mask.numel())):
+        raise ValueError("invalid partition or completion token IDs")
+    trace = teacher_force_partition_trace_batch(
+        model, completion_tokens[:, :1], completion_tokens[:, 1:],
+        partition_one_mask, kv_cache_implementation=kv_cache_implementation,
+        chunk_size=1,
+    )
+    if not torch.isfinite(trace).all() or torch.any((trace < 0) | (trace > 1)):
+        raise ValueError("invalid response-only partition probabilities")
+    return trace
+
+
 def teacher_force_partition_trace_batch(
     model,
     prompt_ids_batch,

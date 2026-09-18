@@ -435,9 +435,18 @@ def build_prc_generation_record(
     }
 
 
-def _soft_tokens(bits, p_arr, weight):
+def _soft_tokens(bits, p_arr, weight, completion_only=True):
     """Per-position soft-token S_j in [-1, 1] (no folding). map is Bayes-optimal;
     other weights use the symmetric t_j * w(p_j)."""
+    if completion_only:
+        p_arr = np.asarray(p_arr, dtype=np.float64)
+        if (not len(bits) or p_arr.shape != (len(bits)-1,)
+                or not np.isfinite(p_arr).all()
+                or np.any((p_arr < 0) | (p_arr > 1))):
+            raise ValueError("completion-only scoring requires T-1 finite probabilities in [0,1]")
+        soft = np.zeros(len(bits), dtype=np.float64)
+        soft[1:] = _soft_tokens(bits[1:], p_arr, weight, completion_only=False)
+        return soft
     if weight == "map":
         return map_soft_token(bits, p_arr)
     return (1 - 2 * bits).astype(np.float64) * weights_from_p(p_arr, weight)
@@ -451,6 +460,7 @@ def detect_hoeffding_prefix(
     fpr=1e-9,
     weight="map",
     return_info=False,
+    *, completion_only=True,
 ):
     """Prefix-column Hoeffding detector for short outputs (T = k < n).
 
@@ -460,18 +470,21 @@ def detect_hoeffding_prefix(
     checks using the k per-position soft-tokens directly -- no cyclic folding of a
     partial block, no Bonferroni split (a single test), so the FPR <= `fpr`
     guarantee holds over the random OTP restricted to the used checks.
+
+    By default, accept T-1 response-only probabilities and zero score 1.
+    completion_only=False is only for explicit historical/control scoring.
     """
     (_, parity_check_matrix, one_time_pad, _, _, _, _, _, t) = decoding_key
     r, n = parity_check_matrix.shape
     bits = tokens_to_bits(generated_token_ids, partition_map)
     p_arr = np.asarray(partition_probs, dtype=np.float64)
-    if bits.shape != p_arr.shape:
+    if not completion_only and bits.shape != p_arr.shape:
         raise ValueError(
             f"tokens length {bits.shape[0]} != p_trace length {p_arr.shape[0]}"
         )
     k = bits.shape[0]
 
-    S = _soft_tokens(bits, p_arr, weight)                    # (k,) in [-1, 1]
+    S = _soft_tokens(bits, p_arr, weight, completion_only)   # (k,) in [-1, 1]
     idx = parity_check_matrix.indices.reshape(r, t)          # (r, t) columns/check
     keep = (idx < k).all(axis=1)                             # checks inside [0, k)
     r_eff = int(keep.sum())
@@ -512,6 +525,7 @@ def detect_hoeffding(
     entropy_weighted=None,
     weight=None,
     return_info=False,
+    *, completion_only=True,
 ):
     """Proven-FPR Hoeffding detector, block-OR over length-n blocks.
 
@@ -530,6 +544,9 @@ def detect_hoeffding(
     which is a uniform improvement over the linear-entropy weight "entropy".
     For backwards compatibility, if weight is None the legacy entropy_weighted
     flag is honored (True->"entropy", False->"naive"); if it too is None -> "map".
+    By default, supply T-1 response-only probabilities for coordinates 2..T;
+    score coordinate 1 is zero, including when the text spans multiple blocks.
+    completion_only=False is only for explicit historical/control scoring.
     """
     if weight is None:
         if entropy_weighted is None:
@@ -548,7 +565,7 @@ def detect_hoeffding(
     n = decoding_key[0].shape[0]
     bits = tokens_to_bits(generated_token_ids, partition_map)
     p_arr = np.asarray(partition_probs, dtype=np.float64)
-    if bits.shape != p_arr.shape:
+    if not completion_only and bits.shape != p_arr.shape:
         raise ValueError(
             f"tokens length {bits.shape[0]} != p_trace length {p_arr.shape[0]}"
         )
@@ -561,7 +578,10 @@ def detect_hoeffding(
         return detect_hoeffding_prefix(
             decoding_key, generated_token_ids, partition_probs, partition_map,
             fpr=fpr, weight=weight, return_info=return_info,
+            completion_only=completion_only,
         )
+    # Abstain only at the global first coordinate, never at later block starts.
+    soft = _soft_tokens(bits, p_arr, weight, True) if completion_only else None
     slices = [slice(b * n, (b + 1) * n) for b in range(T // n)]
     num_blocks = len(slices)
     block_fpr = fpr / num_blocks            # Bonferroni: keep overall FPR <= F
@@ -570,9 +590,11 @@ def detect_hoeffding(
     blocks_passed = 0
     best = None                             # block with the largest margin
     for b, sl in enumerate(slices):
-        post = fold(bits[sl], p_arr[sl], n)
+        post = soft[sl] if completion_only else fold(bits[sl], p_arr[sl], n)
         dec, info = Detect(decoding_key, post, false_positive_rate=block_fpr,
                            return_info=True)
+        if completion_only and info["V"] == 0:
+            dec, info = False, {**info, "threshold": float("inf")}
         margin = info["statistic"] - info["threshold"]
         if dec:
             decision = True
@@ -607,6 +629,7 @@ def detect_online_hoeffding(
     fpr_policy="one_shot",
     return_info=False,
     numerical_tolerance=1e-15,
+    *, completion_only=True,
 ):
     """Hoeffding detector for one causal prefix with ``T = n = length``.
 
@@ -619,6 +642,8 @@ def detect_online_hoeffding(
     ``alpha_spending_v1`` is available for callers that repeatedly test every
     arriving prefix: alpha_L = 6 alpha / (pi^2 L^2).  Final-only experiments
     should use the default ``one_shot`` policy.
+    By default, accept T-1 response-only probabilities and zero score 1.
+    completion_only=False is only for explicit historical/control scoring.
     """
     from online_prc import (
         OnlinePRCKey,
@@ -641,16 +666,12 @@ def detect_online_hoeffding(
 
     bits = tokens_to_bits(generated_token_ids, partition_map)
     p_arr = np.asarray(partition_probs, dtype=np.float64).reshape(-1)
-    if bits.shape != p_arr.shape:
+    if not completion_only and bits.shape != p_arr.shape:
         raise ValueError(
             f"tokens length {bits.shape[0]} != p_trace length {p_arr.shape[0]}"
         )
     length = int(bits.shape[0])
-    if weight == "map":
-        soft = map_soft_token(bits, p_arr)
-    else:
-        signs = (1 - 2 * bits.astype(np.int64)).astype(np.float64)
-        soft = signs * weights_from_p(p_arr, weight)
+    soft = _soft_tokens(bits, p_arr, weight, completion_only)
 
     supports = materialize_supports(length, online_key)
     effective_fpr = float(fpr)
@@ -746,8 +767,9 @@ def prepare_online_map_prefix_trace(
     partition_map,
     maximum_length,
     prepared_context=None,
+    *, completion_only=True,
 ):
-    """Prepare one MAP trace once for adaptive prefix detection.
+    """Prepare one response-only MAP trace once for adaptive prefix detection.
 
     The signed check contribution and squared contribution for every parity
     row through ``maximum_length`` are independent of the eventual stopping
@@ -777,14 +799,17 @@ def prepare_online_map_prefix_trace(
     probabilities = np.asarray(
         partition_probs, dtype=np.float64
     ).reshape(-1)
-    if int(tokens.numel()) < maximum or probabilities.size < maximum:
+    required = maximum - int(completion_only)
+    if int(tokens.numel()) < maximum or probabilities.size < required:
         raise ValueError(
             f"record has {min(int(tokens.numel()), probabilities.size)} values; "
             f"need prefix length {maximum}"
         )
 
     bits = tokens_to_bits(tokens[:maximum], partition_map)
-    soft = map_soft_token(bits, probabilities[:maximum])
+    if completion_only and probabilities.shape != (int(tokens.numel())-1,):
+        raise ValueError("completion-only scoring requires T-1 response-only probabilities")
+    soft = _soft_tokens(bits, probabilities[:required], "map", completion_only)
     longest_supports = context["supports"]
     check_values = np.prod(soft[longest_supports], axis=1)
     signed_check_values = context["otp_signs"] * check_values
@@ -896,6 +921,7 @@ def detect_online_map_prefix_grid(
     fpr=1e-9,
     fpr_policy="one_shot",
     numerical_tolerance=1e-15,
+    *, completion_only=True,
 ):
     """Score MAP detection at several exact prefixes of one online record.
 
@@ -917,6 +943,7 @@ def detect_online_map_prefix_grid(
         partition_probs,
         partition_map,
         max(lengths),
+        completion_only=completion_only,
     )
 
     return [

@@ -475,7 +475,7 @@ def main() -> None:
             "synthid_text": pinned_sources["official_sources"]["synthid_text"],
             "final_integration_code_fingerprint_sha256": campaign_code_fingerprint([
                 str(root / path) for path in (
-                    "modal_online_run.py", "online_prc.py", "watermark_expt.py",
+                    "modal_run.py", "online_prc.py", "watermark_expt.py",
                     "detectors.py", "qwen.py", "constants.py",
                     "proxy_8b_analysis.py", "proxy_8b_finalize.py",
                     "baseline_comparison/smoke_runner.py",
