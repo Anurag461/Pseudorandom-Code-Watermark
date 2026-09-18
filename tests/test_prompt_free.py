@@ -278,6 +278,24 @@ def test_batch_cache_resume_and_aggregation_exclude_prompts(tmp_path, constructi
         _redetect_trace(path, first["identity"])
 
 
+def test_redetect_load_preserves_newer_galois_key_when_factory_is_missing(tmp_path, monkeypatch):
+    import galois
+    from galois._fields import _factory
+    if not hasattr(_factory, "_reconstruct_field_class"):
+        pytest.skip("fixture requires a newer galois serializer")
+    field = galois.GF(2)
+    value = {"generator": field([[1, 0], [0, 1], [1, 1]]), "pad": field([0, 1, 1])}
+    path = tmp_path / "fixed_key.pt"
+    torch.save(value, path)
+    monkeypatch.delattr(_factory, "_reconstruct_field_class")
+    with pytest.raises(AttributeError, match="_reconstruct_field_class"):
+        torch.load(path, weights_only=False, map_location="cpu")
+    restored = _redetect_load(path)
+    for name, original in value.items():
+        assert type(restored[name]) is type(original)
+        np.testing.assert_array_equal(restored[name], original)
+
+
 def test_changed_sources_fail_before_inference_and_batch_125_is_allowed(tmp_path):
     case = fixture_case(tmp_path, "fixed")
     case["batch_size"] = 125

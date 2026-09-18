@@ -7243,7 +7243,12 @@ def _redetect_write(path, value):
 
 def _redetect_load(path):
     import torch
+    from galois._fields import _factory
     _numpy_pickle_compat()
+    # Newer fixed-key caches pickle their field class through this factory.
+    # Reconstruct the same field in the pinned galois 0.4.2 runtime.
+    if not hasattr(_factory, "_reconstruct_field_class"):
+        _factory._reconstruct_field_class = lambda args, kwargs: _factory.GF(*args, **kwargs)
     return torch.load(path, weights_only=False, map_location="cpu")
 
 
