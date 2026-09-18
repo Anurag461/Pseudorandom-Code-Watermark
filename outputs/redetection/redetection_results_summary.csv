@@ -1,1 +1,1 @@
-eta,T,n,r value,r setting,PRC Construction,t,Target FPR,Entropy Model,Generation Model,Map TPR,Entropy Aware TPR,Naive TPR,Log Hoeffding TPR,Map FPR,Entropy FPR,Naive FPR,Log Hoeffding FPR,Entropy Trace Source,Notes
+eta,T,n,r value,r setting,PRC Construction,t,Target FPR,Entropy Model,Generation Model,Old Posterior TPR,Posterior TPR,Old Entropy Aware TPR,Entropy Aware TPR,Naive TPR,Posterior FPR,Entropy FPR,Naive FPR,Entropy Trace Source,Notes

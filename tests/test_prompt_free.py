@@ -240,6 +240,10 @@ def test_batch_cache_resume_and_aggregation_exclude_prompts(tmp_path, constructi
     import csv
     from modal_run import _append_redetection_csv, REDETECT_CSV_COLUMNS
     case = fixture_case(tmp_path, construction)
+    case["old_tpr"] = dict(detector_model="Qwen/Qwen3-8B-Base", source="test historical report",
+                           evidence_sha256="a" * 64,
+                           counts={str(n): {"map": dict(detected=1, count=2), "entropy": dict(detected=0, count=2)}
+                                   for n in case["lengths"]})
     prepared = _prepare_redetection(case, {"id": "Qwen/Qwen3-8B-Base"}, {"gpu": "H100", "git_commit": "test"},
                                     {"data": tmp_path / "data"}, tmp_path / "results")
     assert [b["identity"]["count"] for b in prepared["batches"]] == [3, 1]
@@ -261,7 +265,10 @@ def test_batch_cache_resume_and_aggregation_exclude_prompts(tmp_path, constructi
     assert rows[-1]["Entropy Model"] == "Qwen3-8B-Base" and rows[-1]["Naive TPR"] == "skipped"
     assert rows[-1]["eta"] == "0.05" and rows[-1]["t"] == "3"
     detected = sum(r["scores"]["9"]["map"]["decision"] for r in report["records"] if r["source"] == "wm")
-    assert rows[-1]["Map TPR"] == f"{detected}/2 ({detected/2:.1%})"
+    assert rows[-1]["Posterior TPR"] == f"{detected}/2 ({detected/2:.1%})"
+    assert rows[-1]["Old Posterior TPR"] == "1/2 (50.0%)"
+    assert rows[-1]["Old Entropy Aware TPR"] == "0/2 (0.0%)"
+    assert not any("Log Hoeffding" in k or "Map" in k for k in rows[-1])
     first = prepared["batches"][0]
     path = tmp_path / "results" / first["root"] / "trace.pt"
     payload = _redetect_load(path)

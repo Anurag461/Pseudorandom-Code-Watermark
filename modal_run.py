@@ -7177,7 +7177,10 @@ EXECUTION_FILES = ("qwen.py", "detectors.py", "prc.py", "online_prc.py",
 # Completion-only redetection shares this app's image, model loader and batching.
 REDETECT_PROTOCOL = "completion_only_raw_abstain_v1"
 REDETECT_CSV = "outputs/redetection/redetection_results_summary.csv"
-REDETECT_CSV_COLUMNS = FIXED_CSV_COLUMNS[:5] + ["PRC Construction"] + FIXED_CSV_COLUMNS[5:]
+REDETECT_CSV_COLUMNS = FIXED_CSV_COLUMNS[:5] + ["PRC Construction"] + FIXED_CSV_COLUMNS[5:9] + [
+    "Old Posterior TPR", "Posterior TPR", "Old Entropy Aware TPR", "Entropy Aware TPR",
+    "Naive TPR", "Posterior FPR", "Entropy FPR", "Naive FPR", "Entropy Trace Source", "Notes",
+]
 redetect_results = modal.Volume.from_name("prc-completion-only", create_if_missing=False)
 redetect_archive = modal.Volume.from_name("prc-research-archive", create_if_missing=False)
 
@@ -7461,11 +7464,22 @@ def _append_redetection_csv(prepared, report, csv_out):
                "Notes": f"BF16; coordinate 1=0; FPR policy={case['fpr_policy']}; batch={case['batch_size']}; "
                         f"GPU={run['execution']['gpu']}; commit={run['execution']['git_commit']}; "
                         f"run={prepared['root']}; report=full.json"}
-        for weight, tpr, fpr in [("map", "Map TPR", "Map FPR"), ("entropy", "Entropy Aware TPR", "Entropy FPR"),
-                                  ("naive", "Naive TPR", "Naive FPR"), ("log", "Log Hoeffding TPR", "Log Hoeffding FPR")]:
+        for weight, tpr, fpr in [("map", "Posterior TPR", "Posterior FPR"), ("entropy", "Entropy Aware TPR", "Entropy FPR"),
+                                  ("naive", "Naive TPR", "Naive FPR")]:
             for source, column in [("wm", tpr), ("null", fpr)]:
                 row[column] = (_format_rate(count[weight][source]["detected"], count[weight][source]["count"])
                                if weight in count else "skipped")
+        old = case.get("old_tpr")
+        if old and old["detector_model"] != run["model"]["id"]:
+            raise ValueError("old TPR belongs to a different detector model")
+        for weight, column in [("map", "Old Posterior TPR"), ("entropy", "Old Entropy Aware TPR")]:
+            previous = old["counts"].get(str(length), {}).get(weight) if old else None
+            if previous and (previous["count"] != sum(ref["source"] == "wm" for ref in case["records"])
+                             or not 0 <= previous["detected"] <= previous["count"]):
+                raise ValueError("old and redetected TPR candidate counts differ")
+            row[column] = _format_rate(previous["detected"], previous["count"]) if previous else "unavailable"
+        if old:
+            row["Notes"] += f"; old TPR source={old['source']}; old evidence SHA256={old['evidence_sha256']}"
         rows.append({k: str(row[k]) for k in REDETECT_CSV_COLUMNS})
     path = Path(csv_out)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -7477,7 +7491,7 @@ def _append_redetection_csv(prepared, report, csv_out):
         if reader.fieldnames and reader.fieldnames != REDETECT_CSV_COLUMNS:
             raise ValueError("redetection CSV columns differ from the Hoeffding results schema")
         handle.seek(0, 2)
-        writer = csv.DictWriter(handle, fieldnames=REDETECT_CSV_COLUMNS)
+        writer = csv.DictWriter(handle, fieldnames=REDETECT_CSV_COLUMNS, lineterminator="\n")
         if not reader.fieldnames:
             writer.writeheader()
         writer.writerows(row for row in rows if row not in existing)
