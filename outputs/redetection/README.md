@@ -8,6 +8,8 @@ The current protocol uses BF16 Qwen3-Base detectors (0.6B and 8B), raw completio
 |---|---:|---:|---|---:|---:|---:|---:|
 | 0.6B → 0.6B | 0.05 | 400 | Posterior mean | 89.2% (446/500) | 86.0% (430/500) | -3.2 pp | 0/500 |
 | 0.6B → 0.6B | 0.05 | 400 | Entropy weighted | 73.0% (365/500) | 71.0% (355/500) | -2.0 pp | 0/500 |
+| 0.6B → 0.6B | 0.05 | 448 | Posterior mean | 93.2% (466/500) | 90.0% (450/500) | -3.2 pp | 0/500 |
+| 0.6B → 0.6B | 0.05 | 448 | Entropy weighted | 79.8% (399/500) | 79.4% (397/500) | -0.4 pp | 0/500 |
 | 8B → 0.6B | 0.05 | 640 | Posterior mean | 76.4% (382/500) | 72.8% (364/500) | -3.6 pp | 0/500 |
 | 8B → 0.6B | 0.05 | 640 | Entropy weighted | 64.2% (321/500) | 60.0% (300/500) | -4.2 pp | 0/500 |
 | 0.6B → 0.6B | 0.2 | 3104 | Posterior mean | 90.8% (454/500) | 89.6% (448/500) | -1.2 pp | 0/500 |
@@ -17,9 +19,9 @@ The current protocol uses BF16 Qwen3-Base detectors (0.6B and 8B), raw completio
 | 8B → 8B | 0.05 | 1280 | Posterior mean | 97.8% (489/500) | 96.2% (481/500) | -1.6 pp | 0/500 |
 | 8B → 8B | 0.05 | 1280 | Entropy weighted | 92.4% (462/500) | 90.0% (450/500) | -2.4 pp | 0/500 |
 
-The prompted controls for the first three settings had 0/500 false positives. The n=640 prompted columns use the matched-execution BF16 control (76.4% / 64.2%); the historical saved values were 76.2% / 64.0%. The n=400 construction is fixed-block PRC; n=640, n=1024, n=1280 and n=3104 use online PRC.
+The prompted controls for the 0.6B detector settings had 0/500 false positives. The n=640 prompted columns use the matched-execution BF16 control (76.4% / 64.2%); the historical saved values were 76.2% / 64.0%. The n=400 and n=448 constructions are fixed-block PRC; n=640, n=1024, n=1280 and n=3104 use online PRC.
 
-The largest observed reduction is at 8B → 0.6B, n=640: 3.6 points for posterior mean and 4.2 for entropy weighting. At n=3104, the corresponding reductions are 1.2 and 0.4 points. These results cover five settings; other paper settings have not yet been redetected under this protocol.
+The largest observed reduction is at 8B → 0.6B, n=640: 3.6 points for posterior mean and 4.2 for entropy weighting. At n=3104, the corresponding reductions are 1.2 and 0.4 points. These results cover six settings; other paper settings have not yet been redetected under this protocol.
 
 Earlier EOT and coordinate-1 diagnostics (posterior mean; all false positives are 0/500):
 
@@ -32,7 +34,7 @@ Removing the EOT token after abstaining at coordinate 1 changed posterior-mean T
 
 The preliminary FP32 EOT n=400 run gave 86.2% posterior-mean and 71.4% entropy-weighted TPR. It changed precision as well as context, so it is retained as a diagnostic. BF16 EOT-proxy entropy TPR was 71.2% at n=400 and 59.2% at n=640; EOT-abstain and raw-abstain entropy TPR were 71.0% and 60.0%, respectively.
 
-The n=3104 execution used code commit `dad704f`, eight A100 80GB batches of 125, one full validation batch and parallel workers. Peak live GPU allocation was 48.98 GB. The 8B → 8B n=1280 run used commit `e5fa510`, eight H100 batches of 125 and one full validation batch; peak live allocation was 42.73 GB. Across the four inference runs, 5,420,000 response-only probabilities are cached. The n=1024 result reuses 1,023,000 of the n=1280 probabilities and adds no inference.
+The n=3104 execution used code commit `dad704f`, eight A100 80GB batches of 125, one full validation batch and parallel workers. Peak live GPU allocation was 48.98 GB. The 8B → 8B n=1280 run used commit `e5fa510`, eight H100 batches of 125 and one full validation batch; peak live allocation was 42.73 GB. Across the five inference runs, 5,867,000 response-only probabilities are cached. The n=1024 result reuses 1,023,000 of the n=1280 probabilities and adds no inference.
 
 [Redetection CSV](redetection_results_summary.csv) · [Machine-readable results](summary.json) · [Cache locations and SHA-256 checksums](cache_index.json)
 
@@ -62,3 +64,5 @@ implementation archive listed in the cache index.
 For the 8B → 8B n=1280 run, the old TPR columns use the same 500 watermarked candidates and their cached generation probabilities. Posterior TPR reproduces the saved 489/500 result; entropy-weighted TPR is 462/500. These historical scores required no model inference. Old null FPR was not recomputed. The current run uses 500 cached 8B nulls from T=1382, truncated to 1280 tokens. All eight new trace shards were read back and checksum-verified, and exactly one batch carries full validation.
 
 The 8B → 8B n=1024 result is a local CPU prefix rescore of the same n=1280 traces and candidates, with coordinate 1 zero and the original online one-shot FPR policy. It preserves all 1014 prefix parity checks (11 contain coordinate 1). Both old TPRs use cached generation probabilities; all 500 old posterior decisions match the saved n=1024 result. No new Modal job or model inference was run. Detailed prefix results and provenance are saved locally and under the parent Modal cache in `prefixes/n1024/`.
+
+The fixed-PRC 0.6B → 0.6B n=448 run used commit `789f42b`, eight A100 80GB batches of 125 and one full validation batch. Peak live allocation was 8.68 GB. All 500 watermarked and 500 null token hashes match the original audit; nulls reuse its T=512 cache truncated to 448. The original key and partition survived the galois compatibility loader unchanged. Coordinate 1 occurs in 2/444 parity checks. All eight trace shards, token batches and result evidence are cached locally and in Modal; saved traces and evidence were read back and verified.

@@ -141,6 +141,29 @@
       "old_tpr_sha256": "2622e3fdd8fa453558e09cd751b2bab46602fad187b0b770bda42dd6c6014584",
       "modal_csv_file": "redetection_results_summary.csv",
       "modal_csv_sha256": "c99f460f4083e0564a7f5c55c486032aeca07fa524d1f35b13baf831ca73bade"
+    },
+    {
+      "case": "same_0p6b_eta005_n448",
+      "kind": "current",
+      "run_id": "ae6ee26cba45acb62b60acf3",
+      "local_result_file": ".archive/runs/5ad734125aae7a2f57392331/same_0p6b_eta005_n448/full.json",
+      "result_sha256": "5be53c4a9d077c7cd073dd3647e007eef6c697f329b114b33498bea6fa971504",
+      "modal_root": "completion_only_raw_abstain_v1/integrated/ae6ee26cba45acb62b60acf3",
+      "modal_result_file": "full.json",
+      "local_trace_dir": ".archive/runs/5ad734125aae7a2f57392331/same_0p6b_eta005_n448/traces",
+      "local_input_cache": ".archive/runs/5ad734125aae7a2f57392331/same_0p6b_eta005_n448/cache",
+      "probabilities": 447000,
+      "batch_size": 125,
+      "gpu": "A100-80GB",
+      "detector_model": "Qwen3-0.6B-Base",
+      "trace_checksums_file": "cache_verification.json",
+      "trace_checksums_file_sha256": "adb4ec0007346c824f8cdff0934ca6f2ad3ee9533701140e2a0a9fdd1a6c11b2",
+      "execution_commit": "789f42b23da8f298f24d8f59c0b7f31ed72bf51b",
+      "modal_app_id": "ap-Nszu4gPjVP0fMxhlnlkwoO",
+      "modal_csv_file": "redetection_results_summary.csv",
+      "modal_csv_sha256": "023a20a21069600799c7aa219eb454986431735374c0729fbd6a31965a8c5e8e",
+      "old_tpr_file": "old_results.json",
+      "old_tpr_sha256": "3ca1b7366af19d59447f26f082f7080e53cc992788d4e99276dc84d79acfdf89"
     }
   ],
   "implementation_archive": {

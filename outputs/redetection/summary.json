@@ -246,6 +246,40 @@
       "prompted_false_positives": null,
       "raw_false_positives": 0,
       "change_pp": -3.8
+    },
+    {
+      "case": "same_0p6b_eta005_n448",
+      "generator": "0.6B",
+      "detector": "0.6B",
+      "n": 448,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "fixed",
+      "weight": "map",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 466,
+      "raw_detected": 450,
+      "prompted_false_positives": 0,
+      "raw_false_positives": 0,
+      "change_pp": -3.2
+    },
+    {
+      "case": "same_0p6b_eta005_n448",
+      "generator": "0.6B",
+      "detector": "0.6B",
+      "n": 448,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "fixed",
+      "weight": "entropy",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 399,
+      "raw_detected": 397,
+      "prompted_false_positives": 0,
+      "raw_false_positives": 0,
+      "change_pp": -0.4
     }
   ],
   "runs": [
@@ -293,6 +327,16 @@
       "checks": 1014,
       "checks_containing_coordinate1": 11,
       "execution_commit": "17149a75b561d9ee5c09c5116166b50b2887e2f3"
+    },
+    {
+      "case": "same_0p6b_eta005_n448",
+      "run_id": "ae6ee26cba45acb62b60acf3",
+      "model_probability_count": 447000,
+      "batch_size": 125,
+      "checks_containing_coordinate1": 2,
+      "checks": 444,
+      "gpu": "A100-80GB",
+      "execution_commit": "789f42b23da8f298f24d8f59c0b7f31ed72bf51b"
     }
   ],
   "diagnostics": [
