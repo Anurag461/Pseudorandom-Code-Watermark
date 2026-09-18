@@ -23,6 +23,15 @@ outputs/self_bleu_validation/step3/
 outputs/self_bleu_validation/step3-v1/
 outputs/self_bleu_validation/step3-v2/
 
+# Pilot raw text, traces, and row-level evidence are archived separately.
+outputs/self_bleu_pilot/*/raw/
+outputs/self_bleu_pilot/*/inputs.json
+outputs/self_bleu_pilot/*/reused_textseal.json
+outputs/self_bleu_pilot/*/token_detection.json
+outputs/self_bleu_pilot/*/prc_report.json
+outputs/self_bleu_pilot/*/textseal_report.json
+outputs/self_bleu_pilot/stage_a_v1/
+
 # Online prefix-sweep per-prompt manifests (large, reproducible from cache)
 outputs/online_map_sweep_*_sampler-*.json
 outputs/online_map_sweep_*_sampler-*_increments/

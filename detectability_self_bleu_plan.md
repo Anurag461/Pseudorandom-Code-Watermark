@@ -1,14 +1,18 @@
 # Detectability versus Self-BLEU: proposed experiment
 
 Prepared 2026-09-15; revised for `comparison-with-redetect` at `4696382`.
-Status: steps 1–2 pushed as `b4b8f26`; **step 3 completed on H100** on
-2026-09-17 (Pacific). See the [validation report](outputs/self_bleu_validation/step3-v4/REPORT.md).
-Stage A response pairs are saved and verified; their Self-BLEU/detection analysis
-is the next step. The full sweep remains conditional.
+Status: **steps 1–4 complete**, including Stage A analysis on 2026-09-18.
+See the [pilot results](outputs/self_bleu_pilot/stage_a_v2/REPORT.md) and
+[validation report](outputs/self_bleu_validation/step3-v4/REPORT.md).
+Stage A reused saved pairs and completed missing prompt-free detection.
+The cumulative planning charge is **$5.51880 of the initial $10**.
+Do not expand to the full sweep on the present evidence: PRC's diversity
+advantage over default SynthID is small and uncertain. Stage B is optional
+follow-up to answer the remaining parameter-tradeoff question.
 Total incremental Modal budget: **$200**, including validation, CPU, memory,
 generation, scoring, and retries.
 
-**Recommendation:** start with a 50-prompt, two-response pilot. If its results
+**Original design (pilot now complete):** start with a 50-prompt, two-response pilot. If its results
 justify a larger study, extend to 500 prompts × two responses, retain a single
 plain Gumbel-Max point, sweep TextSeal alpha including zero, and restrict
 SynthID's main sweep to 2–20, with depth 30 as an additional sensitivity check.
@@ -47,7 +51,7 @@ completed default-setting results, including the original shared null cohort.
 4. **Stage A pilot.** Use 50 prompts, two responses, the five default/control
    configurations, and 400/1,024-token evaluation. Reuse compatible redetection
    results; recover only missing evidence for new texts. Initial allocation $10.
-5. **Decision and Stage B.** Compare paired Self-BLEU and completion-only TPR,
+5. **Decision and optional Stage B.** Compare paired Self-BLEU and completion-only TPR,
    then test TextSeal alpha 0/.5 and SynthID depths 2/20 plus depth 30 before
    interpreting a default-setting advantage as a frontier advantage.
 6. **Conditional expansion.** Increase prompt coverage before responses per
@@ -115,16 +119,39 @@ failed startup and $2 for image/startup/storage overhead, the planning charge
 is **$4.05505 of the initial $10**, leaving $5.94495 for the pilot under those
 allowances. This is not a settled invoice. The report records the setup/import
 failures and a BF16-to-NumPy conversion bug in the validation check; the repair
-reused every saved generation. No full sweep or pilot metric analysis ran.
+reused every saved generation. These were the costs through step 3; Stage A
+costs and results below supersede that running balance.
 
-**Immediate next step (4):** read the verified Stage A pairs without new
-generation; compute the frozen pairwise Self-BLEU metric at 400/1,024 tokens;
-reuse compatible old evidence and recover missing completion-only evidence
-for the fresh responses/nulls; then report prompt-bootstrap uncertainty,
-observed null behavior and the provisional go/no-go screen. The alpha-zero
-full-length pairs are already available for Stage B. Its other configurations
-still require full-length pairs; the 128-token checks are only implementation
-validation.
+**Step 4 result:** at 1,024 tokens, PRC Self-BLEU is .0189 with 97/100 detections;
+TextSeal .1 is .0377 with 100/100; SynthID 10 is .0221 with 100/100; Gumbel is
+1.0000 with 100/100. Ordinary sampling is .0193. The paired PRC-minus-SynthID
+Self-BLEU difference is −.0032 (95% prompt-bootstrap interval −.0073 to +.0010),
+well below the provisional .02 practical margin. At 400 tokens, PRC detects
+55/100 versus 100/100 for the baselines. This supports a diversity advantage
+over default TextSeal/Gumbel, but no established advantage over SynthID.
+
+The analysis used two responses per prompt, 2,000 paired prompt-bootstrap
+draws, official SynthID context masking and completion-only model evidence.
+All 153 replay files verified; 400 independent direct-PRC checks agreed exactly;
+6,600 historical CPU score comparisons preserved decisions; 24 local tests
+passed. Fresh-null false positives were 0/100 everywhere except SynthID at
+400 tokens (1/100). Historical null counts were 0/500 at both endpoints; those
+prompts overlap this pilot and do not establish matched 0.1% FPR.
+
+Successful new replay resources totaled $0.68375. Including a $0.78 allowance
+for a failed verification attempt and the prior allowances, the planning
+charge is **$5.51880**, leaving **$4.48120** of the initial $10. The failed call
+was repaired by passing a tensor to the direct detector; frozen inputs,
+analysis choices and keys were unchanged. No additional generation ran.
+
+**Next decision (5):** no-go for immediate large expansion. If a parameter
+tradeoff comparison remains useful, prioritize TextSeal alpha .5 and SynthID
+depth 2 on the same 50 prompts; include depths 20/30 before frontier claims.
+Reuse the full-length alpha-zero pairs. Other Stage B configurations still
+need full-length pairs; their 128-token checks are implementation validation
+only. No Stage B, extra-prompt expansion, Bayesian training or large null
+campaign has been dispatched. The pilot report records all intervals,
+calibration limits, provenance and resource estimates.
 
 ## Evidence behind the recommendation
 

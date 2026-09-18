@@ -1,0 +1,14 @@
+{
+  "direct_prc_checks": 400,
+  "failed_app": "ap-x1hGq0b96pXEZPLB7ds5nS",
+  "failed_attempt_allowance_usd": 0.78,
+  "final_summary_differs_only_in_source_hash_and_limitations": true,
+  "initial_summary_sha256": "8547f010f983f2d3f383a02f5c97bc3091a3ef1abf6a58c38c80761dfcfb75f3",
+  "manifest_id": "6b4f7376b0bc9f0001e7378064c95166f5b85015a0560983e175b399d10d55b4",
+  "max_absolute_statistic_V_threshold_difference": 0.0,
+  "passed": true,
+  "prc_app": "ap-S2x8nGDuhiyw9lxZZTmeLS",
+  "script_sha256": "7dd52e94eff1d084c072eee7c439a6d404e838dda55865bca5ccb7c3128c207e",
+  "textseal_app": "ap-EiZ6c4b0iGUooiV7iW40Qg",
+  "worker_fix_preserved_inputs_analysis_keys_seeds": true
+}

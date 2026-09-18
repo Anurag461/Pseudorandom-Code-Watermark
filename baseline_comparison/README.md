@@ -324,8 +324,8 @@ exclude image/startup/storage overhead and are not exact billing totals.
 All six full-length replicate controls, four short parameter checks, PRC
 completion-only checks and seven TextSeal direct-prefix parity checks passed.
 The 20 local tests pass. The artifact collector verified 27 files containing
-600 full-length and 200 short response records. Stage A now requires analysis
-and missing detector evidence, with no new generation.
+600 full-length and 200 short response records. Stage A subsequently reused
+those pairs for the completed analysis below, with no new generation.
 
 The initial generation run saved every pair before a BF16-to-NumPy conversion
 failed in a diagnostic assertion. The `prc-replay-repair` stage recovered that
@@ -346,3 +346,47 @@ MODAL_PROFILE=new-prc-watermark python -m baseline_comparison.self_bleu_validati
 Omit `--download` to check an existing local copy. The collector verifies file
 hashes, batch/response identities, fixed-key seed pairs, actual historical
 token matches and every saved SynthID official score-update check.
+
+**Status: Stage A analysis complete.** See the [pilot report](../outputs/self_bleu_pilot/stage_a_v2/REPORT.md).
+PRC preserves ordinary-sampling diversity and detects 97/100 at 1,024 tokens,
+but its Self-BLEU difference from default SynthID is small and uncertain.
+The evidence does not justify immediate expansion to the full sweep. The
+cumulative planning charge, including conservative failure/overhead allowances,
+is $5.51880 of the initial $10; this is not a settled invoice.
+
+`self_bleu_pilot.py` freezes clean completion-only replay requests from the
+verified pairs and imports 53 compatible TextSeal records. Its two Modal stages
+recover 200 PRC traces and 147 missing TextSeal records; neither generates text.
+`self_bleu_pilot_analysis.py` computes symmetric sentence Self-BLEU and official
+keyed token evidence. `self_bleu_pilot_results.py` verifies the 153 replay files,
+joins scores by response identity, computes paired prompt-bootstrap intervals,
+and renders the figure. Four additional tests cover clean request boundaries,
+budget limits and the correct resampling unit (24 control/validation/pilot
+tests pass in total).
+
+The completed request is explicitly **`stage_a_v2`**. Version 1 failed in a
+verification call before saving usable PRC batches; version 2 changes that
+argument to a tensor and accounts for the failed attempt. Inputs, keys and
+analysis choices are identical. Do not redispatch either completed GPU stage.
+Restore the raw analysis files from the archive recorded in
+`outputs/self_bleu_pilot/stage_a_v2/archive.json` when using a fresh checkout.
+That record gives the local path and the explicitly authorized Modal archive
+location, with its checksum and transfer-verification status.
+Extract its relative `outputs/` paths at the repository root. It includes the
+step-3 raw generation batches and historical score/input files used below.
+Then verify/reproduce locally (SacreBLEU 2.4.3, pinned SynthID package, existing
+numerical environment and model tokenizer required):
+
+```sh
+NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot_analysis \
+  --setup outputs/self_bleu_pilot/stage_a_v2 --stage diversity --tokenizer /path/to/pinned/tokenizer.json
+NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot_analysis \
+  --setup outputs/self_bleu_pilot/stage_a_v2 --stage token-evidence
+NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m baseline_comparison.self_bleu_pilot_results \
+  --setup outputs/self_bleu_pilot/stage_a_v2
+```
+
+Artifacts are immutable: identical reruns verify existing bytes, while changed
+runtime versions or results require a separate output location. The pinned
+analysis source and original analysis before a figure-layout repair are retained
+inside the archive. No Stage B generation was launched.
