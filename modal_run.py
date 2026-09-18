@@ -7176,7 +7176,7 @@ EXECUTION_FILES = ("qwen.py", "detectors.py", "prc.py", "online_prc.py",
 
 # Completion-only redetection shares this app's image, model loader and batching.
 REDETECT_PROTOCOL = "completion_only_raw_abstain_v1"
-REDETECT_CSV = "outputs/redetection/hoeffding_redetection_results_summary.csv"
+REDETECT_CSV = "outputs/redetection/redetection_results_summary.csv"
 REDETECT_CSV_COLUMNS = FIXED_CSV_COLUMNS[:5] + ["PRC Construction"] + FIXED_CSV_COLUMNS[5:]
 redetect_results = modal.Volume.from_name("prc-completion-only", create_if_missing=False)
 redetect_archive = modal.Volume.from_name("prc-research-archive", create_if_missing=False)
