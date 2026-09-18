@@ -117,6 +117,30 @@
       "modal_csv_sha256": "df9def04aa83273638de6b28c06a3db22bff8867b13fcf7e99e4b2b10823a011",
       "old_tpr_file": "old_tpr.json",
       "old_tpr_sha256": "a2354e7103eea987262acdb03e6355efd2607fe678332c448cc95b2d944065fe"
+    },
+    {
+      "case": "same_8b_eta005_n1024",
+      "kind": "current",
+      "run_id": "d79b1fb3223ea92105ebb171/prefixes/n1024",
+      "local_result_file": ".archive/runs/0d43f0ce4078825fc356e050/same_8b_eta005_n1280/prefixes/n1024/full.json",
+      "result_sha256": "f0a2107b42eba29e5963ea573fe53a34650bcb15c12ffed6932b40f8e4088b6c",
+      "modal_root": "completion_only_raw_abstain_v1/integrated/d79b1fb3223ea92105ebb171/prefixes/n1024",
+      "modal_result_file": "full.json",
+      "parent_run_id": "d79b1fb3223ea92105ebb171",
+      "parent_modal_root": "completion_only_raw_abstain_v1/integrated/d79b1fb3223ea92105ebb171",
+      "local_trace_dir": ".archive/runs/0d43f0ce4078825fc356e050/same_8b_eta005_n1280/traces",
+      "local_input_cache": ".archive/runs/0d43f0ce4078825fc356e050/same_8b_eta005_n1280/cache",
+      "probabilities": 0,
+      "reused_probabilities": 1023000,
+      "compute": "local CPU",
+      "provenance_file": "provenance.json",
+      "provenance_sha256": "f2bed1fc81a911aa2b6243f3b978bdd41b110f7dd12159364e577ed9fbf8f6b9",
+      "verification_file": "verification.json",
+      "verification_sha256": "781cfbf25823ccf9dc81a37a76231c7a9ee3cfc1eb942de889293b373b8caaf3",
+      "old_tpr_file": "old_tpr.json",
+      "old_tpr_sha256": "2622e3fdd8fa453558e09cd751b2bab46602fad187b0b770bda42dd6c6014584",
+      "modal_csv_file": "redetection_results_summary.csv",
+      "modal_csv_sha256": "c99f460f4083e0564a7f5c55c486032aeca07fa524d1f35b13baf831ca73bade"
     }
   ],
   "implementation_archive": {

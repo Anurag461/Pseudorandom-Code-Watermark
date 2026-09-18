@@ -212,6 +212,40 @@
       "prompted_false_positives": null,
       "raw_false_positives": 0,
       "change_pp": -2.4
+    },
+    {
+      "case": "same_8b_eta005_n1024",
+      "generator": "8B",
+      "detector": "8B",
+      "n": 1024,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "online",
+      "weight": "map",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 480,
+      "raw_detected": 466,
+      "prompted_false_positives": null,
+      "raw_false_positives": 0,
+      "change_pp": -2.8
+    },
+    {
+      "case": "same_8b_eta005_n1024",
+      "generator": "8B",
+      "detector": "8B",
+      "n": 1024,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "online",
+      "weight": "entropy",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 441,
+      "raw_detected": 422,
+      "prompted_false_positives": null,
+      "raw_false_positives": 0,
+      "change_pp": -3.8
     }
   ],
   "runs": [
@@ -248,6 +282,17 @@
       "checks": 1267,
       "gpu": "H100",
       "execution_commit": "e5fa51090ec58f3d7e2ad84fab9e3615201ac645"
+    },
+    {
+      "case": "same_8b_eta005_n1024",
+      "run_id": "d79b1fb3223ea92105ebb171/prefixes/n1024",
+      "model_probability_count": 0,
+      "reused_probability_count": 1023000,
+      "compute": "local CPU",
+      "parent_run_id": "d79b1fb3223ea92105ebb171",
+      "checks": 1014,
+      "checks_containing_coordinate1": 11,
+      "execution_commit": "17149a75b561d9ee5c09c5116166b50b2887e2f3"
     }
   ],
   "diagnostics": [
