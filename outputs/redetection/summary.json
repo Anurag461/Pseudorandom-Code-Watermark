@@ -178,6 +178,40 @@
       "prompted_false_positives": 0,
       "raw_false_positives": 0,
       "change_pp": -0.4
+    },
+    {
+      "case": "same_8b_eta005_n1280",
+      "generator": "8B",
+      "detector": "8B",
+      "n": 1280,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "online",
+      "weight": "map",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 489,
+      "raw_detected": 481,
+      "prompted_false_positives": null,
+      "raw_false_positives": 0,
+      "change_pp": -1.6
+    },
+    {
+      "case": "same_8b_eta005_n1280",
+      "generator": "8B",
+      "detector": "8B",
+      "n": 1280,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "online",
+      "weight": "entropy",
+      "wm_count": 500,
+      "null_count": 500,
+      "prompted_detected": 462,
+      "raw_detected": 450,
+      "prompted_false_positives": null,
+      "raw_false_positives": 0,
+      "change_pp": -2.4
     }
   ],
   "runs": [
@@ -204,6 +238,16 @@
       "batch_size": 125,
       "checks_containing_coordinate1": 15,
       "checks": 3073
+    },
+    {
+      "case": "same_8b_eta005_n1280",
+      "run_id": "d79b1fb3223ea92105ebb171",
+      "model_probability_count": 1279000,
+      "batch_size": 125,
+      "checks_containing_coordinate1": 11,
+      "checks": 1267,
+      "gpu": "H100",
+      "execution_commit": "e5fa51090ec58f3d7e2ad84fab9e3615201ac645"
     }
   ],
   "diagnostics": [

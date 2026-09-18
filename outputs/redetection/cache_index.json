@@ -11,7 +11,7 @@
     "local_path": ".archive/detailed-results-e78f61f.tar.gz",
     "contents": "All reports, per-candidate results, provenance and validation files from the original results commit. Raw trace tensors are stored separately under the run roots below."
   },
-  "path_convention": "local_result_file paths are relative to outputs/redetection, and are also member paths within the archive.",
+  "path_convention": "Local paths are relative to outputs/redetection. Earlier current/diagnostics files are also members of the detailed archive; newer integrated runs are stored at their listed local and Modal locations.",
   "runs": [
     {
       "case": "same_0p6b_eta005_n400",
@@ -95,6 +95,28 @@
       "result_sha256": "306139dd290f2ca9d637950b2fb741039d8e36a792246ffa78f45231fcc4f4af",
       "modal_root": "completion_only_eot_v1/gen-qwen3_8b_base/detect-qwen3_0p6b_base/n640_t3_eta0.05/8b-n640-bf16-ce27d367a0fbbc3e/ablations/coordinate1-6f4bb352b80073a5",
       "modal_result_file": "full.json"
+    },
+    {
+      "case": "same_8b_eta005_n1280",
+      "kind": "current",
+      "run_id": "d79b1fb3223ea92105ebb171",
+      "local_result_file": ".archive/runs/0d43f0ce4078825fc356e050/same_8b_eta005_n1280/full.json",
+      "result_sha256": "9f23f5283f03e3e948d49f737f44d566f8e5489f278e71b1af51df26d0b0efe9",
+      "modal_root": "completion_only_raw_abstain_v1/integrated/d79b1fb3223ea92105ebb171",
+      "modal_result_file": "full.json",
+      "local_trace_dir": ".archive/runs/0d43f0ce4078825fc356e050/same_8b_eta005_n1280/traces",
+      "probabilities": 1279000,
+      "batch_size": 125,
+      "gpu": "H100",
+      "detector_model": "Qwen3-8B-Base",
+      "trace_checksums_file": "cache_verification.json",
+      "trace_checksums_file_sha256": "c180010fd62afaf6df9939ad5c39a9f374e1dd533cd95664fe8776dc54638818",
+      "execution_commit": "e5fa51090ec58f3d7e2ad84fab9e3615201ac645",
+      "modal_app_id": "ap-RP4LzHx9hHp9cAAnkZtTTj",
+      "modal_csv_file": "redetection_results_summary.csv",
+      "modal_csv_sha256": "df9def04aa83273638de6b28c06a3db22bff8867b13fcf7e99e4b2b10823a011",
+      "old_tpr_file": "old_tpr.json",
+      "old_tpr_sha256": "a2354e7103eea987262acdb03e6355efd2607fe678332c448cc95b2d944065fe"
     }
   ],
   "implementation_archive": {
