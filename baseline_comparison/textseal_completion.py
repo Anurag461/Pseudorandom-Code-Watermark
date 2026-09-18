@@ -19,7 +19,7 @@ import time
 import types
 from typing import Sequence
 
-from .config import NOMINAL_FPR, PREFIX_LENGTHS, TEXTSEAL_COMMIT
+from .config import NOMINAL_FPR, PREFIX_LENGTHS, TEXTSEAL_ALPHA, TEXTSEAL_COMMIT
 
 
 PROTOCOL = "completion_only_raw_abstain_v1"
@@ -100,14 +100,15 @@ class TextSealCompletionDetector:
     reuse is an explicit diagnostic path, since BF16 outputs depend on shape.
     """
 
-    def __init__(self, model, *, source_root: str | Path | None = None):
+    def __init__(self, model, *, source_root: str | Path | None = None,
+                 alpha: float = TEXTSEAL_ALPHA):
         if model is None:
             raise ValueError("a model is required for completion-only entropy")
         detector_type, self.upstream_source = load_upstream_detector(source_root)
         from .official import textseal_config
 
         model.eval()
-        self._detector = detector_type(None, textseal_config(), model=model, scoring_method="v2")
+        self._detector = detector_type(None, textseal_config(alpha=alpha), model=model, scoring_method="v2")
 
     def detect(self, completion_tokens: Sequence[int], *, nominal_fpr: float = NOMINAL_FPR) -> dict:
         if not math.isfinite(nominal_fpr) or not 0 < nominal_fpr < 1:

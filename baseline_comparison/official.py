@@ -27,8 +27,10 @@ from .scoring import (
 )
 
 
-def textseal_config(*, watermark_type: str = "textseal"):
+def textseal_config(*, watermark_type: str = "textseal", alpha: float = TEXTSEAL_ALPHA):
     """Return the paper settings, explicitly overriding released-code defaults."""
+    if not math.isfinite(alpha) or not 0 <= alpha <= 1:
+        raise ValueError("TextSeal alpha must be finite and in [0, 1]")
     from textseal.watermarking.config import WatermarkConfig
 
     return WatermarkConfig(
@@ -37,7 +39,7 @@ def textseal_config(*, watermark_type: str = "textseal"):
         ngram=CONTEXT_LENGTH,
         watermark_type=watermark_type,
         method="uniform",
-        mixing_alpha=TEXTSEAL_ALPHA,
+        mixing_alpha=float(alpha),
         scoring_method="v2",
         depth=len(SYNTHID_KEYS),
     )
@@ -48,7 +50,7 @@ def gumbel_config():
     return replace(config, secret_key=GUMBEL_KEY)
 
 
-def textseal_generator():
+def textseal_generator(*, alpha: float = TEXTSEAL_ALPHA):
     """Build only the official sampler state; the integration owns Qwen I/O."""
     import textseal.watermarking.generator as generator_module
     from textseal.watermarking.generator import TextSealGenerator
@@ -70,7 +72,7 @@ def textseal_generator():
 
     generator_module.fast_prf_dual = eager_fast_prf_dual
 
-    config = textseal_config()
+    config = textseal_config(alpha=alpha)
     generator = TextSealGenerator.__new__(TextSealGenerator)
     generator.wm_args = config
     generator.ngram = config.ngram
@@ -93,7 +95,15 @@ def gumbel_generator():
     return generator
 
 
-def synthid_processor(device: torch.device | str):
+def _synthid_keys(keys):
+    keys = tuple(keys)
+    if (not keys or len(set(keys)) != len(keys)
+            or any(type(key) is not int or not 0 <= key < 2**31 for key in keys)):
+        raise ValueError("SynthID keys must be distinct nonnegative 31-bit integers")
+    return keys
+
+
+def synthid_processor(device: torch.device | str, *, keys: Sequence[int] = SYNTHID_KEYS):
     """Construct Google's processor and apply its minimal CUDA init workaround.
 
     The pinned constructor hashes ``self.keys.numpy()``. Constructing directly
@@ -103,6 +113,7 @@ def synthid_processor(device: torch.device | str):
     """
     from synthid_text.logits_processing import SynthIDLogitsProcessor
 
+    keys = _synthid_keys(keys)
     target = torch.device(device)
     # The pinned reference checks the literal device string on every call.
     # ``scores.device`` is reported as ``cuda:0``, while ``torch.device("cuda")``
@@ -112,7 +123,7 @@ def synthid_processor(device: torch.device | str):
         target = torch.device("cuda", torch.cuda.current_device())
     processor = SynthIDLogitsProcessor(
         ngram_len=CONTEXT_LENGTH + 1,
-        keys=list(SYNTHID_KEYS),
+        keys=list(keys),
         context_history_size=SYNTHID_CONTEXT_HISTORY_SIZE,
         temperature=float(TEMPERATURE),
         top_k=2,
@@ -137,11 +148,13 @@ def _windows_targets(
 
 
 def official_textseal_fused_scores(
-    token_ids: Sequence[int], positions: Sequence[int]
+    token_ids: Sequence[int], positions: Sequence[int], *, alpha: float = TEXTSEAL_ALPHA,
 ) -> np.ndarray:
     """Compute aligned dual-key scores with TextSeal's official PRF."""
     from textseal.watermarking.core import prf_dual
 
+    if not math.isfinite(alpha) or not 0 <= alpha <= 1:
+        raise ValueError("TextSeal alpha must be finite and in [0, 1]")
     if not positions:
         return np.empty(0, dtype=np.float64)
     windows, targets = _windows_targets(token_ids, positions, CONTEXT_LENGTH)
@@ -150,7 +163,7 @@ def official_textseal_fused_scores(
     score_b = -torch.log1p(-r_b)
     # Released code defines alpha as Key-A probability/weight. The paper labels
     # the two keys oppositely; the mixture distribution is symmetric.
-    fused = TEXTSEAL_ALPHA * score_a + (1.0 - TEXTSEAL_ALPHA) * score_b
+    fused = alpha * score_a + (1.0 - alpha) * score_b
     return fused.double().cpu().numpy()
 
 
@@ -168,12 +181,14 @@ def official_gumbel_scores(
 
 
 def official_synthid_g_values(
-    token_ids: Sequence[int], positions: Sequence[int], *, device: str = "cpu"
+    token_ids: Sequence[int], positions: Sequence[int], *, device: str = "cpu",
+    keys: Sequence[int] = SYNTHID_KEYS,
 ) -> np.ndarray:
     """Compute Google's g-values and select TextSeal-v2 deduplicated positions."""
+    keys = _synthid_keys(keys)
     if not positions:
-        return np.empty((0, len(SYNTHID_KEYS)), dtype=np.int64)
-    processor = synthid_processor(device)
+        return np.empty((0, len(keys)), dtype=np.int64)
+    processor = synthid_processor(device, keys=keys)
     ids = torch.tensor([list(map(int, token_ids))], dtype=torch.long, device=device)
     values = processor.compute_g_values(ids)[0]
     # ngram_len=k+1 maps target position p to g-value row p-k.

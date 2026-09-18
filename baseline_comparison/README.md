@@ -229,3 +229,69 @@ At 1,024 tokens, mean repeated-token-4-gram fractions are 2.70% for PRC, 33.04%
 for TextSeal, 2.58% for SynthID, 57.38% for GumbelMax, and 2.89% for the shared
 nulls. Redetection reused generated text, so these metrics are unchanged.
 TextSeal generation-time repeat handling remains disabled.
+
+## Self-BLEU study controls (preparation only)
+
+The experiment plan is [detectability_self_bleu_plan.md](../detectability_self_bleu_plan.md).
+`self_bleu_reference.json` freezes the completed comparison at commit `4696382`,
+including 30 source hashes and nine artifact/provenance records. Call
+`self_bleu_config.verify_reference()` locally to verify the historical git blobs
+and result records without changing them. The current study source is allowed
+to differ; each new generation manifest records its own implementation hashes.
+
+`StudySetting` configures online PRC eta/key seed, TextSeal alpha, or SynthID
+depth. Its 30-key SynthID bank preserves the original first ten keys, then
+uses the predeclared SHA256 domain in `self_bleu_config.py`. Generation and
+evidence extraction must use the same key list. `pilot_settings()` returns the
+five Stage A configurations; `pilot_settings("B")` and `pilot_settings("depth30")`
+describe the later checks. Sampling seeds are 12345 and 67890, independent of
+the fixed PRC key seed 12345.
+
+`self_bleu_generation.generate_response_batch` wraps already-loaded models;
+it does not load weights, dispatch Modal jobs, or write caches. For example,
+once the existing generation runtime and original artifact have been loaded:
+
+```python
+from baseline_comparison.self_bleu_config import StudySetting
+from baseline_comparison.self_bleu_generation import generate_response_batch
+
+setting = StudySetting("online_prc", eta=.05, key_seed=12345)
+second_response = generate_response_batch(
+    we.model, prompts, prompt_indices,
+    setting=setting, sampling_seed=67890, response_index=1,
+    execution=actual_runtime_identity,  # record actual versions/device/precision
+    prc_artifact=original_artifact,
+    online_sampler=we.generate_batch_and_collect_online,
+)
+```
+
+The wrapper verifies the artifact key against the setting and passes an
+independent document seed into the existing sampler. It records partition,
+key, ordered prompt hashes, execution, sample seed and response IDs under
+`self_bleu_v1/<batch-hash>`. Existing `modal_run` artifact and cache behavior is
+untouched. Ordinary sampling is supported as `StudySetting("null")`; baseline
+methods use the existing `generate_method` with explicit alpha/keys.
+
+For TextSeal detection, instantiate `TextSealCompletionDetector(model,
+alpha=setting.alpha)` and call `detect_prefixes` on the raw saved completion
+IDs. Preserve direct per-length replay. For SynthID, pass
+`keys=setting.synthid_keys` to both `synthid_processor` and
+`official_synthid_g_values`. The historical alpha .1 / depth 10 defaults remain.
+Eligibility/repeat handling and detector formulas have not changed. Generation
+diagnostics are explicitly separated from completion-only detection inputs.
+
+Local checks require the existing numerical test environment, the pinned
+TextSeal checkout (or installed package), and the pinned SynthID package:
+
+```sh
+python -m pip install --no-deps 'git+https://github.com/google-deepmind/synthid-text.git@addb4a158143c7c6851a1308f78b89fceed59683'
+NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 TEXTSEAL_SOURCE_ROOT=/path/to/pinned/textseal \
+  python -m pytest tests/test_self_bleu_controls.py -q
+```
+
+These CPU checks exercise the original PRC sampler with a small deterministic
+model, upstream parameter propagation, default generation versus the frozen
+function, and identity separation. They are not production GPU validation.
+The next step is equal-geometry GPU validation and an audit of reusable first
+responses before any 50-prompt pilot dispatch. No paid job was launched by
+this preparation.

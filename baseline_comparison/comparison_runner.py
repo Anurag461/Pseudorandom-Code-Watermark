@@ -240,35 +240,51 @@ def generate_method(
     *,
     method: str,
     seed: int,
+    textseal_alpha: float = TEXTSEAL_ALPHA,
+    synthid_keys: Sequence[int] = SYNTHID_KEYS,
+    max_new_tokens: int = MAX_NEW_TOKENS,
+    device: str = "cuda",
 ) -> tuple[list[dict], dict]:
-    """Generate a forced 1,024-token batch using the pinned official sampler."""
+    """Generate a forced-length batch; historical calls retain their defaults.
+
+    Alpha and keys configure the pinned samplers without changing their
+    algorithms. The null arm samples the ordinary full-vocabulary distribution.
+    CPU/short-length overrides support local control tests, not GPU validation.
+    """
     from qwen import StaticKVCache
 
-    if method not in {"textseal", "synthid_text", "gumbel_max"}:
+    if method not in {"textseal", "synthid_text", "gumbel_max", "null"}:
         raise ValueError(f"unsupported generated method {method}")
     if not prompts or any(len(prompt) != 50 for prompt in prompts):
         raise ValueError("the smoke requires nonempty, exactly 50-token prompts")
-    device = torch.device("cuda")
+    if type(max_new_tokens) is not int or max_new_tokens <= 0:
+        raise ValueError("max_new_tokens must be a positive integer")
+    if type(seed) is not int or not 0 <= seed < 2**63:
+        raise ValueError("seed must be a nonnegative 63-bit integer")
+    device = torch.device(device)
+    model.eval()
     batch_size = len(prompts)
     torch.manual_seed(int(seed))
-    torch.cuda.manual_seed_all(int(seed))
-    torch.cuda.synchronize()
+    if device.type == "cuda":
+        torch.cuda.manual_seed_all(int(seed))
+        torch.cuda.synchronize()
     started = time.perf_counter()
 
     all_tokens = torch.empty(
-        (batch_size, 50 + MAX_NEW_TOKENS), dtype=torch.long, device=device
+        (batch_size, 50 + max_new_tokens), dtype=torch.long, device=device
     )
     all_tokens[:, :50] = torch.tensor(prompts, dtype=torch.long, device=device)
-    generated = torch.empty((batch_size, MAX_NEW_TOKENS), dtype=torch.long)
-    logprobs = torch.empty((batch_size, MAX_NEW_TOKENS), dtype=torch.float32)
-    entropies = torch.empty((batch_size, MAX_NEW_TOKENS), dtype=torch.float32)
-    cache = StaticKVCache(max_length=50 + MAX_NEW_TOKENS)
+    generated = torch.empty((batch_size, max_new_tokens), dtype=torch.long)
+    logprobs = torch.empty((batch_size, max_new_tokens), dtype=torch.float32)
+    entropies = torch.empty((batch_size, max_new_tokens), dtype=torch.float32)
+    cache = StaticKVCache(max_length=50 + max_new_tokens)
     print(
         f"[smoke] {method} seed={seed} prefill start batch={batch_size}",
         flush=True,
     )
     logits = model(all_tokens[:, :50], cache=cache)[:, -1]
-    torch.cuda.synchronize()
+    if device.type == "cuda":
+        torch.cuda.synchronize()
     print(f"[smoke] {method} seed={seed} prefill complete", flush=True)
 
     sampler = None
@@ -277,17 +293,17 @@ def generate_method(
     synthid_reference_max_abs_difference = 0.0
     synthid_reference_indices_equal = True
     if method == "textseal":
-        sampler = textseal_generator()
+        sampler = textseal_generator(alpha=textseal_alpha)
     elif method == "gumbel_max":
         sampler = gumbel_generator()
-    else:
-        processor = synthid_processor(device)
+    elif method == "synthid_text":
+        processor = synthid_processor(device, keys=synthid_keys)
         # One independent official processor follows prompt 0 for every smoke
         # step. This checks the adapter's exact generation-time score update on
         # real model logits while adding only 1/5 of a second full-batch pass.
-        reference_processor = synthid_processor(device)
+        reference_processor = synthid_processor(device, keys=synthid_keys)
 
-    for position in range(MAX_NEW_TOKENS):
+    for position in range(max_new_tokens):
         base_log_probs = torch.log_softmax(logits.float(), dim=-1)
         base_probs = torch.exp(base_log_probs)
         base_entropy = -(base_probs * base_log_probs).sum(dim=-1)
@@ -297,6 +313,8 @@ def generate_method(
             next_token = sampler.sample_next(
                 logits, context, temperature=float(TEMPERATURE), top_p=float(TOP_P)
             )
+        elif method == "null":
+            next_token = torch.multinomial(torch.softmax(logits.float(), dim=-1), 1).reshape(-1)
         else:
             updated, indices, _ = processor.watermarked_call(
                 all_tokens[:, : 50 + position], logits
@@ -322,10 +340,11 @@ def generate_method(
         logprobs[:, position] = selected_logprob.detach().cpu()
         entropies[:, position] = base_entropy.detach().cpu()
         all_tokens[:, 50 + position] = next_token
-        if position + 1 < MAX_NEW_TOKENS:
+        if position + 1 < max_new_tokens:
             logits = model(next_token[:, None], cache=cache)[:, -1]
 
-    torch.cuda.synchronize()
+    if device.type == "cuda":
+        torch.cuda.synchronize()
     elapsed = time.perf_counter() - started
     outputs = []
     for row in range(batch_size):
@@ -341,10 +360,10 @@ def generate_method(
         "seed": int(seed),
         "batch_size": batch_size,
         "generated_sequences": batch_size,
-        "generated_tokens": batch_size * MAX_NEW_TOKENS,
+        "generated_tokens": batch_size * max_new_tokens,
         "method_seconds": elapsed,
         "seconds_per_prompt": elapsed / batch_size,
-        "tokens_per_second": batch_size * MAX_NEW_TOKENS / elapsed,
+        "tokens_per_second": batch_size * max_new_tokens / elapsed,
         "synthid_official_smoke_reference": {
             "prompt_index": 0 if method == "synthid_text" else None,
             "indices_equal": synthid_reference_indices_equal if method == "synthid_text" else None,
