@@ -219,7 +219,7 @@ def compare_prefixes(generation_cache: Path, output: Path, lengths=PREFIX_LENGTH
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--generation-cache", type=Path, required=True)
-    parser.add_argument("--output", type=Path, default=REPO / "outputs/comparison_redetect/prc_prefix_comparison.csv")
+    parser.add_argument("--output", type=Path, default=REPO / "outputs/comparison_redetect/baseline_comparisons.csv")
     parser.add_argument("--lengths", type=int, nargs="+", default=PREFIX_LENGTHS)
     args = parser.parse_args()
     compare_prefixes(args.generation_cache, args.output, args.lengths)

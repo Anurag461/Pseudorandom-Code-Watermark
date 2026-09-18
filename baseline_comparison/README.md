@@ -111,7 +111,7 @@ to have rebuilt the final comparison tables.
 cohort to the existing comparison grid: 128, 256, 400, 512, 768, and 1024 tokens.
 It calls the integrated completion-only scorer on the original cached traces,
 keys and partition, and saves a separate
-`outputs/comparison_redetect/prc_prefix_comparison.csv` with old/new posterior
+`outputs/comparison_redetect/baseline_comparisons.csv` with old/new posterior
 and entropy-weighted TPRs, new FPRs, and percentage-point changes.
 
 ```sh
