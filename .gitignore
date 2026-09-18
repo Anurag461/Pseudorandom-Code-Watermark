@@ -17,6 +17,12 @@ wandb/
 *.bin
 *.safetensors
 
+# Self-BLEU validation: raw responses are archived on Modal, reports are versioned.
+outputs/self_bleu_validation/raw/
+outputs/self_bleu_validation/step3/
+outputs/self_bleu_validation/step3-v1/
+outputs/self_bleu_validation/step3-v2/
+
 # Online prefix-sweep per-prompt manifests (large, reproducible from cache)
 outputs/online_map_sweep_*_sampler-*.json
 outputs/online_map_sweep_*_sampler-*_increments/

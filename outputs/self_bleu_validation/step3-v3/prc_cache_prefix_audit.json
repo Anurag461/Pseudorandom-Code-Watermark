@@ -1,0 +1,302 @@
+[
+  {
+    "prompt_index": 0,
+    "identical_prefix_tokens": 2,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 103934585705883164571839920497465778154
+  },
+  {
+    "prompt_index": 1,
+    "identical_prefix_tokens": 35,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 144967826657256478330909536642942742905
+  },
+  {
+    "prompt_index": 2,
+    "identical_prefix_tokens": 5,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 136847154757181698644355491397605870317
+  },
+  {
+    "prompt_index": 3,
+    "identical_prefix_tokens": 6,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 9806274871614239227582606260242786480
+  },
+  {
+    "prompt_index": 4,
+    "identical_prefix_tokens": 0,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 122107982142852490491391722197238738810
+  },
+  {
+    "prompt_index": 5,
+    "identical_prefix_tokens": 18,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 34079595211813793870673085041195022202
+  },
+  {
+    "prompt_index": 6,
+    "identical_prefix_tokens": 0,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 6939422405882691246118308279098478125
+  },
+  {
+    "prompt_index": 7,
+    "identical_prefix_tokens": 14,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 158694734158677543330445411829257609073
+  },
+  {
+    "prompt_index": 8,
+    "identical_prefix_tokens": 30,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 311648579760524212391495992562890826567
+  },
+  {
+    "prompt_index": 9,
+    "identical_prefix_tokens": 0,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 44219626400625392463967419049037282430
+  },
+  {
+    "prompt_index": 10,
+    "identical_prefix_tokens": 0,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 7819590832058772778193860785708382212
+  },
+  {
+    "prompt_index": 11,
+    "identical_prefix_tokens": 1,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 235893675352127973630218766791842630851
+  },
+  {
+    "prompt_index": 12,
+    "identical_prefix_tokens": 15,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 219397388549957218096542970702878871656
+  },
+  {
+    "prompt_index": 13,
+    "identical_prefix_tokens": 6,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 305745625130433063588339012785954047372
+  },
+  {
+    "prompt_index": 14,
+    "identical_prefix_tokens": 3,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 308129632954807844948220376576156152431
+  },
+  {
+    "prompt_index": 15,
+    "identical_prefix_tokens": 6,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 240293439108929684788353172100046642797
+  },
+  {
+    "prompt_index": 16,
+    "identical_prefix_tokens": 0,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 119860289991113563369459989400676285410
+  },
+  {
+    "prompt_index": 17,
+    "identical_prefix_tokens": 1,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 312364625653816779668139917070598079075
+  },
+  {
+    "prompt_index": 18,
+    "identical_prefix_tokens": 8,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 299667121762456677053081400686981176372
+  },
+  {
+    "prompt_index": 19,
+    "identical_prefix_tokens": 24,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 20015449218953991717622657087161178889
+  },
+  {
+    "prompt_index": 20,
+    "identical_prefix_tokens": 6,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 47693702995822082791861455700350857837
+  },
+  {
+    "prompt_index": 21,
+    "identical_prefix_tokens": 6,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 160384120131354253450739786849890530353
+  },
+  {
+    "prompt_index": 22,
+    "identical_prefix_tokens": 7,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 35717278862497496898590047955737761878
+  },
+  {
+    "prompt_index": 23,
+    "identical_prefix_tokens": 2,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 130895212750005035757143374473564226395
+  },
+  {
+    "prompt_index": 24,
+    "identical_prefix_tokens": 25,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 129801680982497123423902062409624544193
+  },
+  {
+    "prompt_index": 25,
+    "identical_prefix_tokens": 6,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 307870962577739114940522104866908961253
+  },
+  {
+    "prompt_index": 26,
+    "identical_prefix_tokens": 3,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 256533389304286432399366285131522581034
+  },
+  {
+    "prompt_index": 27,
+    "identical_prefix_tokens": 2,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 157551432457276960613672023121836828636
+  },
+  {
+    "prompt_index": 28,
+    "identical_prefix_tokens": 0,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 216044878173566935163454618166866568349
+  },
+  {
+    "prompt_index": 29,
+    "identical_prefix_tokens": 11,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 305428263181184258076952413792909171287
+  },
+  {
+    "prompt_index": 30,
+    "identical_prefix_tokens": 7,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 136113575957036465200568549444462167768
+  },
+  {
+    "prompt_index": 31,
+    "identical_prefix_tokens": 11,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 190518683245586176052353332026174734301
+  },
+  {
+    "prompt_index": 32,
+    "identical_prefix_tokens": 5,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 197092457022944922473080589440641602385
+  },
+  {
+    "prompt_index": 33,
+    "identical_prefix_tokens": 3,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 290093288143618282286660392652045675232
+  },
+  {
+    "prompt_index": 34,
+    "identical_prefix_tokens": 0,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 54311790827950966006054873082209156100
+  },
+  {
+    "prompt_index": 35,
+    "identical_prefix_tokens": 7,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 27109071706658825255371941398582880544
+  },
+  {
+    "prompt_index": 36,
+    "identical_prefix_tokens": 1,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 86045087754594617473098129156615867510
+  },
+  {
+    "prompt_index": 37,
+    "identical_prefix_tokens": 1,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 289129649343132744868731823785693342177
+  },
+  {
+    "prompt_index": 38,
+    "identical_prefix_tokens": 11,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 168661429456004241673679026169778686990
+  },
+  {
+    "prompt_index": 39,
+    "identical_prefix_tokens": 7,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 331220169410857251185604072084465633049
+  },
+  {
+    "prompt_index": 40,
+    "identical_prefix_tokens": 0,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 45357004884615028421721886267603631915
+  },
+  {
+    "prompt_index": 41,
+    "identical_prefix_tokens": 4,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 297476773907561670862378941157085737068
+  },
+  {
+    "prompt_index": 42,
+    "identical_prefix_tokens": 0,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 226676908209802322120549575307753805977
+  },
+  {
+    "prompt_index": 43,
+    "identical_prefix_tokens": 4,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 62338549059006347181619316149908919782
+  },
+  {
+    "prompt_index": 44,
+    "identical_prefix_tokens": 3,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 173201552519959126172790198558052502022
+  },
+  {
+    "prompt_index": 45,
+    "identical_prefix_tokens": 9,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 334337393251639378511706598682591912140
+  },
+  {
+    "prompt_index": 46,
+    "identical_prefix_tokens": 14,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 1790768958736068594330722230956483238
+  },
+  {
+    "prompt_index": 47,
+    "identical_prefix_tokens": 1,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 209032946975477796772973088440286137135
+  },
+  {
+    "prompt_index": 48,
+    "identical_prefix_tokens": 5,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 251099379217777362443117509543026210255
+  },
+  {
+    "prompt_index": 49,
+    "identical_prefix_tokens": 2,
+    "identical_codeword_prefix": 1024,
+    "document_seed": 202487951306517343772629676958141875830
+  }
+]

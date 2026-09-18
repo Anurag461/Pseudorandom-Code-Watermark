@@ -230,7 +230,7 @@ for TextSeal, 2.58% for SynthID, 57.38% for GumbelMax, and 2.89% for the shared
 nulls. Redetection reused generated text, so these metrics are unchanged.
 TextSeal generation-time repeat handling remains disabled.
 
-## Self-BLEU study controls (preparation only)
+## Self-BLEU study controls and bounded validation
 
 The experiment plan is [detectability_self_bleu_plan.md](../detectability_self_bleu_plan.md).
 `self_bleu_reference.json` freezes the completed comparison at commit `4696382`,
@@ -292,6 +292,57 @@ NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 TEXTSEAL_SOURCE_ROOT=/path/to/pinned/texts
 These CPU checks exercise the original PRC sampler with a small deterministic
 model, upstream parameter propagation, default generation versus the frozen
 function, and identity separation. They are not production GPU validation.
-The next step is equal-geometry GPU validation and an audit of reusable first
-responses before any 50-prompt pilot dispatch. No paid job was launched by
-this preparation.
+`self_bleu_validation.py` verifies historical source bytes and freezes the
+step-3 request. `self_bleu_validation_modal.py` explicitly dispatches either
+generation validation or the subsequent TextSeal replay check; neither stage
+dispatches the pilot or full sweep. Use the `new-prc-watermark` Modal profile.
+
+```sh
+python -m baseline_comparison.self_bleu_validation --cache /path/to/downloaded/prc-data --output outputs/self_bleu_validation/new-run
+MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_validation_modal --manifest outputs/self_bleu_validation/new-run/manifest.json --stage generation
+MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m baseline_comparison.self_bleu_validation_modal --manifest outputs/self_bleu_validation/new-run/manifest.json --stage textseal
+```
+
+Generation checks the same 50-prompt batch at 1,024 tokens, seeds 12345/67890
+and a replay of 12345, with a fixed key for each configuration. It includes
+TextSeal alpha zero as a deterministic control and short parameter checks for
+alpha .5 and SynthID depths 2/20/30. Saved first responses are compared by exact
+token hashes against historical caches; mismatches require the new pair.
+PRC replay observes every actual input and compares an independent token-step
+reference. The separate HF worker checks seven fresh TextSeal/null records
+against upstream direct-prefix detection, including alpha zero and .5.
+
+The workers use existing offline weights and separate paths on
+`prc-completion-only/self_bleu_validation/<manifest-id>`. Successful generation
+batches are saved immediately for reuse. Reports and batch files are immutable;
+retrieve an existing run rather than redispatching it. One H100 per stage,
+no retries, 3,000/600-second timeouts and explicit resource reservations keep
+validation within the initial $10 allocation. Timing-based resource estimates
+exclude image/startup/storage overhead and are not exact billing totals.
+
+**Status: step 3 completed.** See the [validation report](../outputs/self_bleu_validation/step3-v4/REPORT.md).
+All six full-length replicate controls, four short parameter checks, PRC
+completion-only checks and seven TextSeal direct-prefix parity checks passed.
+The 20 local tests pass. The artifact collector verified 27 files containing
+600 full-length and 200 short response records. Stage A now requires analysis
+and missing detector evidence, with no new generation.
+
+The initial generation run saved every pair before a BF16-to-NumPy conversion
+failed in a diagnostic assertion. The `prc-replay-repair` stage recovered that
+check from verified batches without regenerating responses. Its setup embeds
+the original manifest and permits changes only to validation infrastructure.
+The original generation source and keys are unchanged. The successful combined
+request is `outputs/self_bleu_validation/step3-v4/manifest.json`.
+
+Retrieve and verify the completed artifacts without GPU dispatch:
+
+```sh
+MODAL_PROFILE=new-prc-watermark python -m baseline_comparison.self_bleu_validation_results \
+  --setup outputs/self_bleu_validation/step3-v4 \
+  --raw outputs/self_bleu_validation/raw/743658bc40e7f52c910d9538266bbd0ff461bba949e2a842cc8af36fa32507d8 \
+  --download
+```
+
+Omit `--download` to check an existing local copy. The collector verifies file
+hashes, batch/response identities, fixed-key seed pairs, actual historical
+token matches and every saved SynthID official score-update check.

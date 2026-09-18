@@ -1,9 +1,10 @@
 # Detectability versus Self-BLEU: proposed experiment
 
 Prepared 2026-09-15; revised for `comparison-with-redetect` at `4696382`.
-Status: steps 1–2 implemented and locally checked. No Modal jobs
-launched by this study. Steps 1–2 are authorized; GPU validation and the pilot
-are subsequent work.
+Status: steps 1–2 pushed as `b4b8f26`; **step 3 completed on H100** on
+2026-09-17 (Pacific). See the [validation report](outputs/self_bleu_validation/step3-v4/REPORT.md).
+Stage A response pairs are saved and verified; their Self-BLEU/detection analysis
+is the next step. The full sweep remains conditional.
 Total incremental Modal budget: **$200**, including validation, CPU, memory,
 generation, scoring, and retries.
 
@@ -30,7 +31,7 @@ completed default-setting results, including the original shared null cohort.
    model/prompt identity, PRC artifact and partition hashes, and the completed
    comparison/replay provenance. Preserve the historical results and Modal
    namespaces. Reuse the integrated PRC sampler/scorer and upstream TextSeal
-   detector; no repeat-handling change is part of this work.
+   detector; generation-time repeat handling stays unchanged.
 2. **Add experiment controls.** Expose a PRC sampling seed independently of its
    key seed, using the existing online sampler's document-seed argument.
    Parameterize TextSeal alpha in both generation and detection, and SynthID's
@@ -60,8 +61,23 @@ sampling seeds and per-response identities; it performs no dispatch or file
 writes. The baseline generator now accepts explicit alpha/key-list controls
 and ordinary sampling while retaining historical defaults. The TextSeal
 detector accepts the same alpha. API examples and validation commands are in
-`baseline_comparison/README.md`. The production GPU check and Self-BLEU pilot
-remain steps 3–4; local fixtures are not reported as 8B validation.
+`baseline_comparison/README.md`. The bounded step-3 worker and source-cache
+audit are in `self_bleu_validation_modal.py` and `self_bleu_validation.py`.
+The GPU check uses the planned batch of 50 prompts at 1,024 tokens so exact
+cache reproduction and saved pilot outputs have the intended execution shape.
+It verifies two seeds plus an intervening-seed replay, includes the deterministic
+alpha-zero control, and checks alpha .5 / SynthID 2, 20, 30 on 128-token outputs.
+PRC and TextSeal replay receive raw completion IDs only. Their independent
+reference/direct-prefix checks precede pilot detection claims.
+
+Both GPU stages have one H100 worker, four CPU cores, 64 GiB host memory,
+no application retries, and 3,000/600-second timeouts. The combined worker
+reservation is $4.65, plus a $2 overhead allowance and failed-attempt costs,
+within the original $10 allocation. Historical generation caches are read-only;
+new immutable outputs live on `prc-completion-only/self_bleu_validation/`.
+Successful full-length response pairs count toward Stage A/B later. Short
+parameter checks do not count as full-length frontier results. Local fixtures
+are not reported as 8B validation.
 
 Local validation: 17 new control tests passed; the related comparison,
 TextSeal, shared-null and prompt-free suites had 97 passes and one existing
@@ -73,6 +89,42 @@ older-galois serializer plus the compatibility shim, not these controls; the
 test skips in a fresh process without that shim. No production replay or
 historical result was changed. Source/artifact hashes and the historical
 PRC key fingerprint were verified after the changes.
+
+**Step 3 result:** all six full-length configurations passed fixed-key and
+same-seed replay checks. PRC, TextSeal .1, SynthID 10, and ordinary sampling
+changed all 50 responses under the second sampling seed. Gumbel and TextSeal
+alpha zero changed none. Short alpha .5 / SynthID 2, 20, 30 checks passed;
+the saved SynthID batches matched the official score update exactly.
+PRC raw-input observation, independent probability replay, prefix/order check,
+and first-coordinate abstention passed. Seven TextSeal/null records passed
+upstream parity with direct per-length raw-completion forwards.
+
+All 27 archived result files passed checksum verification: 600 full-length
+response records (Stage A plus alpha zero), 200 short parameter-check records,
+replay evidence and reports. Historical first-response token matches were
+50/50 each for TextSeal .1, SynthID 10 and Gumbel, and 0/50 for PRC and ordinary
+sampling. PRC's historical first-response watermark bits still matched for
+all 50 × 1,024 coordinates; a text-cache mismatch is not evidence of rekeying.
+Use the fresh pairs. Reuse historical detector evidence/decisions only after
+checking the relevant configuration, masking rule and token identity; a
+SynthID tuple-mask decision cannot stand in for its context-mask analysis.
+
+Recorded worker resource time totals **$1.55505**, including generation,
+the PRC validation repair and TextSeal parity. With $0.50 reserved for the
+failed startup and $2 for image/startup/storage overhead, the planning charge
+is **$4.05505 of the initial $10**, leaving $5.94495 for the pilot under those
+allowances. This is not a settled invoice. The report records the setup/import
+failures and a BF16-to-NumPy conversion bug in the validation check; the repair
+reused every saved generation. No full sweep or pilot metric analysis ran.
+
+**Immediate next step (4):** read the verified Stage A pairs without new
+generation; compute the frozen pairwise Self-BLEU metric at 400/1,024 tokens;
+reuse compatible old evidence and recover missing completion-only evidence
+for the fresh responses/nulls; then report prompt-bootstrap uncertainty,
+observed null behavior and the provisional go/no-go screen. The alpha-zero
+full-length pairs are already available for Stage B. Its other configurations
+still require full-length pairs; the 128-token checks are only implementation
+validation.
 
 ## Evidence behind the recommendation
 
@@ -140,13 +192,14 @@ This is an exploratory subset, not a representative-sample guarantee. Keep the
 same batch for every response and method. Extend to different prompt batches
 when a result is uncertain or promising.
 
-There are 500 logical response slots, or 450 unique generations after verifying
-Gumbel's determinism. If the existing first response for each method passes all
-provenance checks, only **200 new continuations** are needed: one extra response
-for PRC, TextSeal, SynthID and ordinary sampling on 50 prompts. Fix PRC's
-key/sampling-seed coupling before generating those responses. If old artifacts
-do not match, regenerate the necessary pairs instead of mixing batch effects
-with seed effects.
+There are 500 logical response slots, or 450 generations after accounting for
+Gumbel's verified determinism. The original **200-new-continuation** estimate
+was conditional on all historical first responses matching. Step 3 found only
+150/250 exact first-response matches, covering TextSeal, SynthID and Gumbel.
+It nevertheless saved both responses for every Stage A configuration as part
+of the controlled reproduction checks. **Stage A now needs no new generation.**
+Use those saved pairs and recover missing detector evidence; do not combine
+the mismatching historical PRC/null texts with the new second responses.
 
 **Stage B: check the competing frontiers on the same 50 prompts.** Add TextSeal
 alpha=0 and 0.5 and SynthID depth 2 and 20. This adds 350 unique continuations
