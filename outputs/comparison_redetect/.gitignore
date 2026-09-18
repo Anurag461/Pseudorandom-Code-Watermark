@@ -1,0 +1,4 @@
+# Rebuild the raw token export with baseline_comparison.textseal_preflight.
+preflight/completion_inputs.jsonl
+# Local test timing, host paths, and diagnostics are not source provenance.
+preflight/tests.xml

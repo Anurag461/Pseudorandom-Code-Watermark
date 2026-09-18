@@ -7,6 +7,13 @@ online constructions. Use `::generate_fixed` or `::generate_online` for generati
 `::redetect --manifest ...` for prompt-free detection. The manifest's
 `construction` field selects the original key and scoring rules.
 
+The shared baseline code is in `baseline_comparison/comparison_runner.py`
+(formerly `smoke_runner.py`). The [TextSeal comparison redetection plan](textseal_prompt_free_redetection_plan.md)
+documents the TextSeal entropy correction, PRC cache reuse, upstream-code
+requirements, and estimated costs. The [completion-only TextSeal setup](baseline_comparison/README.md)
+calls the pinned upstream detector directly; the source preflight is complete.
+Full model replay remains pending, and repeat handling is deferred.
+
 The first cleanup commit, `cf57b46`, retired prompted detection before this
 structural move. Old implementations remain in Git history at `61b1739`;
 original caches and historical results are unchanged. The old combined

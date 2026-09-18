@@ -25,7 +25,7 @@ from baseline_comparison.diagnostic import (
     stable_power_argmax,
 )
 from baseline_comparison.schema import PromptLevelResult
-from baseline_comparison.smoke_runner import (
+from baseline_comparison.comparison_runner import (
     FULL_GENERATION_BATCH_SIZE,
     FULL_SHARD_SIZE,
     _validated_full_request,

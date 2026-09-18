@@ -478,7 +478,7 @@ def main() -> None:
                     "modal_run.py", "online_prc.py", "watermark_expt.py",
                     "detectors.py", "qwen.py", "constants.py",
                     "proxy_8b_analysis.py", "proxy_8b_finalize.py",
-                    "baseline_comparison/smoke_runner.py",
+                    "baseline_comparison/comparison_runner.py",
                     "baseline_comparison/modal_app.py",
                 )
             ]),

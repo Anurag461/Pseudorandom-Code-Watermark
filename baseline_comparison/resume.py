@@ -13,7 +13,7 @@ import torch
 
 from .config import GENERATION_SETTINGS, MAX_NEW_TOKENS, PREFIX_LENGTHS
 from .schema import PromptLevelResult
-from .smoke_runner import (
+from .comparison_runner import (
     FULL_GENERATION_BATCH_SIZE,
     FULL_SHARD_SIZE,
     _model_revision,

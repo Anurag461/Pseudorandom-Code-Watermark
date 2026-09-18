@@ -1,8 +1,9 @@
-"""Isolated Modal integration for official baseline reference tests and smoke.
+"""Modal reference checks and historical full-comparison orchestration.
 
-The entrypoints are deliberately fail-closed: cached PRC/null records never
-fall back to generation, model loading is local-files-only, and the only GPU
-entrypoint is the explicitly named five-prompt smoke.
+Cached PRC/null records never fall back to generation and model loading is
+local-files-only. The old TextSeal scoring routes are retired; migrate full
+scoring to the completion-only detector before launching comparison replay.
+The existing Modal app name is retained for historical job continuity.
 """
 
 from __future__ import annotations
@@ -582,7 +583,7 @@ def score_committed_smoke_remote(
     actual_gpu: str,
 ) -> dict:
     """Validate and score a committed GPU payload without regeneration."""
-    from baseline_comparison.smoke_runner import score_committed_smoke
+    from baseline_comparison.comparison_runner import score_committed_smoke
 
     return score_committed_smoke(
         data_volume,
@@ -601,7 +602,7 @@ def score_committed_smoke_remote(
 )
 def full_cache_preflight_remote() -> dict:
     """Verify all 500 PRC/null cache pairs before any approved GPU launch."""
-    from baseline_comparison.smoke_runner import _load_cached_sequences_for_indices
+    from baseline_comparison.comparison_runner import _load_cached_sequences_for_indices
 
     data_volume.reload()
     prompts = _load_prompts()
@@ -629,25 +630,25 @@ class SmokeWorker:
 
     @modal.method()
     def run(self) -> dict:
-        from baseline_comparison.smoke_runner import run_gpu_smoke
+        from baseline_comparison.comparison_runner import run_gpu_smoke
 
         return run_gpu_smoke(data_volume)
 
     @modal.method()
     def diagnose(self) -> dict:
-        from baseline_comparison.smoke_runner import run_gpu_diagnostic
+        from baseline_comparison.comparison_runner import run_gpu_diagnostic
 
         return run_gpu_diagnostic(data_volume)
 
     @modal.method()
     def gumbel_determinism(self, raw_path: str) -> dict:
-        from baseline_comparison.smoke_runner import run_gumbel_determinism_check
+        from baseline_comparison.comparison_runner import run_gumbel_determinism_check
 
         return run_gumbel_determinism_check(data_volume, raw_path)
 
     @modal.method()
     def stochastic_seed_check(self, raw_path: str) -> dict:
-        from baseline_comparison.smoke_runner import run_stochastic_seed_check
+        from baseline_comparison.comparison_runner import run_stochastic_seed_check
 
         return run_stochastic_seed_check(data_volume, raw_path)
 
@@ -671,7 +672,7 @@ class FullRunWorker:
 
     @modal.method()
     def run_shard(self, request: dict) -> dict:
-        from baseline_comparison.smoke_runner import generate_full_shard
+        from baseline_comparison.comparison_runner import generate_full_shard
 
         return generate_full_shard(data_volume, request)
 
@@ -688,13 +689,13 @@ class FullScoreWorker:
 
     @modal.method()
     def score_shard(self, request: dict) -> dict:
-        from baseline_comparison.smoke_runner import score_full_shard
+        from baseline_comparison.comparison_runner import score_full_shard
 
         return score_full_shard(data_volume, request)
 
     @modal.method()
     def score_textseal_proxy_shard(self, request: dict) -> dict:
-        from baseline_comparison.smoke_runner import (
+        from baseline_comparison.comparison_runner import (
             score_textseal_proxy_entropy_shard,
         )
 
