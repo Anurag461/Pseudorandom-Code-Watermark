@@ -2,6 +2,16 @@
 
 **Prompt-free paper redetection** now runs through the existing Modal app:
 
+The old prompted detection commands in both Modal runners are retired and fail
+before dispatching work. Their former implementations remain in Git history at
+`61b1739`; all original caches and historical results remain intact. Generate
+or continue candidates with `modal_run.py::generate_fixed`,
+`modal_online_run.py::generate_online`, or the seeded replicate runner's
+`generate_replicate` command. Then run the shared raw-completion detector below.
+Multiple `lengths` in the manifest replace prompted prefix-detection sweeps.
+Generation, continuation, original keys, cache paths and historical-result
+readers are preserved. The older run examples farther down are historical.
+
 ```sh
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach \
   modal_online_run.py::redetect \

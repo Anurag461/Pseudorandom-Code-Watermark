@@ -15,6 +15,11 @@ from datetime import datetime, timezone
 
 import modal
 
+RETIRED_DETECTION_MESSAGE = (
+    "Prompt-dependent detection has been retired. Use modal_online_run.py::redetect "
+    "with a frozen raw-completion manifest. Generation-only commands remain available."
+)
+
 
 SCHEME = "fixed_prc_replicate_v1"
 SEED = 12345
@@ -389,77 +394,22 @@ class FixedModel:
 
 @app.function(volumes={"/data": data_vol}, timeout=1800)
 def detect_all(tag, prompt_indices, null_T, fpr, batch, code_fingerprint_sha256):
-    import torch
-    from detectors import detect_hoeffding
-
-    data_vol.reload()
-    artifact = torch.load(
-        artifact_path(tag), weights_only=False, map_location="cpu"
-    )
-    key = artifact["decoding_key"]
-    partition = artifact["partition"]
-    T = int(artifact["T"])
-    results = []
-    for watermark in (True, False):
-        directory = wm_dir(tag) if watermark else shared_null_dir(null_T)
-        prefix = "wm" if watermark else "null"
-        for index in prompt_indices:
-            path = os.path.join(directory, f"{prefix}_{index:04d}.pt")
-            record = torch.load(path, weights_only=False, map_location="cpu")
-            if len(record["tokens"]) < T or len(record["p_trace"]) < T:
-                raise ValueError(f"record {path} is shorter than T={T}")
-            if watermark and record.get("artifact_fingerprint") != artifact[
-                "artifact_fingerprint"
-            ]:
-                raise ValueError(f"watermarked record {path} has stale artifact")
-            scored = {}
-            for weight in ("map", "entropy", "naive"):
-                decision, info = detect_hoeffding(
-                    key, record["tokens"][:T], record["p_trace"][:T],
-                    partition, fpr=fpr, weight=weight, return_info=True,
-                )
-                scored[weight] = {"decision": bool(decision), **info}
-            results.append({
-                "prompt_idx": int(index), "watermark": watermark,
-                "scores": scored,
-            })
-    wm = [result for result in results if result["watermark"]]
-    null = [result for result in results if not result["watermark"]]
-    counts = {}
-    for weight in ("map", "entropy", "naive"):
-        counts[weight] = {
-            "tp": sum(result["scores"][weight]["decision"] for result in wm),
-            "fp": sum(result["scores"][weight]["decision"] for result in null),
-            "watermarked_total": len(wm), "null_total": len(null),
-        }
-    payload = {
-        "result_schema_version": RESULT_SCHEMA_VERSION,
-        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-        "scheme": SCHEME, "tag": tag, "n": T, "T": T,
-        "t": int(artifact["config_sig"]["t"]),
-        "eta": float(artifact["config_sig"]["eta"]),
-        "r": int(artifact["r"]), "target_fpr": float(fpr),
-        "generation_model": MODEL_DISPLAY,
-        "num_prompts": len(prompt_indices), "batch": int(batch),
-        "null_cache_T": int(null_T),
-        "experiment_seed": int(artifact["experiment_seed"]),
-        "artifact_fingerprint": artifact["artifact_fingerprint"],
-        "code_fingerprint_sha256": code_fingerprint_sha256,
-        "counts": counts, "results": results,
-    }
-    output_dir = f"/data/{tag}/results"
-    os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(
-        output_dir,
-        f"fpr-{_slug(f'{float(fpr):.12g}')}_prompts-{len(prompt_indices)}.pt",
-    )
-    torch.save(payload, output_path)
-    data_vol.commit()
-    return {"payload": payload, "remote_output_path": output_path}
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
 
 @app.local_entrypoint()
 def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
+         n: int = 256, t: int = 3, eta: float = 0.05,
+         fpr: float = 1e-3, batch: int = DEFAULT_BATCH,
+         experiment_seed: int = 54321,
+         max_containers: int = DEFAULT_MAX_CONTAINERS,
+         gpu: str = GPU,
+         csv_out: str = "fixed_replicate_results_summary.csv"):
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
+
+
+@app.local_entrypoint()
+def generate_replicate(num_prompts: int = CANONICAL_NUM_PROMPTS,
          n: int = 256, t: int = 3, eta: float = 0.05,
          fpr: float = 1e-3, batch: int = DEFAULT_BATCH,
          experiment_seed: int = 54321,
@@ -518,43 +468,4 @@ def main(num_prompts: int = CANONICAL_NUM_PROMPTS,
                 flush=True,
             )
 
-    detected = detect_all.remote(
-        tag, prompt_indices, plan["null_T"], fpr, batch, code_fingerprint
-    )
-    payload = detected["payload"]
-    counts = payload["counts"]
-    print("\n=== Fixed PRC replicate summary ===", flush=True)
-    for weight in ("map", "entropy", "naive"):
-        count = counts[weight]
-        print(
-            f"{weight:>7}: TPR {_format_rate(count['tp'], num_prompts)}  "
-            f"FPR {_format_rate(count['fp'], num_prompts)}", flush=True,
-        )
-
-    os.makedirs("outputs", exist_ok=True)
-    local_json = os.path.join(
-        "outputs",
-        f"fixed_replicate_n{n}_t{t}_eta{eta:.2f}_prompts{num_prompts}_"
-        f"seed{experiment_seed}.json",
-    )
-    with open(local_json, "w") as handle:
-        json.dump(payload, handle, indent=2, allow_nan=False)
-    row = {
-        "timestamp_utc": payload["timestamp_utc"], "scheme": SCHEME,
-        "eta": eta, "T": n, "n": n, "r value": payload["r"],
-        "r setting": "0.99n", "t": t, "Target FPR": f"{fpr:.0e}",
-        "Generation Model": MODEL_DISPLAY, "num prompts": num_prompts,
-        "batch": batch, "experiment seed": experiment_seed,
-        "Map TPR": _format_rate(counts["map"]["tp"], num_prompts),
-        "Map FPR": _format_rate(counts["map"]["fp"], num_prompts),
-        "Entropy Aware TPR": _format_rate(counts["entropy"]["tp"], num_prompts),
-        "Entropy FPR": _format_rate(counts["entropy"]["fp"], num_prompts),
-        "Naive TPR": _format_rate(counts["naive"]["tp"], num_prompts),
-        "Naive FPR": _format_rate(counts["naive"]["fp"], num_prompts),
-        "null cache T": payload["null_cache_T"],
-        "artifact fingerprint": payload["artifact_fingerprint"],
-    }
-    _append_csv(csv_out, row)
-    print(f"[main] remote result: {detected['remote_output_path']}", flush=True)
-    print(f"[main] local result: {local_json}", flush=True)
-    print(f"[main] local summary: {csv_out}", flush=True)
+    return {"generation_only": True, "tag": tag, "plan": plan}

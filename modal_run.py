@@ -38,6 +38,11 @@ from datetime import datetime, timezone
 
 import modal
 
+RETIRED_DETECTION_MESSAGE = (
+    "Prompt-dependent detection has been retired. Use modal_online_run.py::redetect "
+    "with a frozen raw-completion manifest. Generation-only commands remain available."
+)
+
 # ---- experiment config ------------------------------------------------------
 DEFAULT_N = 400
 DEFAULT_T = 3
@@ -959,39 +964,7 @@ def plan_generation(n: int, t: int, eta: float, prompt_indices: list,
 def plan_entropy(tag: str, entropy_model_size: str, T: int, null_T: int,
                  prompt_indices: list,
                  generation_model_size: str = MODEL_SIZE) -> dict:
-    prompt_indices = _coerce_prompt_indices(prompt_indices)
-    generation_model_size = normalize_model_size(generation_model_size)
-    if uses_cached_generation_trace(
-            entropy_model_size, generation_model_size):
-        return {"wm_missing": [], "null_missing": [],
-                "T": T, "null_T": null_T, "null_entropy_T": null_T}
-
-    data_vol.reload()
-    wdir = wm_entropy_dir(tag, entropy_model_size)
-    wm_missing = [i for i in prompt_indices
-                  if not os.path.exists(os.path.join(wdir, f"wm_{i:04d}.pt"))]
-
-    null_entropy_root = os.path.dirname(null_entropy_dir(
-        T, entropy_model_size, generation_model_size
-    ))
-    null_entropy_T = find_complete_cache_T(
-        null_entropy_root, T, prompt_indices, "null"
-    )
-    if null_entropy_T is None:
-        null_entropy_T = T
-        ndir = null_entropy_dir(
-            T, entropy_model_size, generation_model_size
-        )
-        null_missing = [
-            i for i in prompt_indices
-            if not os.path.exists(os.path.join(ndir, f"null_{i:04d}.pt"))
-        ]
-    else:
-        null_missing = []
-
-    return {"wm_missing": wm_missing, "null_missing": null_missing,
-            "T": T, "null_T": null_T,
-            "null_entropy_T": null_entropy_T}
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
 
 # ---- batched generation (GPU) -----------------------------------------------
@@ -1164,167 +1137,8 @@ class Model:
 
 
 # ---- optional alternate entropy model (GPU) ---------------------------------
-@app.cls(
-    gpu=GPU,
-    volumes={"/data": data_vol, "/cache": hf_cache},
-    timeout=7200,
-    max_containers=DEFAULT_MAX_CONTAINERS,
-)
-class EntropyModel:
-    tag: str = modal.parameter()
-    model_size: str = modal.parameter()
-    generation_model_size: str = modal.parameter()
-    T: int = modal.parameter()
-    null_T: int = modal.parameter()
-
-    @modal.enter()
-    def load(self):
-        import os
-
-        import torch
-
-        self.model_size = normalize_model_size(self.model_size)
-        self.generation_model_size = normalize_model_size(
-            self.generation_model_size
-        )
-        os.environ["PRC_MODEL_SIZE"] = self.model_size
-        os.environ["PRC_MODEL_VARIANT"] = "base"
-
-        self.ap = f"/data/{self.tag}/artifacts.pt"
-        data_vol.reload()
-        art = torch.load(self.ap, weights_only=False, map_location="cpu")
-
-        import watermark_expt as we
-        self.we = we
-        self.prompts = art["prompt_ids_list"]
-        self.partition_cpu = art["partition"]
-        self.partition = art["partition"].to(we.device)
-        self.n = art["n"]
-        hf_cache.commit()
-
-    def _prompt_batch(self, indices):
-        import torch
-
-        rows = [self.prompts[i] for i in indices]
-        return torch.tensor(rows, dtype=torch.long, device=self.we.device)
-
-    def _save_trace_payload(self, path, idx, source, tokens, p_trace):
-        import numpy as np
-        import torch
-        from detectors import (
-            binary_entropy,
-            fold_map_soft_token,
-            fold_soft_token,
-            map_soft_token,
-            tokens_to_bits,
-        )
-
-        bits = tokens_to_bits(tokens, self.partition_cpu)
-        entropy = binary_entropy(p_trace) / np.log(2)
-        signs = (1 - 2 * bits.astype(np.int64)).astype(np.float64)
-        signed_entropy = signs * entropy
-        folded = fold_soft_token(bits, p_trace, self.n)
-        map_tokens = map_soft_token(bits, p_trace)
-        folded_map = fold_map_soft_token(bits, p_trace, self.n)
-        torch.save(
-            {
-                "derived_trace_schema_version": DERIVED_TRACE_SCHEMA_VERSION,
-                "prompt_idx": idx,
-                "source": source,
-                "generation_model": model_display(
-                    self.generation_model_size
-                ),
-                "generation_model_size": self.generation_model_size,
-                "entropy_model": model_display(self.model_size),
-                "entropy_trace_source": entropy_trace_source(
-                    self.model_size, self.generation_model_size
-                ),
-                "tokens_len": int(tokens.numel()),
-                "p_trace": p_trace,
-                "observed_bucket_bits": bits.astype(np.uint8),
-                "entropy_trace": entropy.astype(np.float32),
-                "signed_entropy_trace": signed_entropy.astype(np.float32),
-                "map_soft_tokens": map_tokens.astype(np.float32),
-                "folded_signed_entropy": folded.astype(np.float32),
-                "folded_map_soft_tokens": folded_map.astype(np.float32),
-            },
-            path,
-        )
-
-    def _estimate(self, prompt_indices, source):
-        import os
-        import time
-
-        import torch
-
-        if source == "wm":
-            src_dir = f"/data/{self.tag}/wm"
-            out_dir = wm_entropy_dir(self.tag, self.model_size)
-            prefix = "wm"
-        elif source == "null":
-            src_dir = null_dir(self.null_T, self.generation_model_size)
-            out_dir = null_entropy_dir(
-                self.T, self.model_size, self.generation_model_size
-            )
-            prefix = "null"
-        else:
-            raise ValueError(f"unknown entropy source {source}")
-
-        data_vol.reload()
-        os.makedirs(out_dir, exist_ok=True)
-        todo = [
-            i for i in prompt_indices
-            if not os.path.exists(os.path.join(out_dir, f"{prefix}_{i:04d}.pt"))
-        ]
-        if not todo:
-            return {"estimated": 0, "cached": len(prompt_indices), "source": source}
-
-        t0 = time.time()
-        records = [
-            torch.load(os.path.join(src_dir, f"{prefix}_{i:04d}.pt"),
-                       weights_only=False, map_location="cpu")
-            for i in todo
-        ]
-        for record, i in zip(records, todo):
-            validate_generation_record(
-                record, self.generation_model_size, source, i
-            )
-            if int(record.get("prompt_idx", i)) != i:
-                raise ValueError(
-                    f"{source} cache prompt mismatch for index {i}: "
-                    f"record has {record.get('prompt_idx')}"
-                )
-            if len(record["tokens"]) < self.T:
-                raise ValueError(
-                    f"{source} cache index {i} has {len(record['tokens'])} "
-                    f"tokens, need at least {self.T}"
-                )
-        token_batch = torch.stack([rec["tokens"][:self.T].long() for rec in records])
-        prompt_batch = self._prompt_batch(todo)
-        p_traces = self.we.estimate_partition_trace_batch(
-            self.we.model, prompt_batch, token_batch, self.partition
-        )
-        for row, i in enumerate(todo):
-            tokens = token_batch[row].cpu()
-            self._save_trace_payload(
-                os.path.join(out_dir, f"{prefix}_{i:04d}.pt"),
-                i,
-                source,
-                tokens,
-                p_traces[row],
-            )
-
-        data_vol.commit()
-        return {"estimated": len(todo), "cached": len(prompt_indices) - len(todo),
-                "source": source, "dt": time.time() - t0}
-
-    @modal.method()
-    def estimate_wm(self, prompt_indices: list) -> dict:
-        return self._estimate(prompt_indices, "wm")
-
-    @modal.method()
-    def estimate_null(self, prompt_indices: list) -> dict:
-        return self._estimate(prompt_indices, "null")
+def EntropyModel(*args, **kwargs):
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
 
 # ---- detection over cached generations (CPU) --------------------------------
@@ -1335,315 +1149,7 @@ def detect_all(n: int, t: int, eta: float, fpr: float, null_T: int,
                null_entropy_T: int = 0,
                run_metadata: dict = None,
                generation_model_size: str = MODEL_SIZE) -> dict:
-    import os
-
-    import numpy as np
-    import torch
-    from detectors import (
-        binary_entropy,
-        detect_hoeffding,
-        fold_map_soft_token,
-        fold_soft_token,
-        map_soft_token,
-        tokens_to_bits,
-    )
-    from prc import parity_check_rank_info
-
-    requested_r = int(r) if r else None
-    T = experiment_T(n)
-    generation_model_size = normalize_model_size(generation_model_size)
-    tag = config_tag(
-        n, t, eta, requested_r, T, generation_model_size
-    )
-    model_size = normalize_model_size(entropy_model_size)
-    use_generation_trace = uses_cached_generation_trace(
-        model_size, generation_model_size
-    )
-    null_entropy_T = int(null_entropy_T) if null_entropy_T else T
-    source_label = entropy_trace_source(model_size, generation_model_size)
-    prompt_indices = _coerce_prompt_indices(prompt_indices)
-    if not prompt_indices:
-        raise ValueError("detection requires at least one prompt index")
-    run_metadata = dict(run_metadata or {})
-    ap = art_path(
-        n, t, eta, requested_r, T, generation_model_size
-    )
-    wmd = wm_dir(
-        n, t, eta, requested_r, T, generation_model_size
-    )
-    nd = null_dir(null_T, generation_model_size)
-    data_vol.reload()
-    art = torch.load(ap, weights_only=False, map_location="cpu")
-    artifact_model_size = normalize_model_size(
-        art.get("generation_model_size", MODEL_SIZE)
-    )
-    if artifact_model_size != generation_model_size:
-        raise ValueError(
-            f"artifact generation model {artifact_model_size} does not "
-            f"match requested model {generation_model_size}"
-        )
-    decoding_key = art["decoding_key"]
-    partition = art["partition"]
-    artifact_fingerprint = art.get("artifact_fingerprint")
-    if not artifact_fingerprint:
-        artifact_fingerprint = _semantic_fingerprint({
-            key: art[key] for key in (
-                "encoding_key", "decoding_key", "partition",
-                "prompt_ids_list", "seed", "config_sig",
-            )
-        })
-    rank_info = art.get("parity_check_rank_info")
-    if rank_info is None:
-        rank_info = parity_check_rank_info(decoding_key[1])
-
-    workspace_label = run_metadata.get("workspace_label", "workspace")
-    code_fingerprint = run_metadata.get("code_fingerprint", {})
-    config = {
-        "n": n,
-        "T": T,
-        "t": t,
-        "eta": eta,
-        "r_value": rank_info.get("rows", requested_r),
-        "r_setting": run_metadata.get("r_setting", REQUIRED_R_SETTING),
-        "target_fpr": fpr,
-        "generation_model": model_display(generation_model_size),
-        "entropy_model": model_display(model_size),
-        "entropy_trace_source": source_label,
-        "seed": art.get("seed", SEED),
-        "canonical_num_prompts": run_metadata.get(
-            "canonical_num_prompts", CANONICAL_NUM_PROMPTS
-        ),
-    }
-    checkpoint_root = detection_checkpoint_dir(tag, model_size, fpr)
-    checkpoint_stats = {"reused": 0, "computed": 0, "stale_or_corrupt": 0}
-
-    trace_saved = 0
-
-    def _prefix(values, source, idx, field):
-        if len(values) < T:
-            raise ValueError(
-                f"{source} cache index {idx} has {len(values)} {field} values, "
-                f"need at least {T}"
-            )
-        return values[:T]
-
-    def _p_trace(source, idx, record):
-        if use_generation_trace:
-            return np.asarray(
-                _prefix(record["p_trace"], source, idx, "p_trace"),
-                dtype=np.float64,
-            )
-        legacy_path = os.path.join(
-            f"/data/{tag}/entropy/{entropy_model_tag(model_size)}",
-            f"gen_{idx:04d}.pt",
-        )
-        if os.path.exists(legacy_path):
-            est = torch.load(legacy_path, weights_only=False, map_location="cpu")
-            return np.asarray(est["p_trace"][:T], dtype=np.float64)
-        if source == "wm":
-            path = os.path.join(wm_entropy_dir(tag, model_size), f"wm_{idx:04d}.pt")
-        else:
-            path = os.path.join(
-                null_entropy_dir(
-                    null_entropy_T, model_size, generation_model_size
-                ),
-                f"null_{idx:04d}.pt",
-            )
-        est = torch.load(path, weights_only=False, map_location="cpu")
-        return np.asarray(
-            _prefix(est["p_trace"], source, idx, "p_trace"),
-            dtype=np.float64,
-        )
-
-    def _save_detection_trace(source, idx, tokens, p_trace):
-        nonlocal trace_saved
-        if source == "wm":
-            out_dir = wm_trace_dir(tag, model_size)
-            prefix = "wm"
-        else:
-            out_dir = null_trace_dir(
-                T, model_size, generation_model_size
-            )
-            prefix = "null"
-        os.makedirs(out_dir, exist_ok=True)
-        path = os.path.join(out_dir, f"{prefix}_{idx:04d}.pt")
-        if os.path.exists(path):
-            return
-        bits = tokens_to_bits(tokens, partition)
-        entropy = binary_entropy(p_trace) / np.log(2)
-        signs = (1 - 2 * bits.astype(np.int64)).astype(np.float64)
-        signed_entropy = signs * entropy
-        folded = fold_soft_token(bits, p_trace, n)
-        map_tokens = map_soft_token(bits, p_trace)
-        folded_map = fold_map_soft_token(bits, p_trace, n)
-        torch.save(
-            {
-                "derived_trace_schema_version": DERIVED_TRACE_SCHEMA_VERSION,
-                "prompt_idx": idx,
-                "source": source,
-                "generation_model": model_display(generation_model_size),
-                "generation_model_size": normalize_model_size(
-                    generation_model_size
-                ),
-                "entropy_model": model_display(model_size),
-                "entropy_trace_source": source_label,
-                "tokens_len": int(tokens.numel()),
-                "observed_bucket_bits": bits.astype(np.uint8),
-                "entropy_trace": entropy.astype(np.float32),
-                "signed_entropy_trace": signed_entropy.astype(np.float32),
-                "map_soft_tokens": map_tokens.astype(np.float32),
-                "folded_signed_entropy": folded.astype(np.float32),
-                "folded_map_soft_tokens": folded_map.astype(np.float32),
-            },
-            path,
-        )
-        trace_saved += 1
-
-    def _input_hashes(tokens, p_trace):
-        tokens_sha256 = hashlib.sha256(
-            tokens.detach().cpu().contiguous().numpy().tobytes()
-        ).hexdigest()
-        p_trace_sha256 = hashlib.sha256(
-            np.ascontiguousarray(p_trace).tobytes()
-        ).hexdigest()
-        return tokens_sha256, p_trace_sha256
-
-    def _run(tokens, p_trace, wm_flag, idx,
-             tokens_sha256, p_trace_sha256):
-        dm, im = detect_hoeffding(decoding_key, tokens, p_trace, partition,
-                                  fpr=fpr, weight="map", return_info=True)
-        de, ie = detect_hoeffding(decoding_key, tokens, p_trace, partition,
-                                  fpr=fpr, weight="entropy", return_info=True)
-        out = {
-            "prompt_idx": idx,
-            "source": "wm" if wm_flag else "null",
-            "watermark": wm_flag,
-            "decision_map": bool(dm),
-            "stat_map": float(im["statistic"]),
-            "thr_map": float(im["threshold"]),
-            "decision_entropy": bool(de),
-            "stat_entropy": float(ie["statistic"]),
-            "thr_entropy": float(ie["threshold"]),
-            "decision_naive": None,
-            "stat_naive": None,
-            "thr_naive": None,
-            "decision_log": None,
-            "stat_log": None,
-            "thr_log": None,
-            "n_tokens": int(tokens.numel()),
-            "generation_model": model_display(generation_model_size),
-            "entropy_model": model_display(model_size),
-            "entropy_trace_source": source_label,
-            "parity_check_rank_info": rank_info,
-            "tokens_sha256": tokens_sha256,
-            "p_trace_sha256": p_trace_sha256,
-        }
-        if use_generation_trace:
-            dn, ino = detect_hoeffding(decoding_key, tokens, p_trace, partition,
-                                       fpr=fpr, weight="naive", return_info=True)
-            out.update({
-                "decision_naive": bool(dn),
-                "stat_naive": float(ino["statistic"]),
-                "thr_naive": float(ino["threshold"]),
-            })
-        return out
-
-    def _checkpointed_run(tokens, p_trace, wm_flag, idx):
-        source = "wm" if wm_flag else "null"
-        tokens_sha256, p_trace_sha256 = _input_hashes(tokens, p_trace)
-        identity = _detection_checkpoint_identity(
-            config,
-            artifact_fingerprint,
-            code_fingerprint,
-            source,
-            idx,
-            tokens_sha256,
-            p_trace_sha256,
-        )
-        checkpoint_path = os.path.join(
-            checkpoint_root, source, f"{source}_{idx:04d}.json"
-        )
-        existed = os.path.exists(checkpoint_path)
-        cached = _load_detection_checkpoint(checkpoint_path, identity)
-        if cached is not None:
-            checkpoint_stats["reused"] += 1
-            return cached
-        if existed:
-            checkpoint_stats["stale_or_corrupt"] += 1
-        record = _run(
-            tokens, p_trace, wm_flag, idx, tokens_sha256, p_trace_sha256
-        )
-        _save_detection_checkpoint(checkpoint_path, identity, record)
-        checkpoint_stats["computed"] += 1
-        return record
-
-    out = []
-    committed_checkpoint_count = 0
-
-    for position, i in enumerate(prompt_indices, start=1):
-        gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
-                        weights_only=False, map_location="cpu")
-        validate_generation_record(gw, generation_model_size, "wm", i)
-        wm_tokens = _prefix(gw["tokens"], "wm", i, "token")
-        wm_p = _p_trace("wm", i, gw)
-        _save_detection_trace("wm", i, wm_tokens, wm_p)
-        out.append(_checkpointed_run(wm_tokens, wm_p, True, i))
-
-        gn = torch.load(os.path.join(nd, f"null_{i:04d}.pt"),
-                        weights_only=False, map_location="cpu")
-        validate_generation_record(gn, generation_model_size, "null", i)
-        null_tokens = _prefix(gn["tokens"], "null", i, "token")
-        null_p = _p_trace("null", i, gn)
-        _save_detection_trace("null", i, null_tokens, null_p)
-        out.append(_checkpointed_run(null_tokens, null_p, False, i))
-
-        if (position % DETECTION_CHECKPOINT_COMMIT_INTERVAL == 0
-                and checkpoint_stats["computed"] > committed_checkpoint_count):
-            data_vol.commit()
-            committed_checkpoint_count = checkpoint_stats["computed"]
-
-    filename = shard_result_filename(
-        tag, model_size, fpr, prompt_indices, workspace_label
-    )
-    remote_path = os.path.join(
-        f"/data/{tag}/shard_results/{entropy_model_tag(model_size)}",
-        filename,
-    )
-    safe_records = _json_safe(out)
-    records_json = json.dumps(
-        safe_records, sort_keys=True, separators=(",", ":")
-    ).encode()
-    payload = {
-        "schema_version": SHARD_RESULT_SCHEMA_VERSION,
-        "config": config,
-        "artifact_fingerprint": artifact_fingerprint,
-        "code_fingerprint": run_metadata.get("code_fingerprint", {}),
-        "workspace_label": workspace_label,
-        "prompt_indices": prompt_indices,
-        "prompt_start": min(prompt_indices),
-        "prompt_stop": max(prompt_indices) + 1,
-        "record_count": len(safe_records),
-        "records_sha256": hashlib.sha256(records_json).hexdigest(),
-        "null_cache_T": null_T,
-        "null_cache_root": null_root(generation_model_size),
-        "null_entropy_cache_T": null_entropy_T,
-        "null_detection_trace_root": null_trace_dir(
-            T, model_size, generation_model_size
-        ),
-        "parity_check_rank_info": _json_safe(rank_info),
-        "detection_checkpointing": {
-            "schema_version": DETECTION_CHECKPOINT_SCHEMA_VERSION,
-            "commit_interval_prompts": DETECTION_CHECKPOINT_COMMIT_INTERVAL,
-            **checkpoint_stats,
-        },
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "records": safe_records,
-    }
-    _atomic_write_json(remote_path, payload)
-    data_vol.commit()
-    return {"results": out, "shard_payload": payload,
-            "checkpoint_stats": checkpoint_stats,
-            "remote_shard_path": remote_path}
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
 
 @app.function(volumes={"/data": data_vol}, timeout=1800)
@@ -1651,130 +1157,7 @@ def detect_all_any(n: int, t: int, eta: float, fpr: float,
                    num_prompts: int = 500, r: int = 0,
                    entropy_model_size: str = MODEL_SIZE,
                    generation_model_size: str = MODEL_SIZE) -> list:
-    """Re-detect a config with ALL weight kinds, auto-detecting the cache layout:
-      - NEW layout (config_tag/wm/wm_XXXX.pt + shared _nulls/T*) -> batched pipeline
-      - OLD layout (config_tag/gens/gen_XXXX.pt, watermark flag inside)
-    Free: model-free CPU detection over already-cached generations, no regen."""
-    import glob
-    import os
-    import numpy as np
-    import torch
-    from detectors import detect_hoeffding, WEIGHT_KINDS
-
-    T = experiment_T(n)
-    requested_r = int(r) if r else None
-    generation_model_size = normalize_model_size(generation_model_size)
-    tag = config_tag(
-        n, t, eta, requested_r, T, generation_model_size
-    )
-    model_size = normalize_model_size(entropy_model_size)
-    use_generation_trace = uses_cached_generation_trace(
-        model_size, generation_model_size
-    )
-    ap = art_path(
-        n, t, eta, requested_r, T, generation_model_size
-    )
-    data_vol.reload()
-    art = torch.load(ap, weights_only=False, map_location="cpu")
-    decoding_key = art["decoding_key"]
-    partition = art["partition"]
-    null_cache_T = T
-    null_entropy_cache_T = T
-
-    def _prefix(values, source, idx, field):
-        if len(values) < T:
-            raise ValueError(
-                f"{source} cache index {idx} has {len(values)} {field} values, "
-                f"need at least {T}"
-            )
-        return values[:T]
-
-    def _p_trace(source, idx, record):
-        if use_generation_trace:
-            return np.asarray(
-                _prefix(record["p_trace"], source, idx, "p_trace"),
-                dtype=np.float64,
-            )
-        legacy_path = os.path.join(
-            f"/data/{tag}/entropy/{entropy_model_tag(model_size)}",
-            f"gen_{idx:04d}.pt",
-        )
-        if os.path.exists(legacy_path):
-            est = torch.load(legacy_path, weights_only=False, map_location="cpu")
-            return np.asarray(est["p_trace"][:T], dtype=np.float64)
-        if source == "wm":
-            path = os.path.join(wm_entropy_dir(tag, model_size), f"wm_{idx:04d}.pt")
-        else:
-            path = os.path.join(
-                null_entropy_dir(
-                    null_entropy_cache_T, model_size,
-                    generation_model_size,
-                ),
-                f"null_{idx:04d}.pt",
-            )
-        est = torch.load(path, weights_only=False, map_location="cpu")
-        return np.asarray(
-            _prefix(est["p_trace"], source, idx, "p_trace"),
-            dtype=np.float64,
-        )
-
-    def decisions(tokens, p_trace, wm_flag, idx):
-        row = {"prompt_idx": idx, "watermark": bool(wm_flag)}
-        weight_kinds = WEIGHT_KINDS if use_generation_trace else tuple(
-            wname for wname in WEIGHT_KINDS if wname != "naive"
-        )
-        for wname in weight_kinds:
-            row[f"decision_{wname}"] = bool(detect_hoeffding(
-                decoding_key, tokens, p_trace, partition, fpr=fpr, weight=wname))
-        return row
-
-    wmd = f"/data/{tag}/wm"
-    new_layout = os.path.isdir(wmd) and glob.glob(os.path.join(wmd, "wm_*.pt"))
-
-    out = []
-    if new_layout:
-        root = null_root(generation_model_size)
-        null_cache_T = find_complete_cache_T(root, T, num_prompts, "null")
-        if null_cache_T is None:
-            raise FileNotFoundError(
-                f"No complete shared null store found with T >= {T}"
-            )
-        if not use_generation_trace:
-            entropy_root = os.path.dirname(null_entropy_dir(
-                T, model_size, generation_model_size
-            ))
-            null_entropy_cache_T = find_complete_cache_T(
-                entropy_root, T, num_prompts, "null"
-            )
-            if null_entropy_cache_T is None:
-                raise FileNotFoundError(
-                    f"No complete {model_display(model_size)} null entropy "
-                    f"store found with T >= {T}"
-                )
-        for i in range(num_prompts):
-            gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
-                            weights_only=False, map_location="cpu")
-            validate_generation_record(
-                gw, generation_model_size, "wm", i
-            )
-            wm_tokens = _prefix(gw["tokens"], "wm", i, "token")
-            out.append(decisions(wm_tokens, _p_trace("wm", i, gw), True, i))
-            gn = torch.load(os.path.join(
-                root, f"T{null_cache_T}", f"null_{i:04d}.pt"),
-                            weights_only=False, map_location="cpu")
-            validate_generation_record(
-                gn, generation_model_size, "null", i
-            )
-            null_tokens = _prefix(gn["tokens"], "null", i, "token")
-            out.append(decisions(null_tokens, _p_trace("null", i, gn), False, i))
-    else:
-        for path in sorted(glob.glob(f"/data/{tag}/gens/gen_*.pt")):
-            g = torch.load(path, weights_only=False, map_location="cpu")
-            idx = int(os.path.basename(path).split("_")[-1].split(".")[0])
-            tokens = g["tokens"][:T]
-            out.append(decisions(tokens, _p_trace("wm" if g["watermark"] else "null", idx, g),
-                                 bool(g["watermark"]), idx))
-    return out
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
 
 @app.function(volumes={"/data": data_vol}, timeout=1800)
@@ -1782,162 +1165,7 @@ def detect_map_summary(n: int, t: int, eta: float, fpr: float,
                        num_prompts: int = 500, r: int = 0,
                        entropy_model_size: str = MODEL_SIZE,
                        generation_model_size: str = MODEL_SIZE) -> dict:
-    """CPU-only cache redetect for the CSV columns we need: map, entropy, naive."""
-    import glob
-    import os
-    import numpy as np
-    import torch
-    from detectors import detect_hoeffding
-
-    T = experiment_T(n)
-    requested_r = int(r) if r else None
-    generation_model_size = normalize_model_size(generation_model_size)
-    tag = config_tag(
-        n, t, eta, requested_r, T, generation_model_size
-    )
-    model_size = normalize_model_size(entropy_model_size)
-    use_generation_trace = uses_cached_generation_trace(
-        model_size, generation_model_size
-    )
-    data_vol.reload()
-    art = torch.load(
-        art_path(n, t, eta, requested_r, T, generation_model_size),
-        weights_only=False, map_location="cpu"
-    )
-    decoding_key = art["decoding_key"]
-    partition = art["partition"]
-    null_cache_T = T
-    null_entropy_cache_T = T
-
-    def _prefix(values, source, idx, field):
-        if len(values) < T:
-            raise ValueError(
-                f"{source} cache index {idx} has {len(values)} {field} values, "
-                f"need at least {T}"
-            )
-        return values[:T]
-
-    def _p_trace(source, idx, record):
-        if use_generation_trace:
-            return np.asarray(
-                _prefix(record["p_trace"], source, idx, "p_trace"),
-                dtype=np.float64,
-            )
-        legacy_path = os.path.join(
-            f"/data/{tag}/entropy/{entropy_model_tag(model_size)}",
-            f"gen_{idx:04d}.pt",
-        )
-        if os.path.exists(legacy_path):
-            est = torch.load(legacy_path, weights_only=False, map_location="cpu")
-            return np.asarray(est["p_trace"][:T], dtype=np.float64)
-        if source == "wm":
-            path = os.path.join(wm_entropy_dir(tag, model_size), f"wm_{idx:04d}.pt")
-        else:
-            path = os.path.join(
-                null_entropy_dir(
-                    null_entropy_cache_T, model_size,
-                    generation_model_size,
-                ),
-                f"null_{idx:04d}.pt",
-            )
-        est = torch.load(path, weights_only=False, map_location="cpu")
-        return np.asarray(
-            _prefix(est["p_trace"], source, idx, "p_trace"),
-            dtype=np.float64,
-        )
-
-    counts = {
-        "wm_total": 0,
-        "null_total": 0,
-        "map_tp": 0,
-        "map_fp": 0,
-        "entropy_tp": 0,
-        "entropy_fp": 0,
-        "naive_tp": None if not use_generation_trace else 0,
-        "naive_fp": None if not use_generation_trace else 0,
-    }
-
-    def _score(tokens, p_trace, watermark):
-        dm = detect_hoeffding(decoding_key, tokens, p_trace, partition,
-                              fpr=fpr, weight="map")
-        de = detect_hoeffding(decoding_key, tokens, p_trace, partition,
-                              fpr=fpr, weight="entropy")
-        dn = None
-        if use_generation_trace:
-            dn = detect_hoeffding(decoding_key, tokens, p_trace, partition,
-                                  fpr=fpr, weight="naive")
-        if watermark:
-            counts["wm_total"] += 1
-            counts["map_tp"] += int(dm)
-            counts["entropy_tp"] += int(de)
-            if dn is not None:
-                counts["naive_tp"] += int(dn)
-        else:
-            counts["null_total"] += 1
-            counts["map_fp"] += int(dm)
-            counts["entropy_fp"] += int(de)
-            if dn is not None:
-                counts["naive_fp"] += int(dn)
-
-    wmd = f"/data/{tag}/wm"
-    new_layout = os.path.isdir(wmd) and glob.glob(os.path.join(wmd, "wm_*.pt"))
-    if new_layout:
-        root = null_root(generation_model_size)
-        null_cache_T = find_complete_cache_T(root, T, num_prompts, "null")
-        if null_cache_T is None:
-            raise FileNotFoundError(
-                f"No complete shared null store found with T >= {T}"
-            )
-        if not use_generation_trace:
-            entropy_root = os.path.dirname(null_entropy_dir(
-                T, model_size, generation_model_size
-            ))
-            null_entropy_cache_T = find_complete_cache_T(
-                entropy_root, T, num_prompts, "null"
-            )
-            if null_entropy_cache_T is None:
-                raise FileNotFoundError(
-                    f"No complete {model_display(model_size)} null entropy "
-                    f"store found with T >= {T}"
-                )
-        for i in range(num_prompts):
-            gw = torch.load(os.path.join(wmd, f"wm_{i:04d}.pt"),
-                            weights_only=False, map_location="cpu")
-            validate_generation_record(
-                gw, generation_model_size, "wm", i
-            )
-            wm_tokens = _prefix(gw["tokens"], "wm", i, "token")
-            _score(wm_tokens, _p_trace("wm", i, gw), True)
-            gn = torch.load(os.path.join(
-                root, f"T{null_cache_T}", f"null_{i:04d}.pt"),
-                            weights_only=False, map_location="cpu")
-            validate_generation_record(
-                gn, generation_model_size, "null", i
-            )
-            null_tokens = _prefix(gn["tokens"], "null", i, "token")
-            _score(null_tokens, _p_trace("null", i, gn), False)
-    else:
-        for path in sorted(glob.glob(f"/data/{tag}/gens/gen_*.pt")):
-            g = torch.load(path, weights_only=False, map_location="cpu")
-            idx = int(os.path.basename(path).split("_")[-1].split(".")[0])
-            tokens = g["tokens"][:T]
-            watermark = bool(g["watermark"])
-            source = "wm" if watermark else "null"
-            _score(tokens, _p_trace(source, idx, g), watermark)
-
-    counts.update({
-        "n": n,
-        "t": t,
-        "eta": eta,
-        "T": T,
-        "r": requested_r,
-        "generation_model": model_display(generation_model_size),
-        "entropy_model": model_display(model_size),
-        "entropy_trace_source": entropy_trace_source(
-            model_size, generation_model_size
-        ),
-    })
-    return counts
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
 
 @app.function(volumes={"/data": data_vol}, timeout=1800)
@@ -1945,112 +1173,7 @@ def detect_legacy_first_block_summary(n: int, t: int, eta: float, fpr: float,
                                       num_prompts: int = 500, r: int = 0,
                                       entropy_model_size: str = MODEL_SIZE,
                                       legacy_token_length: int = 0) -> dict:
-    """Redetect old T=2n cache rows using only the first length-n block."""
-    import glob
-    import os
-
-    import numpy as np
-    import torch
-    from detectors import detect_hoeffding
-    from prc import parity_check_rank_info
-
-    score_T = experiment_T(n)
-    cache_T = (
-        int(legacy_token_length) if legacy_token_length else 2 * int(n)
-    )
-    requested_r = int(r) if r else None
-    tag = config_tag(n, t, eta, requested_r, None)
-    model_size = normalize_model_size(entropy_model_size)
-    use_generation_trace = uses_cached_generation_trace(model_size)
-
-    data_vol.reload()
-    art = torch.load(f"/data/{tag}/artifacts.pt", weights_only=False,
-                     map_location="cpu")
-    decoding_key = art["decoding_key"]
-    partition = art["partition"]
-    rank_info = art.get("parity_check_rank_info")
-    if rank_info is None:
-        rank_info = parity_check_rank_info(decoding_key[1])
-
-    def _p_trace(idx, record):
-        if use_generation_trace:
-            p_trace = np.asarray(record["p_trace"], dtype=np.float64)
-        else:
-            path = os.path.join(
-                f"/data/{tag}/entropy/{entropy_model_tag(model_size)}",
-                f"gen_{idx:04d}.pt",
-            )
-            est = torch.load(path, weights_only=False, map_location="cpu")
-            p_trace = np.asarray(est["p_trace"], dtype=np.float64)
-        if p_trace.shape[0] < score_T:
-            raise ValueError(
-                f"{tag} gen_{idx:04d} has p_trace length {p_trace.shape[0]}, "
-                f"need at least {score_T}"
-            )
-        return p_trace[:score_T]
-
-    counts = {
-        "wm_total": 0,
-        "null_total": 0,
-        "map_tp": 0,
-        "map_fp": 0,
-        "entropy_tp": 0,
-        "entropy_fp": 0,
-        "naive_tp": None if not use_generation_trace else 0,
-        "naive_fp": None if not use_generation_trace else 0,
-    }
-
-    def _score(tokens, p_trace, watermark):
-        dm = detect_hoeffding(decoding_key, tokens, p_trace, partition,
-                              fpr=fpr, weight="map")
-        de = detect_hoeffding(decoding_key, tokens, p_trace, partition,
-                              fpr=fpr, weight="entropy")
-        dn = None
-        if use_generation_trace:
-            dn = detect_hoeffding(decoding_key, tokens, p_trace, partition,
-                                  fpr=fpr, weight="naive")
-        if watermark:
-            counts["wm_total"] += 1
-            counts["map_tp"] += int(dm)
-            counts["entropy_tp"] += int(de)
-            if dn is not None:
-                counts["naive_tp"] += int(dn)
-        else:
-            counts["null_total"] += 1
-            counts["map_fp"] += int(dm)
-            counts["entropy_fp"] += int(de)
-            if dn is not None:
-                counts["naive_fp"] += int(dn)
-
-    for path in sorted(glob.glob(f"/data/{tag}/gens/gen_*.pt")):
-        g = torch.load(path, weights_only=False, map_location="cpu")
-        idx = int(os.path.basename(path).split("_")[-1].split(".")[0])
-        watermark = bool(g["watermark"])
-        if watermark and counts["wm_total"] >= num_prompts:
-            continue
-        if not watermark and counts["null_total"] >= num_prompts:
-            continue
-        tokens = g["tokens"][:score_T]
-        if tokens.numel() < score_T:
-            raise ValueError(
-                f"{tag} gen_{idx:04d} has token length {tokens.numel()}, "
-                f"need at least {score_T}"
-            )
-        _score(tokens, _p_trace(idx, g), watermark)
-
-    counts.update({
-        "n": n,
-        "t": t,
-        "eta": eta,
-        "T": score_T,
-        "legacy_T": cache_T,
-        "legacy_tag": tag,
-        "r": requested_r,
-        "entropy_model": model_display(model_size),
-        "entropy_trace_source": entropy_trace_source(model_size),
-        "parity_check_rank_info": rank_info,
-    })
-    return counts
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
 
 # ---- driver -----------------------------------------------------------------
@@ -2067,270 +1190,7 @@ def main(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
          gpu: str = GPU,
          csv_out: str = "hoeffding_results_summary.csv",
          shard_out: str = "", workspace_label: str = ""):
-    if batch <= 0:
-        raise ValueError(f"batch must be positive, got {batch}")
-    if entropy_batch <= 0:
-        raise ValueError(
-            f"entropy_batch must be positive, got {entropy_batch}"
-        )
-    if max_containers <= 0:
-        raise ValueError(
-            f"max_containers must be positive, got {max_containers}"
-        )
-    gpu = str(gpu).strip()
-    if not gpu:
-        raise ValueError("gpu must be non-empty")
-    prompt_indices = prompt_indices_for_shard(prompt_start, num_prompts)
-    resolved_r = resolve_new_run_r(n, r, r_frac)
-    validate_r_for_keygen(n, t, resolved_r)
-    generation_model_size = normalize_model_size(generation_model_size)
-    entropy_model_size = normalize_model_size(
-        entropy_model_size or generation_model_size
-    )
-    T = experiment_T(n)
-    tag = config_tag(
-        n, t, eta, resolved_r, T, generation_model_size
-    )
-    workspace_label = (
-        workspace_label.strip() if workspace_label else
-        os.environ.get("MODAL_PROFILE", "workspace")
-    )
-    code_fingerprint = _local_code_fingerprint()
-    is_complete_run = prompt_indices == list(range(CANONICAL_NUM_PROMPTS))
-    r_text = f"r={resolved_r} ({REQUIRED_R_SETTING})"
-    print(f"[main] config {tag}  FPR_target={fpr:g}  ({num_prompts} prompts, "
-          f"global range={prompt_indices[0]}..{prompt_indices[-1]}, "
-          f"batch={batch}, entropy_batch={entropy_batch}, {r_text}, "
-          f"generation_model={model_display(generation_model_size)}, "
-          f"entropy_model={model_display(entropy_model_size)}, fresh={fresh}) ...",
-          flush=True)
-    print(f"[main] GPU={gpu} max_containers={max_containers}", flush=True)
-
-    build_artifacts.remote(
-        CANONICAL_NUM_PROMPTS, n, t, eta, resolved_r or 0, fresh,
-        generation_model_size,
-    )
-
-    plan = plan_generation.remote(
-        n, t, eta, prompt_indices, resolved_r or 0,
-        generation_model_size,
-    )
-    wm_missing, null_missing = plan["wm_missing"], plan["null_missing"]
-    null_T = plan["null_T"]
-    print(f"[main] to generate: {len(wm_missing)} watermarked, "
-          f"{len(null_missing)} null  (selected null store T={null_T}; "
-          f"root={plan['null_root']}; scoring prefix T={T})",
-          flush=True)
-
-    if wm_missing or null_missing:
-        from concurrent.futures import ThreadPoolExecutor
-
-        model = Model.with_options(
-            gpu=gpu, max_containers=max_containers
-        )(
-            tag=tag,
-            model_size=generation_model_size,
-            code_fingerprint_sha256=code_fingerprint["sha256"],
-        )
-        cache_status = model.ready.remote()
-        print(
-            f"[main] model cache ready: {cache_status['generation_model']} "
-            f"at {cache_status['model_cache_dir']}",
-            flush=True,
-        )
-        work = []
-        if wm_missing:
-            work.append((
-                "wm", model.generate_wm, _chunks(wm_missing, batch)
-            ))
-        if null_missing:
-            work.append((
-                "null", model.generate_null, _chunks(null_missing, batch)
-            ))
-
-        def _run_generation_map(item):
-            kind, method, chunks = item
-            return kind, list(method.map(chunks))
-
-        # Watermarked and null generation are independent. Dispatching both
-        # maps together lets batch=100 use 5+5=10 GPUs for 500 prompts.
-        with ThreadPoolExecutor(max_workers=len(work)) as pool:
-            calls = list(pool.map(_run_generation_map, work))
-        for kind, metas in calls:
-            gen = sum(m.get("generated", 0) for m in metas)
-            print(f"[main] {kind}: generated {gen} in {len(metas)} batches",
-                  flush=True)
-    else:
-        print("[main] all generations cached -> skipping generation GPU fleet",
-              flush=True)
-
-    null_entropy_T = null_T
-    if uses_cached_generation_trace(
-            entropy_model_size, generation_model_size):
-        print("[main] entropy trace: using cached generation p_trace", flush=True)
-    else:
-        eplan = plan_entropy.remote(
-            tag, entropy_model_size, T, null_T, prompt_indices,
-            generation_model_size,
-        )
-        wm_e_missing = eplan["wm_missing"]
-        null_e_missing = eplan["null_missing"]
-        null_entropy_T = eplan["null_entropy_T"]
-        print(f"[main] entropy traces to estimate with "
-              f"{model_display(entropy_model_size)}: "
-              f"{len(wm_e_missing)} watermarked, {len(null_e_missing)} null "
-              f"(selected null entropy store T={null_entropy_T}; "
-              f"scoring prefix T={T})",
-              flush=True)
-        if wm_e_missing or null_e_missing:
-            estimator = EntropyModel.with_options(
-                gpu=gpu, max_containers=max_containers
-            )(
-                tag=tag,
-                model_size=entropy_model_size,
-                generation_model_size=generation_model_size,
-                T=T,
-                null_T=null_T,
-            )
-            ecalls = []
-            if wm_e_missing:
-                ecalls.append(("wm entropy", list(estimator.estimate_wm.map(
-                    _chunks(wm_e_missing, entropy_batch)))))
-            if null_e_missing:
-                ecalls.append(("null entropy", list(estimator.estimate_null.map(
-                    _chunks(null_e_missing, entropy_batch)))))
-            for kind, metas in ecalls:
-                est = sum(m.get("estimated", 0) for m in metas)
-                print(f"[main] {kind}: estimated {est} in {len(metas)} batches",
-                      flush=True)
-        else:
-            print("[main] all alternate entropy traces cached", flush=True)
-
-    detect_label = "map + entropy-aware + naive"
-    if not uses_cached_generation_trace(
-            entropy_model_size, generation_model_size):
-        detect_label = "map + entropy-aware (naive/log skipped for alternate entropy)"
-    print(f"[main] detecting ({detect_label}) ...", flush=True)
-    r_setting = REQUIRED_R_SETTING
-    detection = detect_all.remote(
-        n, t, eta, fpr, null_T, prompt_indices,
-        resolved_r or 0, entropy_model_size, null_entropy_T,
-        {
-            "workspace_label": workspace_label,
-            "canonical_num_prompts": CANONICAL_NUM_PROMPTS,
-            "r_setting": r_setting,
-            "code_fingerprint": code_fingerprint,
-        },
-        generation_model_size,
-    )
-    results = detection["results"]
-    shard_payload = detection["shard_payload"]
-    checkpoint_stats = detection.get("checkpoint_stats", {})
-    print(
-        "[main] detection checkpoints: "
-        f"reused={checkpoint_stats.get('reused', 0)}, "
-        f"computed={checkpoint_stats.get('computed', 0)}, "
-        f"stale_or_corrupt={checkpoint_stats.get('stale_or_corrupt', 0)}",
-        flush=True,
-    )
-    if not shard_out:
-        shard_out = os.path.join(
-            "outputs", "shards",
-            shard_result_filename(
-                tag, entropy_model_size, fpr, prompt_indices, workspace_label
-            ),
-        )
-    _atomic_write_json(shard_out, shard_payload)
-    print(f"[main] saved local shard result -> {shard_out}", flush=True)
-    print(f"[main] saved remote shard result -> "
-          f"{detection['remote_shard_path']}", flush=True)
-
-    wm = sorted([r0 for r0 in results if r0["watermark"]],
-                key=lambda r0: r0["prompt_idx"])
-    nw = sorted([r0 for r0 in results if not r0["watermark"]],
-                key=lambda r0: r0["prompt_idx"])
-    tp_m = sum(r0["decision_map"] for r0 in wm)
-    fp_m = sum(r0["decision_map"] for r0 in nw)
-    tp_e = sum(r0["decision_entropy"] for r0 in wm)
-    fp_e = sum(r0["decision_entropy"] for r0 in nw)
-    has_naive = any(r0.get("decision_naive") is not None for r0 in results)
-    tp_n = sum(r0["decision_naive"] for r0 in wm) if has_naive else 0
-    fp_n = sum(r0["decision_naive"] for r0 in nw) if has_naive else 0
-    nwm, nnw = max(len(wm), 1), max(len(nw), 1)
-    rank_info = results[0].get("parity_check_rank_info", {}) if results else {}
-
-    print("\n=== Summary (Hoeffding detector, proven FPR) ===", flush=True)
-    print(f"  n={n} t={t} eta={eta} FPR_target={fpr:g}  T={T}  {r_text}",
-          flush=True)
-    if rank_info:
-        print(f"  parity rank: {rank_info.get('rank')}/{rank_info.get('rows')} "
-              f"full_rank={rank_info.get('full_rank')}", flush=True)
-    print(f"  map (default):  TPR {tp_m}/{len(wm)} ({tp_m/nwm:.1%})   "
-          f"FPR {fp_m}/{len(nw)} ({fp_m/nnw:.1%})", flush=True)
-    print(f"  entropy-aware:  TPR {tp_e}/{len(wm)} ({tp_e/nwm:.1%})   "
-          f"FPR {fp_e}/{len(nw)} ({fp_e/nnw:.1%})", flush=True)
-    if has_naive:
-        print(f"  naive        :  TPR {tp_n}/{len(wm)} ({tp_n/nwm:.1%})   "
-              f"FPR {fp_n}/{len(nw)} ({fp_n/nnw:.1%})", flush=True)
-    else:
-        print("  naive        :  skipped", flush=True)
-    print("  log_hoeffding:  skipped", flush=True)
-
-    rank_note = ""
-    if rank_info:
-        rank_note = (
-            f"r={rank_info.get('rows')} rank={rank_info.get('rank')}/"
-            f"{rank_info.get('rows')} full_rank={rank_info.get('full_rank')}"
-        )
-        if not rank_info.get("full_rank", False):
-            rank_note += "; WARNING parity matrix was not full rank"
-
-    notes = "; ".join(part for part in [
-        f"{model_display(generation_model_size)} generation",
-        f"entropy model {model_display(entropy_model_size)}",
-        entropy_trace_source(
-            entropy_model_size, generation_model_size
-        ),
-        "map=Bayes-optimal soft-token S_j=E[c|observed bit,p]",
-        f"batched Modal pipeline with null cache T={null_T} truncated to T={T}",
-        (f"alternate null entropy cache T={null_entropy_T} truncated to T={T}"
-         if not uses_cached_generation_trace(
-             entropy_model_size, generation_model_size
-         ) else ""),
-        "single length-n code block (T=n)",
-        "Hoeffding threshold tau=sqrt(2V*log(1/F)); one block so block FPR equals target F",
-        rank_note,
-    ] if part)
-
-    row = {
-        "Target FPR": f"{fpr:.0e}",
-        "n": n,
-        "t": t,
-        "eta": eta,
-        "T": T,
-        "r setting": r_setting,
-        "r value": rank_info.get("rows", resolved_r or ""),
-        "Map TPR": _format_rate(tp_m, len(wm)),
-        "Entropy Aware TPR": _format_rate(tp_e, len(wm)),
-        "Naive TPR": _format_rate(tp_n, len(wm)) if has_naive else "skipped",
-        "Log Hoeffding TPR": "skipped",
-        "Map FPR": _format_rate(fp_m, len(nw)),
-        "Entropy FPR": _format_rate(fp_e, len(nw)),
-        "Naive FPR": _format_rate(fp_n, len(nw)) if has_naive else "skipped",
-        "Log Hoeffding FPR": "skipped",
-        "Entropy Model": model_display(entropy_model_size),
-        "Generation Model": model_display(generation_model_size),
-        "Entropy Trace Source": entropy_trace_source(
-            entropy_model_size, generation_model_size
-        ),
-        "Notes": notes,
-    }
-    if is_complete_run:
-        _append_summary_row(csv_out, row)
-        print(f"[main] appended 500/500 summary row to {csv_out}", flush=True)
-    else:
-        print("[main] partial shard: summary CSV not modified; use "
-              "aggregate_shards after all prompt shards finish", flush=True)
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
 
 def _aggregate_shard_payloads(payloads,
@@ -2561,97 +1421,7 @@ def legacy_first_block_redetect(n: int = DEFAULT_N, t: int = DEFAULT_T,
                                 entropy_model_size: str = MODEL_SIZE,
                                 legacy_token_length: int = 0,
                                 csv_out: str = "hoeffding_results_summary.csv"):
-    """Append a T=n redetect row from legacy T=2n cached generations."""
-    resolved_r = resolve_r(n, r, r_frac)
-    entropy_model_size = normalize_model_size(entropy_model_size)
-    score_T = experiment_T(n)
-    cache_T = (
-        int(legacy_token_length) if legacy_token_length else 2 * int(n)
-    )
-    legacy_tag = config_tag(n, t, eta, resolved_r, None)
-    print(f"[legacy_first_block_redetect] cache={legacy_tag} cache_T={cache_T} "
-          f"score_T={score_T} FPR_target={fpr:g} "
-          f"entropy_model={model_display(entropy_model_size)} ...", flush=True)
-
-    s = detect_legacy_first_block_summary.remote(
-        n, t, eta, fpr, num_prompts, resolved_r or 0, entropy_model_size,
-        cache_T,
-    )
-
-    wm_total = max(s["wm_total"], 1)
-    null_total = max(s["null_total"], 1)
-    has_naive = s["naive_tp"] is not None
-    rank_info = s.get("parity_check_rank_info", {})
-
-    print("\n=== Legacy First-Block Redetect Summary ===", flush=True)
-    print(f"  n={n} t={t} eta={eta} FPR_target={fpr:g} "
-          f"T={score_T} legacy_T={cache_T} r={resolved_r}", flush=True)
-    if rank_info:
-        print(f"  parity rank: {rank_info.get('rank')}/{rank_info.get('rows')} "
-              f"full_rank={rank_info.get('full_rank')}", flush=True)
-    print(f"  entropy model: {s['entropy_model']} ({s['entropy_trace_source']})",
-          flush=True)
-    print(f"  map    : TPR {s['map_tp']}/{s['wm_total']} "
-          f"({s['map_tp']/wm_total:.1%})   FPR {s['map_fp']}/"
-          f"{s['null_total']} ({s['map_fp']/null_total:.1%})", flush=True)
-    print(f"  entropy: TPR {s['entropy_tp']}/{s['wm_total']} "
-          f"({s['entropy_tp']/wm_total:.1%})   FPR {s['entropy_fp']}/"
-          f"{s['null_total']} ({s['entropy_fp']/null_total:.1%})", flush=True)
-    if has_naive:
-        print(f"  naive  : TPR {s['naive_tp']}/{s['wm_total']} "
-              f"({s['naive_tp']/wm_total:.1%})   FPR {s['naive_fp']}/"
-              f"{s['null_total']} ({s['naive_fp']/null_total:.1%})", flush=True)
-    else:
-        print("  naive  : skipped", flush=True)
-
-    rank_note = ""
-    if rank_info:
-        rank_note = (
-            f"r={rank_info.get('rows')} rank={rank_info.get('rank')}/"
-            f"{rank_info.get('rows')} full_rank={rank_info.get('full_rank')}"
-        )
-        if not rank_info.get("full_rank", False):
-            rank_note += "; WARNING parity matrix was not full rank"
-
-    notes = "; ".join(part for part in [
-        "Qwen3-0.6B-Base generation",
-        f"entropy model {s['entropy_model']}",
-        s["entropy_trace_source"],
-        "map=Bayes-optimal soft-token S_j=E[c|observed bit,p]",
-        f"legacy redetect from {legacy_tag}",
-        f"used first n tokens from legacy T={cache_T} cached generations",
-        "appended as new T=n row; old T=2n row retained",
-        "Hoeffding threshold tau=sqrt(2V*log(1/F)); one block so block FPR equals target F",
-        rank_note,
-    ] if part)
-
-    row = {
-        "Target FPR": f"{fpr:.0e}",
-        "n": n,
-        "t": t,
-        "eta": eta,
-        "T": score_T,
-        "r setting": f"{r_frac:g}n" if r_frac else (
-            "explicit" if r else "default"
-        ),
-        "r value": rank_info.get("rows", resolved_r or ""),
-        "Map TPR": _format_rate(s["map_tp"], s["wm_total"]),
-        "Entropy Aware TPR": _format_rate(s["entropy_tp"], s["wm_total"]),
-        "Naive TPR": _format_rate(s["naive_tp"], s["wm_total"])
-        if has_naive else "skipped",
-        "Log Hoeffding TPR": "skipped",
-        "Map FPR": _format_rate(s["map_fp"], s["null_total"]),
-        "Entropy FPR": _format_rate(s["entropy_fp"], s["null_total"]),
-        "Naive FPR": _format_rate(s["naive_fp"], s["null_total"])
-        if has_naive else "skipped",
-        "Log Hoeffding FPR": "skipped",
-        "Entropy Model": s["entropy_model"],
-        "Entropy Trace Source": s["entropy_trace_source"],
-        "Notes": notes,
-    }
-    _append_summary_row(csv_out, row)
-    print(f"[legacy_first_block_redetect] appended summary row to {csv_out}",
-          flush=True)
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
 
 # ---- re-detection sweep over all weight kinds (CPU-only, no regeneration) ---
@@ -2661,42 +1431,7 @@ def redetect(n: int = DEFAULT_N, t: int = DEFAULT_T, eta: float = DEFAULT_ETA,
              r: int = 0, r_frac: float = 0.0,
              generation_model_size: str = MODEL_SIZE,
              entropy_model_size: str = ""):
-    """Re-detect a config (either cache layout) with ALL weight kinds, ranked.
-    Free: model-free CPU detection over already-cached generations."""
-    from detectors import WEIGHT_KINDS
-
-    resolved_r = resolve_r(n, r, r_frac)
-    generation_model_size = normalize_model_size(generation_model_size)
-    entropy_model_size = normalize_model_size(
-        entropy_model_size or generation_model_size
-    )
-    T = experiment_T(n)
-    tag = config_tag(
-        n, t, eta, resolved_r, T, generation_model_size
-    )
-    print(f"[redetect] {tag}  FPR_target={fpr:g}  "
-          f"generation_model={model_display(generation_model_size)} "
-          f"entropy_model={model_display(entropy_model_size)} ...", flush=True)
-    results = detect_all_any.remote(n, t, eta, fpr, num_prompts,
-                                    resolved_r or 0, entropy_model_size,
-                                    generation_model_size)
-    wm = [r for r in results if r["watermark"]]
-    nw = [r for r in results if not r["watermark"]]
-    nwm, nnw = max(len(wm), 1), max(len(nw), 1)
-    print(f"\n=== Re-detect (Hoeffding, proven FPR) n={n} t={t} eta={eta} "
-          f"F={fpr:g}  T={T} ===", flush=True)
-    rows = []
-    for name in WEIGHT_KINDS:
-        key = f"decision_{name}"
-        if not any(key in row for row in results):
-            continue
-        tp = sum(r.get(key, False) for r in wm)
-        fp = sum(r.get(key, False) for r in nw)
-        rows.append((tp, fp, name))
-    for tp, fp, name in sorted(rows, reverse=True):     # best TPR first
-        flag = "  <- baseline" if name == "entropy" else ""
-        print(f"  {name:8s}: TPR {tp}/{len(wm)} ({tp/nwm:.1%})   "
-              f"FPR {fp}/{len(nw)} ({fp/nnw:.1%}){flag}", flush=True)
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
 
 @app.local_entrypoint()
@@ -2705,41 +1440,7 @@ def redetect_map(n: int = DEFAULT_N, t: int = DEFAULT_T, eta: float = DEFAULT_ET
                  r: int = 0, r_frac: float = 0.0,
                  generation_model_size: str = MODEL_SIZE,
                  entropy_model_size: str = ""):
-    """CPU-only redetect for map/entropy/naive CSV summary columns."""
-    resolved_r = resolve_r(n, r, r_frac)
-    generation_model_size = normalize_model_size(generation_model_size)
-    entropy_model_size = normalize_model_size(
-        entropy_model_size or generation_model_size
-    )
-    T = experiment_T(n)
-    tag = config_tag(
-        n, t, eta, resolved_r, T, generation_model_size
-    )
-    print(f"[redetect_map] {tag} FPR_target={fpr:g} "
-          f"generation_model={model_display(generation_model_size)} "
-          f"entropy_model={model_display(entropy_model_size)} ...", flush=True)
-    s = detect_map_summary.remote(n, t, eta, fpr, num_prompts,
-                                  resolved_r or 0, entropy_model_size,
-                                  generation_model_size)
-    wm_total = max(s["wm_total"], 1)
-    null_total = max(s["null_total"], 1)
-    print("\n=== Map Redetect Summary ===", flush=True)
-    print(f"  n={n} t={t} eta={eta} FPR_target={fpr:g} T={T} r={resolved_r}",
-          flush=True)
-    print(f"  entropy model: {s['entropy_model']} ({s['entropy_trace_source']})",
-          flush=True)
-    print(f"  map    : TPR {s['map_tp']}/{s['wm_total']} "
-          f"({s['map_tp']/wm_total:.1%})   FPR {s['map_fp']}/{s['null_total']} "
-          f"({s['map_fp']/null_total:.1%})", flush=True)
-    print(f"  entropy: TPR {s['entropy_tp']}/{s['wm_total']} "
-          f"({s['entropy_tp']/wm_total:.1%})   FPR {s['entropy_fp']}/"
-          f"{s['null_total']} ({s['entropy_fp']/null_total:.1%})", flush=True)
-    if s["naive_tp"] is None:
-        print("  naive  : skipped", flush=True)
-    else:
-        print(f"  naive  : TPR {s['naive_tp']}/{s['wm_total']} "
-              f"({s['naive_tp']/wm_total:.1%})   FPR {s['naive_fp']}/"
-              f"{s['null_total']} ({s['naive_fp']/null_total:.1%})", flush=True)
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
 
 # ---- re-detect a whole set of configs in one Modal session ------------------
@@ -2753,32 +1454,117 @@ REDETECT_CONFIGS = [
 
 @app.local_entrypoint()
 def redetect_all(fpr: float = 1e-3, num_prompts: int = 500):
-    """Re-detect EVERY cached config with all weight kinds, one Modal session.
-    Prints a compact map-vs-entropy line per config plus each full leaderboard."""
-    from detectors import WEIGHT_KINDS
+    raise RuntimeError(RETIRED_DETECTION_MESSAGE)
 
-    summary = []
-    for (n, t, eta) in REDETECT_CONFIGS:
-        print(f"\n########## n={n} t={t} eta={eta} ##########", flush=True)
-        results = detect_all_any.remote(n, t, eta, fpr, num_prompts)
-        wm = [r for r in results if r["watermark"]]
-        nw = [r for r in results if not r["watermark"]]
-        nwm, nnw = max(len(wm), 1), max(len(nw), 1)
-        rows = []
-        for name in WEIGHT_KINDS:
-            tp = sum(r[f"decision_{name}"] for r in wm)
-            fp = sum(r[f"decision_{name}"] for r in nw)
-            rows.append((tp, fp, name))
-        for tp, fp, name in sorted(rows, reverse=True):
-            flag = "  <- baseline" if name == "entropy" else ""
-            print(f"  {name:8s}: TPR {tp}/{len(wm)} ({tp/nwm:.1%})   "
-                  f"FPR {fp}/{len(nw)} ({fp/nnw:.1%}){flag}", flush=True)
-        by = {name: (tp, fp) for tp, fp, name in rows}
-        summary.append((n, t, eta, by["map"], by["entropy"], nwm, nnw))
 
-    print("\n================ map vs entropy (all configs) ================",
+@app.local_entrypoint()
+def generate_fixed(num_prompts: int = 10, max_containers: int = DEFAULT_MAX_CONTAINERS,
+         prompt_start: int = 0,
+         n: int = DEFAULT_N, t: int = DEFAULT_T, eta: float = DEFAULT_ETA,
+         fpr: float = DEFAULT_FPR, fresh: bool = False,
+         batch: int = DEFAULT_BATCH,
+         entropy_batch: int = DEFAULT_ENTROPY_BATCH,
+         r: int = 0, r_frac: float = REQUIRED_R_FRAC,
+         generation_model_size: str = MODEL_SIZE,
+         entropy_model_size: str = "",
+         gpu: str = GPU,
+         csv_out: str = "hoeffding_results_summary.csv",
+         shard_out: str = "", workspace_label: str = ""):
+    if batch <= 0:
+        raise ValueError(f"batch must be positive, got {batch}")
+    if entropy_batch <= 0:
+        raise ValueError(
+            f"entropy_batch must be positive, got {entropy_batch}"
+        )
+    if max_containers <= 0:
+        raise ValueError(
+            f"max_containers must be positive, got {max_containers}"
+        )
+    gpu = str(gpu).strip()
+    if not gpu:
+        raise ValueError("gpu must be non-empty")
+    prompt_indices = prompt_indices_for_shard(prompt_start, num_prompts)
+    resolved_r = resolve_new_run_r(n, r, r_frac)
+    validate_r_for_keygen(n, t, resolved_r)
+    generation_model_size = normalize_model_size(generation_model_size)
+    entropy_model_size = normalize_model_size(
+        entropy_model_size or generation_model_size
+    )
+    T = experiment_T(n)
+    tag = config_tag(
+        n, t, eta, resolved_r, T, generation_model_size
+    )
+    workspace_label = (
+        workspace_label.strip() if workspace_label else
+        os.environ.get("MODAL_PROFILE", "workspace")
+    )
+    code_fingerprint = _local_code_fingerprint()
+    is_complete_run = prompt_indices == list(range(CANONICAL_NUM_PROMPTS))
+    r_text = f"r={resolved_r} ({REQUIRED_R_SETTING})"
+    print(f"[main] config {tag}  FPR_target={fpr:g}  ({num_prompts} prompts, "
+          f"global range={prompt_indices[0]}..{prompt_indices[-1]}, "
+          f"batch={batch}, entropy_batch={entropy_batch}, {r_text}, "
+          f"generation_model={model_display(generation_model_size)}, "
+          f"entropy_model={model_display(entropy_model_size)}, fresh={fresh}) ...",
           flush=True)
-    for n, t, eta, (mtp, mfp), (etp, efp), nwm, nnw in summary:
-        print(f"  n={n:>4} t={t} eta={eta:<4}: map {mtp/nwm:5.1%} vs entropy "
-              f"{etp/nwm:5.1%}  (+{(mtp-etp)/nwm:.1%})   FPR map {mfp}/{nnw} "
-              f"ent {efp}/{nnw}", flush=True)
+    print(f"[main] GPU={gpu} max_containers={max_containers}", flush=True)
+
+    build_artifacts.remote(
+        CANONICAL_NUM_PROMPTS, n, t, eta, resolved_r or 0, fresh,
+        generation_model_size,
+    )
+
+    plan = plan_generation.remote(
+        n, t, eta, prompt_indices, resolved_r or 0,
+        generation_model_size,
+    )
+    wm_missing, null_missing = plan["wm_missing"], plan["null_missing"]
+    null_T = plan["null_T"]
+    print(f"[main] to generate: {len(wm_missing)} watermarked, "
+          f"{len(null_missing)} null  (selected null store T={null_T}; "
+          f"root={plan['null_root']}; scoring prefix T={T})",
+          flush=True)
+
+    if wm_missing or null_missing:
+        from concurrent.futures import ThreadPoolExecutor
+
+        model = Model.with_options(
+            gpu=gpu, max_containers=max_containers
+        )(
+            tag=tag,
+            model_size=generation_model_size,
+            code_fingerprint_sha256=code_fingerprint["sha256"],
+        )
+        cache_status = model.ready.remote()
+        print(
+            f"[main] model cache ready: {cache_status['generation_model']} "
+            f"at {cache_status['model_cache_dir']}",
+            flush=True,
+        )
+        work = []
+        if wm_missing:
+            work.append((
+                "wm", model.generate_wm, _chunks(wm_missing, batch)
+            ))
+        if null_missing:
+            work.append((
+                "null", model.generate_null, _chunks(null_missing, batch)
+            ))
+
+        def _run_generation_map(item):
+            kind, method, chunks = item
+            return kind, list(method.map(chunks))
+
+        # Watermarked and null generation are independent. Dispatching both
+        # maps together lets batch=100 use 5+5=10 GPUs for 500 prompts.
+        with ThreadPoolExecutor(max_workers=len(work)) as pool:
+            calls = list(pool.map(_run_generation_map, work))
+        for kind, metas in calls:
+            gen = sum(m.get("generated", 0) for m in metas)
+            print(f"[main] {kind}: generated {gen} in {len(metas)} batches",
+                  flush=True)
+    else:
+        print("[main] all generations cached -> skipping generation GPU fleet",
+              flush=True)
+
+    return {"generation_only": True, "tag": tag, "plan": plan}

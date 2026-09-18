@@ -385,3 +385,25 @@ def test_runner_passes_gpu_and_validates_once_before_eight_batches(tmp_path, mon
     monkeypatch.setattr(runner, "redetect_results", SimpleNamespace(read_file=lambda p: [b"{}\n"]))
     runner.redetect(str(path), stage="full", gpu=gpu)
     assert calls == [batches[0], "distributed"]
+
+
+@pytest.mark.parametrize("module_name", ["modal_run", "modal_online_run", "modal_fixed_replicate_run"])
+def test_old_main_is_retired_before_any_remote_work(module_name):
+    import importlib
+    runner = importlib.import_module(module_name)
+    with pytest.raises(RuntimeError, match="Prompt-dependent detection has been retired"):
+        runner.main()
+
+
+@pytest.mark.parametrize("module_name,command", [("modal_run", "generate_fixed"),
+                                                ("modal_online_run", "generate_online")])
+def test_generation_only_commands_preserve_cached_inputs_and_do_not_detect(monkeypatch, module_name, command):
+    import importlib
+    from types import SimpleNamespace
+    runner = importlib.import_module(module_name)
+    plan = dict(wm_missing=[], null_missing=[], null_T=400, null_root="/data/_nulls",
+                wm_mode="exact", wm_source_T=400, wm_resume_source_T=0, wm_rejected_candidates=[])
+    monkeypatch.setattr(runner, "build_artifacts", SimpleNamespace(remote=lambda *a: dict(reused=True, artifact_fingerprint="original-key")))
+    monkeypatch.setattr(runner, "plan_generation", SimpleNamespace(remote=lambda *a: plan))
+    getattr(runner, command)(n=400)
+    assert plan["wm_missing"] == [] and plan["null_missing"] == []
