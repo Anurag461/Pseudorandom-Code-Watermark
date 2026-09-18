@@ -237,8 +237,11 @@ def fixture_case(tmp_path, construction):
 
 @pytest.mark.parametrize("construction", ["fixed", "online"])
 def test_batch_cache_resume_and_aggregation_exclude_prompts(tmp_path, construction):
+    import csv
+    from modal_run import _append_redetection_csv, REDETECT_CSV_COLUMNS
     case = fixture_case(tmp_path, construction)
-    prepared = _prepare_redetection(case, {"id": "tiny"}, {}, {"data": tmp_path / "data"}, tmp_path / "results")
+    prepared = _prepare_redetection(case, {"id": "Qwen/Qwen3-8B-Base"}, {"gpu": "H100", "git_commit": "test"},
+                                    {"data": tmp_path / "data"}, tmp_path / "results")
     assert [b["identity"]["count"] for b in prepared["batches"]] == [3, 1]
     model = tiny_model(2, dtype=torch.bfloat16)
     for batch in prepared["batches"]:
@@ -247,6 +250,18 @@ def test_batch_cache_resume_and_aggregation_exclude_prompts(tmp_path, constructi
         assert _recover_redetection_batch(None, batch, tmp_path / "results")["cached"]
     report = _score_redetection(prepared, tmp_path / "results")
     assert len(report["records"]) == 4 and report["counts"]["9"]["map"]["wm"]["count"] == 2
+    csv_out = tmp_path / "redetected.csv"
+    _append_redetection_csv(prepared, report, csv_out)
+    _append_redetection_csv(prepared, report, csv_out)
+    with csv_out.open(newline="") as handle:
+        reader = csv.DictReader(handle)
+        rows = list(reader)
+        assert reader.fieldnames == REDETECT_CSV_COLUMNS
+    assert len(rows) == 3 and rows[-1]["T"] == "9"
+    assert rows[-1]["Entropy Model"] == "Qwen3-8B-Base" and rows[-1]["Naive TPR"] == "skipped"
+    assert rows[-1]["eta"] == "0.05" and rows[-1]["t"] == "3"
+    detected = sum(r["scores"]["9"]["map"]["decision"] for r in report["records"] if r["source"] == "wm")
+    assert rows[-1]["Map TPR"] == f"{detected}/2 ({detected/2:.1%})"
     first = prepared["batches"][0]
     path = tmp_path / "results" / first["root"] / "trace.pt"
     payload = _redetect_load(path)
@@ -325,7 +340,8 @@ def test_cache_rejects_legacy_or_unrelated_traces(tmp_path, mismatch):
 
 
 @pytest.mark.parametrize("gpu", ["A100-80GB", "H100", "L40S"])
-def test_runner_passes_gpu_and_validates_once_before_eight_batches(tmp_path, monkeypatch, gpu):
+@pytest.mark.parametrize("size", ["0.6B", "8B"])
+def test_runner_passes_gpu_and_validates_once_before_eight_batches(tmp_path, monkeypatch, gpu, size):
     """Exercise the real dispatcher with every remote operation replaced locally."""
     import json
     import subprocess
@@ -349,7 +365,7 @@ def test_runner_passes_gpu_and_validates_once_before_eight_batches(tmp_path, mon
         protocol=runner.REDETECT_PROTOCOL,
         schema_version=1,
         cases=[case],
-        model=dict(id="Qwen/Qwen3-0.6B-Base", size="0.6B", dtype="bfloat16"),
+        model=detector_spec(size),
     )
     path = tmp_path / "manifest.json"
     path.write_text(json.dumps(manifest))
@@ -370,13 +386,61 @@ def test_runner_passes_gpu_and_validates_once_before_eight_batches(tmp_path, mon
 
     def with_options(**options):
         assert options["gpu"] == gpu and options["max_containers"] == 10
+        assert options["memory"] == (65536 if size == "8B" else 8192)
         return lambda **kw: SimpleNamespace(redetect_batch=SimpleNamespace(remote=validate, map=distribute))
 
     monkeypatch.setattr(runner, "RedetectionModel", SimpleNamespace(with_options=with_options))
     monkeypatch.setattr(runner, "finish_redetection", SimpleNamespace(remote=lambda p: dict(root="run", counts={})))
     monkeypatch.setattr(runner, "redetect_results", SimpleNamespace(read_file=lambda p: [b"{}\n"]))
+    monkeypatch.setattr(runner, "_append_redetection_csv", lambda *args: calls.append("csv saved"))
     runner.redetect(str(path), stage="full", gpu=gpu)
-    assert calls == [batches[0], "distributed"]
+    assert calls == [batches[0], "distributed", "csv saved"]
+
+
+def detector_spec(size):
+    spec = dict(id=f"Qwen/Qwen3-{size}-Base", size=size, dtype="bfloat16", revision="a" * 40,
+                cache_directory=f"models/Qwen3-{size}-Base", tokenizer_sha256="b" * 64)
+    if size == "0.6B":
+        spec["weights_sha256"] = "c" * 64
+    else:
+        spec.update(weight_files={"model-00001-of-00001.safetensors": "c" * 64}, index_sha256="d" * 64)
+    return spec
+
+
+@pytest.mark.parametrize("size", ["0.6B", "8B"])
+def test_checkpoint_hashes_revision_and_shard_index_are_verified(tmp_path, size):
+    import json
+    from modal_run import _verify_redetection_checkpoint
+    spec = detector_spec(size)
+    cache = tmp_path / spec["cache_directory"]
+    metadata = cache / ".cache/huggingface/download"
+    metadata.mkdir(parents=True)
+    filename = "model.safetensors" if size == "0.6B" else "model-00001-of-00001.safetensors"
+    (cache / filename).write_bytes(b"original weights")
+    digest = hashlib.sha256(b"original weights").hexdigest()
+    (metadata / (filename + ".metadata")).write_text(spec["revision"] + "\n")
+    (cache / "tokenizer.json").write_bytes(b"tokenizer")
+    spec["tokenizer_sha256"] = hashlib.sha256(b"tokenizer").hexdigest()
+    if size == "0.6B":
+        spec["weights_sha256"] = digest
+    else:
+        spec["weight_files"][filename] = digest
+        index = cache / "model.safetensors.index.json"
+        index.write_text(json.dumps({"weight_map": {"layer.weight": filename}}))
+        spec["index_sha256"] = hashlib.sha256(index.read_bytes()).hexdigest()
+    _verify_redetection_checkpoint(spec, tmp_path)
+    (cache / filename).write_bytes(b"changed weights")
+    with pytest.raises(ValueError, match="checkpoint differs"):
+        _verify_redetection_checkpoint(spec, tmp_path)
+    (cache / filename).write_bytes(b"original weights")
+    (metadata / (filename + ".metadata")).write_text("wrong revision\n")
+    with pytest.raises(ValueError, match="revision differs"):
+        _verify_redetection_checkpoint(spec, tmp_path)
+    if size == "8B":
+        index.write_text(json.dumps({"weight_map": {"layer.weight": "missing.safetensors"}}))
+        spec["index_sha256"] = hashlib.sha256(index.read_bytes()).hexdigest()
+        with pytest.raises(ValueError, match="index does not match"):
+            _verify_redetection_checkpoint(spec, tmp_path)
 
 
 @pytest.mark.parametrize("command", ["fixed_main", "online_main", "replicate_main"])

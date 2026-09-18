@@ -7176,6 +7176,8 @@ EXECUTION_FILES = ("qwen.py", "detectors.py", "prc.py", "online_prc.py",
 
 # Completion-only redetection shares this app's image, model loader and batching.
 REDETECT_PROTOCOL = "completion_only_raw_abstain_v1"
+REDETECT_CSV = "outputs/redetection/hoeffding_redetection_results_summary.csv"
+REDETECT_CSV_COLUMNS = FIXED_CSV_COLUMNS[:5] + ["PRC Construction"] + FIXED_CSV_COLUMNS[5:]
 redetect_results = modal.Volume.from_name("prc-completion-only", create_if_missing=False)
 redetect_archive = modal.Volume.from_name("prc-research-archive", create_if_missing=False)
 
@@ -7183,6 +7185,43 @@ redetect_archive = modal.Volume.from_name("prc-research-archive", create_if_miss
 def _redetect_sha(path):
     with open(path, "rb") as handle:
         return hashlib.file_digest(handle, "sha256").hexdigest()
+
+
+def _redetect_model_spec(spec):
+    """Validate pinned single-file or sharded BF16 detector checkpoints."""
+    size = spec["size"]
+    if (size not in ("0.6B", "8B") or spec["id"] != f"Qwen/Qwen3-{size}-Base"
+            or spec["dtype"] != "bfloat16" or spec["cache_directory"] != f"models/Qwen3-{size}-Base"
+            or not re.fullmatch(r"[0-9a-f]{40}", spec["revision"])):
+        raise ValueError("expected a pinned BF16 Qwen3-0.6B-Base or Qwen3-8B-Base detector")
+    weights = ({"model.safetensors": spec["weights_sha256"]} if size == "0.6B" else spec["weight_files"])
+    hashes = [spec["tokenizer_sha256"], *weights.values()]
+    if size == "8B":
+        hashes.append(spec["index_sha256"])
+        if not weights or any(not re.fullmatch(r"model-\d{5}-of-\d{5}\.safetensors", p) for p in weights):
+            raise ValueError("invalid detector weight-shard names")
+    if any(not re.fullmatch(r"[0-9a-f]{64}", digest) for digest in hashes):
+        raise ValueError("detector files require SHA-256 checksums")
+    return weights
+
+
+def _verify_redetection_checkpoint(spec, cache_root="/cache"):
+    from pathlib import Path
+    weights = _redetect_model_spec(spec)
+    cache = Path(cache_root)/spec["cache_directory"]
+    files = {**weights, "tokenizer.json": spec["tokenizer_sha256"]}
+    if spec["size"] == "8B":
+        index = cache/"model.safetensors.index.json"
+        files[index.name] = spec["index_sha256"]
+        if set(json.loads(index.read_text())["weight_map"].values()) != set(weights):
+            raise ValueError("detector index does not match the frozen weight shards")
+    for name, digest in files.items():
+        if _redetect_sha(cache/name) != digest:
+            raise ValueError(f"checkpoint differs from frozen detector manifest: {name}")
+    for name in weights:
+        metadata = cache/".cache/huggingface/download"/(name+".metadata")
+        if metadata.read_text().splitlines()[0] != spec["revision"]:
+            raise ValueError("checkpoint revision differs from frozen detector manifest")
 
 
 def _redetect_write(path, value):
@@ -7388,11 +7427,62 @@ def _score_redetection(prepared, destination):
     counts = {str(n): {w: {s: {"detected": sum(r["scores"][str(n)][w]["decision"] for r in records if r["source"] == s),
                               "count": sum(r["source"] == s for r in records)}
                           for s in ("wm", "null")} for w in case["weights"]} for n in case["lengths"]}
-    report = {"passed": True, "protocol": REDETECT_PROTOCOL, "counts": counts,
+    key = artifact["online_key"] if case["construction"] == "online" else artifact["decoding_key"]
+    settings = ({"eta": key["noise_rate"], "t": key["check_weight"],
+                 "r_setting": f"causal round({key['row_rate_numerator']/key['row_rate_denominator']:g}L), startup-clamped"}
+                if case["construction"] == "online" else
+                {"eta": key[4], "t": key[-1], "n": key[1].shape[1], "r": key[1].shape[0],
+                 "r_setting": f"{key[1].shape[0]}/{key[1].shape[1]}"})
+    report = {"passed": True, "protocol": REDETECT_PROTOCOL, "counts": counts, "settings": settings,
               "trace_shard_sha256": hashes, "records": records}
     _redetect_write(root/"full.json", report)
     _redetect_write(root/"summary.json", {k: v for k, v in report.items() if k != "records"})
     return report
+
+
+def _append_redetection_csv(prepared, report, csv_out):
+    """Append completed results in the Hoeffding CSV format; reruns are idempotent."""
+    import fcntl
+    from pathlib import Path
+    if not report.get("passed") or report.get("protocol") != REDETECT_PROTOCOL:
+        raise ValueError("only completed raw-completion results can enter the CSV")
+    run = prepared["run"]
+    case, settings = run["case"], report["settings"]
+    rows = []
+    for length in case["lengths"]:
+        count = report["counts"][str(length)]
+        info = report["records"][0]["scores"][str(length)][case["weights"][0]]
+        row = {"eta": settings["eta"], "T": length, "n": settings.get("n", length),
+               "r value": settings.get("r", info.get("r")), "t": settings["t"],
+               "r setting": settings["r_setting"],
+               "PRC Construction": "online_causal_prc_v1" if case["construction"] == "online" else "fixed_prc",
+               "Target FPR": f"{case['fpr']:g}", "Entropy Model": run["model"]["id"].split("/")[-1],
+               "Generation Model": case["generation_model"], "Entropy Trace Source": REDETECT_PROTOCOL,
+               "Notes": f"BF16; coordinate 1=0; FPR policy={case['fpr_policy']}; batch={case['batch_size']}; "
+                        f"GPU={run['execution']['gpu']}; commit={run['execution']['git_commit']}; "
+                        f"run={prepared['root']}; report=full.json"}
+        for weight, tpr, fpr in [("map", "Map TPR", "Map FPR"), ("entropy", "Entropy Aware TPR", "Entropy FPR"),
+                                  ("naive", "Naive TPR", "Naive FPR"), ("log", "Log Hoeffding TPR", "Log Hoeffding FPR")]:
+            for source, column in [("wm", tpr), ("null", fpr)]:
+                row[column] = (_format_rate(count[weight][source]["detected"], count[weight][source]["count"])
+                               if weight in count else "skipped")
+        rows.append({k: str(row[k]) for k in REDETECT_CSV_COLUMNS})
+    path = Path(csv_out)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a+", newline="") as handle:
+        fcntl.flock(handle, fcntl.LOCK_EX)
+        handle.seek(0)
+        reader = csv.DictReader(handle)
+        existing = list(reader)
+        if reader.fieldnames and reader.fieldnames != REDETECT_CSV_COLUMNS:
+            raise ValueError("redetection CSV columns differ from the Hoeffding results schema")
+        handle.seek(0, 2)
+        writer = csv.DictWriter(handle, fieldnames=REDETECT_CSV_COLUMNS)
+        if not reader.fieldnames:
+            writer.writeheader()
+        writer.writerows(row for row in rows if row not in existing)
+        handle.flush()
+        os.fsync(handle.fileno())
 
 
 @app.function(cpu=4, memory=8192, timeout=3600,
@@ -7413,7 +7503,8 @@ def finish_redetection(prepared):
 
 
 @app.local_entrypoint()
-def redetect(manifest: str, stage: str = "preflight", gpu: str = "A100-80GB", max_containers: int = 10):
+def redetect(manifest: str, stage: str = "preflight", gpu: str = "A100-80GB", max_containers: int = 10,
+             csv_out: str = REDETECT_CSV):
     """Redetect frozen completions; no text generation or original prompt input."""
     from pathlib import Path
     import subprocess
@@ -7425,8 +7516,7 @@ def redetect(manifest: str, stage: str = "preflight", gpu: str = "A100-80GB", ma
     if content["protocol"] != REDETECT_PROTOCOL or content["schema_version"] != 1 or not content["cases"]:
         raise ValueError("expected a frozen raw-completion manifest")
     spec = content["model"]
-    if (spec["id"], spec["size"], spec["dtype"]) != ("Qwen/Qwen3-0.6B-Base", "0.6B", "bfloat16"):
-        raise ValueError("redetection currently supports BF16 Qwen3-0.6B-Base")
+    _redetect_model_spec(spec)
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     files = EXECUTION_FILES
     for name in files:
@@ -7442,7 +7532,8 @@ def redetect(manifest: str, stage: str = "preflight", gpu: str = "A100-80GB", ma
         if stage == "preflight":
             continue
         worker = RedetectionModel.with_options(
-            **{**model_cls_options(spec["size"], gpu, max_containers), "memory": 8192, "scaledown_window": 2},
+            **{**model_cls_options(spec["size"], gpu, max_containers),
+               "memory": 65536 if spec["size"] == "8B" else 8192, "scaledown_window": 2},
         )(entropy_model_size=spec["size"], generation_model_size=case["generation_model"].removeprefix("Qwen3-").removesuffix("-Base"),
           trace_kv_cache_implementation=case["cache"], completion_model=json.dumps(spec, sort_keys=True))
         # Validate one representative for each actual shape, including a short tail.
@@ -7458,6 +7549,7 @@ def redetect(manifest: str, stage: str = "preflight", gpu: str = "A100-80GB", ma
         result = finish_redetection.remote(prepared)
         for name in ("full.json", "summary.json"):
             (local/case["id"]/name).write_bytes(b"".join(redetect_results.read_file(result["root"]+"/"+name)))
+        _append_redetection_csv(prepared, json.loads((local/case["id"]/"full.json").read_text()), csv_out)
         print(json.dumps(result), flush=True)
 
 
@@ -7497,15 +7589,10 @@ class RedetectionModel:
         os.environ["PRC_MODEL_SIZE"] = self.entropy_model_size
         os.environ["PRC_MODEL_VARIANT"] = "base"
         if self.completion_model:
-            from pathlib import Path
             spec = json.loads(self.completion_model)
-            if (spec["size"], spec["dtype"], spec["cache_directory"]) != ("0.6B", "bfloat16", "models/Qwen3-0.6B-Base"):
-                raise ValueError("unsupported completion-only checkpoint")
-            cache = Path("/cache")/spec["cache_directory"]
-            if (_redetect_sha(cache/"model.safetensors") != spec["weights_sha256"]
-                    or _redetect_sha(cache/"tokenizer.json") != spec["tokenizer_sha256"]
-                    or (cache/".cache/huggingface/download/model.safetensors.metadata").read_text().splitlines()[0] != spec["revision"]):
-                raise ValueError("checkpoint differs from frozen detector manifest")
+            if spec["size"] != self.entropy_model_size:
+                raise ValueError("detector model and frozen manifest disagree")
+            _verify_redetection_checkpoint(spec)
         we = load_watermark_model(self.entropy_model_size)
         self.we = we
         if self.completion_model:
