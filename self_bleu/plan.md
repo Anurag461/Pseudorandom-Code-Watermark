@@ -289,6 +289,21 @@ and independent bootstrap/score verification passed. No retries were needed.
 New worker resource estimate: $0.50548; cumulative planning charge including
 the new $0.50 allowance: **$7.71132**. No broader sweep is dispatched.
 
+**Short-prefix detection completed:** the requested depth-20 generation was
+cancelled before launch and its unfinished runner changes were reverted.
+Instead, the [short-prefix report](../outputs/self_bleu_depth/short_prefixes/REPORT.md)
+scores saved fallback-on depths 2/10/30 at 64/128/256 tokens with the unchanged
+completion-only weighted-normal detector. Depth 2 detects 45/100, 82/100 and
+100/100; depths 10/30 each detect 100/100 at all three lengths. Paired gains over
+depth 2 are +55 pp [45, 65] at 64 and +18 pp [11, 25] at 128, with no observed
+gain of depth 30 over 10. Thus the earlier long-prefix detection saturation hid
+a useful depth-10 versus depth-2 tradeoff. The report retains pilot and historical
+null counts separately, including the observed false positives; no threshold
+calibration or new generation was performed. All 6,300 scores were checked on
+the actual truncated inputs and by an independent score calculation, 1,400
+saved depth-10 scores reproduced, and all 36 bootstrap intervals independently
+verified. Additional Modal cost: $0; cumulative planning charge stays $7.71132.
+
 ## Evidence behind the recommendation
 
 The completed comparison in `controlled_baseline_full_report.md` already uses

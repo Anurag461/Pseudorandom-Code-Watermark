@@ -31,6 +31,15 @@ at both lengths. The report includes direct paired contrasts,
 absolute intervals and verification. Cumulative planning charge: **$7.71132**
 including allowances; the new worker resource estimate was **$0.50548**.
 
+The [short-prefix detection follow-up](../outputs/self_bleu_depth/short_prefixes/REPORT.md)
+scores the saved depths 2/10/30 at 64, 128 and 256 tokens. Depth 2 detects
+45/100, 82/100 and 100/100; depths 10 and 30 detect 100/100 at all three lengths.
+The deeper-minus-depth-2 paired TPR differences are +55 pp [45, 65] at 64 and
++18 pp [11, 25] at 128. The report includes both saved null cohorts and their
+nonzero false-positive counts. All 6,300 scores passed direct-prefix and
+independent score checks. This analysis cost no Modal credit. The proposed
+depth-20 generation was cancelled before launch; its unfinished edits were reverted.
+
 | Files | Responsibility |
 |---|---|
 | `config.py`, `reference.json` | Fixed settings, keys and historical reference identity. |
