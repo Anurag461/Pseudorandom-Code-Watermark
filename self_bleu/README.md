@@ -21,6 +21,16 @@ SynthID, and −.18829 [−.21248, −.16445] versus Gumbel. The report preserve
 distinction between 100 clustered pilot null responses and 500 historical shared
 nulls, including Gumbel's 2/500 historical false positives at 400 tokens.
 
+**SynthID depth follow-up complete:** [depths 2/30 report](../outputs/self_bleu_depth/depth2_30_v1/REPORT.md).
+The 200 new full-length responses retain native fallback, fixed keys, original
+prompts/seeds and completion-only detection. Both depths detect 100/100 at 400
+and 1,024 tokens. Depth 2 has no established Self-BLEU difference from PRC,
+depth 10 or ordinary sampling; depth 30 has higher Self-BLEU than all three at
+both lengths. Both depths have 0/100 pilot and 0/500 historical false positives
+at both lengths. The report includes direct paired contrasts,
+absolute intervals and verification. Cumulative planning charge: **$7.71132**
+including allowances; the new worker resource estimate was **$0.50548**.
+
 | Files | Responsibility |
 |---|---|
 | `config.py`, `reference.json` | Fixed settings, keys and historical reference identity. |
@@ -28,6 +38,7 @@ nulls, including Gumbel's 2/500 historical false positives at 400 tokens.
 | `validation.py`, `validation_modal.py` | Prepare/collect validation locally; explicitly dispatch its GPU stages. |
 | `pilot.py`, `pilot_modal.py` | Prepare, collect and analyze Stage A; dispatch missing detection replay. |
 | `repeat.py`, `repeat_modal.py` | Prepare/analyze repeat-policy contrasts; explicitly dispatch each GPU stage. |
+| `depth.py`, `depth_modal.py` | Run the requested SynthID depths 2/30 with native fallback and compare saved depth-10/PRC/null pairs. |
 
 Local workflows use subcommands, for example `python -m self_bleu.pilot --help`.
 Only the `*_modal.py` entrypoints dispatch GPUs. Saved data stays in the existing
@@ -227,7 +238,8 @@ The [follow-up report](../outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.md)
 records both endpoints, per-response diagnostics, unchanged detector settings,
 and reproducibility. The cumulative planning charge is now **$6.70584 of $10**;
 the follow-ups added $0.46117 in estimated worker resources with no retries.
-All repeat-policy stages are complete; no Stage B or parameter sweep has run.
+All repeat-policy stages were complete at this point. The separately requested
+depths 2/30 follow-up above is now complete; no broader parameter sweep has run.
 
 The [matched-policy repetition analysis](../outputs/self_bleu_repeat/matched_repetition/REPORT.md)
 recomputes the earlier repeated-token-4-gram fraction and distinct-3 metrics

@@ -36,6 +36,9 @@ outputs/self_bleu_pilot/stage_a_v1/
 outputs/self_bleu_repeat/*/raw/
 outputs/self_bleu_repeat/*/*_report.json
 
+# SynthID depth follow-up: remote generation and reproducible CPU score records.
+outputs/self_bleu_depth/*/raw/
+
 # Online prefix-sweep per-prompt manifests (large, reproducible from cache)
 outputs/online_map_sweep_*_sampler-*.json
 outputs/online_map_sweep_*_sampler-*_increments/

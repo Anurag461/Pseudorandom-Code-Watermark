@@ -262,10 +262,32 @@ to repeated three-token contexts within a response; native context initializatio
 is retained (SynthID starts with zeros; TextSeal/Gumbel start from prompt suffixes).
 PRC has no corresponding context-reuse mechanism and is not modified.
 
-After this ablation, reassess whether Stage B is useful. It would prioritize
-TextSeal alpha .5 and SynthID depth 2, with depths 20/30 before frontier claims.
-No Stage B, extra-prompt expansion, Bayesian training or large null campaign
-has been dispatched. The pilot report remains an unchanged historical record.
+**Requested depth follow-up completed:** SynthID depths 2 and 30 with native repeat fallback
+on: 50 prompts × two seeds × two depths, 200 new 1,024-token responses. The
+frozen request is `outputs/self_bleu_depth/depth2_30_v1/manifest.json`. Reuse saved
+depth-10 SynthID, PRC and ordinary-sampling pairs; compare 400/1,024-token
+completion-only detection and Self-BLEU using the same 2,000 paired prompt
+bootstrap draws. Generation and detection both receive the explicit per-depth
+prefix of the predeclared key bank. Rescore existing nulls for each depth.
+The single H100 run has no automatic retries, a 900-second timeout and a total
+planning reservation of $8.37076 including earlier work and a new $0.50 allowance.
+No broader parameter sweep, extra-prompt expansion, Bayesian training or new
+null generation is included. The pilot report remains an unchanged record.
+
+The [depth follow-up report](../outputs/self_bleu_depth/depth2_30_v1/REPORT.md)
+records 100/100 detections at both lengths for depths 2, 10 and 30. Depth 2 has
+no established Self-BLEU difference from PRC, depth 10 or ordinary sampling;
+depth 30 has higher Self-BLEU than each of them at both lengths. At 1,024 tokens,
+PRC-minus-depth-2 Self-BLEU is −.00097 [−.00459, +.00265], while
+PRC-minus-depth-30 is −.01000 [−.01546, −.00506]. PRC remains at 55/100 detection
+at 400 and 97/100 at 1,024, so this does not establish PRC superiority over the
+evaluated SynthID settings. Depth-2/30 false-positive counts are 0/100 pilot and
+0/500 historical nulls at both lengths; these remain separate, limited null
+cohorts rather than matched-FPR calibration. All generation controls passed,
+1,400 saved depth-10 scores and 100 prompt-level Self-BLEU values reproduced,
+and independent bootstrap/score verification passed. No retries were needed.
+New worker resource estimate: $0.50548; cumulative planning charge including
+the new $0.50 allowance: **$7.71132**. No broader sweep is dispatched.
 
 ## Evidence behind the recommendation
 
