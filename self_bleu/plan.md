@@ -226,6 +226,19 @@ See the [follow-up report](../outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.
 for both-policy diagnostics and artifact retrieval. All repeat-policy stages
 are now complete; the optional parameter pilot remains a separate decision.
 
+**Matched-policy repetition analysis:** the earlier repeated-token-4-gram and
+distinct-3 metrics were recomputed locally for all native/modified responses.
+At 1,024 tokens with fallback on for the three contextual baselines, repeated
+4-grams are 2.38% PRC, 2.42% SynthID, 2.74% TextSeal, 2.81% Gumbel and 2.92%
+ordinary sampling. Distinct-3 is respectively 95.61%, 95.54%, 94.64%, 94.56% and
+95.14%. Every paired PRC contrast with those baselines includes zero at both
+primary lengths for both metrics. The prior large within-response repetition
+gap is therefore highly sensitive to repeat policy; it cannot support a PRC
+advantage under matched fallback-on handling on this cohort. See the
+[matched repetition report](../outputs/self_bleu_repeat/matched_repetition/REPORT.md)
+for means, medians, paired intervals and matched-off sensitivity. This reused
+saved tokens, reproduced 1,000 historical metric values and cost no Modal credit.
+
 Keep generation and detector repeat handling separate: the primary contrasts
 change generation only. SynthID retains its context-mask detector; TextSeal and
 Gumbel retain their existing detectors and tuple masks. Reuse existing null

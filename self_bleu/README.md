@@ -220,6 +220,17 @@ and reproducibility. The cumulative planning charge is now **$6.70584 of $10**;
 the follow-ups added $0.46117 in estimated worker resources with no retries.
 All repeat-policy stages are complete; no Stage B or parameter sweep has run.
 
+The [matched-policy repetition analysis](../outputs/self_bleu_repeat/matched_repetition/REPORT.md)
+recomputes the earlier repeated-token-4-gram fraction and distinct-3 metrics
+from saved completions. With fallback on for all contextual baselines, 1,024-token
+repeated-4-gram rates are 2.38% PRC, 2.42% SynthID, 2.74% TextSeal and 2.81%
+Gumbel, versus 2.92% ordinary sampling. The large earlier within-response
+repetition gap shrinks substantially; paired PRC differences for both metrics
+include zero at both lengths. This is distinct from between-response Self-BLEU.
+The report includes paired intervals, on/off sensitivity and supplemental medians.
+The analysis reproduced all 1,000 historical prompt-level metric values and
+incurred no additional Modal cost.
+
 `repeat.py` scopes the policy adapters to a single generation call;
 historical generator code and defaults are unchanged. Setup and CPU analysis
 share that module; explicit GPU stages remain in
