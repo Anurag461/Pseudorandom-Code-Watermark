@@ -5,6 +5,12 @@ responses**, followed by analysis and a stop. Commit and push this setup before
 either Modal stage. No temperature, depth, eta or prompt expansion is authorized
 by this setup. No automatic retries.
 
+Revision `matched_v2` fixes prefix-specific replay diagnostics before any
+generation. `matched_v1` was committed and pushed as `539f3f3`; its H100
+validation passed and cost an estimated $0.15581, with zero generated responses.
+Its immutable manifest/report remain preserved. Version 2 has fresh source pins
+and repeats preflight validation before its sole 500-response generation stage.
+
 ## Frozen settings
 
 | Item | Setting |
@@ -63,6 +69,26 @@ SynthID uses raw completions, its official context mask, explicit depth-specific
 keys, and the existing weighted normal test at nominal p < .001. It does not use
 generation fallback diagnostics as detector evidence.
 
+**Replay diagnostics:** each prefix uses exactly its first `n-1` saved flags,
+probabilities and observed-bucket bits. Position indexing is one-based within
+the completion; coordinate one abstains. Report separately for PRC and matched
+ordinary nulls, for all positions 2–n, early positions 2–64 and later positions
+65–n. Include event counts, evaluated-position denominators, rates with paired
+prompt-bootstrap intervals, and numbers of affected responses. Count:
+
+- The observed token lying outside replay's top-100 set.
+- Contradictory saved bucket endpoints: p1=0 with observed bucket 1, or p1=1
+  with observed bucket 0; retain both directions and overlap with token-support
+  mismatches.
+
+An absent token need not imply its entire bucket has zero probability. Endpoint
+counts refer to the saved FP32 scalar p1, including any numerical rounding to an
+endpoint. Neither diagnostic automatically indicates a generation support
+violation; generation has its own per-token support checks. Preserve every
+token and PRC coordinate. The existing detector clips p1 and assigns magnitude-one
+soft scores to contradictory endpoints; this convention is unchanged and is
+not a posterior justified for an observation assigned zero probability by replay.
+
 ## Preselected probability diagnostic
 
 Use ordinary **saved full-vocabulary** seed-12345 trajectories only as common
@@ -102,7 +128,8 @@ pooled with these. Fifty clustered prompts do not establish a .001 empirical
 FPR; zero-count bootstrap intervals must not be interpreted as zero population
 false-positive probability. Nonprimary intervals are exploratory.
 
-Starting cumulative planning charge is $7.71132. One H100 at a time, 4 CPUs,
+Starting cumulative planning charge is $7.86713, including the completed v1
+validation. One H100 at a time, 4 CPUs,
 64 GiB, timeouts 600 s (validation) and 1,800 s (generation plus replay),
 retries=0, and a $0.50 overhead allowance reserve approximately $3.60 additional
 credit at the frozen planning rate $0.00129148/s. The manifest records the
@@ -128,7 +155,7 @@ MODAL_PROFILE=new-prc-watermark python -m self_bleu.topk collect --stage batch -
 NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 python -m self_bleu.topk analyze
 ```
 
-The immutable manifest lives at `outputs/self_bleu_topk/matched_v1/manifest.json`.
+The immutable manifest lives at `outputs/self_bleu_topk/matched_v2/manifest.json`.
 Its source hashes identify the exact code; `source_parent_commit` identifies the
 prior commit used to prepare it. Raw generation and replay files live in the
 existing Modal volume `prc-completion-only`, under

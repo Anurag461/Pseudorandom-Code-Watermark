@@ -19,13 +19,14 @@ from .pilot import paired_interval
 from .repeat import upstream_hashes
 from .validation import ROOT, RATE, save, sha
 
-SETUP = ROOT/"outputs/self_bleu_topk/matched_v1"
+SETUP = ROOT/"outputs/self_bleu_topk/matched_v2"
 DECODER = dict(top_k=100,temperature=1.,top_p=1.,probability_dtype="float32",
     order="top-100 base logits, then watermark; native fallback uses the same truncated base",
     tie_break="higher logits first; lower token ID at boundary ties",masked_logit=-1e12)
 SETTINGS = {"null":StudySetting("null"),"prc":StudySetting("online_prc",eta=.05),
             **{f"synthid_depth{d}":StudySetting("synthid_text",depth=d) for d in (2,10,30)}}
 TIMEOUTS = {"validate":600,"batch":1800}
+REPLAY_EARLY_END = 64  # One-based completion positions 2..64 versus 65..n.
 
 
 def truncate(logits, k=100):
@@ -239,6 +240,12 @@ def prepare(setup):
     if sha(raw)!=generation["files"][f"batches/{bid}.json"]:raise ValueError("common-history source changed")
     history = json.loads(raw.read_text())
     previous = json.loads((ROOT/"outputs/self_bleu_depth/short_prefixes/summary.json").read_text())["cumulative_planning_charge_usd"]
+    previous_setup = ROOT/"outputs/self_bleu_topk/matched_v1"
+    previous_manifest = json.loads((previous_setup/"manifest.json").read_text())
+    previous_report = json.loads((previous_setup/"validate_report.json").read_text())
+    if not previous_report["passed"] or previous_report["manifest_id"]!=previous_manifest["id"]:
+        raise ValueError("prior validation record differs")
+    previous += previous_report["resource_estimate_usd"]
     names = sorted(set(prior["code_sha256"])|{"self_bleu/topk.py","self_bleu/topk_modal.py"})
     codeword_hashes = {}
     prc_batches = next(r for r in generation["settings"] if r["setting"]["method"]=="online_prc")["batches"]
@@ -255,7 +262,13 @@ def prepare(setup):
         prompt_indices=list(range(50)),prompt_sha256=sha(ROOT/"prompts.jsonl"),seeds=[12345,67890],length=1024,
         primary_length=1024,secondary_lengths=[400],primary_contrast=["prc","synthid_depth2"],
         analysis=dict(bootstrap_seed=20260918,bootstrap_resamples=2000,unit="50 paired prompt clusters",nominal_fpr=.001,
-            metrics=["self_bleu","repeated_4gram_fraction","distinct_3","detection"],pilot_null="matched top-100 ordinary responses only"),
+            metrics=["self_bleu","repeated_4gram_fraction","distinct_3","detection"],pilot_null="matched top-100 ordinary responses only",
+            replay_diagnostics=dict(prefixes=[400,1024],early_end=REPLAY_EARLY_END,position_indexing="one-based completion; position 1 abstains",
+                events=["token outside replay top-100","p1=0 with observed bucket 1 or p1=1 with observed bucket 0"],
+                scoring="diagnostic only; no dropping, reindexing or detector change")),
+        previous_validation=dict(manifest_id=previous_manifest["id"],resource_estimate_usd=previous_report["resource_estimate_usd"],
+            files={str((previous_setup/name).relative_to(ROOT)):sha(previous_setup/name) for name in ("manifest.json","validate_report.json")},
+            disposition="validation completed; no responses generated; superseded for prefix-specific diagnostics"),
         common_histories=dict(prompt_indices=[0,7,19,31,49],positions=[0,32,128,400,1023],
             source_local=str(raw.relative_to(ROOT)),source_sha256=sha(raw),
             source_remote=f"self_bleu_validation/{generation['source_manifest_id']}/batches/{bid}.json",
@@ -294,6 +307,53 @@ def collect(setup,stage,download=False):
 def repetition(tokens):
     def count(n):return len({tuple(tokens[i:i+n]) for i in range(len(tokens)-n+1)})/(len(tokens)-n+1)
     return {"repeated_4gram_fraction":1-count(4),"distinct_3":count(3)}
+
+
+def replay_prefix_diagnostics(probabilities,observed_buckets,outside,n):
+    """Count aligned raw-completion replay events without modifying evidence.
+
+    Array entry j belongs to completion position j+2 (one-based). Endpoints
+    refer to the saved FP32 p1 scalar, including any rounding to 0 or 1.
+    """
+    p,b,o = np.asarray(probabilities),np.asarray(observed_buckets),np.asarray(outside)
+    if (p.ndim!=1 or p.shape!=b.shape or p.shape!=o.shape or not 2<=n<=len(p)+1
+            or not np.isfinite(p).all() or np.any((p<0)|(p>1))
+            or not np.isin(b,[0,1]).all() or not np.isin(o,[False,True]).all()):
+        raise ValueError("replay diagnostics require aligned T-1 probabilities, bits and support flags")
+    zero_one = (p==0)&(b==1);one_zero = (p==1)&(b==0)
+    contradictory = zero_one|one_zero;o=o.astype(bool)
+    events = dict(outside_top100=o,endpoint_contradiction=contradictory,
+        p1_zero_observed_one=zero_one,p1_one_observed_zero=one_zero,
+        outside_and_endpoint=o&contradictory,outside_without_endpoint=o&~contradictory)
+    windows = {"all":(2,n),"early":(2,min(n,REPLAY_EARLY_END))}
+    if n>REPLAY_EARLY_END:windows["later"]=(REPLAY_EARLY_END+1,n)
+    output = {}
+    for name,(a,z) in windows.items():
+        counts = {key:int(flags[a-2:z-1].sum()) for key,flags in events.items()}
+        output[name] = dict(first_position=a,last_position=z,positions=z-a+1,
+            counts=counts,rates={key:value/(z-a+1) for key,value in counts.items()})
+    return output
+
+
+def summarize_replay_diagnostics(score_records,draws):
+    summaries = []
+    for cohort in ("watermarked","pilot_null"):
+        for n in (1024,400):
+            rows = [r for r in score_records if r["setting"]=="prc" and r["cohort"]==cohort and r["length"]==n]
+            if len(rows)!=100 or {(r["prompt_index"],r["response_index"]) for r in rows}!={(i,j) for i in range(50) for j in (0,1)}:
+                raise ValueError("replay diagnostic coverage differs")
+            for window in ("all","early","later"):
+                details = [r["replay_diagnostics"][window] for r in rows]
+                positions = sum(r["positions"] for r in details)
+                metrics = {}
+                for event in details[0]["counts"]:
+                    rates = [np.mean([r["replay_diagnostics"][window]["rates"][event] for r in rows if r["prompt_index"]==i]) for i in range(50)]
+                    metrics[event] = dict(count=sum(r["counts"][event] for r in details),rate=paired_interval(rates,draws),
+                        responses_with_event=sum(r["counts"][event]>0 for r in details))
+                summaries.append(dict(source="prc" if cohort=="watermarked" else "null",length=n,window=window,
+                    first_position=details[0]["first_position"],last_position=details[0]["last_position"],
+                    positions=positions,responses=100,prompts=50,metrics=metrics))
+    return summaries
 
 
 def summarize_metrics(prompt_rows,draws):
@@ -356,8 +416,18 @@ def analyze(setup):
                     source = "prc" if cohort=="watermarked" else "null"
                     replay = json.loads((setup/f"raw/batch/replay/{source}_r{response}.json").read_text())
                     if replay["decoder"]!=DECODER or replay["raw_completion_only"] is not True:raise ValueError("replay protocol differs")
-                    for row in replay["rows"]:
-                        for n in (400,1024):scored.append({**row,"length":n,"score":row["results"][str(n)]})
+                    if not (len(replay["rows"])==len(replay["probabilities_2_to_T"])==len(replay["observed_buckets_2_to_T"])==len(replay["replay_outside_top100"])==50):
+                        raise ValueError("replay diagnostic vectors incomplete")
+                    for j,row in enumerate(replay["rows"]):
+                        if any(len(replay[key][j])!=1023 for key in ("probabilities_2_to_T","observed_buckets_2_to_T","replay_outside_top100")):
+                            raise ValueError("replay must have exactly 1023 aligned positions")
+                        for n in (400,1024):
+                            diagnostic = replay_prefix_diagnostics(replay["probabilities_2_to_T"][j],replay["observed_buckets_2_to_T"][j],replay["replay_outside_top100"][j],n)
+                            if diagnostic!=row["diagnostics_by_prefix"][str(n)]:raise ValueError("saved prefix diagnostics differ")
+                            scored.append({k:row[k] for k in ("response_id","completion_sha256","prompt_index","response_index")}|dict(
+                                length=n,score=row["results"][str(n)],replay_diagnostics=diagnostic,
+                                replay_outside_top100=diagnostic["all"]["counts"]["outside_top100"],
+                                replay_endpoint_contradictions=diagnostic["all"]["counts"]["endpoint_contradiction"]))
             else:scored = score_completions(rows,SETTINGS[setting].depth,[400,1024])
             expected = {r["response_id"]:r for r in rows}
             if len(scored)!=200 or len({(r["response_id"],r["length"]) for r in scored})!=200:raise ValueError("detection coverage differs")
@@ -407,6 +477,7 @@ def analyze(setup):
     resource = validation["resource_estimate_usd"]+report["resource_estimate_usd"]
     summary = dict(manifest_id=manifest["id"],settings=manifest["settings"],decoder=DECODER,results=measured,contrasts=contrasts,
         primary_contrast=next(r for r in contrasts if r["primary"]),null_counts=null_counts,fallback=fallback,common_histories=diagnostic_summary,
+        replay_diagnostics=summarize_replay_diagnostics(score_records,draws),
         bootstrap=dict(resamples=len(draws),seed=manifest["analysis"]["bootstrap_seed"],draws_sha256=digest(draws.tolist()),
             unit="50 paired prompt clusters, retaining both seeds",interval="95% percentile, marginal"),
         bleu_signature=str(bleu.get_signature()),analysis_versions={p:importlib.metadata.version(p) for p in ("torch","numpy","scipy","sacrebleu","tokenizers","synthid-text")},
@@ -420,6 +491,7 @@ def analyze(setup):
             "Pilot nulls are 100 responses clustered in 50 prompts; nominal p<.001 is not a matched empirical FPR.",
             "Boundary bootstrap intervals do not establish zero population false positives or perfect detection.",
             "Self-BLEU measures lexical overlap, not semantic quality. Repetition metrics use raw token IDs.",
+            "Replay support mismatches are not generation top-k violations. Bucket endpoint contradictions use the saved FP32 p1 scalar; the unchanged detector clips endpoints and can return magnitude-one scores, not a posterior justified for a zero-probability observation.",
             "Both diagnostic decoders normalize in FP32; full-vocabulary reference is not the historical BF16 SynthID probability path."])
     save(setup/"summary.json",summary)
     return summary

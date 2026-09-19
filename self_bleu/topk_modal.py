@@ -11,7 +11,7 @@ import time
 import modal
 
 from .config import StudySetting,digest
-from .topk import SETUP,DECODER,SETTINGS,TIMEOUTS,validate_manifest,truncate,partition_probability,completion_trace,generate,semantic_checks
+from .topk import SETUP,DECODER,SETTINGS,TIMEOUTS,validate_manifest,truncate,partition_probability,completion_trace,generate,semantic_checks,replay_prefix_diagnostics
 from .repeat import upstream_hashes
 from .validation import save,sha
 from .validation_modal import generation_image,hf_cache,data_volume,results,checkpoint
@@ -187,6 +187,7 @@ def score_prc(model,artifact,batch,manifest):
     from detectors import prepare_online_map_prefix_context,prepare_online_map_prefix_trace,score_prepared_online_map_prefix,detect_online_hoeffding
     tokens = torch.tensor([r["token_ids"] for r in batch["responses"]],device="cuda",dtype=torch.long)
     trace,outside = replay_checked(model,tokens,artifact["partition"][1].to("cuda"))
+    observed_buckets = artifact["partition"][1][tokens[:,1:].cpu()].to(torch.uint8).tolist()
     context = prepare_online_map_prefix_context(artifact["online_key"],1024)
     rows = []
     for i,row in enumerate(batch["responses"]):
@@ -204,9 +205,10 @@ def score_prc(model,artifact,batch,manifest):
                 if decision!=info["decision"] or any(direct[k]!=info[k] for k in ("V","statistic")):raise ValueError("PRC direct/prepared detector differs")
             scores[str(n)] = info
         rows.append(dict(response_id=row["response_id"],completion_sha256=row["completion_sha256"],prompt_index=row["prompt_index"],
-                         response_index=row["response_index"],results=scores,replay_outside_top100=int(outside[i].sum())))
+                         response_index=row["response_index"],results=scores,
+                         diagnostics_by_prefix={str(n):replay_prefix_diagnostics(p,observed_buckets[i],outside[i].numpy(),n) for n in (400,1024)}))
     return dict(rows=rows,probabilities_2_to_T=trace.tolist(),raw_completion_only=True,decoder=DECODER,
-                replay_outside_top100=outside.tolist())
+                replay_outside_top100=outside.tolist(),observed_buckets_2_to_T=observed_buckets)
 
 
 @app.function(image=generation_image,gpu="H100",cpu=(4,4),memory=(65536,65536),timeout=TIMEOUTS["batch"],

@@ -19,6 +19,11 @@ is committed before GPU validation; successful validation gates generation.
 BF16 model execution is preserved, with common FP32 probability arithmetic
 for all arms and PRC replay. No historical response cache is compatible.
 Stop after this batch; earlier optional sweep proposals do not authorize expansion.
+The active setup is `matched_v2`: it corrects replay mismatch counts to each
+prefix and reports contradictory bucket endpoints separately, with early/later
+positions and PRC/null cohorts separated. Version 1 completed validation only;
+no responses were generated. Neither the detector nor generation probabilities
+changed in this reporting revision.
 
 The [consolidated paired comparison](../outputs/self_bleu_repeat/paired_comparison/REPORT.md)
 combines direct PRC-minus-baseline Self-BLEU intervals, repetition metrics,

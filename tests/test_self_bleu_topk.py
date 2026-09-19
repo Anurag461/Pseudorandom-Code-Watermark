@@ -4,7 +4,8 @@ import pytest
 import torch
 
 from self_bleu.topk import (SETTINGS,truncate,partition_probability,prc_draw,
-    semantic_checks,generate,completion_trace,repetition,summarize_metrics)
+    semantic_checks,generate,completion_trace,repetition,summarize_metrics,
+    replay_prefix_diagnostics,summarize_replay_diagnostics)
 from self_bleu.validation import load_online_sampler,ROOT
 from online_prc import OnlinePRCEncoder,derive_document_seed
 
@@ -111,3 +112,74 @@ def test_repetition_counts_and_paired_covariance_are_preserved():
     primary=next(r for r in contrasts if r["primary"])
     assert primary["metrics"]["self_bleu"]["mean"]==pytest.approx(.01)
     assert primary["metrics"]["self_bleu"]["ci95"]==pytest.approx([.01,.01])
+
+
+def diagnostic_fixture():
+    p=np.full(1023,.25);bits=np.zeros(1023,dtype=np.uint8);outside=np.zeros(1023,dtype=bool)
+    for position in (2,64,65,400,401,1024):outside[position-2]=True
+    for position in (2,401):p[position-2]=0;bits[position-2]=1
+    for position in (64,1024):p[position-2]=1
+    # Consistent endpoints and a rare but possible bucket are not contradictions.
+    p[8]=0;p[9]=1;bits[9]=1;p[10]=1e-8;bits[10]=1
+    return p,bits,outside
+
+
+def test_replay_prefix_boundaries_and_endpoint_cases_preserve_scoring():
+    from detectors import _soft_tokens
+    p,bits,outside=diagnostic_fixture();before=_soft_tokens(np.r_[0,bits],p,"map")
+    short=replay_prefix_diagnostics(p,bits,outside,400)
+    full=replay_prefix_diagnostics(p,bits,outside,1024)
+    assert short["all"]["positions"]==399 and full["all"]["positions"]==1023
+    assert short["all"]["counts"]["outside_top100"]==4
+    assert full["all"]["counts"]["outside_top100"]==6
+    assert short["all"]["counts"]["endpoint_contradiction"]==2
+    assert full["all"]["counts"]["endpoint_contradiction"]==4
+    assert short["early"]["positions"]==63 and short["later"]["positions"]==336
+    assert short["early"]["counts"]["endpoint_contradiction"]==2
+    assert short["later"]["counts"]["endpoint_contradiction"]==0
+    assert full["later"]["counts"]["endpoint_contradiction"]==2
+    assert short["all"]["rates"]["outside_top100"]==4/399
+    assert full["all"]["counts"]["outside_without_endpoint"]==2
+    for window in full.values():
+        assert window["counts"]["endpoint_contradiction"]==window["counts"]["p1_zero_observed_one"]+window["counts"]["p1_one_observed_zero"]
+    np.testing.assert_array_equal(before,_soft_tokens(np.r_[0,bits],p,"map"))
+    assert before[0]==0 and before[1]==-1 and before[63]==1
+    with pytest.raises(ValueError):replay_prefix_diagnostics(p[:-1],bits,outside,400)
+
+
+def test_worker_saves_prefix_diagnostics_and_primary_detector_unchanged(monkeypatch):
+    from self_bleu import topk_modal
+    from detectors import detect_online_hoeffding
+    from self_bleu.config import digest
+    p,bits,outside=diagnostic_fixture();tokens=np.r_[0,bits].tolist()
+    rows=[dict(response_id="fixture",completion_sha256=digest(tokens),prompt_index=0,response_index=0,token_ids=tokens)]
+    tensor=torch.tensor;move=torch.Tensor.to
+    # CPU scoring fixture supplies an already-tested replay trace, no Modal call.
+    monkeypatch.setattr(torch,"tensor",lambda *a,**kw:tensor(*a,**(kw|{"device":"cpu"})))
+    monkeypatch.setattr(torch.Tensor,"to",lambda self,*a,**kw:move(self,*(('cpu',) if a==('cuda',) else a),**kw))
+    monkeypatch.setattr(topk_modal,"replay_checked",lambda *args:(tensor(p[None]),tensor(outside[None])))
+    report=topk_modal.score_prc(None,ARTIFACT,{"responses":rows},{})
+    row=report["rows"][0]
+    assert "replay_outside_top100" not in row  # No ambiguous full-response scalar.
+    assert row["diagnostics_by_prefix"]["400"]["all"]["counts"]["outside_top100"]==4
+    assert row["diagnostics_by_prefix"]["1024"]["all"]["counts"]["outside_top100"]==6
+    for n in (400,1024):
+        decision,direct=detect_online_hoeffding(ARTIFACT["online_key"],tensor(tokens[:n]),p[:n-1],ARTIFACT["partition"],fpr=.001,return_info=True)
+        assert row["results"][str(n)]["decision"]==decision
+        for key in ("V","statistic"):assert row["results"][str(n)][key]==direct[key]
+
+
+def test_replay_summary_separates_prc_and_null_and_uses_prefix_denominators():
+    p,bits,outside=diagnostic_fixture();records=[]
+    for cohort in ("watermarked","pilot_null"):
+        for n in (400,1024):
+            diagnostic=replay_prefix_diagnostics(p,bits,outside if cohort=="watermarked" else np.zeros_like(outside),n)
+            for i in range(50):
+                for response in (0,1):records.append(dict(setting="prc",cohort=cohort,length=n,prompt_index=i,response_index=response,replay_diagnostics=diagnostic))
+    draws=np.random.default_rng(1).integers(0,50,(2000,50))
+    summary=summarize_replay_diagnostics(records,draws)
+    assert len(summary)==12
+    short=next(r for r in summary if (r["source"],r["length"],r["window"])==("prc",400,"all"))
+    assert short["positions"]==39900 and short["metrics"]["outside_top100"]["count"]==400
+    assert short["metrics"]["outside_top100"]["rate"]["mean"]==pytest.approx(4/399)
+    assert all(r["metrics"]["outside_top100"]["count"]==0 for r in summary if r["source"]=="null")

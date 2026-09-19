@@ -10,6 +10,11 @@ passes. Use BF16 model execution and common FP32 probability arithmetic,
 completion-only replay, a predeclared PRC-minus-depth-2 primary Self-BLEU contrast
 at 1,024 tokens, matched pilot nulls and paired prompt intervals. Four-hundred-token
 results are secondary. Starting cumulative planning charge: $7.71132 of $200.
+The revised `matched_v2` adds prefix-specific replay support and contradictory
+bucket-endpoint diagnostics without altering the detector or dropping tokens.
+Report PRC and ordinary nulls separately, including positions 2–64 and 65 onward.
+Version 1 ran validation only ($0.15581); no generation. The updated starting
+charge is $7.86713 and is included in version 2's reservation.
 Stop after this batch. This replaces the older next-step sweep suggestions below;
 the remaining historical plan is retained for provenance.
 
