@@ -2,6 +2,17 @@
 
 Prepared 2026-09-15; revised for `comparison-with-redetect` at `4696382`.
 
+**Current scope (2026-09-18):** completed depth-2/30 and short-prefix results are
+in the README. The next authorized work is the [single matched top-100 batch](topk.md):
+500 new responses across ordinary, PRC eta .05, and native SynthID depths 2/10/30.
+Commit and push setup first, then run validation, then generation only if it
+passes. Use BF16 model execution and common FP32 probability arithmetic,
+completion-only replay, a predeclared PRC-minus-depth-2 primary Self-BLEU contrast
+at 1,024 tokens, matched pilot nulls and paired prompt intervals. Four-hundred-token
+results are secondary. Starting cumulative planning charge: $7.71132 of $200.
+Stop after this batch. This replaces the older next-step sweep suggestions below;
+the remaining historical plan is retained for provenance.
+
 Implementation update (2026-09-18): Self-BLEU workflows now live in the
 `self_bleu/` package, in `validation.py`, `pilot.py`, and `repeat.py`, with
 separate Modal workers and shared configuration/generation modules. See the

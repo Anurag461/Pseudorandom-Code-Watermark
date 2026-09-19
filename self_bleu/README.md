@@ -12,6 +12,14 @@ Stage A and all three repeat-ablation stages of `setup_v4` are complete. See the
 [TextSeal/Gumbel follow-ups](../outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.md).
 All commands below run from the repository root.
 
+**Current authorized run:** the [matched top-100 runbook](topk.md) freezes exactly
+500 new responses: ordinary, PRC eta .05 and native SynthID depths 2/10/30.
+The primary comparison is PRC minus depth-2 Self-BLEU at 1,024 tokens. The setup
+is committed before GPU validation; successful validation gates generation.
+BF16 model execution is preserved, with common FP32 probability arithmetic
+for all arms and PRC replay. No historical response cache is compatible.
+Stop after this batch; earlier optional sweep proposals do not authorize expansion.
+
 The [consolidated paired comparison](../outputs/self_bleu_repeat/paired_comparison/REPORT.md)
 combines direct PRC-minus-baseline Self-BLEU intervals, repetition metrics,
 detection and existing null counts, with native and fallback-on policies shown
