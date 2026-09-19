@@ -36,7 +36,7 @@
     "self_bleu/depth.py": "a5f5aace07250e04cf1b9656ec2ffd63b37e2eef2e700b622750f34dd90814e2",
     "self_bleu/depth_modal.py": "b4c408211929d2241f4b83a69839926f72524779d3f447f0297d87dd251dec43",
     "self_bleu/full_vocab.py": "f8cd3d0dc4636c8611fd337641026f221cb2eed440244f9d938e9efdd675635d",
-    "self_bleu/full_vocab_modal.py": "c0f6ae502e28eb971349d6c64b90a43ec04e32b3b578d024ace6167497e685dd",
+    "self_bleu/full_vocab_modal.py": "f3fb756bfbb789ebf684cc744c6d1fb418b8e6e7f8bb5ee7201582d9f6ad5c3c",
     "self_bleu/generation.py": "afddbe9950f6ea22c5a870262d25c985423755814a44d792ac6e1a602950f101",
     "self_bleu/pilot.py": "cb1e26d55a595b28f1fb6aa54ab648d1f75d45c3abf447669b8cbfa767d7d350",
     "self_bleu/pilot_modal.py": "d52f6e5ac86e1010f6aa9914f958eb01bbbbceb75ede995d5f03f3455d1fb513",
@@ -103,7 +103,7 @@
       "transformers": "4.43.3"
     }
   },
-  "id": "bdfbbc8b22bb5c1a0a9c7172aac74ef5a0dc104aec5ab4e0e12682ffcadbac15",
+  "id": "fa4123aed0f407016d955b92adbe2b141d15a48ebf6ac0ffed9a26c4a3949c84",
   "length": 1024,
   "model": {
     "cache_directory": "models/Qwen3-0.6B-Base",
@@ -388,7 +388,7 @@
       "scoring_method": "v2"
     }
   },
-  "source_parent_commit": "98cb56cf1416c297ff7c233dbfa9dc64e4874a98",
+  "source_parent_commit": "801b9ebfc7a020e152cecfa515b1031526faa971",
   "stop_rule": "Exactly 600 responses, 100 per setting. No additional settings or automatic retries.",
   "test_sha256": "ad7becd0d8e13782e577e2a4e9c2d1d7621436bd68c5348ec60ff860e1d72d20",
   "textseal_runtime": {

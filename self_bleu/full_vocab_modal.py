@@ -18,7 +18,6 @@ from .validation import save,sha
 from .validation_modal import generation_image,detector_image,hf_cache,data_volume,results
 
 app=modal.App("prc-self-bleu-0p6b-full-vocab")
-generation_image=generation_image.env({"PRC_MODEL_SIZE":"0.6B"})
 
 
 def start(manifest,stage):
@@ -50,6 +49,9 @@ def checkpoint(manifest):
 
 
 def load(manifest):
+    # The shared image has live source mounts, so set this at worker startup
+    # rather than adding an image-build layer after those mounts.
+    os.environ["PRC_MODEL_SIZE"]="0.6B"
     import torch
     from safetensors.torch import load_file
     from qwen import Qwen3Model,return_qwen_config,load_weights_into_qwen
