@@ -1,8 +1,9 @@
 # Repeat-handling ablation
 
-Prepared 2026-09-18 on `comparison-with-redetect`. **SynthID-off completed and
-analyzed; TextSeal/Gumbel-on remain unrun.** See the
-[paired results](../outputs/self_bleu_repeat/setup_v4/REPORT.md). This experiment precedes the alpha/depth sweep. It isolates
+Prepared 2026-09-18 on `comparison-with-redetect`. **All three stages completed
+and analyzed.** See the [SynthID results](../outputs/self_bleu_repeat/setup_v4/REPORT.md)
+and [TextSeal/Gumbel follow-ups](../outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.md).
+This experiment precedes the alpha/depth sweep. It isolates
 the effect of generation-time fallback; it does not attribute authors' intent
 or claim that repeat handling explains the observed diversity without data.
 
@@ -100,8 +101,8 @@ The CPU suite exercises native-policy reproduction, actual upstream forced
 repeats, response-local histories, private RNG streams, factory cleanup on
 failure, immutable policy identities, budget rejection and paired contrasts.
 The released TextSeal CPU PRF supports the test's single-row path; its batched
-CUDA helper is tested by the future H100 preflight. CPU checks are not 8B/H100
-validation. The setup's local verification record records the executed checks.
+CUDA helper also passed the completed H100 preflight. CPU checks alone are not
+8B/H100 validation. The setup's verification records describe the executed checks.
 
 ## Run sequence
 
@@ -133,8 +134,10 @@ NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 MODAL_PROFILE=new-prc-watermark \
   --stage synthid --tokenizer /path/to/pinned/tokenizer.json --download
 ```
 
-The follow-up stages below are **unrun**, separate commands, never automatically
-chained. Review the SynthID result before deciding whether to dispatch them:
+The follow-up stages below also **completed** after inspection of the SynthID
+result and user authorization. These are historical dispatch commands; do not
+redispatch completed workers. The final analysis command retrieves and reproduces
+saved results without GPU generation:
 
 ```sh
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m self_bleu.repeat_modal \
@@ -152,6 +155,13 @@ prompt metrics, scores and generation-policy diagnostics in the ignored `raw/`
 directory. Reuse Stage A's restored archive and original generation artifacts.
 The analysis checks their frozen hashes before joining responses.
 
+The completed TextSeal/Gumbel full-trajectory audit is reproduced with
+`PYTHONPATH=. python outputs/self_bleu_repeat/setup_v4/check_followup_trajectories.py`.
+This experiment-specific CPU script leaves the dispatched source bytes unchanged.
+It reconstructs both policies' generation contexts, checks the native prefixes and
+full modified traces, and writes `followup_trajectory.json` and
+`followup_response_diagnostics.json`. It never supplies prompts to detectors.
+
 ## Budget and decisions
 
 One H100, four CPU cores and 64 GiB per worker. Timeout reservations: 600 seconds
@@ -163,11 +173,18 @@ total is **$8.35121 of the initial $10**. This is a conservative planning
 reservation, not new incurred spending or a guaranteed invoice cap. The full
 study ceiling remains $200.
 
-**Current spending estimate after SynthID-off:** 174.895 worker seconds cost
+**Spending estimate after SynthID-off:** 174.895 worker seconds cost
 $0.22587 in estimated resources. Adding the predeclared $0.50 overhead allowance
 to the prior planning charge gives **$6.24467**, leaving **$3.75533** of the initial
-$10. No retries or subsequent GPU stages ran. The timeout reservation above
-describes the original maximum plan, not additional measured spending.
+$10 at that point. The timeout reservation above describes the original maximum
+plan, not additional measured spending.
+
+**Current balance after all stages:** TextSeal/Gumbel generation took 253.377
+seconds ($0.32723 estimated resources), and TextSeal replay took 103.710 seconds
+($0.13394). With no retries, these follow-ups added $0.46117. The cumulative
+planning charge is **$6.70584**, leaving **$3.29416** of the initial $10. The
+existing $0.50 overhead allowance is counted once. These are estimates, not a
+settled invoice; the overall study ceiling remains $200.
 
 If SynthID-off loses diversity, quantify the paired effect and inspect whether
 TextSeal/Gumbel-on recover it without losing useful detection. If it does not,
@@ -181,5 +198,9 @@ Repeated contexts increased substantially, but Self-BLEU changes at 400 and
 1,024 tokens were small and uncertain and TPR stayed 100/100. This does not
 support fallback as the main explanation for SynthID's between-response
 diversity on this cohort. Native fallback-on SynthID remains the main comparison.
-TextSeal/Gumbel-on are the remaining diagnostic stages; no subsequent stage
-has been dispatched.
+The TextSeal/Gumbel-on follow-ups are now complete too. Gumbel Self-BLEU at
+1,024 tokens improved from 1.00000 to .20718; TextSeal rose from .03770 to .04727
+despite substantially fewer within-response repeats. Both retained 100/100
+detections at both primary lengths. All 200 new pairs passed full-trajectory
+checks. Keep both native and modified policies clearly labeled. The next decision
+is the optional parameter pilot; no parameter sweep has been dispatched.

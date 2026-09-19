@@ -1,19 +1,50 @@
 {
+  "followups": {
+    "detector_prefix_results_verified": 600,
+    "raw_data_download_verified": true,
+    "remote_stage_roots": {
+      "other_generators": "self_bleu_repeat/8e762224a9f7d2207e7088a2f41a0a1a93de8012fa4e9b9d83df13a961e7d158/other_generators",
+      "textseal_replay": "self_bleu_repeat/8e762224a9f7d2207e7088a2f41a0a1a93de8012fa4e9b9d83df13a961e7d158/textseal_replay"
+    },
+    "reproduction_commands": [
+      "NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 MODAL_PROFILE=new-prc-watermark python -m self_bleu.repeat analyze --setup outputs/self_bleu_repeat/setup_v4 --stage all --tokenizer outputs/self_bleu_pilot/stage_a_v2/raw/tokenizer.json --download",
+      "NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 PYTHONPATH=. python outputs/self_bleu_repeat/setup_v4/check_followup_trajectories.py"
+    ],
+    "trajectory_pairs_verified": 200
+  },
   "generation_artifacts": "synthid_report.json lists SHA-256 checksums for both full batches and both native-prefix controls; remote filename is report.json",
   "local_record_sha256": {
+    "FOLLOWUP_REPORT.md": "9aaab82ecbfe1e801c1930cd9e8c74256e7959a545aa159fbaa7d3f865c62682",
     "REPORT.md": "f1ebf693122ebc7f2f50a98378467ae7616a3498b67497fc8c577730862e8fea",
+    "all_analysis.json": "56e2f83b69be29b9d5a819246c7684681d0335c1c883609522a9851a67145bbc",
+    "check_followup_trajectories.py": "8cba2f900036e9384d30c43d9a3a3ff7d2624074c74f7fca2f47da93fc6150bb",
+    "followup_execution.json": "d12805e54a2ef303e2286791bf4f387064c1d1809d27079e43a3165e22fb5e45",
+    "followup_inspection.json": "212d15349f5002934cc6c4e0adb83dc5c20e8fb395b3f929fa1910864144fbf9",
+    "followup_preflight.json": "ae7c49097ef6c2cdfbf0876fe5114b6f65cd0f0cad73c107f96bcbe6adb4dfb3",
+    "followup_response_diagnostics.json": "06bfc2daeeba3ac648d810fc8644663b80947efd8a62e53b5c981fa170fa271f",
+    "followup_trajectory.json": "12607436fa93532b50808dd40f7b01e180749e5dfb3eeec1aeab8526177e5705",
     "inspection.json": "1e1da0095634d7d6be4c916c34439b3ec9a90f8493010709975c4f8241630e0c",
     "local_validation.json": "179ef3169230a17e06837657c7d3b79837637d061aaa4206242549136f382c06",
     "manifest.json": "4e8d9a2cab7fbfc9a2495eeb6ac7c39a4ce80641bc8d6e031b42e1f6d1954be3",
+    "other_generators_report.json": "3d1964c810f03f54b969efb2637b23335e421749f263ed011da50edc9e4bade4",
     "synthid_analysis.json": "56573e9d4f2726058e35b6d6a9ab94399fa43cc0fe9b1327f49fad1a640085d7",
     "synthid_execution.json": "4c5b60c751ea1e90d23ad854faa0d549c4e9f44fe8757ced7607765782d4c7fc",
     "synthid_report.json": "edecc91930346784f1a4a382541e06ff07fc8bae59ba352095949433b926d8ed",
     "synthid_response_diagnostics.json": "d8c030936955197e83524804c4041b823fda7d8c5c637271af12dd369f765e27",
-    "synthid_trajectory.json": "fd9b49a2c1abba0232c29fcc4e2af505a27fa423601f798e35614e5a54c80fef"
+    "synthid_trajectory.json": "fd9b49a2c1abba0232c29fcc4e2af505a27fa423601f798e35614e5a54c80fef",
+    "textseal_replay_report.json": "bfb5f36470db53360e57621d45de9a095346f828e8bc855db7a97bd961b9970f"
   },
   "manifest_id": "8e762224a9f7d2207e7088a2f41a0a1a93de8012fa4e9b9d83df13a961e7d158",
   "output_records": {
+    "FOLLOWUP_REPORT.md": "Completed TextSeal/Gumbel primary results, diagnostics, validation and interpretation",
     "REPORT.md": "Readable paired results, repeat/fallback summaries, validation and interpretation",
+    "all_analysis.json": "Combined paired primary contrasts for all three repeat-policy arms",
+    "check_followup_trajectories.py": "Reproducible independent trajectory postprocessing without changing frozen workers",
+    "followup_execution.json": "Follow-up Modal jobs, timings, costs and final status",
+    "followup_inspection.json": "Independent aggregate, detector-input, hash and prior-result verification",
+    "followup_preflight.json": "Source validation, restored CPU runtime and 49 passing local tests",
+    "followup_response_diagnostics.json": "200 TextSeal/Gumbel response pairs with counts and first-event/divergence positions",
+    "followup_trajectory.json": "Both-policy context counts and 200 full-trajectory causal checks",
     "inspection.json": "Independent pair coverage, divergence timing and descriptive repeat-count bootstrap intervals",
     "raw/synthid_trajectory_pairs.json": "All repeat/fallback positions and per-pair causal checks; regenerable from saved generation tokens",
     "synthid_analysis.json": "Paired Self-BLEU and nominal TPR with prompt-bootstrap intervals",
@@ -26,6 +57,6 @@
   "reference_archive_record": "outputs/self_bleu_pilot/stage_a_v2/archive.json",
   "remote_stage_root": "self_bleu_repeat/8e762224a9f7d2207e7088a2f41a0a1a93de8012fa4e9b9d83df13a961e7d158/synthid",
   "reproduction_command": "NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 MODAL_PROFILE=new-prc-watermark python -m self_bleu.repeat analyze --setup outputs/self_bleu_repeat/setup_v4 --stage synthid --tokenizer /path/to/pinned/tokenizer.json --download",
-  "status": "Completed and downloaded; generation artifact checksums verified",
+  "status": "All repeat-policy stages completed; raw generation and detector artifacts downloaded and hash-verified",
   "volume": "prc-completion-only"
 }

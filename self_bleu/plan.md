@@ -12,11 +12,11 @@ immutable. The legacy SynthID scorer now requires explicit keys and derives
 its depth metadata from them, preventing a depth sweep from silently using the
 historical ten-key detector. This does not change the depth-10 pilot findings.
 
-Status: **steps 1–4 and the SynthID-off stage of step 5 complete**.
+Status: **steps 1–5 complete**, including all repeat-policy follow-ups.
 See the [pilot results](../outputs/self_bleu_pilot/stage_a_v2/REPORT.md) and
 [validation report](../outputs/self_bleu_validation/step3-v4/REPORT.md).
 Stage A reused saved pairs and completed missing prompt-free detection.
-The cumulative planning charge is **$6.24467 of the initial $10**.
+The cumulative planning charge is **$6.70584 of the initial $10**.
 PRC's diversity advantage over default SynthID is small and uncertain under
 the evaluated implementations. **Repeat-handling ablation now precedes any
 parameter expansion:** the current SynthID generator falls back to ordinary
@@ -24,8 +24,12 @@ sampling on repeated contexts, while TextSeal and Gumbel do not. The ablation
 runbook is [repeat_handling_ablation.md](repeat_handling_ablation.md).
 The [SynthID-off result](../outputs/self_bleu_repeat/setup_v4/REPORT.md) shows more
 within-response repeats but no clear paired Self-BLEU or TPR degradation.
-Native fallback-on SynthID remains the main comparison. TextSeal/Gumbel-on
-are prepared but unrun; review their value before dispatching the next stage.
+Native fallback-on SynthID remains the main comparison. The completed
+[TextSeal/Gumbel follow-ups](../outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.md)
+show a large Self-BLEU improvement for Gumbel but an increase for TextSeal at
+1,024 tokens, while within-response repeats decrease for both. Detection remained
+100/100 at both primary lengths. The next decision is the optional parameter
+pilot; no broader sweep has been dispatched.
 Total incremental Modal budget: **$200**, including validation, CPU, memory,
 generation, scoring, and retries.
 
@@ -68,7 +72,7 @@ completed default-setting results, including the original shared null cohort.
 4. **Stage A pilot.** Use 50 prompts, two responses, the five default/control
    configurations, and 400/1,024-token evaluation. Reuse compatible redetection
    results; recover only missing evidence for new texts. Initial allocation $10.
-5. **Repeat-handling ablation (SynthID stage complete).** Disable only SynthID's
+5. **Repeat-handling ablation (complete).** Disable only SynthID's
    generation fallback on the same 50 prompts and two seeds at depth 10.
    Inspect that paired result before enabling a per-response
    context fallback for TextSeal .1 and Gumbel. Keep all detector formulas and
@@ -196,8 +200,31 @@ The worker took 174.895 seconds, with $0.22587 estimated resources and no retry.
 Including the predeclared $0.50 overhead allowance, the cumulative planning
 charge is now **$6.24467**, leaving **$3.75533** of the initial $10. This remains
 an estimate with allowances, not a settled Modal invoice. TextSeal/Gumbel-on
-generation and TextSeal replay have not run. Their value should be reviewed
-before dispatch; there is no automatic progression to them or the sweep.
+generation and TextSeal replay were still pending at that point; the following
+result supersedes this stage's balance and status.
+
+**TextSeal/Gumbel follow-ups (complete):** 100 fallback-on responses per method
+and the 100-response direct-prefix TextSeal replay passed. At 1,024 tokens,
+TextSeal Self-BLEU changed from .03770 to .04727 (on minus off +.00957; 95% paired
+interval +.00402 to +.01528), while Gumbel changed from 1.00000 to .20718
+(−.79282; −.81657 to −.76903). At 400 tokens, TextSeal's change was small and
+uncertain (+.00189; −.00273 to +.00675); Gumbel improved to .39375.
+Both policies for both methods detected 100/100 at both endpoints.
+
+Mean repeated contexts at 1,024 fell from 346.71 to 54.86 for TextSeal and
+539.00 to 55.82 for Gumbel. All 200 pairs passed the no-early-divergence and trace
+checks, and all 200 native 64-token controls reproduced the originals. Thus the
+fallback materially changes Gumbel's deterministic diversity point and reduces
+within-response repetition in both methods, but does not improve TextSeal's
+between-response Self-BLEU in this cohort. Preserve and label both policy variants.
+The conclusion about PRC versus native SynthID is unchanged.
+
+The two follow-up workers used $0.46117 in estimated resources without retries.
+The current cumulative planning charge is **$6.70584**, leaving **$3.29416** of
+the initial $10, with the existing repeat-study overhead allowance counted once.
+See the [follow-up report](../outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.md)
+for both-policy diagnostics and artifact retrieval. All repeat-policy stages
+are now complete; the optional parameter pilot remains a separate decision.
 
 Keep generation and detector repeat handling separate: the primary contrasts
 change generation only. SynthID retains its context-mask detector; TextSeal and

@@ -7,9 +7,10 @@ them rather than duplicating their implementations.
 
 Start with the [experiment plan](plan.md) for the rationale and the
 [repeat-handling runbook](repeat_handling_ablation.md) for the current ablation.
-Stage A and the SynthID-off stage of `setup_v4` are complete. See the
-[paired ablation results](../outputs/self_bleu_repeat/setup_v4/REPORT.md).
-TextSeal/Gumbel-on remain unrun. All commands below run from the repository root.
+Stage A and all three repeat-ablation stages of `setup_v4` are complete. See the
+[SynthID results](../outputs/self_bleu_repeat/setup_v4/REPORT.md) and
+[TextSeal/Gumbel follow-ups](../outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.md).
+All commands below run from the repository root.
 
 | Files | Responsibility |
 |---|---|
@@ -183,7 +184,7 @@ runtime versions or results require a separate output location. The pinned
 analysis source and original analysis before a figure-layout repair are retained
 inside the archive. No Stage B generation was launched.
 
-**Repeat-handling ablation: SynthID-off complete.** The pilot used Google's repeated-context
+**Repeat-handling ablation: all stages complete.** The pilot used Google's repeated-context
 generation fallback for SynthID and no corresponding fallback for TextSeal or
 Gumbel. The [runbook](repeat_handling_ablation.md) freezes a generation-only
 ablation before the parameter sweep: SynthID depth 10 with fallback off first,
@@ -201,8 +202,23 @@ this cohort. Native fallback-on SynthID remains the main comparison.
 The [report](../outputs/self_bleu_repeat/setup_v4/REPORT.md) links both-policy
 per-response diagnostics, checksums and retrieval instructions. The cumulative
 planning charge is now **$6.24467 of $10**, including the new $0.22587 measured
-worker estimate and $0.50 overhead allowance. TextSeal/Gumbel-on and Stage B
-have not been dispatched.
+worker estimate and $0.50 overhead allowance. That was the balance after SynthID;
+the completed follow-ups below supersede it.
+
+TextSeal/Gumbel fallback-on added 100 responses each, followed by 100 completion-only
+TextSeal replays. At 1,024 tokens, Gumbel Self-BLEU fell from 1.00000 to .20718
+(paired change −.79282, 95% interval −.81657 to −.76903). TextSeal Self-BLEU rose
+from .03770 to .04727 (+.00957, interval +.00402 to +.01528), despite mean repeated
+contexts falling from 346.71 to 54.86. Gumbel repeats fell from 539.00 to 55.82.
+Both methods still detected 100/100 at 400 and 1,024 tokens. All 200 pairs passed
+full-trajectory and native-prefix checks. These results distinguish repetition
+inside responses from pairwise Self-BLEU diversity.
+
+The [follow-up report](../outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.md)
+records both endpoints, per-response diagnostics, unchanged detector settings,
+and reproducibility. The cumulative planning charge is now **$6.70584 of $10**;
+the follow-ups added $0.46117 in estimated worker resources with no retries.
+All repeat-policy stages are complete; no Stage B or parameter sweep has run.
 
 `repeat.py` scopes the policy adapters to a single generation call;
 historical generator code and defaults are unchanged. Setup and CPU analysis
