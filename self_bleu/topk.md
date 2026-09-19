@@ -1,5 +1,13 @@
 # One matched top-100 batch
 
+**Complete:** [results and diagnostics](../outputs/self_bleu_topk/matched_v2/REPORT.md).
+Exactly 500 responses were generated (the same 50 prompts × two seeds × five
+settings). All validation and analysis checks passed. PRC-minus-depth-2 primary
+Self-BLEU is +.00095 [−.00503, +.00734]; detection is 85/100 versus 100/100.
+No contradictory bucket endpoints or generation support violations occurred.
+Cumulative planning charge is $9.77418 of $200. No additional runs are queued.
+The predeclared protocol below is retained unchanged.
+
 Requested 2026-09-18. This is a separate decoding study with exactly **500 new
 responses**, followed by analysis and a stop. Commit and push this setup before
 either Modal stage. No temperature, depth, eta or prompt expansion is authorized

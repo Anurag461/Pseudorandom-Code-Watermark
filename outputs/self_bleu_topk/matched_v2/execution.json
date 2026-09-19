@@ -1,0 +1,19 @@
+{
+  "additional_generation_queued": false,
+  "automatic_retries": 0,
+  "batch_app": "https://modal.com/apps/new-prc-watermark/main/ap-KFbRmAYF9dReHLoqcgQTop",
+  "common_unique_prompts": 50,
+  "completed": true,
+  "manifest_id": "85a49cb02e1eb7fa919259e5e3b6625e493aa6e3dfb9f00a1a474ca923323cf0",
+  "new_full_responses": 500,
+  "new_tokens_per_response": 1024,
+  "prior_validation_app": "https://modal.com/apps/new-prc-watermark/main/ap-CLzW4WrMbmeU5RuzRfkm1E",
+  "responses_per_setting": 100,
+  "sampling_seeds": [
+    12345,
+    67890
+  ],
+  "settings": 5,
+  "source_commit": "90057f0de43d5c9a7db800d2c4930d1c6f20d424",
+  "validation_app": "https://modal.com/apps/new-prc-watermark/main/ap-qYSkQx47aN7lG7ZwfdGq7F"
+}

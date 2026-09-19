@@ -12,14 +12,31 @@ Stage A and all three repeat-ablation stages of `setup_v4` are complete. See the
 [TextSeal/Gumbel follow-ups](../outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.md).
 All commands below run from the repository root.
 
-**Current authorized run:** the [matched top-100 runbook](topk.md) freezes exactly
+**Matched top-100 batch complete:** the [report](../outputs/self_bleu_topk/matched_v2/REPORT.md)
+contains exactly 500 new responses, from the same 50 prompts and two seeds for
+each of five settings. At 1,024 tokens, PRC-minus-depth-2 Self-BLEU is +.00095
+[−.00503, +.00734], while detection is 85/100 versus 100/100. This does not
+establish a PRC diversity advantage. Depth 30 has higher Self-BLEU than PRC;
+PRC-minus-depth-10 is uncertain. PRC detects 33/100 at 400 tokens, versus 100/100
+for all SynthID depths. Pilot nulls are 0/100 everywhere except depth 10 at
+400 tokens (1/100). All paired PRC-minus-SynthID repetition intervals include zero.
+
+Generation had zero support violations in 512,000 checked tokens. There were
+zero contradictory replay bucket endpoints. At 1,024 tokens, outside-replay-top-100
+rates are .719% PRC and .770% ordinary; early positions have higher rates. The
+report separates all prefix/cohort/window counts and retains the original
+detector. All 34 local tests, CUDA preflight and independent diagnostic/primary
+interval checks passed. Cumulative planning charge: **$9.77418 of $200**.
+The batch is complete; no additional generation is queued.
+
+The [matched top-100 runbook](topk.md) freezes exactly
 500 new responses: ordinary, PRC eta .05 and native SynthID depths 2/10/30.
 The primary comparison is PRC minus depth-2 Self-BLEU at 1,024 tokens. The setup
 is committed before GPU validation; successful validation gates generation.
 BF16 model execution is preserved, with common FP32 probability arithmetic
 for all arms and PRC replay. No historical response cache is compatible.
 Stop after this batch; earlier optional sweep proposals do not authorize expansion.
-The active setup is `matched_v2`: it corrects replay mismatch counts to each
+The completed setup is `matched_v2`: it corrects replay mismatch counts to each
 prefix and reports contradictory bucket endpoints separately, with early/later
 positions and PRC/null cohorts separated. Version 1 completed validation only;
 no responses were generated. Neither the detector nor generation probabilities

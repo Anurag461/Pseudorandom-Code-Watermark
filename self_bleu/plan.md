@@ -2,8 +2,18 @@
 
 Prepared 2026-09-15; revised for `comparison-with-redetect` at `4696382`.
 
-**Current scope (2026-09-18):** completed depth-2/30 and short-prefix results are
-in the README. The next authorized work is the [single matched top-100 batch](topk.md):
+**Current status (2026-09-18):** the [matched top-100 batch is complete](../outputs/self_bleu_topk/matched_v2/REPORT.md).
+The same 50 prompts × two seeds × five settings yielded exactly 500 responses.
+PRC-minus-depth-2 Self-BLEU at 1,024 is +.00095 [−.00503, +.00734], with
+85/100 versus 100/100 detections. No primary PRC diversity advantage is established.
+All generation support checks passed; contradictory replay bucket endpoints
+were zero. Corrected prefix-specific support diagnostics are in the report.
+The cumulative planning charge is $9.77418 of $200. Stop: no further generation
+or sweep is queued. Earlier proposals below remain historical and do not
+authorize additional experiments.
+
+**Frozen scope:** completed depth-2/30 and short-prefix results are in the README.
+The [single matched top-100 batch](topk.md) authorized:
 500 new responses across ordinary, PRC eta .05, and native SynthID depths 2/10/30.
 Commit and push setup first, then run validation, then generation only if it
 passes. Use BF16 model execution and common FP32 probability arithmetic,
