@@ -1,7 +1,8 @@
 # Repeat-handling ablation
 
-Prepared 2026-09-18 on `comparison-with-redetect`. **Setup only: no new GPU job
-has been launched.** This experiment precedes the alpha/depth sweep. It isolates
+Prepared 2026-09-18 on `comparison-with-redetect`. **SynthID-off completed and
+analyzed; TextSeal/Gumbel-on remain unrun.** See the
+[paired results](../outputs/self_bleu_repeat/setup_v4/REPORT.md). This experiment precedes the alpha/depth sweep. It isolates
 the effect of generation-time fallback; it does not attribute authors' intent
 or claim that repeat handling explains the observed diversity without data.
 
@@ -120,7 +121,9 @@ records the current source commit and refuses to overwrite a different request):
 python -m self_bleu.repeat prepare --output outputs/self_bleu_repeat/new-setup
 ```
 
-First paid stage, then inspect its analysis before proceeding:
+The first paid stage below **already completed**. Do not redispatch it; its
+immutable started marker rejects a second run. The analysis command can retrieve
+and reproduce the saved results without GPU generation:
 
 ```sh
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m self_bleu.repeat_modal \
@@ -130,7 +133,8 @@ NUMBA_DISABLE_JIT=1 OMP_NUM_THREADS=1 MODAL_PROFILE=new-prc-watermark \
   --stage synthid --tokenizer /path/to/pinned/tokenizer.json --download
 ```
 
-The follow-up stages are separate commands, never automatically chained:
+The follow-up stages below are **unrun**, separate commands, never automatically
+chained. Review the SynthID result before deciding whether to dispatch them:
 
 ```sh
 MODAL_PROFILE=new-prc-watermark python -m modal run --detach -m self_bleu.repeat_modal \
@@ -159,6 +163,12 @@ total is **$8.35121 of the initial $10**. This is a conservative planning
 reservation, not new incurred spending or a guaranteed invoice cap. The full
 study ceiling remains $200.
 
+**Current spending estimate after SynthID-off:** 174.895 worker seconds cost
+$0.22587 in estimated resources. Adding the predeclared $0.50 overhead allowance
+to the prior planning charge gives **$6.24467**, leaving **$3.75533** of the initial
+$10. No retries or subsequent GPU stages ran. The timeout reservation above
+describes the original maximum plan, not additional measured spending.
+
 If SynthID-off loses diversity, quantify the paired effect and inspect whether
 TextSeal/Gumbel-on recover it without losing useful detection. If it does not,
 the repeat handler is not supported as the main explanation in this cohort.
@@ -166,6 +176,10 @@ Either outcome is useful. Reassess the parameter sweep after the results;
 do not silently replace the original pilot or select the repeat policy that
 makes PRC look best.
 
-Only the SynthID-off stage is authorized for the next run. Inspect its paired
-results before dispatching TextSeal/Gumbel. Either outcome leaves native
-fallback-on SynthID as the main-comparison configuration.
+The authorized SynthID-off stage and its paired inspection are complete.
+Repeated contexts increased substantially, but Self-BLEU changes at 400 and
+1,024 tokens were small and uncertain and TPR stayed 100/100. This does not
+support fallback as the main explanation for SynthID's between-response
+diversity on this cohort. Native fallback-on SynthID remains the main comparison.
+TextSeal/Gumbel-on are the remaining diagnostic stages; no subsequent stage
+has been dispatched.

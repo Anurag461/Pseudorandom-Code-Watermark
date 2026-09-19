@@ -6,9 +6,10 @@ generators, upstream adapters and completion-only detectors remain in
 them rather than duplicating their implementations.
 
 Start with the [experiment plan](plan.md) for the rationale and the
-[repeat-handling runbook](repeat_handling_ablation.md) for the next experiment.
-Stage A is complete. The repeat ablation is prepared as `setup_v4`; no ablation
-GPU stage has run. All commands below run from the repository root.
+[repeat-handling runbook](repeat_handling_ablation.md) for the current ablation.
+Stage A and the SynthID-off stage of `setup_v4` are complete. See the
+[paired ablation results](../outputs/self_bleu_repeat/setup_v4/REPORT.md).
+TextSeal/Gumbel-on remain unrun. All commands below run from the repository root.
 
 | Files | Responsibility |
 |---|---|
@@ -144,9 +145,9 @@ token matches and every saved SynthID official score-update check.
 **Status: Stage A analysis complete.** See the [pilot report](../outputs/self_bleu_pilot/stage_a_v2/REPORT.md).
 PRC preserves ordinary-sampling diversity and detects 97/100 at 1,024 tokens,
 but its Self-BLEU difference from default SynthID is small and uncertain.
-The evidence does not justify immediate expansion to the full sweep. The
-cumulative planning charge, including conservative failure/overhead allowances,
-is $5.51880 of the initial $10; this is not a settled invoice.
+The evidence does not justify immediate expansion to the full sweep. Through
+Stage A, the cumulative planning charge, including conservative failure/overhead
+allowances, was $5.51880 of the initial $10; this is not a settled invoice.
 
 `pilot.py` freezes clean completion-only replay requests from the
 verified pairs and imports 53 compatible TextSeal records. Its two Modal stages
@@ -182,12 +183,26 @@ runtime versions or results require a separate output location. The pinned
 analysis source and original analysis before a figure-layout repair are retained
 inside the archive. No Stage B generation was launched.
 
-**Next setup: repeat-handling ablation.** The pilot used Google's repeated-context
+**Repeat-handling ablation: SynthID-off complete.** The pilot used Google's repeated-context
 generation fallback for SynthID and no corresponding fallback for TextSeal or
 Gumbel. The [runbook](repeat_handling_ablation.md) freezes a generation-only
 ablation before the parameter sweep: SynthID depth 10 with fallback off first,
 then TextSeal alpha .1 and Gumbel with fallback on. Each adds 50 prompts × two
 responses, and the original-policy pairs are reused. PRC is unchanged.
+
+The first stage generated all 100 SynthID-off responses and passed the H100
+forced-repeat checks, both native 64-token prefix controls, and every paired
+full-trajectory check. At 1,024 tokens, mean repeated-context counts rose from
+45.53 to 114.21 per response, but Self-BLEU changed by only −.00067 (95% paired
+interval −.00421 to +.00309), with 100/100 detections under both policies.
+The 400-token difference was also small and uncertain. This does not support
+fallback as the main explanation for SynthID's between-response diversity on
+this cohort. Native fallback-on SynthID remains the main comparison.
+The [report](../outputs/self_bleu_repeat/setup_v4/REPORT.md) links both-policy
+per-response diagnostics, checksums and retrieval instructions. The cumulative
+planning charge is now **$6.24467 of $10**, including the new $0.22587 measured
+worker estimate and $0.50 overhead allowance. TextSeal/Gumbel-on and Stage B
+have not been dispatched.
 
 `repeat.py` scopes the policy adapters to a single generation call;
 historical generator code and defaults are unchanged. Setup and CPU analysis
@@ -209,7 +224,7 @@ layout before this move is at `7d275d710d4c7b473c9bb1304e3c26bc7cac968a`.
 Historical readers verify the recorded source hashes against the original Git
 bytes when files have moved. Workers require matching **current** source files.
 
-The unrun repeat request is now `setup_v4`, with unchanged experimental settings,
+The current repeat request is `setup_v4`, with unchanged experimental settings,
 input data, upstream sources and budget. It adds full-trajectory repeat/fallback
 diagnostics and a no-divergence-before-first-repeat check. Its manifest links to the superseded
 `setup_v3`; earlier setups remain historical records and must not be dispatched

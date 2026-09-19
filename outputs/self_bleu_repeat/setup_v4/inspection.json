@@ -1,0 +1,42 @@
+{
+  "all_divergence_at_or_after_first_repeat": true,
+  "diverged_after_first_repeat": 55,
+  "diverged_at_first_repeat": 45,
+  "divergence_delay_max_tokens": 528,
+  "divergence_delay_median_tokens": 1.0,
+  "manifest_id": "8e762224a9f7d2207e7088a2f41a0a1a93de8012fa4e9b9d83df13a961e7d158",
+  "passed": true,
+  "repeat_count_differences": [
+    {
+      "interpretation": "Additional descriptive diagnostic, paired by prompt; not a predeclared primary endpoint.",
+      "length": 400,
+      "modified_minus_original_repeat_count_per_response": {
+        "ci95": [
+          5.349749999999999,
+          19.1605
+        ],
+        "mean": 11.25
+      }
+    },
+    {
+      "interpretation": "Additional descriptive diagnostic, paired by prompt; not a predeclared primary endpoint.",
+      "length": 1024,
+      "modified_minus_original_repeat_count_per_response": {
+        "ci95": [
+          36.16975,
+          106.2805
+        ],
+        "mean": 68.68
+      }
+    }
+  ],
+  "response_pairs_checked": 100,
+  "same_prompt_and_seed_coverage": true,
+  "sources": {
+    "manifest.json": "4e8d9a2cab7fbfc9a2495eeb6ac7c39a4ce80641bc8d6e031b42e1f6d1954be3",
+    "synthid_analysis.json": "56573e9d4f2726058e35b6d6a9ab94399fa43cc0fe9b1327f49fad1a640085d7",
+    "synthid_report.json": "edecc91930346784f1a4a382541e06ff07fc8bae59ba352095949433b926d8ed",
+    "synthid_response_diagnostics.json": "d8c030936955197e83524804c4041b823fda7d8c5c637271af12dd369f765e27",
+    "synthid_trajectory.json": "fd9b49a2c1abba0232c29fcc4e2af505a27fa423601f798e35614e5a54c80fef"
+  }
+}

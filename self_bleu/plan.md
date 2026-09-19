@@ -6,23 +6,26 @@ Implementation update (2026-09-18): Self-BLEU workflows now live in the
 `self_bleu/` package, in `validation.py`, `pilot.py`, and `repeat.py`, with
 separate Modal workers and shared configuration/generation modules. See the
 [CLI and source-history notes](README.md#source-history-and-immutable-results).
-The unrun repeat request is now `outputs/self_bleu_repeat/setup_v4/manifest.json`;
+The current repeat request is `outputs/self_bleu_repeat/setup_v4/manifest.json`;
 its experimental settings and budget match setup_v2 and setup_v1. Completed results remain
 immutable. The legacy SynthID scorer now requires explicit keys and derives
 its depth metadata from them, preventing a depth sweep from silently using the
 historical ten-key detector. This does not change the depth-10 pilot findings.
 
-Status: **steps 1–4 complete**, including Stage A analysis on 2026-09-18.
+Status: **steps 1–4 and the SynthID-off stage of step 5 complete**.
 See the [pilot results](../outputs/self_bleu_pilot/stage_a_v2/REPORT.md) and
 [validation report](../outputs/self_bleu_validation/step3-v4/REPORT.md).
 Stage A reused saved pairs and completed missing prompt-free detection.
-The cumulative planning charge is **$5.51880 of the initial $10**.
+The cumulative planning charge is **$6.24467 of the initial $10**.
 PRC's diversity advantage over default SynthID is small and uncertain under
 the evaluated implementations. **Repeat-handling ablation now precedes any
 parameter expansion:** the current SynthID generator falls back to ordinary
 sampling on repeated contexts, while TextSeal and Gumbel do not. The ablation
-setup is [repeat_handling_ablation.md](repeat_handling_ablation.md).
-It is prepared locally; no new GPU jobs have been launched.
+runbook is [repeat_handling_ablation.md](repeat_handling_ablation.md).
+The [SynthID-off result](../outputs/self_bleu_repeat/setup_v4/REPORT.md) shows more
+within-response repeats but no clear paired Self-BLEU or TPR degradation.
+Native fallback-on SynthID remains the main comparison. TextSeal/Gumbel-on
+are prepared but unrun; review their value before dispatching the next stage.
 Total incremental Modal budget: **$200**, including validation, CPU, memory,
 generation, scoring, and retries.
 
@@ -65,8 +68,9 @@ completed default-setting results, including the original shared null cohort.
 4. **Stage A pilot.** Use 50 prompts, two responses, the five default/control
    configurations, and 400/1,024-token evaluation. Reuse compatible redetection
    results; recover only missing evidence for new texts. Initial allocation $10.
-5. **Repeat-handling ablation.** First disable only SynthID's generation fallback
-   on the same 50 prompts and two seeds at depth 10. Then enable a per-response
+5. **Repeat-handling ablation (SynthID stage complete).** Disable only SynthID's
+   generation fallback on the same 50 prompts and two seeds at depth 10.
+   Inspect that paired result before enabling a per-response
    context fallback for TextSeal .1 and Gumbel. Keep all detector formulas and
    masks fixed within each method. Preserve PRC's position-based construction.
    Report paired changes and actual fallback/divergence diagnostics.
@@ -163,7 +167,7 @@ charge is **$5.51880**, leaving **$4.48120** of the initial $10. The failed call
 was repaired by passing a tensor to the direct detector; frozen inputs,
 analysis choices and keys were unchanged. No additional generation ran.
 
-**Next experiment (5): repeat handling.** The pilot conclusion is specific to
+**Experiment (5): repeat handling.** The pilot conclusion is specific to
 the evaluated generation policies: native SynthID fallback on, native TextSeal
 and Gumbel fallback off. Test this asymmetry before treating the result as an
 algorithm comparison or deciding on a parameter sweep. The frozen setup adds
@@ -174,6 +178,26 @@ geometry and decoding. A source/runtime check, forced-repeat check and native
 64-token prefix reproduction gate precede each arm. The three stage timeouts
 plus $0.50 extra overhead reserve total $2.83241, bringing the cumulative
 reservation to $8.35121 of $10. This is a reservation, not incurred spending.
+
+**SynthID-off result (2026-09-18):** all 100 full-length responses completed.
+Self-BLEU off minus on was +.00202 at 400 tokens (95% paired interval −.00200
+to +.00649), and −.00067 at 1,024 (−.00421 to +.00309). Both policies detected
+100/100 at both endpoints. All 100 pairs passed the no-divergence-before-first-
+repeat check, with both native-prefix controls and H100 forced-repeat checks
+passing. Mean repeats at 1,024 increased from 45.53 to 114.21 per response;
+fallback counts decreased from 45.53 to zero. Every response encountered a
+repeat under both policies. The ablation supports an effect on within-response
+repetition, but does not support fallback as the main explanation for SynthID's
+between-response Self-BLEU diversity on this cohort. The main comparison keeps
+native SynthID fallback on. See the [complete report](../outputs/self_bleu_repeat/setup_v4/REPORT.md)
+and its per-response diagnostics for first repeat/divergence positions.
+
+The worker took 174.895 seconds, with $0.22587 estimated resources and no retry.
+Including the predeclared $0.50 overhead allowance, the cumulative planning
+charge is now **$6.24467**, leaving **$3.75533** of the initial $10. This remains
+an estimate with allowances, not a settled Modal invoice. TextSeal/Gumbel-on
+generation and TextSeal replay have not run. Their value should be reviewed
+before dispatch; there is no automatic progression to them or the sweep.
 
 Keep generation and detector repeat handling separate: the primary contrasts
 change generation only. SynthID retains its context-mask detector; TextSeal and
