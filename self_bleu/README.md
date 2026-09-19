@@ -1,11 +1,18 @@
 # Detectability versus diversity (Self-BLEU)
 
-**Authorized final sensitivity (2026-09-19):** [8B T=.7 setup](temperature.md).
-Four arms only: ordinary, PRC eta .05, native-fallback SynthID depths 2/10.
-Exactly 400 evaluation responses; 64-token validation batches are separate.
-Preserve original full-vocabulary BF16/FP32 method-specific arithmetic, keys,
-prompts/seeds and completion-only detector. Stop if validation fails. Commit
-and push before the full run; stop after its analysis regardless of outcome.
+**Completed final sensitivity (2026-09-19):** [8B T=.7 results](../outputs/self_bleu_temperature/t07_v1/REPORT.md) · [frozen setup](temperature.md).
+Exactly 400 responses: ordinary, PRC eta .05, native-fallback SynthID depths 2/10;
+50 prompts × two seeds per arm, 1,024 tokens, full vocabulary. The original
+BF16/FP32 arithmetic, fixed keys and completion-only protocol were preserved.
+All 29 local checks and H100 validation passed; setup `24f28c4` was pushed before
+full dispatch. At 1,024 tokens PRC-minus-depth-2 Self-BLEU is **−.01098
+[−.01976, −.00227]**, but detection is **3/100 vs 93/100** (depth 10: 100/100).
+At 400 tokens detection is 1/100 vs 87/100 and 100/100. All new pilot nulls are
+0/100. Thus the favorable lexical-diversity contrast comes with severe PRC
+detection loss; it does not establish an improved overall tradeoff. The report
+includes saved T=1 comparisons, repetition, bootstrap intervals and BF16 endpoint
+diagnostics. Measured worker cost: **$1.00943**; cumulative planning charge with
+allowance: **$12.51222/$200**. **STOP: complete; no further runs are queued.**
 
 
 **Completed 2026-09-19:** [Qwen3-0.6B full-vocabulary results](../outputs/self_bleu_full_vocab/qwen3_0p6b_v1/REPORT.md).

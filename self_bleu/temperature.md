@@ -1,5 +1,10 @@
 # Final temperature sensitivity — setup
 
+**Completed and stopped (2026-09-19).** See the [versioned results](../outputs/self_bleu_temperature/t07_v1/REPORT.md).
+Validation passed, setup commit `24f28c4` was pushed, and exactly 400 full responses
+were generated and analyzed. No additional runs are queued. The protocol below
+is retained as the frozen pre-run specification.
+
 One bounded 8B follow-up: **T=.7**, full vocabulary, top-p 1, no top-k.
 Four arms: ordinary, PRC eta .05, SynthID depth 2, SynthID depth 10.
 The same 50 canonical prompts × seeds 12345 and 67890 = **400 evaluation responses**.
