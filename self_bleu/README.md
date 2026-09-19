@@ -12,6 +12,15 @@ Stage A and all three repeat-ablation stages of `setup_v4` are complete. See the
 [TextSeal/Gumbel follow-ups](../outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.md).
 All commands below run from the repository root.
 
+The [consolidated paired comparison](../outputs/self_bleu_repeat/paired_comparison/REPORT.md)
+combines direct PRC-minus-baseline Self-BLEU intervals, repetition metrics,
+detection and existing null counts, with native and fallback-on policies shown
+separately. At 1,024 tokens with fallback on, the Self-BLEU differences are
+−.02837 [−.03531, −.02201] versus TextSeal, −.00316 [−.00731, +.00102] versus
+SynthID, and −.18829 [−.21248, −.16445] versus Gumbel. The report preserves the
+distinction between 100 clustered pilot null responses and 500 historical shared
+nulls, including Gumbel's 2/500 historical false positives at 400 tokens.
+
 | Files | Responsibility |
 |---|---|
 | `config.py`, `reference.json` | Fixed settings, keys and historical reference identity. |

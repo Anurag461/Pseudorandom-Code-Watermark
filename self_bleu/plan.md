@@ -239,6 +239,21 @@ advantage under matched fallback-on handling on this cohort. See the
 for means, medians, paired intervals and matched-off sensitivity. This reused
 saved tokens, reproduced 1,000 historical metric values and cost no Modal credit.
 
+**Consolidated direct paired contrasts:** the
+[paired comparison report](../outputs/self_bleu_repeat/paired_comparison/REPORT.md)
+now joins Self-BLEU, repetition and detection with the existing null counts.
+Self-BLEU contrasts resample the actual per-prompt PRC-minus-baseline differences;
+they do not subtract separate confidence limits. Both native and fallback-on
+comparisons favor PRC over TextSeal/Gumbel on Self-BLEU at both primary lengths,
+while PRC-minus-SynthID intervals include zero. At 1,024 tokens with fallback on,
+the differences are −.02837 [−.03531, −.02201] against TextSeal and −.18829
+[−.21248, −.16445] against Gumbel. Repetition contrasts under fallback on still
+include zero; PRC's lower TPR and unmatched empirical FPR remain limitations.
+The historical Gumbel null count at 400 is 2/500, correcting earlier prose that
+said all historical counts were zero; pilot SynthID has 1/100 at 400. These
+cohorts overlap in prompts and are retained separately, not pooled. This was
+local analysis of saved outputs with no additional Modal cost.
+
 Keep generation and detector repeat handling separate: the primary contrasts
 change generation only. SynthID retains its context-mask detector; TextSeal and
 Gumbel retain their existing detectors and tuple masks. Reuse existing null
