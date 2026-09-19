@@ -1,5 +1,14 @@
 # Detectability versus diversity (Self-BLEU)
 
+**New authorized run (2026-09-18):** [Qwen3-0.6B full-vocabulary setup](full_vocab.md).
+Six settings, 600 responses total (50 prompts × two seeds each): ordinary,
+PRC eta .05, SynthID depths 2/10, TextSeal alpha .1, and Gumbel-max.
+Repeat fallback is ON for all contextual baselines. Temperature 1, fixed keys,
+1,024-token generation; completion-only evaluation at 400 and 1,024.
+Setup/local validation are in progress; no GPU jobs have launched yet.
+This new request supersedes the earlier stop for this bounded batch only.
+
+
 This package owns the PRC/TextSeal/SynthID/Gumbel-Max diversity study. Shared
 generators, upstream adapters and completion-only detectors remain in
 [`baseline_comparison/`](../baseline_comparison/README.md); the study imports

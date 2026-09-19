@@ -75,3 +75,6 @@ generate_corpus.py
 modal_invert.py                                                                                                  
 phase_f_brute_force_steal.py                                                                                     
 prc_visualizer.jsx
+
+# Full-vocabulary 0.6B study: raw completions/traces stay on the existing Modal volume.
+outputs/self_bleu_full_vocab/*/raw/

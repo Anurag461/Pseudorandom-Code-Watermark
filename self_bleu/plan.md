@@ -1,5 +1,14 @@
 # Detectability versus Self-BLEU: proposed experiment
 
+**New authorized run (2026-09-18):** [Qwen3-0.6B full-vocabulary setup](full_vocab.md).
+Six settings, 600 responses total (50 prompts × two seeds each): ordinary,
+PRC eta .05, SynthID depths 2/10, TextSeal alpha .1, and Gumbel-max.
+Repeat fallback is ON for all contextual baselines. Temperature 1, fixed keys,
+1,024-token generation; completion-only evaluation at 400 and 1,024.
+Setup/local validation are in progress; no GPU jobs have launched yet.
+This new request supersedes the earlier stop for this bounded batch only.
+
+
 Prepared 2026-09-15; revised for `comparison-with-redetect` at `4696382`.
 
 **Current status (2026-09-18):** the [matched top-100 batch is complete](../outputs/self_bleu_topk/matched_v2/REPORT.md).
