@@ -1,5 +1,13 @@
 # Detectability versus diversity (Self-BLEU)
 
+**Authorized final sensitivity (2026-09-19):** [8B T=.7 setup](temperature.md).
+Four arms only: ordinary, PRC eta .05, native-fallback SynthID depths 2/10.
+Exactly 400 evaluation responses; 64-token validation batches are separate.
+Preserve original full-vocabulary BF16/FP32 method-specific arithmetic, keys,
+prompts/seeds and completion-only detector. Stop if validation fails. Commit
+and push before the full run; stop after its analysis regardless of outcome.
+
+
 **Completed 2026-09-19:** [Qwen3-0.6B full-vocabulary results](../outputs/self_bleu_full_vocab/qwen3_0p6b_v1/REPORT.md).
 Six settings, 600 responses total (50 prompts × two seeds each): ordinary,
 PRC eta .05, SynthID depths 2/10, TextSeal alpha .1, and Gumbel-max.
