@@ -1,6 +1,8 @@
 # Redetection results
 
-Updated September 17, 2026. This folder collects all completed redetection settings and their earlier diagnostics from this work.
+Updated September 19, 2026. This folder collects all completed redetection settings and their earlier diagnostics from this work.
+
+The remaining **18 main fixed-PRC 0.6B → 0.6B single-block settings and two seed replicates are complete**. Eta=.20, n8192 remains deferred. Across the 18 main settings, mean TPR changes are −1.62 percentage points for posterior weighting and −1.00 for entropy weighting. The [full result table](../fixed_0p6b_redetect_setup/RESULTS.md) gives all old/new TPRs, false-positive counts, hardware choices and cache verification. These 20 settings are included in the CSV and JSON indexes below; the following table preserves the six earlier settings.
 
 The current protocol uses BF16 Qwen3-Base detectors (0.6B and 8B), raw completion tokens with no prepended special token, and coordinate 1 score zero. Original candidates, keys, partitions, PRC indices and threshold formula are preserved. Every setting has 500 watermarked and 500 null candidates; t=3 and target FPR=0.001.
 
@@ -21,7 +23,7 @@ The current protocol uses BF16 Qwen3-Base detectors (0.6B and 8B), raw completio
 
 The prompted controls for the 0.6B detector settings had 0/500 false positives. The n=640 prompted columns use the matched-execution BF16 control (76.4% / 64.2%); the historical saved values were 76.2% / 64.0%. The n=400 and n=448 constructions are fixed-block PRC; n=640, n=1024, n=1280 and n=3104 use online PRC.
 
-The largest observed reduction is at 8B → 0.6B, n=640: 3.6 points for posterior mean and 4.2 for entropy weighting. At n=3104, the corresponding reductions are 1.2 and 0.4 points. These results cover six settings; other paper settings have not yet been redetected under this protocol.
+The largest observed reduction is at 8B → 0.6B, n=640: 3.6 points for posterior mean and 4.2 for entropy weighting. At n=3104, the corresponding reductions are 1.2 and 0.4 points. This earlier table covers six settings; the linked single-block report adds 20 completed settings, including two seed replicates.
 
 Earlier EOT and coordinate-1 diagnostics (posterior mean; all false positives are 0/500):
 

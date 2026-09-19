@@ -1,0 +1,794 @@
+{
+  "as_of": "2026-09-19",
+  "status": "completed",
+  "protocol": "completion_only_raw_abstain_v1",
+  "deferred": [
+    {
+      "eta": 0.2,
+      "n": 8192,
+      "reason": "user deferred on 2026-09-19"
+    }
+  ],
+  "settings": [
+    {
+      "id": "fixed_0p6b_eta005_n256",
+      "group": "main",
+      "n": 256,
+      "eta": 0.05,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/ee9a3eba4ec1f197fe0600ec",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n256/088ea0b006405e3309986d4a/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta005_n256/full.json",
+      "result_sha256": "6a26356b987e6cf42689d96605bcf6530a5cde8d4ee07f07a4ad3e1ef77dce9a",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 255000,
+      "detectors": {
+        "map": {
+          "old_wm": 334,
+          "wm": 312,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -4.4
+        },
+        "entropy": {
+          "old_wm": 237,
+          "wm": 219,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -3.6
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 4994334720,
+      "peak_reserved_bytes": 5020581888,
+      "gpu_method_seconds": 103.05308598399999
+    },
+    {
+      "id": "fixed_0p6b_eta005_n416",
+      "group": "main",
+      "n": 416,
+      "eta": 0.05,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/f9827a8cc9d3501b8a13b17e",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n416/63aa8690b49c05d251fb54f4/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta005_n416/full.json",
+      "result_sha256": "5cf82d37d36e15737e80b8fae125ac1958e0537941672bbddee587f9a54e6741",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 415000,
+      "detectors": {
+        "map": {
+          "old_wm": 456,
+          "wm": 441,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -3.0
+        },
+        "entropy": {
+          "old_wm": 384,
+          "wm": 368,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -3.2
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 6829598720,
+      "peak_reserved_bytes": 6845104128,
+      "gpu_method_seconds": 205.81049849000001
+    },
+    {
+      "id": "fixed_0p6b_eta005_n512",
+      "group": "main",
+      "n": 512,
+      "eta": 0.05,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/72585f241bc0f4cfc1b2c092",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n512/2ce4e3718a73c961ff1e542f/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta005_n512/full.json",
+      "result_sha256": "71b7fd9cf7ed32874f30570dcb107664d263b113c1b2be417a6c9081df97b7f7",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 511000,
+      "detectors": {
+        "map": {
+          "old_wm": 479,
+          "wm": 472,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -1.4
+        },
+        "entropy": {
+          "old_wm": 423,
+          "wm": 421,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -0.4
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 7930757120,
+      "peak_reserved_bytes": 7956594688,
+      "gpu_method_seconds": 273.7779163860001
+    },
+    {
+      "id": "fixed_0p6b_eta005_n1024",
+      "group": "main",
+      "n": 1024,
+      "eta": 0.05,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/55deff00968e8a1c6ac6213d",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n1024/5b4677c5697162177f8b3740/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta005_n1024/full.json",
+      "result_sha256": "e691b7ca562e415dcd1d414f5a1aea62d1a375946e1a15686d5fcc488dcab87e",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 1023000,
+      "detectors": {
+        "map": {
+          "old_wm": 496,
+          "wm": 495,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -0.2
+        },
+        "entropy": {
+          "old_wm": 490,
+          "wm": 489,
+          "old_null": 1,
+          "null": 1,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -0.2
+        }
+      },
+      "batches": 8,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 17010068992,
+      "peak_reserved_bytes": 17081303040,
+      "gpu_method_seconds": 503.76533202800005
+    },
+    {
+      "id": "fixed_0p6b_eta005_n2048",
+      "group": "main",
+      "n": 2048,
+      "eta": 0.05,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/26edf5193e6061745ea46c9e",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n2048/70446f013cd2ca6ce5ccd6e1/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta005_n2048/full.json",
+      "result_sha256": "c231d4a5faba15395d1983d79fa92e49bea450a870751f790078f6563157fda3",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 2047000,
+      "detectors": {
+        "map": {
+          "old_wm": 498,
+          "wm": 498,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": 0.0
+        },
+        "entropy": {
+          "old_wm": 497,
+          "wm": 497,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": 0.0
+        }
+      },
+      "batches": 8,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 32752030208,
+      "peak_reserved_bytes": 32996589568,
+      "gpu_method_seconds": 1730.008787297
+    },
+    {
+      "id": "fixed_0p6b_eta010_n256",
+      "group": "main",
+      "n": 256,
+      "eta": 0.1,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/65150c8d400d82e5bbd80a5d",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta010_n256/555846d831adeadb435d208f/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta010_n256/full.json",
+      "result_sha256": "8b068d8c9375fafee70846eab168cd0db793d77e3a777a3f4f8868b4270edeab",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 255000,
+      "detectors": {
+        "map": {
+          "old_wm": 151,
+          "wm": 135,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -3.2
+        },
+        "entropy": {
+          "old_wm": 99,
+          "wm": 94,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -1.0
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 4994334720,
+      "peak_reserved_bytes": 5020581888,
+      "gpu_method_seconds": 94.85588681299998
+    },
+    {
+      "id": "fixed_0p6b_eta010_n400",
+      "group": "main",
+      "n": 400,
+      "eta": 0.1,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/5f593e793ca390fc4c26b3a5",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta010_n400/49c02a9b682856650ef8434c/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta010_n400/full.json",
+      "result_sha256": "cefc36bf422eec474815938872f50adee31a557697c5baaf1e78718c0b233fc0",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 399000,
+      "detectors": {
+        "map": {
+          "old_wm": 276,
+          "wm": 247,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -5.8
+        },
+        "entropy": {
+          "old_wm": 192,
+          "wm": 184,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -1.6
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 6646072320,
+      "peak_reserved_bytes": 6677331968,
+      "gpu_method_seconds": 186.31363215099998
+    },
+    {
+      "id": "fixed_0p6b_eta010_n512",
+      "group": "main",
+      "n": 512,
+      "eta": 0.1,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/03b3c9dbb5a7c8b26273b5f0",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta010_n512/c757f2caf8974196932a58e3/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta010_n512/full.json",
+      "result_sha256": "7f4522478bf33d58ed272fb293e5969df8e6e76e1b13a9b32056d196d2175d94",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 511000,
+      "detectors": {
+        "map": {
+          "old_wm": 341,
+          "wm": 335,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -1.2
+        },
+        "entropy": {
+          "old_wm": 251,
+          "wm": 247,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -0.8
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 7930757120,
+      "peak_reserved_bytes": 7956594688,
+      "gpu_method_seconds": 270.50537637
+    },
+    {
+      "id": "fixed_0p6b_eta010_n768",
+      "group": "main",
+      "n": 768,
+      "eta": 0.1,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/ff4048f366d743b14c75d446",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta010_n768/d3d3caada62775866d971146/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta010_n768/full.json",
+      "result_sha256": "3f04b807af1cbf449529225ddce8c2c60984a6e0c678336cb9647bd4ff23d5f2",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 767000,
+      "detectors": {
+        "map": {
+          "old_wm": 458,
+          "wm": 448,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -2.0
+        },
+        "entropy": {
+          "old_wm": 395,
+          "wm": 385,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -2.0
+        }
+      },
+      "batches": 8,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 13272921600,
+      "peak_reserved_bytes": 13306429440,
+      "gpu_method_seconds": 333.77526150599994
+    },
+    {
+      "id": "fixed_0p6b_eta010_n1024",
+      "group": "main",
+      "n": 1024,
+      "eta": 0.1,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/1c593a51d22e269031a2477b",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta010_n1024/ec13e0f0b6a08242acbbbe92/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta010_n1024/full.json",
+      "result_sha256": "71bde71885575fadd7347381361d8d6613d1177f5bcd049d50cb21e8b8585228",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 1023000,
+      "detectors": {
+        "map": {
+          "old_wm": 481,
+          "wm": 476,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -1.0
+        },
+        "entropy": {
+          "old_wm": 448,
+          "wm": 446,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -0.4
+        }
+      },
+      "batches": 8,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 17010068992,
+      "peak_reserved_bytes": 17081303040,
+      "gpu_method_seconds": 508.742102532
+    },
+    {
+      "id": "fixed_0p6b_eta015_n256",
+      "group": "main",
+      "n": 256,
+      "eta": 0.15,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/17cee94b237e8fd8f9467eac",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n256/ed75b870b5de04141773675d/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta015_n256/full.json",
+      "result_sha256": "2ec4a781cde0b6c9b6fbbab3b894ac6c8c38170698550e3bd19d67dd6ab32843",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 255000,
+      "detectors": {
+        "map": {
+          "old_wm": 50,
+          "wm": 47,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -0.6
+        },
+        "entropy": {
+          "old_wm": 42,
+          "wm": 37,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -1.0
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 4994334720,
+      "peak_reserved_bytes": 5020581888,
+      "gpu_method_seconds": 108.579152588
+    },
+    {
+      "id": "fixed_0p6b_eta015_n400",
+      "group": "main",
+      "n": 400,
+      "eta": 0.15,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/0f46e12aff1fecf2147659b8",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n400/50f8a9a01c16d57ed74d5c3e/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta015_n400/full.json",
+      "result_sha256": "fe773a57bd23e3a7a62dda7260f25dbd13828e62a74f2fd2eef257312e53fecd",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 399000,
+      "detectors": {
+        "map": {
+          "old_wm": 94,
+          "wm": 88,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -1.2
+        },
+        "entropy": {
+          "old_wm": 49,
+          "wm": 49,
+          "old_null": 1,
+          "null": 1,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": 0.0
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 6646072320,
+      "peak_reserved_bytes": 6677331968,
+      "gpu_method_seconds": 197.58736712099997
+    },
+    {
+      "id": "fixed_0p6b_eta015_n512",
+      "group": "main",
+      "n": 512,
+      "eta": 0.15,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/4abea76949f58a98644e215e",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n512/1a5176d87244a6043a07285f/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta015_n512/full.json",
+      "result_sha256": "8aafb7074752a0e8b576b76dfb98ec0bb62d25d7a8254de4b25d7e47ceeb33f6",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 511000,
+      "detectors": {
+        "map": {
+          "old_wm": 160,
+          "wm": 148,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -2.4
+        },
+        "entropy": {
+          "old_wm": 112,
+          "wm": 110,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -0.4
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 7930757120,
+      "peak_reserved_bytes": 7956594688,
+      "gpu_method_seconds": 271.947037123
+    },
+    {
+      "id": "fixed_0p6b_eta015_n1024",
+      "group": "main",
+      "n": 1024,
+      "eta": 0.15,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/f79139b4509d956cbf385dd1",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n1024/b5134d8cf736fb01cf463af9/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta015_n1024/full.json",
+      "result_sha256": "dd13e25808246d55d0255ab0933f0b0587ac0ef34ccde7137e9d3f2c381c5fe4",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 1023000,
+      "detectors": {
+        "map": {
+          "old_wm": 385,
+          "wm": 373,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -2.4
+        },
+        "entropy": {
+          "old_wm": 309,
+          "wm": 304,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -1.0
+        }
+      },
+      "batches": 8,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 17010068992,
+      "peak_reserved_bytes": 17081303040,
+      "gpu_method_seconds": 522.5970213960001
+    },
+    {
+      "id": "fixed_0p6b_eta015_n1504",
+      "group": "main",
+      "n": 1504,
+      "eta": 0.15,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/8f73908289279692c83162d3",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n1504/e39057d0c9d693f30a498574/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta015_n1504/full.json",
+      "result_sha256": "944acee68f6ac7a5c52ba0e2ceb553c7ef18501a7f9a1260593298a3a3fbe96c",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 1503000,
+      "detectors": {
+        "map": {
+          "old_wm": 455,
+          "wm": 455,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": 0.0
+        },
+        "entropy": {
+          "old_wm": 424,
+          "wm": 417,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -1.4
+        }
+      },
+      "batches": 8,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 24389113856,
+      "peak_reserved_bytes": 24649924608,
+      "gpu_method_seconds": 1003.6513576
+    },
+    {
+      "id": "fixed_0p6b_eta015_n2048",
+      "group": "main",
+      "n": 2048,
+      "eta": 0.15,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/35c77b8597ae7f8cc90e2f6b",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n2048/d2107e5d6135df44105f13f8/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta015_n2048/full.json",
+      "result_sha256": "f2d8b811940c1c442bcaca80f99648566b5453ddb4cdb28eb668d4bb6bca18ea",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 2047000,
+      "detectors": {
+        "map": {
+          "old_wm": 487,
+          "wm": 488,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": 0.2
+        },
+        "entropy": {
+          "old_wm": 476,
+          "wm": 476,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": 0.0
+        }
+      },
+      "batches": 8,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 32752030208,
+      "peak_reserved_bytes": 32996589568,
+      "gpu_method_seconds": 1750.071446328
+    },
+    {
+      "id": "fixed_0p6b_eta020_n2048",
+      "group": "main",
+      "n": 2048,
+      "eta": 0.2,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/060095c0af4fac4cfc9cae17",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta020_n2048/2eb53d1b4025db122925ec68/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta020_n2048/full.json",
+      "result_sha256": "63c05d0994e92d7efbbce0bc9dcfe1e3381d933df46deb814800718ded0b251f",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 2047000,
+      "detectors": {
+        "map": {
+          "old_wm": 364,
+          "wm": 361,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -0.6
+        },
+        "entropy": {
+          "old_wm": 301,
+          "wm": 297,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -0.8
+        }
+      },
+      "batches": 8,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 32752030208,
+      "peak_reserved_bytes": 32996589568,
+      "gpu_method_seconds": 1743.484208102
+    },
+    {
+      "id": "fixed_0p6b_eta020_n4096",
+      "group": "main",
+      "n": 4096,
+      "eta": 0.2,
+      "gpu": "A100-80GB",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/7f27b4cc6f12b39b35f6ac0a",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta020_n4096/26049041cda277a35b7fe836/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta020_n4096/full.json",
+      "result_sha256": "948875fc433d52913bc7b4c372919ceb359a94b9e3a031ced3ad65d6569d0241",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 4095000,
+      "detectors": {
+        "map": {
+          "old_wm": 484,
+          "wm": 484,
+          "old_null": 1,
+          "null": 1,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": 0.0
+        },
+        "entropy": {
+          "old_wm": 476,
+          "wm": 475,
+          "old_null": 1,
+          "null": 1,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -0.2
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 51637611520,
+      "peak_reserved_bytes": 51891929088,
+      "gpu_method_seconds": 6560.256432719
+    },
+    {
+      "id": "fixed_0p6b_eta005_n256_seed54321",
+      "group": "replicates",
+      "n": 256,
+      "eta": 0.05,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/8de0404063bd16fd26ed466a",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n256_seed54321/42c0aa663f0c599d8f7dad99/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/c5ae3ee871408926474d5963/fixed_0p6b_eta005_n256_seed54321/full.json",
+      "result_sha256": "df91c4c2ff1b161ccb4e1efa38297beaefe695c30498e3c697992f00cc5130d5",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 255000,
+      "detectors": {
+        "map": {
+          "old_wm": 339,
+          "wm": 317,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -4.4
+        },
+        "entropy": {
+          "old_wm": 237,
+          "wm": 224,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -2.6
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 4994334720,
+      "peak_reserved_bytes": 5020581888,
+      "gpu_method_seconds": 94.76104122999998
+    },
+    {
+      "id": "fixed_0p6b_eta005_n256_seed67890",
+      "group": "replicates",
+      "n": 256,
+      "eta": 0.05,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "remote_root": "completion_only_raw_abstain_v1/integrated/86f8d0b4824e9fef7c09e669",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n256_seed67890/008be3be2c19dcde8cb18968/setup.json",
+      "local_result_file": "outputs/redetection/.archive/runs/c5ae3ee871408926474d5963/fixed_0p6b_eta005_n256_seed67890/full.json",
+      "result_sha256": "10a91eb5de87d39888b5944a71032ea7986bffba4be23a1eb759aabc52891d9c",
+      "execution_commit": "23b8f280380c24a7e8899313874de70d544afc50",
+      "probabilities": 255000,
+      "detectors": {
+        "map": {
+          "old_wm": 317,
+          "wm": 285,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -6.4
+        },
+        "entropy": {
+          "old_wm": 226,
+          "wm": 209,
+          "old_null": 0,
+          "null": 0,
+          "wm_count": 500,
+          "null_count": 500,
+          "change_pp": -3.4
+        }
+      },
+      "batches": 10,
+      "full_validation_batches": 1,
+      "peak_allocated_bytes": 4994334720,
+      "peak_reserved_bytes": 5020581888,
+      "gpu_method_seconds": 95.88829208199999
+    }
+  ]
+}
