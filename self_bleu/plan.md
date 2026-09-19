@@ -1,12 +1,20 @@
 # Detectability versus Self-BLEU: proposed experiment
 
-**New authorized run (2026-09-18):** [Qwen3-0.6B full-vocabulary setup](full_vocab.md).
+**Completed 2026-09-19:** [Qwen3-0.6B full-vocabulary results](../outputs/self_bleu_full_vocab/qwen3_0p6b_v1/REPORT.md).
 Six settings, 600 responses total (50 prompts × two seeds each): ordinary,
 PRC eta .05, SynthID depths 2/10, TextSeal alpha .1, and Gumbel-max.
 Repeat fallback is ON for all contextual baselines. Temperature 1, fixed keys,
 1,024-token generation; completion-only evaluation at 400 and 1,024.
-Setup/local validation are in progress; no GPU jobs have launched yet.
-This new request supersedes the earlier stop for this bounded batch only.
+All 600 responses and completion-only detection are complete. At 1,024 tokens,
+PRC-minus-depth-2 Self-BLEU is +.00051 [−.00141, +.00248]: no PRC advantage is
+established over either SynthID depth. PRC has lower Self-BLEU than TextSeal
+and Gumbel with fallback enabled. Detection is 99/100 PRC versus 100/100 for
+every baseline; at 400 tokens it is 79/100 versus 100/100. All matched pilot
+null counts are 0/100. The 44 local checks, both GPU preflights, 400 reconstructed
+repeat trajectories and independent paired-interval checks passed. No support
+violations or contradictory replay bucket endpoints occurred. New worker
+resource estimate: $0.72862; cumulative planning charge including allowance:
+**$11.00279 of $200**. Stop: no further generation is queued.
 
 
 Prepared 2026-09-15; revised for `comparison-with-redetect` at `4696382`.

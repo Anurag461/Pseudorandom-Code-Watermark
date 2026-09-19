@@ -1,5 +1,10 @@
 # Qwen3-0.6B full-vocabulary comparison
 
+**Complete 2026-09-19:** [results](../outputs/self_bleu_full_vocab/qwen3_0p6b_v1/REPORT.md).
+Exactly 600 responses; all validation/analysis checks passed. New worker resource
+estimate $0.72862; cumulative planning charge $11.00279 of $200. No additional
+generation is queued. The frozen protocol follows.
+
 Authorized scope: **600 responses**, six settings × 50 canonical prompts × seeds
 12345 and 67890. Ordinary sampling; PRC eta .05; SynthID depths 2 and 10;
 TextSeal alpha .1; Gumbel-max. **Repeat fallback is ON for every contextual
