@@ -1,5 +1,7 @@
 # Completion-only baseline comparison
 
+**Final comparison package:** [consolidated report](../reports/comparisons/REPORT.md) and [paper assets](../reports/comparisons/README.md). The 500-prompt results here are a separate cohort from the paired Self-BLEU experiments. Historical prompted/proxy score panels are superseded for paper detection; see the report for scope and corrected null counts.
+
 The shared historical runner is `comparison_runner.py` (formerly
 `smoke_runner.py`). It served the full comparison as well as smoke runs.
 Its native and proxy TextSeal paths that consumed prompt-conditioned entropy

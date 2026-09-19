@@ -1,5 +1,8 @@
 # PRC watermark — reproduction guide
 
+**Comparison campaign closed:** [full report and highlighted takeaways](reports/comparisons/REPORT.md) · [paper figures/tables](reports/comparisons/README.md) · [completed experiment index](self_bleu/README.md).
+The final report separates corrected 500-prompt results from paired diversity studies and includes unfavorable sensitivity results. No further comparison runs are pending.
+
 **Prompt-free paper redetection** now runs through the existing Modal app:
 
 `modal_run.py` contains the combined PRC Modal implementation for both fixed and

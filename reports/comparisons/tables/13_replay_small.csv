@@ -1,0 +1,13 @@
+Study,Response source,Tokens,Window,Positions,Support / zero-token events,Endpoint contradictions
+small,prc,1024,all,102300,0,0
+small,prc,1024,early,6300,0,0
+small,prc,1024,later,96000,0,0
+small,prc,400,all,39900,0,0
+small,prc,400,early,6300,0,0
+small,prc,400,later,33600,0,0
+small,null,1024,all,102300,0,0
+small,null,1024,early,6300,0,0
+small,null,1024,later,96000,0,0
+small,null,400,all,39900,0,0
+small,null,400,early,6300,0,0
+small,null,400,later,33600,0,0

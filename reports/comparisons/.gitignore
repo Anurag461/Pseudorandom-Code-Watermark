@@ -1,0 +1,8 @@
+# Portable convenience archive is reproducible from the versioned package.
+paper_assets.zip
+# TeX build intermediates; the source fragments and vector figures are versioned.
+*.aux
+*.log
+*.out
+*.toc
+!REPORT.md

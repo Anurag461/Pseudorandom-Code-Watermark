@@ -1,0 +1,21 @@
+% Generated from hash-pinned saved results. Requires booktabs, graphicx and array.
+\begin{table*}[t]
+\centering
+\caption{8B / top-k=100 / T=1 at 400 tokens}
+\label{tab:10_8b_topk_400}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{>{\raggedright\arraybackslash}p{\dimexpr0.181159\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.239130\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.144928\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.144928\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.144928\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.144928\textwidth-2\tabcolsep\relax}}
+\toprule
+Setting & Self-BLEU [95\% CI] & Detected /100 & TPR (\%) [95\% CI] & Repeat-4 (\%) & Distinct-3 (\%) \\
+\midrule
+Ordinary & 0.02389 [0.02063, 0.02738] & -- & -- & 2.06 & 95.96 \\
+PRC eta=.05 & 0.02835 [0.02371, 0.03406] & 33 & 33.0 [24.0, 42.0] & 1.60 & 96.54 \\
+SynthID d=2 & 0.02711 [0.02338, 0.03119] & 100 & 100.0 [100.0, 100.0] & 1.70 & 96.43 \\
+SynthID d=10 & 0.03104 [0.02614, 0.03620] & 100 & 100.0 [100.0, 100.0] & 1.39 & 96.81 \\
+SynthID d=30 & 0.04262 [0.03641, 0.04900] & 100 & 100.0 [100.0, 100.0] & 1.30 & 96.71 \\
+\bottomrule
+\end{tabular}}
+\par\smallskip
+\begin{minipage}{\textwidth}\footnotesize Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95\% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.\end{minipage}
+\end{table*}

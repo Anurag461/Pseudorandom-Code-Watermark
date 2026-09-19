@@ -1,0 +1,9 @@
+Decoder,Method,Collision probability,Max token probability,Top-100 retained mass,Ordinary base mass
+full_vocab_fp32_reference,ordinary,0.493972,0.608896,0.965926,0.965926
+full_vocab_fp32_reference,synthid_depth2,0.569810,0.683616,0.969879,0.965926
+full_vocab_fp32_reference,synthid_depth10,0.717703,0.799167,0.970507,0.965926
+full_vocab_fp32_reference,synthid_depth30,0.724606,0.790109,0.950562,0.965926
+top100_fp32,ordinary,0.507671,0.621708,1.000000,0.965926
+top100_fp32,synthid_depth2,0.586296,0.697667,1.000000,0.965926
+top100_fp32,synthid_depth10,0.739752,0.816823,1.000000,0.965926
+top100_fp32,synthid_depth30,0.781309,0.838859,1.000000,0.965926
