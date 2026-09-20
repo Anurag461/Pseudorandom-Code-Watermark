@@ -672,6 +672,12 @@
       "path": "completion_only_raw_abstain_v1/integrated/2d9e999b8f2ea462bbcfbf16/batches/000000/inputs.pt",
       "sha256": "678b73a2f7b07655b7784977c1e4f3bb4aad73cd3707f2728c185e2ee34f7a93",
       "bytes": 1428306
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/ca29c3c412c2ea56a5b60c7b/batches/000000/trace.pt",
+      "sha256": "90190abe3534ff6a21cbc0c2f0ad85cea5ac7480684502f4d8eb706534b3c147",
+      "bytes": 410834
     }
   ],
   "local_path_pattern": "cache/{volume}/{path}",
@@ -683,7 +689,10 @@
   "primary_generation_sha256": "fef2a042c700a8a76fec2b30b273872d5506af8b4e0a18cc2333ceeaba880cd9",
   "source_manifest": "setup.json",
   "source_hashes_authoritative": true,
-  "detector_replay_completed": false,
+  "detector_replay_completed": {
+    "4B": true,
+    "0.6B": false
+  },
   "scoring_completed": false,
   "manifest_preparation_app_id": "ap-VC6JnhZbVzB2aElnjMWqei",
   "prepared_runs": {
@@ -716,5 +725,6 @@
       }
     }
   },
-  "identical_candidates_and_inputs_confirmed": true
+  "identical_candidates_and_inputs_confirmed": true,
+  "replay_4b_app_id": "ap-lmiikeifcvSPibtJYVpRCG"
 }

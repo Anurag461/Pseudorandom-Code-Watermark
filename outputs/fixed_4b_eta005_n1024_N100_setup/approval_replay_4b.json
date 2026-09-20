@@ -1,0 +1,24 @@
+{
+  "recorded_at_utc": "2026-09-20T21:04:18.024827+00:00",
+  "stage": "replay_4b",
+  "user_message": "go ahead",
+  "approved_workload": {
+    "id": "replay_4b",
+    "workload": "One raw-completion 4B replay; 100 x 1023 recovered partition probabilities; no independent reference replay.",
+    "hardware": "1 H100 80GB, 4 physical CPU cores, 64 GiB host RAM",
+    "batch": 100,
+    "batches": 1,
+    "estimated_minutes": [
+      2,
+      4
+    ],
+    "estimated_usd": [
+      0.16,
+      0.31
+    ],
+    "conservative_allowance_usd": 0.9,
+    "proposed_work_timeout_seconds": 600
+  },
+  "scope": "One primary 4B completion-only replay of the saved 100 completions; no generation, reference replay, scoring, retries or optional validation.",
+  "budget_before_stage_usd": "6.31006747"
+}
