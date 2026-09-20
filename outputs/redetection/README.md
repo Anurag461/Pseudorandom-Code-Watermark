@@ -1,8 +1,16 @@
 # Redetection results
 
+The **fixed PRC 4B → {4B, 0.6B} comparison at eta=.05, n=T=1024 is complete**.
+Exactly 100 watermarked completions were generated once and reused by both
+detectors. For the 4B detector, MAP TPR is **98/100 (98%)** and entropy TPR is
+**93/100 (93%)**; for the 0.6B detector, they are **93/100 (93%)** and
+**90/100 (90%)**. No null cohort was generated, so empirical FPR is unmeasured.
+All six approved stages cost **$0.40304877** in provider-reported charges. See
+the [complete results and provenance](../fixed_4b_eta005_n1024_N100_setup/RESULTS.md).
+
 The **online PRC 8B → 8B campaign at eta=.05, .10, .15 is complete**, with shorter recorded prefixes stopping after the first redetected MAP TPR below 90%. At the longest lengths (1280, 3072 and 4096), MAP TPR is 96.2%, 94.2% and 88.0%; entropy TPR is 90.0%, 91.0% and 84.0%, respectively. Each point uses 500 watermarked and 500 null candidates.
 
-Updated September 20, 2026. This folder collects all completed redetection settings and their earlier diagnostics from this work. The CSV contains 299 rows: 22 fixed 0.6B rows, 156 online 0.6B rows, 119 online 8B full-cohort rows, one 8B→0.6B row and the 100-prompt 6144-token pilot. Counts include recorded prefixes, seed replicates and separately labeled reruns; they are not independent generation-run counts. All 295 previously present rows were preserved. Fixed rows come first, followed by online rows; eta and sequence length increase numerically within each construction. Source hashes and coverage checks are preserved locally.
+Updated September 20, 2026. This folder collects all completed redetection settings and their earlier diagnostics from this work. The CSV contains 301 rows: 22 fixed 0.6B rows, two fixed 4B-generation rows, 156 online 0.6B rows, 119 online 8B full-cohort rows, one 8B→0.6B row and the 100-prompt 6144-token pilot. Counts include recorded prefixes, seed replicates and separately labeled reruns; they are not independent generation-run counts. All 299 previously present rows were preserved, and the two 4B-generation rows were appended with explicit N=100. Source hashes and coverage checks are preserved locally.
 
 The online 8B → 8B eta=.15, n=6144 pilot completed primary generation, replay and scoring for 100 watermarked prompts: MAP 94/100 (94%) and entropy 90/100 (90%). No null cohort was evaluated, and the additional independent reference pass was stopped by the user. The CSV labels this as a pilot with unmeasured FPR; the remaining 400 prompts were not run. Among the 298 full-cohort CSV rows, 292 have zero false positives for both detectors; six prefix rows have 1/500 (0.2%) for at least one detector. No experiment or scoring was launched during this reconciliation.
 
@@ -12,7 +20,7 @@ An independent eta=.05, T=512 rerun reproduced MAP 447/500 (89.4%) and entropy 3
 
 The remaining **18 main fixed-PRC 0.6B → 0.6B single-block settings and two seed replicates are complete**. Eta=.20, n8192 remains deferred. Across the 18 main settings, mean TPR changes are −1.62 percentage points for posterior weighting and −1.00 for entropy weighting. The [full result table](../fixed_0p6b_redetect_setup/RESULTS.md) gives all old/new TPRs, false-positive counts, hardware choices and cache verification. These 20 settings are included in the CSV and JSON indexes below; the following table preserves the six earlier settings.
 
-The current protocol uses BF16 Qwen3-Base detectors (0.6B and 8B), raw completion tokens with no prepended special token, and coordinate 1 score zero. Original candidates, keys, partitions, PRC indices and threshold formula are preserved. Full-cohort settings have 500 watermarked and 500 null candidates; the 6144-token pilot has 100 watermarked and zero null candidates. All use t=3 and target FPR=0.001.
+The current protocol uses BF16 Qwen3-Base detectors (0.6B, 4B and 8B), raw completion tokens with no prepended special token, and coordinate 1 score zero. Original candidates, keys, partitions, PRC indices and threshold formula are preserved. Full-cohort settings have 500 watermarked and 500 null candidates; the 6144-token pilot and the paired fixed 4B comparison each have 100 watermarked and zero null candidates. All use t=3 and target FPR=0.001.
 
 | Generation → detection | η | n | Detector | Prompted TPR | Raw-completion TPR | Change | Raw FP |
 |---|---:|---:|---|---:|---:|---:|---:|

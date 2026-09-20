@@ -10358,6 +10358,86 @@
       "raw_false_positives": null,
       "change_pp": null,
       "independent_reference_completed": false
+    },
+    {
+      "case": "fixed_4b_eta005_n1024_N100_detect_4B",
+      "generator": "4B",
+      "detector": "4B",
+      "n": 1024,
+      "T": 1024,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "fixed",
+      "kind": "paired_detector_N100",
+      "weight": "map",
+      "wm_count": 100,
+      "null_count": 0,
+      "prompted_detected": null,
+      "raw_detected": 98,
+      "prompted_false_positives": null,
+      "raw_false_positives": null,
+      "change_pp": null,
+      "independent_reference_completed": false
+    },
+    {
+      "case": "fixed_4b_eta005_n1024_N100_detect_4B",
+      "generator": "4B",
+      "detector": "4B",
+      "n": 1024,
+      "T": 1024,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "fixed",
+      "kind": "paired_detector_N100",
+      "weight": "entropy",
+      "wm_count": 100,
+      "null_count": 0,
+      "prompted_detected": null,
+      "raw_detected": 93,
+      "prompted_false_positives": null,
+      "raw_false_positives": null,
+      "change_pp": null,
+      "independent_reference_completed": false
+    },
+    {
+      "case": "fixed_4b_eta005_n1024_N100_detect_0.6B",
+      "generator": "4B",
+      "detector": "0.6B",
+      "n": 1024,
+      "T": 1024,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "fixed",
+      "kind": "paired_detector_N100",
+      "weight": "map",
+      "wm_count": 100,
+      "null_count": 0,
+      "prompted_detected": null,
+      "raw_detected": 93,
+      "prompted_false_positives": null,
+      "raw_false_positives": null,
+      "change_pp": null,
+      "independent_reference_completed": false
+    },
+    {
+      "case": "fixed_4b_eta005_n1024_N100_detect_0.6B",
+      "generator": "4B",
+      "detector": "0.6B",
+      "n": 1024,
+      "T": 1024,
+      "eta": 0.05,
+      "t": 3,
+      "construction": "fixed",
+      "kind": "paired_detector_N100",
+      "weight": "entropy",
+      "wm_count": 100,
+      "null_count": 0,
+      "prompted_detected": null,
+      "raw_detected": 90,
+      "prompted_false_positives": null,
+      "raw_false_positives": null,
+      "change_pp": null,
+      "independent_reference_completed": false
     }
   ],
   "runs": [
@@ -10628,6 +10708,28 @@
       "scoring_device": "cloud CPU",
       "independent_reference_completed": false,
       "independent_reference_stopped_by_user": true
+    },
+    {
+      "case": "fixed_4b_eta005_n1024_N100_detect_4B",
+      "run_id": "ca29c3c412c2ea56a5b60c7b",
+      "kind": "paired_detector_N100",
+      "gpu": "H100",
+      "batch_size": 100,
+      "wm_count": 100,
+      "null_count": 0,
+      "scoring_device": "cloud CPU",
+      "independent_reference_completed": false
+    },
+    {
+      "case": "fixed_4b_eta005_n1024_N100_detect_0.6B",
+      "run_id": "2d9e999b8f2ea462bbcfbf16",
+      "kind": "paired_detector_N100",
+      "gpu": "A100-80GB",
+      "batch_size": 100,
+      "wm_count": 100,
+      "null_count": 0,
+      "scoring_device": "cloud CPU",
+      "independent_reference_completed": false
     }
   ],
   "diagnostics": [
@@ -10711,5 +10813,16 @@
         "reason": "user deferred on 2026-09-19"
       }
     ]
+  },
+  "fixed_4b_N100_comparison": {
+    "report": "../fixed_4b_eta005_n1024_N100_setup/RESULTS.md",
+    "cache_index": "../fixed_4b_eta005_n1024_N100_setup/cache_index.json",
+    "generation_count": 100,
+    "generation_model": "Qwen3-4B-Base",
+    "n": 1024,
+    "eta": 0.05,
+    "null_count": 0,
+    "empirical_fpr": "not_evaluated",
+    "actual_cost_usd": "0.40304877"
   }
 }

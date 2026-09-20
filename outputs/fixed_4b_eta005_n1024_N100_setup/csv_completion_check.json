@@ -1,0 +1,59 @@
+{
+  "prior_rows_preserved": 299,
+  "added_rows": [
+    {
+      "eta": "0.05",
+      "T": "1024",
+      "n": "1024",
+      "r value": "1014",
+      "r setting": "1014/1024",
+      "PRC Construction": "fixed_prc",
+      "t": "3",
+      "Target FPR": "0.001",
+      "Entropy Model": "Qwen3-4B-Base",
+      "Generation Model": "Qwen3-4B-Base",
+      "Old Posterior TPR": "unavailable",
+      "Posterior TPR": "98/100 (98.0%)",
+      "Old Entropy Aware TPR": "unavailable",
+      "Entropy Aware TPR": "93/100 (93.0%)",
+      "Naive TPR": "skipped",
+      "Posterior FPR": "skipped",
+      "Entropy FPR": "skipped",
+      "Naive FPR": "skipped",
+      "Entropy Trace Source": "completion_only_raw_abstain_v1",
+      "Notes": "BF16; coordinate 1=0; FPR policy=block_or_bonferroni; batch=100; GPU=H100; commit=998f9ccbbbc5a3be392c1795b4c6fc18b47b3123; run=completion_only_raw_abstain_v1/integrated/ca29c3c412c2ea56a5b60c7b; report=full.json; N=100; null N=0; empirical FPR not evaluated; working-tree execution; source hashes in manifest"
+    },
+    {
+      "eta": "0.05",
+      "T": "1024",
+      "n": "1024",
+      "r value": "1014",
+      "r setting": "1014/1024",
+      "PRC Construction": "fixed_prc",
+      "t": "3",
+      "Target FPR": "0.001",
+      "Entropy Model": "Qwen3-0.6B-Base",
+      "Generation Model": "Qwen3-4B-Base",
+      "Old Posterior TPR": "unavailable",
+      "Posterior TPR": "93/100 (93.0%)",
+      "Old Entropy Aware TPR": "unavailable",
+      "Entropy Aware TPR": "90/100 (90.0%)",
+      "Naive TPR": "skipped",
+      "Posterior FPR": "skipped",
+      "Entropy FPR": "skipped",
+      "Naive FPR": "skipped",
+      "Entropy Trace Source": "completion_only_raw_abstain_v1",
+      "Notes": "BF16; coordinate 1=0; FPR policy=block_or_bonferroni; batch=100; GPU=A100-80GB; commit=998f9ccbbbc5a3be392c1795b4c6fc18b47b3123; run=completion_only_raw_abstain_v1/integrated/2d9e999b8f2ea462bbcfbf16; report=full.json; N=100; null N=0; empirical FPR not evaluated; working-tree execution; source hashes in manifest"
+    }
+  ],
+  "total_rows": 301,
+  "schema_unchanged": true,
+  "all_null_FPR_cells": "skipped",
+  "score_report_files_checksum_verified": [
+    "completion_only_raw_abstain_v1/integrated/ca29c3c412c2ea56a5b60c7b/full.json",
+    "completion_only_raw_abstain_v1/integrated/ca29c3c412c2ea56a5b60c7b/summary.json",
+    "completion_only_raw_abstain_v1/integrated/2d9e999b8f2ea462bbcfbf16/full.json",
+    "completion_only_raw_abstain_v1/integrated/2d9e999b8f2ea462bbcfbf16/summary.json"
+  ],
+  "scope": "Local JSON/CSV and file-checksum inspection only; no model execution, trace rescoring or optional replay."
+}
