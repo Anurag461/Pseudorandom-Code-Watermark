@@ -1,0 +1,25 @@
+{
+  "N": 100,
+  "n": 512,
+  "T": 512,
+  "completed_stages": [
+    "prepare",
+    "generate"
+  ],
+  "stage_app_ids": {
+    "prepare": "ap-NePyIo8VK28v3MJ65nRlzo",
+    "generate": "ap-FT5N0eZB67GHOhKBxGaabg"
+  },
+  "timing_seconds": {
+    "prepare": 37.121257451,
+    "generate": 77.57155328
+  },
+  "pending_stages": [
+    "freeze",
+    "replay_4b",
+    "replay_0p6b",
+    "score"
+  ],
+  "status": "in_progress",
+  "immutable_setup_note": "Reviewed setup.json is frozen. Approval and execution are recorded separately."
+}

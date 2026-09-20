@@ -1,0 +1,43 @@
+✓ Initialized. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-NePyIo8VK28v3MJ65nRlzo
+Building image im-4S5kgx6BXnbfG2XkIrXUiE
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 1.14s
+
+Built image im-4S5kgx6BXnbfG2XkIrXUiE in 2.36s
+
+
+✓ Created objects.
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/fixed_4b_comparison.py
+├── 🔨 Created mount PythonPackage:modal_run, PythonPackage:prc, 
+│   PythonPackage:online_prc, PythonPackage:qwen, PythonPackage:constants, 
+│   PythonPackage:detectors, PythonPackage:watermark_expt, 
+│   PythonPackage:proxy_8b_analysis, PythonPackage:benchmarks
+├── 🔨 Created mount prompts.jsonl
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/tests
+└── 🔨 Created function paid_stage.
+{
+  "files": [
+    {
+      "volume": "data",
+      "path": "fixed_4b_eta005_n512_N100_v1/artifacts.pt",
+      "sha256": "9e8bee38ce5a3c3791441db80d54432300f8c9c394f6499b02d07fbe189a68c0",
+      "bytes": 722167
+    },
+    {
+      "volume": "results",
+      "path": "fixed_4b_eta005_n512_N100_v1/setup.json",
+      "sha256": "dc82860e78b63470a7afa28a50a1c680fd3194d3cea45cd3b0b1b00acb84cac8",
+      "bytes": 12595
+    }
+  ]
+}
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-NePyIo8VK28v3MJ65nRlzo
