@@ -5,20 +5,22 @@
   "completed_stages": [
     "prepare",
     "generate",
-    "freeze"
+    "freeze",
+    "replay_4b"
   ],
   "stage_app_ids": {
     "prepare": "ap-G6nmkMaMQHrc6vDX7eMNhF",
     "generate": "ap-xQ1TnpsxSkXQl5DDSfUphc",
-    "freeze": "ap-5pKLX3JdRZgFQIiJgY8Pl1"
+    "freeze": "ap-5pKLX3JdRZgFQIiJgY8Pl1",
+    "replay_4b": "ap-VKfiCfN2T0NCDDLRJZqfIf"
   },
   "timing_seconds": {
     "prepare": 35.448685543,
     "generate": 71.21700742499999,
-    "freeze": 12.080155264
+    "freeze": 12.080155264,
+    "replay_4b": 53.741646895
   },
   "pending_stages": [
-    "replay_4b",
     "replay_0p6b",
     "score"
   ],
