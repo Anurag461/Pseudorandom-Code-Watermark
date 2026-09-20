@@ -1,0 +1,40 @@
+{
+  "workspace": "new-prc-watermark",
+  "run": "fixed_4b_eta005_n1024_N100_v1",
+  "generation_model": "Qwen/Qwen3-4B-Base",
+  "N": 100,
+  "T": 1024,
+  "null_count": 0,
+  "generated_once": true,
+  "files": [
+    {
+      "volume": "data",
+      "path": "fixed_4b_eta005_n1024_N100_v1/artifacts.pt",
+      "sha256": "5915dc825d94b0d248ec99df167f7f99a7f9c4347bce2ea217934f49b0b444cd",
+      "bytes": 759863
+    },
+    {
+      "volume": "results",
+      "path": "fixed_4b_eta005_n1024_N100_v1/setup.json",
+      "sha256": "b0f9968a0231e905c9d9feef2d76918a2cb364da15268ab4858d225547cca5f4",
+      "bytes": 13581
+    },
+    {
+      "volume": "data",
+      "path": "fixed_4b_eta005_n1024_N100_v1/generation.pt",
+      "sha256": "fef2a042c700a8a76fec2b30b273872d5506af8b4e0a18cc2333ceeaba880cd9",
+      "bytes": 3182376
+    }
+  ],
+  "local_path_pattern": "cache/{volume}/{path}",
+  "volume_names": {
+    "data": "prc-data",
+    "results": "prc-completion-only"
+  },
+  "generation_app_id": "ap-zYbQrA2etgC4udQJLgNtdI",
+  "primary_generation_sha256": "fef2a042c700a8a76fec2b30b273872d5506af8b4e0a18cc2333ceeaba880cd9",
+  "source_manifest": "setup.json",
+  "source_hashes_authoritative": true,
+  "detector_replay_completed": false,
+  "scoring_completed": false
+}

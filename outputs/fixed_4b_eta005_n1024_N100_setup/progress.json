@@ -1,0 +1,42 @@
+{
+  "updated_utc": "2026-09-20T20:50:56.109004+00:00",
+  "completed_stages": [
+    "prepare",
+    "generate"
+  ],
+  "pending_stages": [
+    "freeze",
+    "replay_4b",
+    "replay_0p6b",
+    "score"
+  ],
+  "generation_count": 100,
+  "null_count": 0,
+  "app_id": "ap-zYbQrA2etgC4udQJLgNtdI",
+  "paid_compute_launched": true,
+  "approved_stage": "generate",
+  "preparation_wall_seconds": 105.6798215,
+  "provider_reported_spending_usd": "0.17267314",
+  "remaining_budget_estimate_usd": "6.32786183",
+  "next_stage_approval_required": {
+    "stage": "freeze",
+    "workload": "Convert the saved 100-completion batch into existing per-candidate records and freeze two manifests referencing identical tokens, key and partition. No generation, model execution or scoring.",
+    "hardware": "4 physical CPU cores, 16 GiB RAM; one CPU worker; no GPU",
+    "batch_size": 100,
+    "estimated_minutes": [
+      0.5,
+      2
+    ],
+    "estimated_cost_usd": [
+      0.003,
+      0.011
+    ],
+    "allowance_usd": 0.05,
+    "work_timeout_seconds": 180,
+    "automatic_retries": 0,
+    "remaining_after_allowance_usd": "6.27786183"
+  },
+  "immutable_setup_note": "setup.json retains the frozen reviewed proposal; approval and execution status are recorded separately.",
+  "completion_length": 1024,
+  "generation_wall_seconds": 130.46182280899998
+}
