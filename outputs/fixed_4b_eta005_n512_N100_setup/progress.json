@@ -7,25 +7,76 @@
     "generate",
     "freeze",
     "replay_4b",
-    "replay_0p6b"
+    "replay_0p6b",
+    "score"
   ],
   "stage_app_ids": {
     "prepare": "ap-NePyIo8VK28v3MJ65nRlzo",
     "generate": "ap-FT5N0eZB67GHOhKBxGaabg",
     "freeze": "ap-nU8i1Ytz93fG3KWjv8bWI5",
     "replay_4b": "ap-xhL5w0Dqo2cVeVGNidRVCa",
-    "replay_0p6b": "ap-CWDvuK8lVI9sy3EOLzYTIJ"
+    "replay_0p6b": "ap-CWDvuK8lVI9sy3EOLzYTIJ",
+    "score": "ap-rLf6eBhfN55c4nEaLKl5VW"
   },
   "timing_seconds": {
     "prepare": 37.121257451,
     "generate": 77.57155328,
     "freeze": 12.366733893,
     "replay_4b": 86.047109615,
-    "replay_0p6b": 36.417945963
+    "replay_0p6b": 36.417945963,
+    "score": 11.183954490000001
   },
-  "pending_stages": [
-    "score"
-  ],
-  "status": "in_progress",
+  "pending_stages": [],
+  "status": "complete",
+  "results": {
+    "4B": {
+      "512": {
+        "map": {
+          "wm": {
+            "detected": 83,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 67,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        }
+      }
+    },
+    "0.6B": {
+      "512": {
+        "map": {
+          "wm": {
+            "detected": 78,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 64,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        }
+      }
+    }
+  },
   "immutable_setup_note": "Reviewed setup.json is frozen. Approval and execution are recorded separately."
 }
