@@ -1,0 +1,15 @@
+{
+  "files": [
+    {
+      "volume": "data",
+      "path": "fixed_4b_eta005_n256_N100_v1/generation.pt",
+      "sha256": "2382888ce26c7d2c825b962c7cf30df000850e31bd1183df88292d02940bc473",
+      "bytes": 836136
+    }
+  ],
+  "N": 100,
+  "T": 256,
+  "seconds": 10.64315919100001,
+  "gpu": "NVIDIA H100 80GB HBM3",
+  "peak_allocated_bytes": 13448666624
+}

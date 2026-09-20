@@ -1,0 +1,31 @@
+✓ Initialized. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-xQ1TnpsxSkXQl5DDSfUphc
+✓ Created objects.
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/fixed_4b_comparison.py
+├── 🔨 Created mount PythonPackage:modal_run, PythonPackage:prc, 
+│   PythonPackage:online_prc, PythonPackage:qwen, PythonPackage:constants, 
+│   PythonPackage:detectors, PythonPackage:watermark_expt, 
+│   PythonPackage:proxy_8b_analysis, PythonPackage:benchmarks
+├── 🔨 Created mount prompts.jsonl
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/tests
+└── 🔨 Created function paid_stage.
+{
+  "files": [
+    {
+      "volume": "data",
+      "path": "fixed_4b_eta005_n256_N100_v1/generation.pt",
+      "sha256": "2382888ce26c7d2c825b962c7cf30df000850e31bd1183df88292d02940bc473",
+      "bytes": 836136
+    }
+  ],
+  "N": 100,
+  "T": 256,
+  "seconds": 10.64315919100001,
+  "gpu": "NVIDIA H100 80GB HBM3",
+  "peak_allocated_bytes": 13448666624
+}
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-xQ1TnpsxSkXQl5DDSfUphc
