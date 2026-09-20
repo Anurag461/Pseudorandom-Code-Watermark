@@ -671,6 +671,12 @@
       "path": "completion_only_raw_abstain_v1/integrated/34ed41583e7165cfcbd0d994/batches/000000/trace.pt",
       "sha256": "37359df80920c1e82a5f6ae38addafa368d114bf56836b04a35e9f0bcbd65b8f",
       "bytes": 103634
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/01d480ae687f86d8b994e3e4/batches/000000/trace.pt",
+      "sha256": "2d9d7b756edd679ba52de21da0d8170cbc6d81fdf1f2edecaa7ac6a0516a7d42",
+      "bytes": 103634
     }
   ],
   "local_prefix": "cache/",

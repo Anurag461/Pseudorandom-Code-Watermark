@@ -6,22 +6,24 @@
     "prepare",
     "generate",
     "freeze",
-    "replay_4b"
+    "replay_4b",
+    "replay_0p6b"
   ],
   "stage_app_ids": {
     "prepare": "ap-G6nmkMaMQHrc6vDX7eMNhF",
     "generate": "ap-xQ1TnpsxSkXQl5DDSfUphc",
     "freeze": "ap-5pKLX3JdRZgFQIiJgY8Pl1",
-    "replay_4b": "ap-VKfiCfN2T0NCDDLRJZqfIf"
+    "replay_4b": "ap-VKfiCfN2T0NCDDLRJZqfIf",
+    "replay_0p6b": "ap-wkyBVYgDELalf4cQwsQ5jW"
   },
   "timing_seconds": {
     "prepare": 35.448685543,
     "generate": 71.21700742499999,
     "freeze": 12.080155264,
-    "replay_4b": 53.741646895
+    "replay_4b": 53.741646895,
+    "replay_0p6b": 37.724677977999995
   },
   "pending_stages": [
-    "replay_0p6b",
     "score"
   ],
   "status": "in_progress",
