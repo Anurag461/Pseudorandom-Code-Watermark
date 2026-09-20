@@ -1,5 +1,7 @@
 # Redetection results
 
+The **fixed PRC 4B → {4B, 0.6B} comparisons at eta=.05, n=T=512 and 256 are complete**, with N=100 at each length. At n512, MAP/entropy TPR is **83%/67%** with 4B detection and **78%/64%** with 0.6B. At n256, it is **46%/27%** with 4B and **35%/25%** with 0.6B. Each cohort was generated once and reused by both detectors. No nulls or empirical FPR were included. The twelve approved stages cost **$0.50338169**. See the [results and provenance](../fixed_4b_eta005_n512_n256_N100_setup/RESULTS.md).
+
 The **fixed PRC 4B → {4B, 0.6B} comparison at eta=.05, n=T=1024 is complete**.
 Exactly 100 watermarked completions were generated once and reused by both
 detectors. For the 4B detector, MAP TPR is **98/100 (98%)** and entropy TPR is
@@ -10,7 +12,7 @@ the [complete results and provenance](../fixed_4b_eta005_n1024_N100_setup/RESULT
 
 The **online PRC 8B → 8B campaign at eta=.05, .10, .15 is complete**, with shorter recorded prefixes stopping after the first redetected MAP TPR below 90%. At the longest lengths (1280, 3072 and 4096), MAP TPR is 96.2%, 94.2% and 88.0%; entropy TPR is 90.0%, 91.0% and 84.0%, respectively. Each point uses 500 watermarked and 500 null candidates.
 
-Updated September 20, 2026. This folder collects all completed redetection settings and their earlier diagnostics from this work. The CSV contains 301 rows: 22 fixed 0.6B rows, two fixed 4B-generation rows, 156 online 0.6B rows, 119 online 8B full-cohort rows, one 8B→0.6B row and the 100-prompt 6144-token pilot. Counts include recorded prefixes, seed replicates and separately labeled reruns; they are not independent generation-run counts. All 299 previously present rows were preserved, and the two 4B-generation rows were appended with explicit N=100. Source hashes and coverage checks are preserved locally.
+Updated September 20, 2026. This folder collects all completed redetection settings and their earlier diagnostics from this work. The CSV contains 305 rows: 22 fixed 0.6B rows, six fixed 4B-generation rows, 156 online 0.6B rows, 119 online 8B full-cohort rows, one 8B→0.6B row and the 100-prompt 6144-token pilot. Counts include recorded prefixes, seed replicates and separately labeled reruns; they are not independent generation-run counts. All 301 rows present before the shorter 4B experiment were preserved; its four rows were appended with explicit N=100. Source hashes and coverage checks are preserved locally.
 
 The online 8B → 8B eta=.15, n=6144 pilot completed primary generation, replay and scoring for 100 watermarked prompts: MAP 94/100 (94%) and entropy 90/100 (90%). No null cohort was evaluated, and the additional independent reference pass was stopped by the user. The CSV labels this as a pilot with unmeasured FPR; the remaining 400 prompts were not run. Among the 298 full-cohort CSV rows, 292 have zero false positives for both detectors; six prefix rows have 1/500 (0.2%) for at least one detector. No experiment or scoring was launched during this reconciliation.
 

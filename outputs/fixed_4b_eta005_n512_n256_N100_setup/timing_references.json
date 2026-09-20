@@ -1,0 +1,69 @@
+{
+  "n1024_worker_timings": {
+    "prepare": {
+      "stage": "prepare",
+      "wall_seconds": 105.6798215,
+      "resources": [
+        null,
+        16384,
+        600
+      ]
+    },
+    "generate": {
+      "stage": "generate",
+      "wall_seconds": 130.46182280899998,
+      "resources": [
+        "H100",
+        65536,
+        600
+      ]
+    },
+    "freeze": {
+      "stage": "freeze",
+      "wall_seconds": 12.324410063,
+      "resources": [
+        null,
+        16384,
+        180
+      ]
+    },
+    "replay_4b": {
+      "stage": "replay_4b",
+      "wall_seconds": 110.81628742299999,
+      "resources": [
+        "H100",
+        65536,
+        600
+      ]
+    },
+    "replay_0p6b": {
+      "stage": "replay_0p6b",
+      "wall_seconds": 76.20506989399999,
+      "resources": [
+        "A100-80GB",
+        16384,
+        360
+      ]
+    },
+    "score": {
+      "stage": "score",
+      "wall_seconds": 9.892222768,
+      "resources": [
+        null,
+        8192,
+        180
+      ]
+    }
+  },
+  "n1024_actual_costs": {
+    "prepare": "0.00988003",
+    "generate": "0.17829656",
+    "freeze": "0.00229091",
+    "replay_4b": "0.14728834",
+    "replay_0p6b": "0.06416753",
+    "score": "0.00112540"
+  },
+  "generation_seconds": 80.13280032200001,
+  "replay_4b_seconds": 60.191096683,
+  "replay_0p6b_seconds": 50.377025966999994
+}

@@ -78,5 +78,15 @@
       }
     }
   },
-  "immutable_setup_note": "Reviewed setup.json is frozen. Approval and execution are recorded separately."
+  "immutable_setup_note": "Reviewed setup.json is frozen. Approval and execution are recorded separately.",
+  "cost_by_stage_usd": {
+    "score": "0.00140668",
+    "replay_0p6b": "0.03443380",
+    "replay_4b": "0.07881648",
+    "prepare": "0.00370068",
+    "freeze": "0.00229093",
+    "generate": "0.10393370"
+  },
+  "actual_cost_usd": "0.22458227",
+  "all_apps_stopped": true
 }
