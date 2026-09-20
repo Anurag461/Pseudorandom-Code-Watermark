@@ -678,6 +678,12 @@
       "path": "completion_only_raw_abstain_v1/integrated/ca29c3c412c2ea56a5b60c7b/batches/000000/trace.pt",
       "sha256": "90190abe3534ff6a21cbc0c2f0ad85cea5ac7480684502f4d8eb706534b3c147",
       "bytes": 410834
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2d9e999b8f2ea462bbcfbf16/batches/000000/trace.pt",
+      "sha256": "8c7f049b8e602b198b3191fb6adc7d66b063975d0c460eeda5185091bb50c909",
+      "bytes": 410834
     }
   ],
   "local_path_pattern": "cache/{volume}/{path}",
@@ -691,7 +697,7 @@
   "source_hashes_authoritative": true,
   "detector_replay_completed": {
     "4B": true,
-    "0.6B": false
+    "0.6B": true
   },
   "scoring_completed": false,
   "manifest_preparation_app_id": "ap-VC6JnhZbVzB2aElnjMWqei",
@@ -726,5 +732,6 @@
     }
   },
   "identical_candidates_and_inputs_confirmed": true,
-  "replay_4b_app_id": "ap-lmiikeifcvSPibtJYVpRCG"
+  "replay_4b_app_id": "ap-lmiikeifcvSPibtJYVpRCG",
+  "replay_0p6b_app_id": "ap-dpNpTWPbYOgXe6fHQ4loAV"
 }
