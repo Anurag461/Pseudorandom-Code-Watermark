@@ -1,0 +1,23 @@
+{
+  "profile": "new-prc-watermark",
+  "volume": "prc-completion-only",
+  "apps": {
+    "freeze": {
+      "url": "https://modal.com/apps/new-prc-watermark/main/ap-6g39ohHlTV7nHCVm8gFXCP",
+      "app_id": "ap-6g39ohHlTV7nHCVm8gFXCP"
+    },
+    "full-a10g": {
+      "url": "https://modal.com/apps/new-prc-watermark/main/ap-mO68ejuHlU13FsuKRbnKsl",
+      "app_id": "ap-mO68ejuHlU13FsuKRbnKsl"
+    },
+    "full-a100": {
+      "url": "https://modal.com/apps/new-prc-watermark/main/ap-FfU53HGeCx5wrVDMs18Ajd",
+      "app_id": "ap-FfU53HGeCx5wrVDMs18Ajd"
+    }
+  },
+  "new_watermarked_batches": 18,
+  "imported_null_batches": 18,
+  "length_points": 154,
+  "setup_archive": "Additional reproducibility archive kept local by explicit user preference",
+  "collector": "collect_online_prc_redetection.py finish --wait; local-only archives"
+}

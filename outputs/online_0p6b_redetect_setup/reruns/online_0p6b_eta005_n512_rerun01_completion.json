@@ -1,0 +1,31 @@
+{
+  "status": "completed_verified",
+  "id": "online_0p6b_eta005_n512_rerun01",
+  "counts": {
+    "map": {
+      "wm": {
+        "detected": 447,
+        "count": 500
+      },
+      "null": {
+        "detected": 0,
+        "count": 500
+      }
+    },
+    "entropy": {
+      "wm": {
+        "detected": 395,
+        "count": 500
+      },
+      "null": {
+        "detected": 0,
+        "count": 500
+      }
+    }
+  },
+  "all_fresh_watermarked_traces_bitwise_equal": true,
+  "detector_score_changes": 0,
+  "csv_rows": 178,
+  "local_archive_status": "verified_local_only",
+  "modal_app": "https://modal.com/apps/new-prc-watermark/main/ap-UgmqtX5hcuEfUhIu7LhZQn"
+}

@@ -2,6 +2,10 @@
 
 Updated September 19, 2026. This folder collects all completed redetection settings and their earlier diagnostics from this work.
 
+The four main **online PRC 0.6B → 0.6B families are complete**, covering 154 recorded lengths at eta=.05, .10, .15 and .20. Only the longest watermarked completions were replayed; all 2,000 null traces were reused from verified fixed-run caches, and shorter lengths were scored on CPU. All 36 trace shards were read back and verified. See the [online result summary](../online_0p6b_redetect_setup/RESULTS.md) for results and cache provenance.
+
+An independent eta=.05, T=512 rerun reproduced MAP 447/500 (89.4%) and entropy 395/500 (79.0%), with zero false positives. All 500 freshly recomputed watermarked traces and every detector score matched the first run exactly; verified null traces were reused. The CSV includes a separately labeled rerun row. Additional reproducibility archives remain local as requested.
+
 The remaining **18 main fixed-PRC 0.6B → 0.6B single-block settings and two seed replicates are complete**. Eta=.20, n8192 remains deferred. Across the 18 main settings, mean TPR changes are −1.62 percentage points for posterior weighting and −1.00 for entropy weighting. The [full result table](../fixed_0p6b_redetect_setup/RESULTS.md) gives all old/new TPRs, false-positive counts, hardware choices and cache verification. These 20 settings are included in the CSV and JSON indexes below; the following table preserves the six earlier settings.
 
 The current protocol uses BF16 Qwen3-Base detectors (0.6B and 8B), raw completion tokens with no prepended special token, and coordinate 1 score zero. Original candidates, keys, partitions, PRC indices and threshold formula are preserved. Every setting has 500 watermarked and 500 null candidates; t=3 and target FPR=0.001.
