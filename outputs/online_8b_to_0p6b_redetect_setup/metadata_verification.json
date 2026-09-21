@@ -1,0 +1,38 @@
+{
+  "checked_utc": "2026-09-21T01:02:11.563997+00:00",
+  "checks": {
+    "eta005_T1280_N500": {
+      "download_hashes_verified": 14,
+      "candidate_coverage": 500,
+      "all_original_token_hashes_preserved": true,
+      "reported_points": 33,
+      "paid_attempts": 3,
+      "paid_worker_executions": 3,
+      "primary_replay_batches": 4
+    },
+    "eta010_T3072_N500": {
+      "download_hashes_verified": 16,
+      "candidate_coverage": 500,
+      "all_original_token_hashes_preserved": true,
+      "reported_points": 90,
+      "paid_attempts": 3,
+      "paid_worker_executions": 3,
+      "primary_replay_batches": 5
+    },
+    "eta015_T6144_N100": {
+      "download_hashes_verified": 10,
+      "candidate_coverage": 100,
+      "all_original_token_hashes_preserved": true,
+      "reported_points": 1,
+      "paid_attempts": 3,
+      "paid_worker_executions": 4,
+      "primary_replay_batches": 2
+    }
+  },
+  "all_apps_stopped": true,
+  "all_stages_billed": true,
+  "prior_csv_rows_preserved": 305,
+  "new_csv_rows": 124,
+  "csv_sha256": "2a9b5e37029ab60871f8b525e2ea14f605a65722ff827daaefdc809fc8632dd8",
+  "scope": "Saved metadata and transfer checksums only; no local model execution or rescoring."
+}

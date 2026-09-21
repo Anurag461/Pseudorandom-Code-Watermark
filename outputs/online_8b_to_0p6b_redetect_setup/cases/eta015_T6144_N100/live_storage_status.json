@@ -1,0 +1,16 @@
+{
+  "checked_utc": "2026-09-21T00:58:14.467768+00:00",
+  "case": "eta015_T6144_N100",
+  "completed_batches": 2,
+  "total_batches": 2,
+  "traces": [
+    {
+      "path": "completion_only_raw_abstain_v1/integrated/fa6ef1c4a5699524417f485a/batches/000050/trace.pt",
+      "bytes": 1230226
+    },
+    {
+      "path": "completion_only_raw_abstain_v1/integrated/fa6ef1c4a5699524417f485a/batches/000000/trace.pt",
+      "bytes": 1230226
+    }
+  ]
+}

@@ -45,5 +45,12 @@
         }
       }
     }
-  }
+  },
+  "cost_by_stage_usd": {
+    "prepare": "0.00229098",
+    "replay": "1.06740567",
+    "score": "0.00098461"
+  },
+  "actual_cost_usd": "1.07068126",
+  "all_apps_stopped": true
 }

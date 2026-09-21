@@ -1,3 +1,5 @@
+**Execution complete.** This document preserves the pre-run proposal. See [RESULTS.md](RESULTS.md) and [progress.json](progress.json) for completed results, actual scheduling and spending.
+
 Prepared on `redetection`. **Awaiting user setup review and explicit approval;
 no paid computation has launched.** Scope incorporates the user's correction:
 eta=0.15 uses the completed **T=6144, N=100 pilot only**. The T4096 cohort and

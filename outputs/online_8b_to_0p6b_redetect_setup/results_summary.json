@@ -1,7 +1,7 @@
 {
-  "updated_utc": "2026-09-21T01:02:11.558033+00:00",
-  "approval": "approval.json",
-  "cohorts": {
+  "status": "complete",
+  "protocol": "completion_only_raw_abstain_v1",
+  "cases": {
     "eta005_T1280_N500": {
       "eta": 0.05,
       "N": 500,
@@ -41,23 +41,6 @@
         256,
         128
       ],
-      "completed_stages": [
-        "prepare",
-        "replay",
-        "score"
-      ],
-      "stage_app_ids": {
-        "prepare": "ap-JL8vJdod4n3fG3VqdlcZM3",
-        "replay": "ap-FgvS06xARvTu758a8idEnk",
-        "score": "ap-XTGjBUYpHYiEuHfqmJzs3Q"
-      },
-      "timing_seconds": {
-        "prepare": 72.28341264800001,
-        "replay": 353.273336318,
-        "score": 14.240479976
-      },
-      "pending_stages": [],
-      "status": "complete",
       "counts": {
         "1280": {
           "map": {
@@ -792,7 +775,8 @@
         "score": "0.00154735"
       },
       "actual_cost_usd": "0.29031688",
-      "all_apps_stopped": true
+      "cache_index": "cases/eta005_T1280_N500/cache_index.json",
+      "run": "completion_only_raw_abstain_v1/integrated/c0a5604a7aff302319379d2a"
     },
     "eta010_T3072_N500": {
       "eta": 0.1,
@@ -890,23 +874,6 @@
         1664,
         1648
       ],
-      "completed_stages": [
-        "prepare",
-        "replay",
-        "score"
-      ],
-      "stage_app_ids": {
-        "prepare": "ap-lAsN6taUyhFFUgMlQHi0HO",
-        "replay": "ap-TgqJmm8A0sMfft6UsvnlxX",
-        "score": "ap-YMyYMa75bMVYb12bQ64vLh"
-      },
-      "timing_seconds": {
-        "prepare": 42.074282373,
-        "replay": 1691.2751961630001,
-        "score": 17.624509807000003
-      },
-      "pending_stages": [],
-      "status": "complete",
       "counts": {
         "3072": {
           "map": {
@@ -2895,7 +2862,8 @@
         "score": "0.00182866"
       },
       "actual_cost_usd": "1.33979404",
-      "all_apps_stopped": true
+      "cache_index": "cases/eta010_T3072_N500/cache_index.json",
+      "run": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628"
     },
     "eta015_T6144_N100": {
       "eta": 0.15,
@@ -2904,23 +2872,6 @@
       "lengths": [
         6144
       ],
-      "completed_stages": [
-        "prepare",
-        "replay",
-        "score"
-      ],
-      "stage_app_ids": {
-        "prepare": "ap-1DtJWoBTh6aMWOUmehnzun",
-        "replay": "ap-dJaYTsUXcXcTaduCYrki8A",
-        "score": "ap-Kk7ZXyr1qhfxbcdHhVIm3L"
-      },
-      "timing_seconds": {
-        "prepare": 16.737561682,
-        "replay": 672.8379227849999,
-        "score": 9.593168907
-      },
-      "pending_stages": [],
-      "status": "complete",
       "counts": {
         "6144": {
           "map": {
@@ -2951,16 +2902,34 @@
         "score": "0.00098461"
       },
       "actual_cost_usd": "1.07068126",
-      "all_apps_stopped": true
+      "cache_index": "cases/eta015_T6144_N100/cache_index.json",
+      "run": "completion_only_raw_abstain_v1/integrated/fa6ef1c4a5699524417f485a"
     }
   },
-  "new_generations": 0,
+  "paid_stages": 9,
+  "paid_worker_executions": 10,
+  "parallel_eta015": {
+    "gpu_workers": 2,
+    "overlap_seconds": 671.1154625415802,
+    "worker_window_seconds": 673.1185762882233,
+    "sum_worker_seconds": 1344.234037232,
+    "prompt_ranges": [
+      [
+        0,
+        49
+      ],
+      [
+        50,
+        99
+      ]
+    ],
+    "all_batches_disjoint": true,
+    "no_replay_repeated": true
+  },
   "null_count": 0,
-  "automatic_retries": 0,
-  "optional_checks_run": false,
-  "eta015_T4096_excluded": true,
-  "status": "complete",
-  "actual_cost_usd": "2.70079218",
+  "empirical_fpr": "not_evaluated",
+  "new_generations": 0,
+  "total_cost_usd": "2.70079218",
   "remaining_budget_estimate_usd": "2.89331233",
-  "all_apps_stopped": true
+  "paired_comparison": "paired_comparison.csv"
 }

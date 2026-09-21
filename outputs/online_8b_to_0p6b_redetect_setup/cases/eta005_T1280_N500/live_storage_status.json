@@ -1,0 +1,20 @@
+{
+  "checked_utc": "2026-09-21T00:03:17.750868+00:00",
+  "case": "eta005_T1280_N500",
+  "completed_batches": 3,
+  "total_batches": 4,
+  "traces": [
+    {
+      "path": "completion_only_raw_abstain_v1/integrated/c0a5604a7aff302319379d2a/batches/000250/trace.pt",
+      "bytes": 641170
+    },
+    {
+      "path": "completion_only_raw_abstain_v1/integrated/c0a5604a7aff302319379d2a/batches/000125/trace.pt",
+      "bytes": 641170
+    },
+    {
+      "path": "completion_only_raw_abstain_v1/integrated/c0a5604a7aff302319379d2a/batches/000000/trace.pt",
+      "bytes": 641170
+    }
+  ]
+}

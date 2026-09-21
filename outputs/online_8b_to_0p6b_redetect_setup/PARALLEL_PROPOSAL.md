@@ -1,3 +1,5 @@
+**Execution complete.** This document preserves the pre-run proposal. See [RESULTS.md](RESULTS.md) and [progress.json](progress.json) for completed results, actual scheduling and spending.
+
 Awaiting explicit approval. All seven previously launched apps are stopped. This replaces the original sequential eta=0.15 GPU stage; it does not add a replay.
 
 Use the prepared **eta=0.15, T=6144, N=100** saved online PRC 8B cohort. The T=4096 cohort is excluded. The eta=0.05 and eta=0.10 cohorts are already replayed, scored and committed; never replay them again for this comparison.
