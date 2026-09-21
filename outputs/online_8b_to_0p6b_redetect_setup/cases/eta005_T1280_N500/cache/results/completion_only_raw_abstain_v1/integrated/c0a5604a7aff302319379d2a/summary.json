@@ -1,59 +1,6 @@
 {
-  "eta": 0.05,
-  "N": 500,
-  "T": 1280,
-  "lengths": [
-    1280,
-    1264,
-    1248,
-    1232,
-    1216,
-    1200,
-    1184,
-    1168,
-    1152,
-    1136,
-    1120,
-    1104,
-    1088,
-    1072,
-    1056,
-    1040,
-    1024,
-    1008,
-    992,
-    976,
-    960,
-    944,
-    928,
-    912,
-    896,
-    880,
-    864,
-    848,
-    768,
-    512,
-    400,
-    256,
-    128
-  ],
-  "completed_stages": [
-    "prepare",
-    "replay",
-    "score"
-  ],
-  "stage_app_ids": {
-    "prepare": "ap-JL8vJdod4n3fG3VqdlcZM3",
-    "replay": "ap-FgvS06xARvTu758a8idEnk",
-    "score": "ap-XTGjBUYpHYiEuHfqmJzs3Q"
-  },
-  "timing_seconds": {
-    "prepare": 72.28341264800001,
-    "replay": 353.273336318,
-    "score": 14.240479976
-  },
-  "pending_stages": [],
-  "status": "complete",
+  "passed": true,
+  "protocol": "completion_only_raw_abstain_v1",
   "counts": {
     "1280": {
       "map": {
@@ -781,5 +728,52 @@
         }
       }
     }
+  },
+  "reported_lengths": [
+    1280,
+    1264,
+    1248,
+    1232,
+    1216,
+    1200,
+    1184,
+    1168,
+    1152,
+    1136,
+    1120,
+    1104,
+    1088,
+    1072,
+    1056,
+    1040,
+    1024,
+    1008,
+    992,
+    976,
+    960,
+    944,
+    928,
+    912,
+    896,
+    880,
+    864,
+    848,
+    768,
+    512,
+    400,
+    256,
+    128
+  ],
+  "stop_rule": "none; all frozen comparison lengths",
+  "settings": {
+    "eta": 0.05,
+    "t": 3,
+    "r_setting": "causal round(0.99L), startup-clamped"
+  },
+  "trace_shard_sha256": {
+    "completion_only_raw_abstain_v1/integrated/c0a5604a7aff302319379d2a/batches/000000": "ec20877e5aad975360fe2d6948687f6e021be9feea7b1872f075f684e47069a9",
+    "completion_only_raw_abstain_v1/integrated/c0a5604a7aff302319379d2a/batches/000125": "256356c2a9e9804c681903687a438e8c4b0f1e52a9b92abaad90e860f09af878",
+    "completion_only_raw_abstain_v1/integrated/c0a5604a7aff302319379d2a/batches/000250": "2214dd1a3346178f15ef71441635f529b82e9d20eff42172376c57e2ee7812e1",
+    "completion_only_raw_abstain_v1/integrated/c0a5604a7aff302319379d2a/batches/000375": "d891fa6c3ba6d91f41859169408ac42935f450c262a079184bde7f091271625b"
   }
 }

@@ -1,59 +1,19 @@
+✓ Initialized. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-XTGjBUYpHYiEuHfqmJzs3Q
+✓ Created objects.
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/online_8b_to_0p6b.py
+├── 🔨 Created mount PythonPackage:online_8b_to_0p6b, 
+│   PythonPackage:fixed_4b_comparison, PythonPackage:online_prc_redetection
+├── 🔨 Created mount PythonPackage:modal_run, PythonPackage:prc, 
+│   PythonPackage:online_prc, PythonPackage:qwen, PythonPackage:constants, 
+│   PythonPackage:detectors, PythonPackage:watermark_expt, 
+│   PythonPackage:proxy_8b_analysis, PythonPackage:benchmarks
+├── 🔨 Created mount prompts.jsonl
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/tests
+└── 🔨 Created function paid_stage.
 {
-  "eta": 0.05,
-  "N": 500,
-  "T": 1280,
-  "lengths": [
-    1280,
-    1264,
-    1248,
-    1232,
-    1216,
-    1200,
-    1184,
-    1168,
-    1152,
-    1136,
-    1120,
-    1104,
-    1088,
-    1072,
-    1056,
-    1040,
-    1024,
-    1008,
-    992,
-    976,
-    960,
-    944,
-    928,
-    912,
-    896,
-    880,
-    864,
-    848,
-    768,
-    512,
-    400,
-    256,
-    128
-  ],
-  "completed_stages": [
-    "prepare",
-    "replay",
-    "score"
-  ],
-  "stage_app_ids": {
-    "prepare": "ap-JL8vJdod4n3fG3VqdlcZM3",
-    "replay": "ap-FgvS06xARvTu758a8idEnk",
-    "score": "ap-XTGjBUYpHYiEuHfqmJzs3Q"
-  },
-  "timing_seconds": {
-    "prepare": 72.28341264800001,
-    "replay": 353.273336318,
-    "score": 14.240479976
-  },
-  "pending_stages": [],
-  "status": "complete",
   "counts": {
     "1280": {
       "map": {
@@ -781,5 +741,22 @@
         }
       }
     }
-  }
+  },
+  "files": [
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/c0a5604a7aff302319379d2a/full.json",
+      "sha256": "fa771d0f49acc33fb83bc74017524da5416588811206cc17b10202f592c7c85e",
+      "bytes": 8431693
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/c0a5604a7aff302319379d2a/summary.json",
+      "sha256": "ca6fa3bbb331fec7c323cd9ee4bf8b84971cd47cf76e958a8420f1adeb0dbb99",
+      "bytes": 13572
+    }
+  ]
 }
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-XTGjBUYpHYiEuHfqmJzs3Q
