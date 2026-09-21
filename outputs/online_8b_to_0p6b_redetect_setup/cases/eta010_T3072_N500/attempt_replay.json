@@ -1,0 +1,22 @@
+{
+  "case": "eta010_T3072_N500",
+  "stage": "replay",
+  "approval_reference": "User yes approved all nine listed runs and USD 4.30 proposal; approval.json; eta015 T6144 N100 only; no nulls",
+  "plan_sha256": "4b46dfea7b2fdc69d405444a0ae4cd87f473b7566707d9ebe5df07c727a5c675",
+  "resources": {
+    "hardware": "1 A100 80GB, 4 CPU cores, 16 GiB host RAM",
+    "gpu": "A100-80GB",
+    "memory_mib": 16384,
+    "work_timeout_seconds": 2100,
+    "expected_minutes": [
+      23,
+      32
+    ],
+    "expected_usd": [
+      1.08,
+      1.5
+    ],
+    "allowance_usd": 1.75,
+    "workload": "Load pinned 0.6B once and replay 5 sequential batches of 100, raw T=3072; save each primary trace immediately; validate=False."
+  }
+}

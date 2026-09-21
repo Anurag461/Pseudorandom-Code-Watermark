@@ -95,16 +95,18 @@
     1648
   ],
   "completed_stages": [
-    "prepare"
+    "prepare",
+    "replay"
   ],
   "stage_app_ids": {
-    "prepare": "ap-lAsN6taUyhFFUgMlQHi0HO"
+    "prepare": "ap-lAsN6taUyhFFUgMlQHi0HO",
+    "replay": "ap-TgqJmm8A0sMfft6UsvnlxX"
   },
   "timing_seconds": {
-    "prepare": 42.074282373
+    "prepare": 42.074282373,
+    "replay": 1691.2751961630001
   },
   "pending_stages": [
-    "replay",
     "score"
   ],
   "status": "in_progress"
