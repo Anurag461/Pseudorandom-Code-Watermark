@@ -1,6 +1,6 @@
 # Proposed first eta=0.20 batch: native 8B, T=14336, N=50
 
-Prepared on `redetection`. **No paid computation launched. Approval pending for all three stages below.**
+Prepared and completed on `redetection`. The user approved all three stages with a $9.50 allowance. Execution completed on September 20, 2026 (Pacific time); actual cost was **$6.62260577**. See [RESULTS.md](RESULTS.md). The original approved scope and estimates are retained below.
 
 ## Exact scope and reuse
 
@@ -44,4 +44,4 @@ The isolated `online_8b_eta020_batch50.py` wrapper uses the existing preparation
 
 Cache inputs, prompts/provenance, exact keys/partition, manifests, primary trace, scores, file hashes, memory/time and actual cost. Download and commit primary replay evidence before CPU scoring. Append a single native detector result row to the existing CSV with **N=50**, null N=0 explicit; preserve all current rows. Do not infer N=500 from this initial batch. Keep extra source archives local; no additional archive upload or push.
 
-All stages are separately gated on the same frozen setup hash and their own explicit approvals. No approval or attempt files exist. The proposal covers preparation, one primary GPU replay and scoring only—no independent reference replay, benchmark, null work or automatic retry.
+All stages were separately gated on the same frozen setup hash and their own explicit approval records. Approval, attempt, output and billing files are saved alongside this plan. Execution covered preparation, one primary GPU replay and scoring only—no independent reference replay, benchmark, null work or paid retry.
