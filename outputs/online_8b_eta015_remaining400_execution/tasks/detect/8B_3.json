@@ -1,0 +1,41 @@
+{
+  "batches": [
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/6081f050152f1b3effadf16a/batches/000300",
+      "cached": false,
+      "seconds": 1641.74735377
+    }
+  ],
+  "files": [
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/6081f050152f1b3effadf16a/batches/000300/trace.pt",
+      "sha256": "d0d26ca58d3331bb1b228f636e7d640410b3a450b56842b9a3c8320978775377",
+      "bytes": 2458834
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_remaining400_v1/attempts/prepare_retry1/detect/8B_3/request.json",
+      "sha256": "1d5a24402917b31366a66d3c7dcce800b5c44b333c21a4f6ae21031db348488a",
+      "bytes": 530453
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_remaining400_v1/attempts/prepare_retry1/detect/8B_3/response.json",
+      "sha256": "d58ec4f95e35eed82d3820099690237711b59faffcd2aeaebbea29f1d48544a9",
+      "bytes": 460
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_remaining400_v1/attempts/prepare_retry1/detect/8B_3/worker.log",
+      "sha256": "52bc799df8e7332518addacc9a312afd2471270446ca6375aef2b610f4d7a8ca",
+      "bytes": 455
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_remaining400_v1/attempts/prepare_retry1/detect/8B_3/timing.json",
+      "sha256": "57319014f8f2779481910419c1b5b2581e89e50180b8793472155052b94d36a2",
+      "bytes": 115
+    }
+  ]
+}
