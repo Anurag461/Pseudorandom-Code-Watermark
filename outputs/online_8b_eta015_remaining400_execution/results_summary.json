@@ -1,0 +1,131 @@
+{
+  "completed_utc": "2026-09-21T04:08:17.115855+00:00",
+  "eta": 0.15,
+  "T": 6144,
+  "N": 500,
+  "N_new": 400,
+  "N_reused": 100,
+  "null_N": 0,
+  "empirical_FPR": "not_evaluated",
+  "target_FPR": 0.001,
+  "protocol": "completion_only_raw_abstain_v1",
+  "generation_model": "Qwen/Qwen3-8B-Base",
+  "counts": {
+    "8B": {
+      "6144": {
+        "map": {
+          "wm": {
+            "detected": 465,
+            "count": 500
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 436,
+            "count": 500
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        }
+      }
+    },
+    "0.6B": {
+      "6144": {
+        "map": {
+          "wm": {
+            "detected": 438,
+            "count": 500
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 416,
+            "count": 500
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        }
+      }
+    }
+  },
+  "new_only_counts": {
+    "8B": {
+      "6144": {
+        "map": {
+          "wm": {
+            "detected": 371,
+            "count": 400
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 346,
+            "count": 400
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        }
+      }
+    },
+    "0.6B": {
+      "6144": {
+        "map": {
+          "wm": {
+            "detected": 346,
+            "count": 400
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 332,
+            "count": 400
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        }
+      }
+    }
+  },
+  "drop_vs_native_percentage_points": {
+    "map": 5.4,
+    "entropy": 4.0
+  },
+  "reported_task_cost_usd": "28.68301936",
+  "billing_checked_utc": "2026-09-21T04:13:02.811073+00:00",
+  "costs_by_app_usd": {
+    "ap-74oPtw92UaCPwKJQzaIGEo": "0.01762228",
+    "ap-FJFpAHhr285oC0EyRszlna": "13.79725035",
+    "ap-GT2wSrmXDghB9pUZN6IwH5": "0.00276499",
+    "ap-WybnYBYxYV2XBVFExnvljv": "14.81090510",
+    "ap-e7VjXL1zxVOg3uTmfHhiyv": "0.05022344",
+    "ap-jKSj0iAhFtHqpsvyenejqY": "0.00425320"
+  },
+  "all_apps_stopped": true,
+  "generation_commit": "9f609f9d74e73dabd89ae80453cbf2a92272f710",
+  "primary_detection_commit": "c8035f484ca63162611cc64d7c6f6b14caaa930a",
+  "scores_csv_commit": "b61d7312230da576ec2e104535d0e0a464de18cf"
+}

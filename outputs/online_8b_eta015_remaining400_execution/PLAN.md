@@ -1,4 +1,6 @@
-# Approved remaining400 execution — total ceiling $35.11
+# Completed remaining400 execution — approximately $35.11 budget
+
+Completed: N=500 per detector, actual reported cost $28.68301936. See [RESULTS.md](RESULTS.md). The user clarified that $35.11 was an approximate target.
 
 Online 8B eta=.15, T=6144; continue saved prompt IDs100–499 from 4096. Reuse all generation/traces/scores for IDs0–99. Native8B and0.6B raw completion detection; MAP+entropy; finalN500; null0. Exact pinned models, keys, seed12345, t3, 99/100 partition schedule, BF16 and established sampling settings are frozen in setup.json.
 
