@@ -1,0 +1,22 @@
+{
+  "read_only": true,
+  "checked_utc": "2026-09-21T08:06:54.304871+00:00",
+  "app_ids": [
+    "ap-mRtyt0DWrYj2SmvhLfy5Yu"
+  ],
+  "reported_task_cost_usd": "0.02149906",
+  "task_rows": [
+    {
+      "object_id": "ap-mRtyt0DWrYj2SmvhLfy5Yu",
+      "description": "prc-online-8b-eta020-remaining450",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 08:00:00+00:00",
+      "cost": "0.02149906",
+      "cost_by_resource": {
+        "Memory": "0.00867553",
+        "CPU": "0.01282352"
+      },
+      "tags": {}
+    }
+  ]
+}
