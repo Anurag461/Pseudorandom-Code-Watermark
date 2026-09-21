@@ -1,11 +1,12 @@
 {
   "read_only": true,
-  "checked_utc": "2026-09-21T09:25:54.497996+00:00",
+  "checked_utc": "2026-09-21T09:26:26.582080+00:00",
   "app_ids": [
     "ap-0evFWsui5bQu6EVAv3MUZS",
+    "ap-YP8ryxLr0WRkwWppnTt2E7",
     "ap-mRtyt0DWrYj2SmvhLfy5Yu"
   ],
-  "reported_task_cost_usd": "59.77365768",
+  "reported_task_cost_usd": "59.86151397",
   "task_rows": [
     {
       "object_id": "ap-0evFWsui5bQu6EVAv3MUZS",
@@ -14,9 +15,9 @@
       "interval_start": "2026-09-21 08:00:00+00:00",
       "cost": "40.72705756",
       "cost_by_resource": {
-        "Memory": "3.97852657",
         "CPU": "1.47018990",
-        "H200": "35.27834109"
+        "H200": "35.27834109",
+        "Memory": "3.97852657"
       },
       "tags": {}
     },
@@ -25,11 +26,11 @@
       "description": "prc-online-8b-eta020-remaining450",
       "environment_name": "main",
       "interval_start": "2026-09-21 09:00:00+00:00",
-      "cost": "19.01993492",
+      "cost": "19.10779121",
       "cost_by_resource": {
-        "Memory": "1.85801089",
-        "CPU": "0.68659309",
-        "H200": "16.47533095"
+        "CPU": "0.68976458",
+        "H200": "16.55143328",
+        "Memory": "1.86659336"
       },
       "tags": {}
     },
