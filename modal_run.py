@@ -7350,12 +7350,14 @@ def _redetect_trace(path, identity):
     return payload
 
 
-def _recover_redetection_batch(model, batch, destination, validate=False):
+def _recover_redetection_batch(model, batch, destination, validate=False, *, max_memory_fraction=0.85):
     from pathlib import Path
     import time
     import torch
     from detectors import tensor_sha256
     from qwen import completion_only_partition_trace_batch, make_kv_cache
+    if not 0 < max_memory_fraction <= 0.95:
+        raise ValueError("live GPU memory limit must be in (0, 0.95]")
     inputs = _redetect_inputs(batch, destination)
     path = Path(destination)/batch["root"]/"trace.pt"
     identity = batch["identity"]
@@ -7388,14 +7390,17 @@ def _recover_redetection_batch(model, batch, destination, validate=False):
             raise ValueError("batch-order/prefix consistency failed")
     allocated = torch.cuda.max_memory_allocated() if cuda else 0
     reserved = torch.cuda.max_memory_reserved() if cuda else 0
-    if cuda and allocated >= .85*torch.cuda.get_device_properties(device).total_memory:
-        raise ValueError("batch exceeds the live GPU memory margin")
+    total_memory = torch.cuda.get_device_properties(device).total_memory if cuda else 0
     payload = {"identity": identity, "probabilities_2_to_T": trace,
                "probabilities_sha256": tensor_sha256(trace), "full_validation": validate,
                "peak_allocated_bytes": allocated, "peak_reserved_bytes": reserved,
+               "total_memory_bytes": total_memory, "memory_limit_fraction": max_memory_fraction,
                "seconds": time.monotonic()-started}
     _redetect_write(path, payload)
     _redetect_trace(path, identity)
+    # Retain valid primary evidence even when the requested memory margin fails.
+    if cuda and allocated >= max_memory_fraction*total_memory:
+        raise ValueError("batch exceeds the live GPU memory margin; completed trace saved")
     return {"root": batch["root"], "cached": False, "seconds": payload["seconds"]}
 
 
