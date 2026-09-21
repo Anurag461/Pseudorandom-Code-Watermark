@@ -1,0 +1,21 @@
+{
+  "stage": "score",
+  "case": "eta010_T3072_N500",
+  "wall_seconds": 17.624509807000003,
+  "resources": {
+    "hardware": "4 CPU cores, 8 GiB RAM",
+    "gpu": null,
+    "memory_mib": 8192,
+    "work_timeout_seconds": 300,
+    "expected_minutes": [
+      0.25,
+      2
+    ],
+    "expected_usd": [
+      0.002,
+      0.009
+    ],
+    "allowance_usd": 0.035,
+    "workload": "Existing cloud prefix_scores for all 90 frozen lengths, MAP and entropy; no early stopping, no LM calls."
+  }
+}
