@@ -1,0 +1,64 @@
+{
+  "counts": {
+    "14336": {
+      "map": {
+        "wm": {
+          "detected": 48,
+          "count": 50
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 47,
+          "count": 50
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    }
+  },
+  "files": [
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a/full.json",
+      "sha256": "602cfb592c607b2a4f0c3b124e0785aee8dba0e2db4f56c36da9f339fbb24c1b",
+      "bytes": 35043
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a/summary.json",
+      "sha256": "1ccb812190a47a88b52d02b9231870fc59c7887ab58ec4004f2ca73815137820",
+      "bytes": 843
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/score/request.json",
+      "sha256": "808c7c7808a079789fc7dccc20060fcbf002213a4d4d1b2349330912e4d67ab4",
+      "bytes": 55307
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/score/response.json",
+      "sha256": "f62b95c0adb47786d3e021547ef1f168ec69f03da6571ae7104f8565a7eda1b7",
+      "bytes": 888
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/score/worker.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/score/timing.json",
+      "sha256": "a7a2a05869fa7cb730eedb1128527edb5c1ece85a053d932b220433ebc9fba96",
+      "bytes": 86
+    }
+  ]
+}

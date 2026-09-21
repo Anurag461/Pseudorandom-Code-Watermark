@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "original_rows_preserved": 617,
+  "rows_added": 1,
+  "N": 50,
+  "null_N": 0,
+  "added_row": {
+    "eta": "0.2",
+    "T": "14336",
+    "n": "14336",
+    "r value": "14193",
+    "r setting": "causal round(0.99L), startup-clamped",
+    "PRC Construction": "online_causal_prc_v1",
+    "t": "3",
+    "Target FPR": "0.001",
+    "Entropy Model": "Qwen3-8B-Base",
+    "Generation Model": "Qwen3-8B-Base",
+    "Old Posterior TPR": "unavailable",
+    "Posterior TPR": "48/50 (96.0%)",
+    "Old Entropy Aware TPR": "unavailable",
+    "Entropy Aware TPR": "47/50 (94.0%)",
+    "Naive TPR": "skipped",
+    "Posterior FPR": "skipped",
+    "Entropy FPR": "skipped",
+    "Naive FPR": "skipped",
+    "Entropy Trace Source": "completion_only_raw_abstain_v1",
+    "Notes": "BF16; coordinate 1=0; FPR policy=one_shot; batch=50; GPU=H200; commit=12120a811e758d5f1205f9805fc1854269413b9a; run=completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a; report=full.json; N=50; null N=0; empirical FPR not evaluated; working-tree execution; source hashes in manifest"
+  }
+}
