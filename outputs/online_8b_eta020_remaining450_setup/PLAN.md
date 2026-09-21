@@ -1,6 +1,6 @@
 # Online 8B eta=0.20: complete the remaining 450 watermarked prompts
 
-Prepared on `redetection`, September 21, 2026. **The user approved all three stages with a new $75 allowance. CPU preparation has been launched.** The approved scope and estimates are retained below.
+Completed on `redetection`, September 21, 2026. **All three approved stages finished successfully for $59.86306135 against the $75 allowance.** All workers are stopped. The final N=500 MAP TPR is 90.4%, and entropy TPR is 86.6%. See [RESULTS.md](RESULTS.md). The approved scope and estimates are retained below.
 
 ## Scope and cache reuse
 
