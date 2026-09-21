@@ -38,16 +38,18 @@
     128
   ],
   "completed_stages": [
-    "prepare"
+    "prepare",
+    "replay"
   ],
   "stage_app_ids": {
-    "prepare": "ap-JL8vJdod4n3fG3VqdlcZM3"
+    "prepare": "ap-JL8vJdod4n3fG3VqdlcZM3",
+    "replay": "ap-FgvS06xARvTu758a8idEnk"
   },
   "timing_seconds": {
-    "prepare": 72.28341264800001
+    "prepare": 72.28341264800001,
+    "replay": 353.273336318
   },
   "pending_stages": [
-    "replay",
     "score"
   ],
   "status": "in_progress"

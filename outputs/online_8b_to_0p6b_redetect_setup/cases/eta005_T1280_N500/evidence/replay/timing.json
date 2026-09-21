@@ -1,0 +1,21 @@
+{
+  "stage": "replay",
+  "case": "eta005_T1280_N500",
+  "wall_seconds": 353.273336318,
+  "resources": {
+    "hardware": "1 A100 80GB, 4 CPU cores, 16 GiB host RAM",
+    "gpu": "A100-80GB",
+    "memory_mib": 16384,
+    "work_timeout_seconds": 600,
+    "expected_minutes": [
+      5,
+      8
+    ],
+    "expected_usd": [
+      0.24,
+      0.38
+    ],
+    "allowance_usd": 0.55,
+    "workload": "Load pinned 0.6B once and replay 4 sequential batches of 125, raw T=1280; save each primary trace immediately; validate=False."
+  }
+}
