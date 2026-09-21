@@ -1,0 +1,26 @@
+{
+  "received_utc": "2026-09-21T00:45:54.760295+00:00",
+  "user_message": "go ahead",
+  "in_reply_to": "Approve these two parallel GPU batches and subsequent CPU scoring?",
+  "setup_sha256": "5eef00f1dbff422bed2bd4e5b0e45dfc9c532f25aba618e4ba9f59d9e7b99a0f",
+  "approved_gpu_workers": 2,
+  "approved_batch_size": 50,
+  "approved_prompt_ranges": [
+    [
+      0,
+      49
+    ],
+    [
+      50,
+      99
+    ]
+  ],
+  "approved_following_cpu_scoring": true,
+  "conservative_estimate_usd": 1.79,
+  "gpu_total_allowance_usd": 1.75,
+  "cpu_allowance_usd": 0.035,
+  "retries_approved": false,
+  "extra_paid_validation_approved": false,
+  "nulls_approved": false,
+  "generation_approved": false
+}
