@@ -1,0 +1,64 @@
+{
+  "files": [
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_N500_prefixes_v1/8B/full.json",
+      "sha256": "fe425e29447dbeac6e96a50f363c459105da1c86d1f5241006af09386a68992e",
+      "bytes": 23686791
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_N500_prefixes_v1/8B/prepared.json",
+      "sha256": "001a38884b6131ee4a3141e05eaeaa1c1b0841a1193faff277ec6fa42ab95b90",
+      "bytes": 510086
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_N500_prefixes_v1/8B/summary.json",
+      "sha256": "5de09c756ce6230605a68e762ecc7227c17415cdceb233183a04ff7e331b9bc7",
+      "bytes": 37123
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_N500_prefixes_v1/0.6B/full.json",
+      "sha256": "881501a2c0fdf5e9aae3461878a1848ced297ccaa38dbe0c1a2d0c5a320c6390",
+      "bytes": 23700810
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_N500_prefixes_v1/0.6B/prepared.json",
+      "sha256": "4a41d8d2dbfee9d5f60a0e496064a5243e10d276f76a7f666d6427afd8e7a6af",
+      "bytes": 511533
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_N500_prefixes_v1/0.6B/summary.json",
+      "sha256": "87e39442f6bd265b307e5307c776c6dd30f23369bb806376c22239bc6c872cb5",
+      "bytes": 37908
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_N500_prefixes_v1/attempt/request.json",
+      "sha256": "62b668e8da278859240e55eaea3ee6c8cd7a8a091305f51252c446661942c139",
+      "bytes": 623697
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_N500_prefixes_v1/attempt/response.json",
+      "sha256": "add16288f94a739d22c55ed9dad6fe6d3b69a9c521496af06975617b4201f35f",
+      "bytes": 90021
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_N500_prefixes_v1/attempt/worker.log",
+      "sha256": "c09ba1811e50bb3b02941e66c1779314b28e82fe85ade6aad552c8698ab7f1ee",
+      "bytes": 92
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta015_N500_prefixes_v1/attempt/timing.json",
+      "sha256": "2e57b4fb1292368303f94eac3d1ac71a758ce9e3165bd1ce4ff7a5431de04ad8",
+      "bytes": 84
+    }
+  ]
+}

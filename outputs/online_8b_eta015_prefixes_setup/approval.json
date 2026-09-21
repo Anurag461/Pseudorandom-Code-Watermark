@@ -1,0 +1,10 @@
+{
+  "explicit_user_approval": true,
+  "approval_reference": "user-annotation-eta015-prefix-cpu-20260920",
+  "plan_sha256": "9efb5b666da3f84be54ba6da610093485185e4d8464ddffd57ea80379044c013",
+  "authorized_spend_usd": 0.1,
+  "user_response": "yes",
+  "approved_question": "Approve this CPU-only scoring run?",
+  "scope": "eta=.15 N=500 T6144 saved traces; 16-token prefixes until native MAP<90%; both detectors; CPU only",
+  "recorded_utc": "2026-09-21T05:00:30.798155+00:00"
+}
