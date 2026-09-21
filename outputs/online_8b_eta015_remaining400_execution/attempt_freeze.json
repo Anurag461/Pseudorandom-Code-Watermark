@@ -1,0 +1,8 @@
+{
+  "plan_sha256": "cb2c03b3b52dc84c1c67e5ee542fc5ffcf7258f33eeb241890231156b724fb10",
+  "stage": "freeze",
+  "approval_reference": "user-3511-full-run-20260920",
+  "tasks": [
+    "cpu"
+  ]
+}
