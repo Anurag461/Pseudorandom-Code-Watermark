@@ -7,18 +7,43 @@
   ],
   "completed_stages": [
     "prepare",
-    "replay"
+    "replay",
+    "score"
   ],
   "stage_app_ids": {
     "prepare": "ap-1DtJWoBTh6aMWOUmehnzun",
-    "replay": "ap-dJaYTsUXcXcTaduCYrki8A"
+    "replay": "ap-dJaYTsUXcXcTaduCYrki8A",
+    "score": "ap-Kk7ZXyr1qhfxbcdHhVIm3L"
   },
   "timing_seconds": {
     "prepare": 16.737561682,
-    "replay": 672.8379227849999
+    "replay": 672.8379227849999,
+    "score": 9.593168907
   },
-  "pending_stages": [
-    "score"
-  ],
-  "status": "in_progress"
+  "pending_stages": [],
+  "status": "complete",
+  "counts": {
+    "6144": {
+      "map": {
+        "wm": {
+          "detected": 92,
+          "count": 100
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 84,
+          "count": 100
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    }
+  }
 }

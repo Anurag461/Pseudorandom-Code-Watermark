@@ -1,0 +1,2543 @@
+{
+  "passed": true,
+  "protocol": "completion_only_raw_abstain_v1",
+  "counts": {
+    "6144": {
+      "map": {
+        "wm": {
+          "detected": 92,
+          "count": 100
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 84,
+          "count": 100
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    }
+  },
+  "reported_lengths": [
+    6144
+  ],
+  "stop_rule": "none; all frozen comparison lengths",
+  "settings": {
+    "eta": 0.15,
+    "t": 3,
+    "r_setting": "causal round(0.99L), startup-clamped"
+  },
+  "trace_shard_sha256": {
+    "completion_only_raw_abstain_v1/integrated/fa6ef1c4a5699524417f485a/batches/000000": "f8cdcc106ba441c8172a759b221bec1a839adfb9e70e221096039ed856514d0a",
+    "completion_only_raw_abstain_v1/integrated/fa6ef1c4a5699524417f485a/batches/000050": "d8b0e31702f7c474962a483e01e19c638d5a7b53e5077e8c44404948f9eeb39d"
+  },
+  "records": [
+    {
+      "source": "wm",
+      "prompt_idx": 0,
+      "tokens_sha256": "a806a79b42b0bdc35cd4365ebbf3954e1c607cdd5788dc4ad08c798062b5f982",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": false,
+            "statistic": 40.63499793967436,
+            "threshold": 52.63753715251164,
+            "V": 200.55070030580976,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 42.688200689222185,
+            "threshold": 88.312773894419,
+            "V": 564.5210142762892,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 1,
+      "tokens_sha256": "7145db824ec278ad391eba52bac016da02b166c6479c0a3e2b6f426beda58de6",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 383.24052335088976,
+            "threshold": 130.28891180059853,
+            "V": 1228.7059871557474,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 516.4155530714442,
+            "threshold": 201.38395537748366,
+            "V": 2935.504794652787,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 2,
+      "tokens_sha256": "b5f8582e1a875bbbd18f244c2426d294ef21d7a8e164f72b7cd224e9864d5808",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 253.73577622730818,
+            "threshold": 114.33300970991597,
+            "V": 946.1855973025954,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 365.50796786100693,
+            "threshold": 176.7527349123876,
+            "V": 2261.337296796379,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 3,
+      "tokens_sha256": "1ffca7e5e87f9e2d19188d23df096de9aefeefceb4c1564cc0ba791a46a52a68",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 79.27564734391049,
+            "threshold": 72.41034200848115,
+            "V": 379.51964263547336,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 152.60314406845555,
+            "threshold": 123.09004874250918,
+            "V": 1096.6775376027667,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 4,
+      "tokens_sha256": "349ef08410c09ce97d4f4e5150e4b62ca7e6fbc9039f85ec88c0c1af802001f3",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 124.63596267814884,
+            "threshold": 84.3512970200206,
+            "V": 515.0111014071822,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 212.0895824814439,
+            "threshold": 145.78918542039685,
+            "V": 1538.451039964658,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 5,
+      "tokens_sha256": "a1d0458c760287752d10ad1c595bafa2fea80d16b15a16112625906be9f400c3",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 427.6758681107018,
+            "threshold": 130.0361318041597,
+            "V": 1223.9428650605303,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 540.9439887058945,
+            "threshold": 189.6831275901597,
+            "V": 2604.2967244264073,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 6,
+      "tokens_sha256": "9c6bbe2321cad7a877c4da69f04e937c35c17a49a5a78c9e3e538c9e2755366d",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 385.0455527172423,
+            "threshold": 127.44200841779083,
+            "V": 1175.596474804002,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 579.8580569836467,
+            "threshold": 202.2631745726273,
+            "V": 2961.192901019018,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 7,
+      "tokens_sha256": "44775c90c4c4196c77de09f1687fe46719606bc957f106935d6e865f762377b2",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 78.20807214855049,
+            "threshold": 69.36095607679452,
+            "V": 348.2276103877782,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 72.0625485734717,
+            "threshold": 122.35048716781044,
+            "V": 1083.5387984681427,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 8,
+      "tokens_sha256": "7814bfb4ae2d565f689b458cb9875457cd23cb5db585d7c2cbaf1a7627d21d4b",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 330.57260628309183,
+            "threshold": 123.58932965510016,
+            "V": 1105.5923225212823,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 466.7754840293601,
+            "threshold": 190.1109516946146,
+            "V": 2616.057785385071,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 9,
+      "tokens_sha256": "d848ee922818e5e0fac11e5c77e4a3790572c59cfe0469cdd31a125ad4617760",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 819.3879112065678,
+            "threshold": 172.31772040259318,
+            "V": 2149.2797273155297,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 1113.2438326039467,
+            "threshold": 240.63590996584549,
+            "V": 4191.350071511431,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 10,
+      "tokens_sha256": "91459919c1fa3640badfca5bda0fb6cf48e8ff9472c00aea0680821bc51d0895",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 339.22882191901283,
+            "threshold": 115.88283649180045,
+            "V": 972.0112577123682,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 475.20843119353844,
+            "threshold": 187.767630481331,
+            "V": 2551.963816946969,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 11,
+      "tokens_sha256": "f82a81e53cde741422f0f31aa7ca65634d97590b84dae8ce44aedc4f568ee1d1",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 516.9793580866841,
+            "threshold": 157.68623086951544,
+            "V": 1799.784908528056,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 736.1509901504824,
+            "threshold": 226.23898985490527,
+            "V": 3704.82728928622,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 12,
+      "tokens_sha256": "e5cc79956f53cc5b5d7b074d60af4891bcec261a5a4b6a2bdbb9a1457f312b59",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 473.10973995005133,
+            "threshold": 141.14444699802354,
+            "V": 1441.9847051467468,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 698.5375308123716,
+            "threshold": 213.4696706579999,
+            "V": 3298.415943416977,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 13,
+      "tokens_sha256": "ed44f4dfa3b5d8ff87446d439b2dbd3ff26caa508aaa51004284cde61d43213f",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 126.57670874369077,
+            "threshold": 81.38551584095623,
+            "V": 479.4323134790127,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 165.69745638349139,
+            "threshold": 137.54163412949748,
+            "V": 1369.308867713687,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 14,
+      "tokens_sha256": "288158d35d86fb6f70c6f8ba9c3ebbb8665a3b2def3a3dcb9b022fb6d87f38c4",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 270.5541510755413,
+            "threshold": 123.655165642272,
+            "V": 1106.7705334424359,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 361.4295939180116,
+            "threshold": 184.82831470818175,
+            "V": 2472.692252272463,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 15,
+      "tokens_sha256": "750e78b025746688617b51bb4d0658511f2f22cfc2778da40cec063354325c84",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": false,
+            "statistic": -2.584398803427148,
+            "threshold": 42.97862969856268,
+            "V": 133.70208817229224,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 10.347571945612167,
+            "threshold": 79.24817914023546,
+            "V": 454.5813830544569,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 16,
+      "tokens_sha256": "dd1fae189f8817a0211f800ca875b012fa2f0a8a1a4207070c53f032ecec8e7b",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 387.2787084664907,
+            "threshold": 133.84299343250123,
+            "V": 1296.6547139762165,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 496.91578653809347,
+            "threshold": 204.94814302313605,
+            "V": 3040.332179719395,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 17,
+      "tokens_sha256": "2633d1e19b93bb3b56feca6e500a92aa5d670f55bb9b34ac9d5070405d34c7dc",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 509.3853992505247,
+            "threshold": 152.36949674430244,
+            "V": 1680.4636673183472,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 719.0353212874235,
+            "threshold": 233.5946889509849,
+            "V": 3949.653433158955,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 18,
+      "tokens_sha256": "9d65cd9095fce1799fa2ff7862e5c891bfe9f28abd1b9809bc13d6b86fa96e5e",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 408.22540191774283,
+            "threshold": 127.42969247719412,
+            "V": 1175.3692675129769,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 634.0256724270471,
+            "threshold": 206.79787804612042,
+            "V": 3095.460148573735,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 19,
+      "tokens_sha256": "c597f4872a01e6305fedfd6d71c03d016b86b9ec825d11063e2c810561c6508a",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 254.45830849749328,
+            "threshold": 116.26930315455796,
+            "V": 978.5053400182462,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 326.878447391732,
+            "threshold": 192.39939715053126,
+            "V": 2679.4180257455805,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 20,
+      "tokens_sha256": "2aa9fce2212d913d33d29b38b43227b6db0e92c04a653055a543424d691d4286",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 240.74328752618578,
+            "threshold": 118.3032732342611,
+            "V": 1013.0399741088186,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 361.3771183406756,
+            "threshold": 195.9654058520086,
+            "V": 2779.6613183147592,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 21,
+      "tokens_sha256": "c632ba09c6b8c58c699a91e435132377603fbb3d63d4a23068b6e5a74bd2c0ad",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 373.56652845111887,
+            "threshold": 138.15785654965165,
+            "V": 1381.606075744384,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 530.3427797929569,
+            "threshold": 213.27300673292072,
+            "V": 3292.3412573181627,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 22,
+      "tokens_sha256": "cde97333ba0c85d8a35482a08a2967d879688ab2c604b751505c1cd0ced6b268",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 220.80821197669843,
+            "threshold": 109.51541934342262,
+            "V": 868.1276760381252,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 301.6002038084681,
+            "threshold": 167.07963447683727,
+            "V": 2020.5988146287466,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 23,
+      "tokens_sha256": "2d2728ac81b5b19d9875bc8f79e696be24afe522fdef57219b377b380dbf0874",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 256.32740540716554,
+            "threshold": 108.07759978471749,
+            "V": 845.4821503858152,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 381.84284752895934,
+            "threshold": 185.7061327919528,
+            "V": 2496.2354892242256,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 24,
+      "tokens_sha256": "bd0a8bca0f67ad0e816b77d31077cf414931ed1d55d3ac28196d9c5e499c22d8",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 368.18018416419693,
+            "threshold": 129.10070934926972,
+            "V": 1206.397192818657,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 507.4435831396596,
+            "threshold": 197.67161950262786,
+            "V": 2828.27543671678,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 25,
+      "tokens_sha256": "e990d905d4049307f7accdf8c29a52412f0af9cc6ed4ea7dd1b7310806a438de",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 510.2273352730344,
+            "threshold": 157.5532995850436,
+            "V": 1796.751709318819,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 764.1860535376909,
+            "threshold": 237.8795297031578,
+            "V": 4095.8798022252477,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 26,
+      "tokens_sha256": "d4ec1d0b5bc6b27ddb60008e3736af2b959680ac262a9cf0c68440bc1069c0c9",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 389.9072472857078,
+            "threshold": 133.2358003408996,
+            "V": 1284.9165738754864,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 513.4412211534332,
+            "threshold": 206.2565505866562,
+            "V": 3079.275607037315,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 27,
+      "tokens_sha256": "884bd03f46c052e5f13a7d981d63d611acab1ddf4a8434fe4af3028e9bab3740",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 351.6706755286992,
+            "threshold": 134.2098175081445,
+            "V": 1303.7719482025118,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 487.3167582435579,
+            "threshold": 205.47201021753457,
+            "V": 3055.894807919107,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 28,
+      "tokens_sha256": "650b2c5de2f328d713a423ede1fe93d4a17b5037b59c949fde00c1ca175b4d0d",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 189.38589916158605,
+            "threshold": 105.0336061579896,
+            "V": 798.5270161580804,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 265.85584164704414,
+            "threshold": 176.77948688532067,
+            "V": 2262.021866822859,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 29,
+      "tokens_sha256": "758186adff20992688a9826bfe4b5f2a1128777b9358fbe769692b4fbadadb7a",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 262.81475638405885,
+            "threshold": 120.22600676015523,
+            "V": 1046.2365933454682,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 441.31005092984185,
+            "threshold": 190.76978381420398,
+            "V": 2634.2211721982626,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 30,
+      "tokens_sha256": "b03feeec69d7d2cb5228414cc614b269175a607f33ac7e507a8937d6c43b96e7",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 335.3517498803339,
+            "threshold": 130.787489851027,
+            "V": 1238.1277861404628,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 429.02323805800773,
+            "threshold": 208.3001445349158,
+            "V": 3140.59694219945,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 31,
+      "tokens_sha256": "4652c2effb50c80861d3e64b8bc2ccab30bc220e258f698033f746656e385ebc",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 312.98786372753034,
+            "threshold": 120.77251381863208,
+            "V": 1055.76989231594,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 399.2588499655512,
+            "threshold": 188.8432735625341,
+            "V": 2581.2858540545235,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 32,
+      "tokens_sha256": "f15b1ceca61f751058a02dedd42795f418d3b2e73284972a496765d2aa342d26",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 58.170563407784314,
+            "threshold": 54.99427720002596,
+            "V": 218.9112383551997,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 72.30378039597949,
+            "threshold": 93.21349666795655,
+            "V": 628.9131280825746,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 33,
+      "tokens_sha256": "a5a507083d344fd6ca08dcdc11b4408fcb97a2bd13e0ef69a99f444000c717c6",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": false,
+            "statistic": 20.75010112504257,
+            "threshold": 39.706611752073925,
+            "V": 114.11920031584056,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 18.70846739832925,
+            "threshold": 64.84768458538251,
+            "V": 304.3841324894836,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 34,
+      "tokens_sha256": "f470dcbd600ce62bedeef266082df5eb2ccc24d36d96cf0d164385b77fe58c12",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": false,
+            "statistic": 51.21763593836559,
+            "threshold": 62.96183943328532,
+            "V": 286.93787378980005,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 61.810035280243234,
+            "threshold": 100.97764623474119,
+            "V": 738.046197882317,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 35,
+      "tokens_sha256": "1ab00b76933454204e7c3cf166078a38de309b8759659d2d9b20cdab2080007e",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 358.63182972234495,
+            "threshold": 123.17510787678093,
+            "V": 1098.1937393338173,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 489.2204455365231,
+            "threshold": 197.36114868651052,
+            "V": 2819.398012649229,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 36,
+      "tokens_sha256": "907fff9783705a59fa93938649ec4163e1e885e9f0ddac002739e2aa79dd7435",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 155.36289987398163,
+            "threshold": 87.9754324063328,
+            "V": 560.2164809334183,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 232.0137992421443,
+            "threshold": 138.92163698948949,
+            "V": 1396.9242137572694,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 37,
+      "tokens_sha256": "e4a190073a23b4fbf318bdd8f2f7e831c27ea9a47ec22932c99c06a0be641de8",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 102.3344470195591,
+            "threshold": 78.04561052413806,
+            "V": 440.8897736011705,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 171.70411987157928,
+            "threshold": 132.41154281240307,
+            "V": 1269.0675886642243,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 38,
+      "tokens_sha256": "9705623a0d5013c60aaf9b53fa83a95a3c3d93c9d7b7c0fdd1bb6d732da88808",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": false,
+            "statistic": 50.56045370202357,
+            "threshold": 61.19471333957759,
+            "V": 271.0571516703233,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 71.33177239279846,
+            "threshold": 103.8383453949386,
+            "V": 780.4562798544423,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 39,
+      "tokens_sha256": "329597d1bf8f701e9f0e0412d3175e488fe91fbd8d1368e04c1fa830990fdf22",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 654.5973542738619,
+            "threshold": 174.9754728340444,
+            "V": 2216.0900941766404,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 841.5914126061828,
+            "threshold": 230.86533962312322,
+            "V": 3857.896153434205,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 40,
+      "tokens_sha256": "fd7d6599f3269e172b07565e22b8b62a4b0e40d61154136eac874c573104fce4",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": false,
+            "statistic": 30.72760363159424,
+            "threshold": 50.30988505400894,
+            "V": 183.20600773516028,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 56.41568108417694,
+            "threshold": 93.37095115620858,
+            "V": 631.0396190743248,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 41,
+      "tokens_sha256": "e497ad1d43f1366917265511bbd2ec23ca02696eabd7ab2ce824464ae2fc9492",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 276.6074585815186,
+            "threshold": 109.38182916831265,
+            "V": 866.011031731924,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 386.13325500907615,
+            "threshold": 166.86150166717286,
+            "V": 2015.3262249561471,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 42,
+      "tokens_sha256": "99b3baeb19d169a185e31f419fe9263b9ba4fdeb6926e6f78c109b2056526769",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 316.5986080187396,
+            "threshold": 130.06748182100816,
+            "V": 1224.5330895502643,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 475.7378461835309,
+            "threshold": 205.0022211820833,
+            "V": 3041.936851574478,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 43,
+      "tokens_sha256": "60ff8d9ee5bde89e9daa0297040b0c883a0add8b50bce95f99b146be8dfbd57b",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 157.2728975908425,
+            "threshold": 96.80203748670833,
+            "V": 678.2691397659685,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 277.626756309511,
+            "threshold": 164.04757651007407,
+            "V": 1947.9270958477016,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 44,
+      "tokens_sha256": "3af1fdceac43a9874b11213e041b8cf999f12def87e959dc14de7af17f6ef301",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 303.33088978496556,
+            "threshold": 126.06835933947748,
+            "V": 1150.3904368836804,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 400.50966732179876,
+            "threshold": 200.72551175505126,
+            "V": 2916.340362542786,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 45,
+      "tokens_sha256": "2bef59e32a245cfd3bd071126a1549f340cfac4848b5680f7ba29539fe38f7ca",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 234.3496127196911,
+            "threshold": 117.40491672285584,
+            "V": 997.7129989419504,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 302.94680820008705,
+            "threshold": 187.1735538057768,
+            "V": 2535.8410821877223,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 46,
+      "tokens_sha256": "e5f4ccb0f88961be2e50825c82811d1aab72143f29d04a99a01d845d08204cf3",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 189.2688160385447,
+            "threshold": 96.42003946688162,
+            "V": 672.9265611856551,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 296.93484865353946,
+            "threshold": 156.71076124720196,
+            "V": 1777.5863286152935,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 47,
+      "tokens_sha256": "91241b4d2802e56194600ba21fbd1ccdaceed63a1f48b639560563d9a2fb44c0",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 646.5032697072314,
+            "threshold": 146.54864407488787,
+            "V": 1554.5212744821463,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 833.5698763474845,
+            "threshold": 212.45443402636042,
+            "V": 3267.116792252091,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 48,
+      "tokens_sha256": "828f609381057d332a24803360dbd58ac6fc42fab955901f4cee4955d93e115d",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 184.3695734595521,
+            "threshold": 88.47366368228481,
+            "V": 566.5797968540255,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 229.03292758588287,
+            "threshold": 144.10571586975675,
+            "V": 1503.126305698761,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 49,
+      "tokens_sha256": "b3ca9209d9701ffbef77cfd98675cad1a6b8e547d9ff75a16bd02d644496114b",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 92.50184036285388,
+            "threshold": 71.9420154383839,
+            "V": 374.6262987257494,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 145.96441117583993,
+            "threshold": 117.18319515443511,
+            "V": 993.9481547923215,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 50,
+      "tokens_sha256": "86a3e385404cf1ce9bf59c1e9e2e4a84886124294a5e0766be53f5678f42d080",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 123.07585923004422,
+            "threshold": 75.0351940614979,
+            "V": 407.5332811063536,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 148.8071918457174,
+            "threshold": 125.28904747657357,
+            "V": 1136.2117492312295,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 51,
+      "tokens_sha256": "a58d7a2dd2e1741115150d061349997f8410e04162e75ecf916ebd65267d46b9",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 93.8747038724303,
+            "threshold": 78.35121040496692,
+            "V": 444.3492801925064,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 157.05317927500062,
+            "threshold": 131.46602597216253,
+            "V": 1251.0081268730196,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 52,
+      "tokens_sha256": "6df460b162723ade2e9276e3e95a09ca96d8997fbb6771e1bc5e462f7c1b588b",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 323.763375928032,
+            "threshold": 114.04314526255042,
+            "V": 941.3940170222415,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 442.53143456284397,
+            "threshold": 172.25417531811735,
+            "V": 2147.694852827562,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 53,
+      "tokens_sha256": "a6974c1267dd46bfeb2f6ef93a252cb6b430b390a57ede83b682a64d0f740f43",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 319.58058575188136,
+            "threshold": 129.32334988681825,
+            "V": 1210.5617635902113,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 442.26106520979914,
+            "threshold": 198.0346208049612,
+            "V": 2838.6725827339624,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 54,
+      "tokens_sha256": "f44fc27be040e00204c5f5e0b908c3cd002406df27302e1dac4ef65334aa457a",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 615.690272207279,
+            "threshold": 158.0286058624408,
+            "V": 1807.608930994618,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 773.9457970123526,
+            "threshold": 226.91353170122875,
+            "V": 3726.9524461723254,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 55,
+      "tokens_sha256": "f3eb74b0367fc49e20abe2cd2f5a7b81dc08fc5a2d2c55bc8f8d39b317ce4ec5",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 272.17695976695205,
+            "threshold": 113.8841732983851,
+            "V": 938.7713087722248,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 365.4679438552756,
+            "threshold": 181.76759055410798,
+            "V": 2391.4756416149585,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 56,
+      "tokens_sha256": "72925715d14cd9320ee3bc1017f0be33d691c4c3a0b458cf71c3d71c27abebaa",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 55.095187429206725,
+            "threshold": 47.28815865062546,
+            "V": 161.85937821006775,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 78.99846419877632,
+            "threshold": 82.86345229585218,
+            "V": 497.0031109294548,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 57,
+      "tokens_sha256": "586c6f622951f02bb6264b93e4c2eca7a28250f5f823e649de055d473a1f1f52",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 477.0819059719592,
+            "threshold": 132.84074575396264,
+            "V": 1277.308113835584,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 667.3099532688999,
+            "threshold": 213.93726405930568,
+            "V": 3312.881761492078,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 58,
+      "tokens_sha256": "50eeb4803b28768902768cc252f1261542be5e032abac8c8fb9a469883f9bf0c",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 430.12952565804153,
+            "threshold": 131.39073187241118,
+            "V": 1249.5755657771101,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 598.0776615511506,
+            "threshold": 209.58557724245654,
+            "V": 3179.478167220645,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 59,
+      "tokens_sha256": "fe91923e87816a3f2c240122f491f85e4d6f6a540bb59cb49919932fcec3d032",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 86.67861343423381,
+            "threshold": 78.50921010105152,
+            "V": 446.14319860497983,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 128.8712695005088,
+            "threshold": 129.04861801100748,
+            "V": 1205.4238416075473,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 60,
+      "tokens_sha256": "5869c5f9c63c5c11532d7207791b9e30136eee7257f76e2d3372faecf5d295a4",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 471.8317774742663,
+            "threshold": 135.77372384940765,
+            "V": 1334.333900335533,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 695.9546735398852,
+            "threshold": 211.24867267245375,
+            "V": 3230.1377150443277,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 61,
+      "tokens_sha256": "71b18f5fdbc4c72e2676b8af3d0be168f143b585dae96f2b5a4e2e77ffecafbe",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 469.5099422758174,
+            "threshold": 136.57388448296666,
+            "V": 1350.107608727793,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 630.1269497856598,
+            "threshold": 211.0252049915868,
+            "V": 3223.307380129353,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 62,
+      "tokens_sha256": "e3551913b40341f0e23646cc017a4e7431b89140f0ac33aeb96d22da4571919b",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 606.9416550172118,
+            "threshold": 160.7478941826229,
+            "V": 1870.3532797962162,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 798.178744208988,
+            "threshold": 231.47389886776782,
+            "V": 3878.261728529321,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 63,
+      "tokens_sha256": "39528b3a278bf4b3c07b3de5f1844e759f75ae57cfc81c016668ec0ff2741fcd",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 401.7798712070738,
+            "threshold": 138.47643397443747,
+            "V": 1387.9850973167577,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 556.0579841255493,
+            "threshold": 210.7648370568808,
+            "V": 3215.3582998787924,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 64,
+      "tokens_sha256": "dbefff344865585c8dd89e1bf710ec37d2a3a9fbc9edae21e131a2f40b3a016e",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 309.58351695897557,
+            "threshold": 126.98622244871707,
+            "V": 1167.2026613956104,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 464.25151527880826,
+            "threshold": 202.62688263153944,
+            "V": 2971.852063860718,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 65,
+      "tokens_sha256": "4611091e73e28e9eb271ef93768413037fd90ed55951925fa31ef783de423036",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 458.21801927199476,
+            "threshold": 143.5857382513462,
+            "V": 1492.2983948138663,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 577.969377599855,
+            "threshold": 213.61164199883234,
+            "V": 3302.804728496471,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 66,
+      "tokens_sha256": "dea529c158ada57aa3dc3af81ebbb83bd2e5fefdc25ea21b8ebbfc723e917b5a",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 131.1437881726684,
+            "threshold": 86.84925234754101,
+            "V": 545.9655364657253,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 188.32053210152324,
+            "threshold": 145.37926287790083,
+            "V": 1529.8117276409996,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 67,
+      "tokens_sha256": "6fe7462d3e51a17b4b3a1a985aa9a02374fc5115604813cc75696b843bf2606b",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 392.94470024002584,
+            "threshold": 135.19858201142708,
+            "V": 1323.0532813977993,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 510.648594306409,
+            "threshold": 211.41752375689052,
+            "V": 3235.3034774909947,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 68,
+      "tokens_sha256": "ba5dc30b92c18d9f4af5917a7c57ad008f18fe9fad3eaaf968845886fc108a1d",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 293.68121973435484,
+            "threshold": 112.87142222473538,
+            "V": 922.1489065918192,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 438.95077709919315,
+            "threshold": 183.73201018048616,
+            "V": 2443.4458229632346,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 69,
+      "tokens_sha256": "fb36a00b41df52df0d15a17b37b60e0db6e1517102ff3d4c9955467ef6c97b17",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": false,
+            "statistic": 60.88839971399145,
+            "threshold": 65.72633767230032,
+            "V": 312.6885138039945,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 86.38000752783344,
+            "threshold": 108.278836946134,
+            "V": 848.6336050497043,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 70,
+      "tokens_sha256": "106542737196f27d81a7c8245f220ffb02d5273241a886a40c1ead4ff2cb5510",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 469.6120624295646,
+            "threshold": 148.45672436510972,
+            "V": 1595.264895694574,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 676.2764448434256,
+            "threshold": 229.1064008738981,
+            "V": 3799.334284546753,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 71,
+      "tokens_sha256": "8473faf1b9a7141250c99c8d47cda931493ea7a627adfdad3457da7ed94fbee1",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 225.14099880296297,
+            "threshold": 100.76171509721271,
+            "V": 734.8930889476956,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 324.1250502568181,
+            "threshold": 168.3321016557908,
+            "V": 2051.006101364869,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 72,
+      "tokens_sha256": "765f5b83c799b131c47d9b98b40a498bc41b5c0832ebd96678079295425dae5b",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 294.890136544101,
+            "threshold": 121.73717968583449,
+            "V": 1072.7030937932186,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 406.6636360372531,
+            "threshold": 195.37986796514866,
+            "V": 2763.0750702928626,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 73,
+      "tokens_sha256": "37351390584adbe85c06353bbcc71f0ed22b9b66704992997a514d47dfd2ae23",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 77.22127323740177,
+            "threshold": 64.86344582631851,
+            "V": 304.5321117024067,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 81.14650835563019,
+            "threshold": 112.58352398708722,
+            "V": 917.4507029741449,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 74,
+      "tokens_sha256": "9219f3e8e544b7bd09319057c74b50396d1415b437681618f839eeaf477483d0",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 310.8042234280001,
+            "threshold": 121.95279661347207,
+            "V": 1076.5063324621974,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 406.3831113539488,
+            "threshold": 195.38332870489975,
+            "V": 2763.172955182625,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 75,
+      "tokens_sha256": "963e1edd2f074923bd7c1592adb6e0d3dd6dbb4977d20e67e4a3ab380d4f9509",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 510.2266667821441,
+            "threshold": 160.46479779828013,
+            "V": 1863.7712464125577,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 679.5116880896807,
+            "threshold": 232.03229868131692,
+            "V": 3896.995873257765,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 76,
+      "tokens_sha256": "128bce8bbe04805b77336775a19368e6f1be9c866f7e891e1e8b46ea70191dd1",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 259.6704588860315,
+            "threshold": 128.3170845648607,
+            "V": 1191.796287378885,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 360.5612579725514,
+            "threshold": 199.780879619048,
+            "V": 2888.9558365508337,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 77,
+      "tokens_sha256": "0adeb170a3bdd29d5682ce90a613e0c4e1ad9b37281d3eed488838b6a3c259f6",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 279.2500905616014,
+            "threshold": 119.5675160766928,
+            "V": 1034.8072798879446,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 434.8465083248959,
+            "threshold": 197.22758755843748,
+            "V": 2815.58333518822,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 78,
+      "tokens_sha256": "c2b6aecb5c3cdab6850f06e6d42c66dd95fbecddc851866c9ff6a68d19742d80",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 389.6162032432194,
+            "threshold": 130.9688895736164,
+            "V": 1241.5646866020425,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 575.222844775298,
+            "threshold": 202.51996208250966,
+            "V": 2968.7165646048084,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 79,
+      "tokens_sha256": "47823c9e815e7753c75a0500e4ce2b3cea1fe0fc122e92c9e8e6c072606edec4",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 319.8291187555579,
+            "threshold": 115.81791155734585,
+            "V": 970.9223977808401,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 447.7129464822572,
+            "threshold": 184.12039769745903,
+            "V": 2453.7870465256055,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 80,
+      "tokens_sha256": "62cca035691b1519864a8e03362f1efb55329e4d62947eee2aadb465fbd6ad19",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 533.153266962247,
+            "threshold": 146.7785880067067,
+            "V": 1559.4033826584157,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 691.1380202674936,
+            "threshold": 211.22411348995186,
+            "V": 3229.3867050679746,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 81,
+      "tokens_sha256": "7ce85f5d59f11fb6222d51823e06a003adb9e368ab02b4b86a4c125f05c478a8",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 324.6889983500179,
+            "threshold": 121.30763046468441,
+            "V": 1065.1463908782807,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 409.4147259139876,
+            "threshold": 191.69460609258334,
+            "V": 2659.823670708074,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 82,
+      "tokens_sha256": "cd26b92773276adb9dedd1ca7372700a4d4cd9e363c673a039ee2e172239dcfe",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 294.2955735406571,
+            "threshold": 113.44312201657657,
+            "V": 931.5140311951081,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 426.34812105647336,
+            "threshold": 182.21661040013936,
+            "V": 2403.3055431726766,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 83,
+      "tokens_sha256": "caa44c8566d6a640046d81b1957e0706d360326e6ea5f7452c5a1bf9fad283cd",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 65.57360663995989,
+            "threshold": 64.08725133590843,
+            "V": 297.287296517914,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 59.138690383221416,
+            "threshold": 103.91054463484319,
+            "V": 781.5419662565655,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 84,
+      "tokens_sha256": "513ebc42264fa52960b1fe4da9c4c17bc7a8f0cb239795e8cc1041edb0e61598",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 472.67739744701765,
+            "threshold": 139.88147369014337,
+            "V": 1416.2941427051726,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 675.6926476471693,
+            "threshold": 213.99632922737763,
+            "V": 3314.7112971798883,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 85,
+      "tokens_sha256": "fcab699546e6b959af25efe573c7c138c692bbcb92bf650c61851487d7915d16",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 69.77428244959107,
+            "threshold": 63.90513231331216,
+            "V": 295.6000734716021,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 88.27345430095136,
+            "threshold": 103.27784355759738,
+            "V": 772.0534775139898,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 86,
+      "tokens_sha256": "d7b5e525c455ca8c3da471bb80ee38e063cac0b43ebed7b417e381007427b09e",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 87.17486314176213,
+            "threshold": 72.01582135930191,
+            "V": 375.3953575798278,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 111.58520572071086,
+            "threshold": 120.7911047735752,
+            "V": 1056.0949543779107,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 87,
+      "tokens_sha256": "f152175c293bf88956b14273629915c5311d03d2d4ad8eccb944e425fb063a92",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 452.2811570747994,
+            "threshold": 139.15161618487866,
+            "V": 1401.5531460544853,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 678.4700934258369,
+            "threshold": 214.27406935751407,
+            "V": 3323.3210315604956,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 88,
+      "tokens_sha256": "93cdfbf53b8d2c6aeac23ae395701105d083dbaa8926dc7221ae71e997c14900",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 312.969948225658,
+            "threshold": 119.57483799682423,
+            "V": 1034.9340201346567,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 474.5674159649967,
+            "threshold": 189.5960603937906,
+            "V": 2601.9064562274607,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 89,
+      "tokens_sha256": "3a040cf542d227b9a77b64f3742932e44ed8a38f5dbdc969cf29d4915ef4951a",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 543.024178630865,
+            "threshold": 152.13856109857116,
+            "V": 1675.3736082377743,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 695.2581217527968,
+            "threshold": 220.18528677585283,
+            "V": 3509.212367444229,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 90,
+      "tokens_sha256": "1174f1023359e7f1130b7f51712205f6b0298ba21ec7db168ba98b3b18e84009",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 96.5904183024912,
+            "threshold": 78.85307074267202,
+            "V": 450.0598613030944,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 149.5085558099303,
+            "threshold": 133.7119390883958,
+            "V": 1294.1166799277046,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 91,
+      "tokens_sha256": "91ce9bac2db2ce0dea8d51e56f03d853eeab6cdc68d3b30030f44a055073f79f",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 460.4816269955499,
+            "threshold": 144.09339297211602,
+            "V": 1502.8692433119954,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 583.403198906633,
+            "threshold": 214.3524596227786,
+            "V": 3325.7530913215314,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 92,
+      "tokens_sha256": "39f7dbcbfe994db293390a6e13c976a7ef6dd34150214b09aa41fd5e0c165849",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 309.9351548155904,
+            "threshold": 113.16659081465359,
+            "V": 926.978212124671,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 443.8139142819289,
+            "threshold": 181.03527392712516,
+            "V": 2372.244606405518,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 93,
+      "tokens_sha256": "b707a67bf4186d3705170fcc43c4e9c6c5be615623441410c8e9adc780640b38",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 950.5895784947877,
+            "threshold": 197.4354360393981,
+            "V": 2821.5208725381412,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 1171.8044627815877,
+            "threshold": 246.6815525442774,
+            "V": 4404.599316858084,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 94,
+      "tokens_sha256": "473f116b83fd6505a2d5834177d0d8c80591aa520f5905c0892fdab9a22bb83a",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 319.45618322622795,
+            "threshold": 115.06246544577711,
+            "V": 958.2976248987416,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 411.28192556666954,
+            "threshold": 192.52553841126598,
+            "V": 2682.932547808032,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 95,
+      "tokens_sha256": "1b90daf5b09eb02f2387bfb4d20c3660e35d567689122936ee1243f2f886e401",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 1007.6044708274903,
+            "threshold": 208.0804084377053,
+            "V": 3133.974397395139,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 1186.150288393615,
+            "threshold": 258.1920285828126,
+            "V": 4825.2377893684425,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 96,
+      "tokens_sha256": "b8e7338dfcef202969660964408b2a9ae8242a92e703b786bc9ae40ef41c7103",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 348.19884812475664,
+            "threshold": 130.85048518238978,
+            "V": 1239.3207909784064,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 459.88402784695813,
+            "threshold": 204.64932931599765,
+            "V": 3031.47305441739,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 97,
+      "tokens_sha256": "349c077052d518044ef5f44aa8264221a9f0d7d347ebb6962cf3556726f55576",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 105.91612420942639,
+            "threshold": 74.79152198468012,
+            "V": 404.89070145585237,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 163.93606925897325,
+            "threshold": 128.6727992660872,
+            "V": 1198.4131314948963,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 98,
+      "tokens_sha256": "0dfad41af8d44363d1213d7b5f0f0369fab3afbdefacbf395fb11335ff4bdc12",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": true,
+            "statistic": 247.86856793908981,
+            "threshold": 101.63034646856242,
+            "V": 747.6182136002063,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": true,
+            "statistic": 406.8589943180276,
+            "threshold": 164.34556865535905,
+            "V": 1955.0103359070645,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    },
+    {
+      "source": "wm",
+      "prompt_idx": 99,
+      "tokens_sha256": "345dfd7efa819023f7992d142c180d1943f15dfefd519149e7b0fec7daa2df08",
+      "scores": {
+        "6144": {
+          "map": {
+            "decision": false,
+            "statistic": 28.77721939749452,
+            "threshold": 55.762308235633114,
+            "V": 225.06841182016618,
+            "r": 6083,
+            "status": "ok"
+          },
+          "entropy": {
+            "decision": false,
+            "statistic": 88.86272161929531,
+            "threshold": 95.97405349465187,
+            "V": 666.7157833616501,
+            "r": 6083,
+            "status": "ok"
+          }
+        }
+      }
+    }
+  ]
+}
