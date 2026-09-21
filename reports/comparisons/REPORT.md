@@ -1,80 +1,76 @@
-# Watermark comparisons: final consolidated report
+# Watermark comparison results
 
-Closed 19 September 2026. This report consolidates the completed baseline redetection, paired diversity studies and bounded sensitivity experiments. It uses saved results only. No generation, model inference, threshold tuning or further experiment was performed for this report.
+## Main findings
 
-## Highlighted takeaways
+- **PRC has lower Self-BLEU than the tested TextSeal and Gumbel-Max settings**, including with matched repeat handling, but lower detection rates.
+- **A diversity advantage over shallow SynthID is not established at temperature 1.** The paired PRC-minus-depth-2 Self-BLEU intervals include zero in all three model/decoder settings.
+- **Repeat handling substantially reduces the apparent repetition advantage.** With fallback enabled, PRC, SynthID, TextSeal and Gumbel have similar observed repeated-four-gram fractions on the 8B cohort.
+- **Lower temperature exposes a substantial PRC detection loss.** At temperature 0.7 and 1,024 tokens, PRC detects 3/100 responses, versus 93/100 for SynthID depth 2 and 100/100 for depth 10.
 
-- No general PRC advantage over SynthID is established. At T=1 and 1,024 tokens, PRC-minus-depth-2 Self-BLEU is -0.00097 [-0.00459, +0.00265] for 8B full vocabulary, +0.00095 [-0.00503, +0.00734] for 8B top-100, and +0.00051 [-0.00141, +0.00248] for 0.6B full vocabulary. These intervals include zero; that is uncertainty, not equivalence. PRC detection is respectively 97/100, 85/100 and 99/100, versus 100/100 for depth 2.
+## Evaluation protocol
 
-- PRC does have lower between-response Self-BLEU than the tested TextSeal alpha=.1 and Gumbel-Max configurations. In the 8B fallback-on comparison at 1,024 tokens, paired differences are -0.02837 [-0.03531, -0.02201] against TextSeal and -0.18829 [-0.21248, -0.16445] against Gumbel. Both baselines detect 100/100 versus PRC 97/100. This is a configuration-specific diversity/detection tradeoff, not a parameter-frontier result.
+The paired studies use 50 fixed prompts, sampling seeds 12345 and 67890, fixed watermark keys, and 1,024 generated tokens per response. The reference model is **Qwen3-8B-Base**, run in BF16 on H100, with temperature 1, top-p=1 and no top-k truncation. PRC uses η=.05, t=3 and row rate 99/100; TextSeal uses α=.1. SynthID depths 2, 10 and 30 use their exact fixed key lists. Model, decoding and repeat-policy changes are identified below.
 
-- Repeat handling explains much of the native-policy repetition gap. With fallback on, repeated-four-gram fractions at 1,024 tokens are 2.38% PRC, 2.42% SynthID, 2.74% TextSeal and 2.81% Gumbel. All paired PRC-versus-baseline repetition intervals include zero. Between-response Self-BLEU remains different: reducing loops does not necessarily reduce overlap between two responses.
+**All detection is completion-only:** no original prompt, BOS/chat template or generation-time probability trace is supplied to the detector. PRC retains first-coordinate abstention. Detectors are PRC posterior MAP/Hoeffding, TextSeal entropy-weighted, SynthID weighted-normal, and Gumbel Gamma, at nominal p<.001.
 
-- SynthID depth 2 is an essential comparator. Depth 30 has higher Self-BLEU than depth 2 at the long lengths, while both detect 100/100 at T=1. At 64/128 tokens depth 10 detects 100/100 versus depth 2 at 45/100 and 82/100; depth 30 adds no observed detection benefit over depth 10 on these cutoffs. Neither detector equivalence nor perfect population detection follows.
+Self-BLEU measures overlap between a prompt's two decoded responses; lower indicates less lexical overlap. It averages the two BLEU directions on a 0–1 scale using SacreBLEU 2.4.3, 13a tokenization, exponential smoothing and effective order. Repeated-four-gram fraction measures repetition within each response. Intervals are marginal 95% percentile intervals from **2,000 paired bootstrap resamples of the 50 prompts**, retaining both responses and all compared arms. Results at 1,024 tokens are emphasized; 400-token results are secondary. Full settings and metric definitions are in the [asset catalogue](README.md) and [source manifests](data/source_manifest.json).
 
-- The final temperature result is unfavorable for PRC detection. At T=.7, PRC-minus-depth-2 Self-BLEU is -0.01098 [-0.01976, -0.00227], but PRC detects only 3/100 at 1,024 tokens versus 93/100 and 100/100 for SynthID depths 2 and 10. Its T=1 detection was 97/100. At 400 tokens the counts are 1/100, 87/100 and 100/100. This does not demonstrate an improved overall tradeoff.
+## Main comparison: 8B, full vocabulary, temperature 1
 
-- The larger, separate corrected comparison also shows weaker PRC detection at shorter lengths: 274/500 at 400 tokens and 466/500 at 1,024, versus near-ceiling baseline counts. Its native TextSeal/Gumbel repetition results are policy-sensitive and should not be presented as a matched-fallback advantage.
+Repeat fallback is **ON for SynthID, TextSeal and Gumbel** in this table. Detection columns give counts out of 100. Self-BLEU, its paired difference, and repetition refer to 1,024 tokens. Negative differences favor PRC.
 
-- All conclusions are exploratory: fixed keys, a reused 50-prompt paired cohort, nominal thresholds, and no empirical FPR calibration. The two response slots are not 100 independent prompts. Historical and pilot nulls overlap and must not be pooled. Self-BLEU and repetition do not measure semantic quality.
+| Method | Self-BLEU | PRC − method Self-BLEU [95% CI] | Detected, 400 tokens | Detected, 1,024 tokens | Repeated 4-grams |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Ordinary sampling | 0.01928 | −0.00038 [−0.00369, +0.00297] | — | — | 2.92% |
+| PRC | 0.01890 | — | 55 | 97 | 2.38% |
+| SynthID depth 2 | 0.01987 | −0.00097 [−0.00459, +0.00265] | 100 | 100 | 3.28% |
+| SynthID depth 10 | 0.02206 | −0.00316 [−0.00731, +0.00102] | 100 | 100 | 2.42% |
+| SynthID depth 30 | 0.02890 | −0.01000 [−0.01546, −0.00506] | 100 | 100 | Not reported |
+| TextSeal α=.1 | 0.04727 | −0.02837 [−0.03531, −0.02201] | 100 | 100 | 2.74% |
+| Gumbel-Max | 0.20718 | −0.18829 [−0.21248, −0.16445] | 100 | 100 | 2.81% |
 
-- The campaign is closed. Depth 20, a full TextSeal alpha sweep, PRC eta sweep, Bayesian SynthID, attacks, unseen-prompt confirmation and a large null-calibration campaign were not completed. Cumulative Self-BLEU planning charge is $12.51222 of the $200 ceiling, including allowances; this is not an account-wide settled invoice.
+PRC's lower Self-BLEU relative to TextSeal and Gumbel persists after matching repeat handling. Against SynthID depth 2, the estimated difference is small and uncertain, while PRC detection is lower, especially at 400 tokens. With fallback ON, all available paired PRC-versus-baseline repetition intervals at 1,024 tokens include zero.
 
-## 1. Cohorts, scope and experiment ledger
+[Full 1,024-token metrics](tables/05_8b_full_1024.csv) · [400-token metrics](tables/05_8b_full_400.csv) · [Paired differences](tables/06_8b_contrasts_1024.csv)
 
-Two different cohorts are kept separate throughout. The historical baseline campaign has 500 completions per watermark and 500 shared ordinary completions (2,500 source responses). The paired diversity campaign uses the same 50 canonical prompts with two sampling seeds per configuration. Its completed evaluation configurations contain 2,500 response slots across four decoder/model regimes; these are not 2,500 independent prompts or necessarily unique texts. Native Gumbel seed slots duplicate one another. Some historical first-seed TextSeal/SynthID/Gumbel responses also match the later pilot; do not add cohorts as independent evidence.
+## Repeat handling and SynthID depth
 
-**Completed experiments and their non-overlapping roles**
+The repeat-policy ablation changes only whether repeated contexts fall back to ordinary sampling. These are paired results on the same 50 prompts, at 1,024 tokens.
 
-| Experiment | Evaluation cohort | Work performed | Status |
-| --- | --- | --- | --- |
-| Historical controlled baseline / proxy campaign | 500 prompts per setting | Saved generation and historical detection | Completed; prompted native/proxy scores superseded for paper detection |
-| Completion-only baseline redetection | 500 per watermark + 500 shared nulls | PRC prefix rescoring; shared-null replay; TextSeal direct-prefix replay; SynthID/Gumbel saved-score audit | Completed; 24 method/length cells |
-| Two-response implementation validation | 50 prompts; seeds 12345/67890 | 600 saved full-length slots, 200 short slots; same-seed controls and repairs | Completed; only five settings enter Stage A |
-| Stage A native-policy pilot | 5 settings x 100 = 500 slots | Reuse validation outputs; completion-only scoring | Completed; no extra generation |
-| Repeat-handling intervention | 3 modified settings x 100 = 300 | SynthID d=10 OFF; TextSeal/Gumbel ON | Completed; native controls reused |
-| Paired Self-BLEU / matched repetition | Saved Stage A + repeat outputs | Paired analysis only | Completed; zero GPU cost |
-| SynthID depths 2 and 30 | 2 settings x 100 = 200 | New responses; d=10/PRC/ordinary reused | Completed; depth 20 cancelled |
-| SynthID 64/128/256-token scoring | Saved d=2/10/30 and nulls | Detection-only CPU analysis; no new text | Completed; 6,300 prefix scores |
-| 8B top-100, T=1 | 5 settings x 100 = 500 | Ordinary, PRC, SynthID d=2/10/30 | Completed; matched ordinary controls |
-| 0.6B full vocabulary, T=1 | 6 settings x 100 = 600 | Ordinary, PRC, SynthID d=2/10, TextSeal, Gumbel | Completed; all contextual fallbacks ON |
-| 8B full vocabulary, T=.7 | 4 settings x 100 = 400 | Ordinary, PRC, SynthID d=2/10 | Completed; temperature-faithful precision; stopped |
+| Method | Self-BLEU, OFF → ON | Repeated 4-grams, OFF → ON |
+| --- | ---: | ---: |
+| TextSeal | 0.03770 → 0.04727 | 32.17% → 2.74% |
+| Gumbel-Max | 1.00000 → 0.20718 | 51.73% → 2.81% |
+| SynthID depth 10 | 0.02138 → 0.02206 | 9.35% → 2.42% |
 
-Counts are response slots. Validation controls, short checks and reused rows are not added to evaluation sample sizes.
+Both policies detect 100/100 responses for each baseline at 400 and 1,024 tokens. All 300 original/modified response pairs pass the check that divergence never precedes the first repeated context. SynthID's ON-minus-OFF Self-BLEU difference is +0.00067 [−0.00309, +0.00421]: this ablation does not support fallback as the main explanation for its between-response diversity. Native Gumbel's two seed slots are identical under fixed keys, explaining Self-BLEU=1.
 
-[LaTeX](tables/01_experiment_ledger.tex) · [CSV](tables/01_experiment_ledger.csv)
+**Depth matters at short lengths.** SynthID depth 2 detects 45/100, 82/100 and 100/100 responses at 64, 128 and 256 tokens; depths 10 and 30 detect 100/100 at all three lengths. Depth 30 has higher long-prefix Self-BLEU than depth 2, without an observed detection gain over depth 10 on these cutoffs. These are frequentist-detector results, not an evaluation of the Bayesian SynthID detector.
 
-Validation-only configurations include TextSeal alpha=0 full-length pairs and alpha=.5 / SynthID depths 2/20/30 short checks. Alpha=0 was deterministic across seeds. The alpha=0 pairs were not promoted to a scored comparison row. Depth 20 has a short validation check only, not a full-length evaluation arm. The initial setup had image/import failures and a PRC assertion repair, and Stage A had a detector-verification argument repair; all are preserved in the historical reports. The top-100 v1 run completed validation only; v2 supplies the evaluation cohort. These records are not hidden or counted as extra evidence.
+[Repeat-policy intervals](tables/07_repeat_policy.csv) · [Short-prefix detection and nulls](tables/09_short_prefixes.csv)
 
-## 2. What was held fixed, and what was not
+## Sensitivity results
 
-**Numerical and policy differences that must accompany cross-study comparisons**
+Each setting has its own matched ordinary control and 100 responses per arm. The difference column is measured at 1,024 tokens; detection entries show **400 / 1,024 tokens**, each out of 100.
 
-| Regime | Model / temperature | Sampling | Probability arithmetic | Repeat policy |
-| --- | --- | --- | --- | --- |
-| 8B original + depths | Qwen3-8B-Base / 1 | Full vocabulary | Ordinary FP32; PRC bucket BF16; SynthID update BF16 | Native plus separate on/off ablation |
-| 8B top-100 | Qwen3-8B-Base / 1 | Top-100 before watermark | Common FP32 probabilities; BF16 model | Native SynthID ON |
-| 0.6B full vocabulary | Qwen3-0.6B-Base / 1 | Full vocabulary | Common FP32 probabilities; BF16 model | All contextual baselines ON |
-| 8B temperature follow-up | Qwen3-8B-Base / .7 | Full vocabulary | Original method paths; single BF16 temperature division | Native SynthID ON |
+| Setting | PRC − SynthID depth 2 Self-BLEU [95% CI] | PRC detected | SynthID depth 2 detected |
+| --- | --- | ---: | ---: |
+| 8B, top-k=100, temperature 1 | +0.00095 [−0.00503, +0.00734] | 33 / 85 | 100 / 100 |
+| 0.6B, full vocabulary, temperature 1 | +0.00051 [−0.00141, +0.00248] | 79 / 99 | 100 / 100 |
+| 8B, full vocabulary, temperature 0.7 | −0.01098 [−0.01976, −0.00227] | 1 / 3 | 87 / 93 |
 
-Consequently top-100 versus original full vocabulary is not a pure truncation-only comparison, and 0.6B versus original 8B is not a pure model-size comparison. The T=.7 follow-up explicitly preserves the original numerical paths.
+SynthID depth 10 detects 100/100 at both lengths in all three settings. The 0.6B comparison also includes TextSeal and Gumbel with fallback ON: PRC again has lower Self-BLEU, with 99/100 versus 100/100 detection at 1,024 tokens. The temperature-0.7 Self-BLEU advantage over SynthID accompanies a severe detection loss, not an improved overall tradeoff.
 
-[LaTeX](tables/02_protocols.tex) · [CSV](tables/02_protocols.csv)
+**Numerical paths differ across studies.** The original 8B pipeline uses BF16 PRC bucket probabilities and SynthID updates, followed by FP32 sampling; ordinary sampling uses FP32 softmax. The temperature-0.7 study preserves these paths and applies temperature once. Top-100 and 0.6B use FP32 probability arithmetic, so their comparisons with the original study do not isolate truncation or model size alone. Temperature-0.7 replay records eight bucket-endpoint contradictions in each of the PRC and ordinary cohorts; the detector is unchanged, and their causal contribution is unresolved.
 
-Paired studies preserve prompts 0-49, their original 50-token formatting, seeds 12345 and 67890, fixed secret keys independent of sampling seeds, H100 BF16 model execution, and exactly 1,024 completion-generation steps with the original forced-length/EOS policy. PRC uses eta=.05, t=3 and row rate 99/100 with the fixed artifact and position-addressed randomness. TextSeal uses alpha=.1 and original keys. SynthID uses its fixed nested key bank, ngram length 4, two leaves, history 1,024, native context initialization and fresh repeat state per response. No key sweep was run.
+[Top-100 results](tables/10_8b_topk_1024.csv) · [0.6B results](tables/10_0p6b_full_1024.csv) · [Temperature-0.7 results](tables/10_8b_t07_1024.csv)
 
-Detection takes raw completion IDs only, without the original prompt, BOS/chat template or generation-time traces. PRC reconstructs bucket probabilities and abstains at coordinate 1, preserving coordinates and its MAP/Hoeffding detector. TextSeal uses pinned upstream entropy-weighted scoring, with a separate direct forward at each prefix. Its BF16 shape-dependent entropy check showed that slicing a longest-prefix trace is not numerically identical at every length. SynthID receives the exact key list for each depth and the official context-repetition mask in the paired studies; the legacy 500-prompt comparison retains its audited historical tuple mask. Its detector is the existing layer-weighted normal test, not the Bayesian detector. Gumbel retains its Gamma test. All comparisons use nominal p<.001; none tunes thresholds on the reported nulls.
+## Larger detection cohort and false positives
 
-Self-BLEU is the average of both directions of sentence BLEU between a prompt's two responses, divided by 100: SacreBLEU 2.4.3, 13a tokenization, exponential smoothing, effective order, case-sensitive, decoded with the pinned model tokenizer and special tokens skipped. Repeated token four-gram fraction is 1-unique4/(T-3); distinct-3 is unique3/(T-2), calculated on raw completion IDs including special tokens. Average within each prompt before summarizing. The bootstrap resamples 50 prompt clusters jointly 2,000 times, seed 20260918, keeping both seed slots and all compared arms; differences are bootstrapped directly, not formed from marginal interval endpoints.
+The separate 500-response-per-method cohort provides broader detection evidence. Entries are **true positives / false positives**, each out of 500, after completion-only scoring.
 
-## 3. Corrected 500-prompt baseline comparison
-
-This is the main larger-cohort completion-only comparison. PRC watermarked traces were reused only after score agreement, and all 500 comparison shared nulls were replayed because they differ from the older PRC null cohort. TextSeal replayed all 500 marked and 500 null responses at each actual length. Token-only SynthID/Gumbel scores were audited against saved text and reused. Repetition was recomputed on actual prefixes, correcting older quality columns that referred to the full response even on shorter detection rows.
-
-**Completion-only detection and shared-null counts (500 responses per cell)**
-
-| Tokens | PRC TP / FP | TextSeal TP / FP | SynthID d=10 TP / FP | Gumbel TP / FP |
-| --- | --- | --- | --- | --- |
+| Tokens | PRC | TextSeal | SynthID depth 10 | Gumbel |
+| --- | ---: | ---: | ---: | ---: |
 | 128 | 46 / 0 | 500 / 0 | 500 / 1 | 500 / 1 |
 | 256 | 151 / 0 | 500 / 0 | 500 / 0 | 500 / 1 |
 | 400 | 274 / 0 | 500 / 0 | 499 / 0 | 500 / 2 |
@@ -82,726 +78,14 @@ This is the main larger-cohort completion-only comparison. PRC watermarked trace
 | 768 | 436 / 0 | 500 / 1 | 500 / 0 | 500 / 0 |
 | 1024 | 466 / 0 | 500 / 0 | 500 / 0 | 500 / 0 |
 
-Entries are true positives out of 500 / false positives out of 500, not percentages. SynthID uses the legacy audited tuple-mask scorer here. Native TextSeal/Gumbel generation fallback is OFF.
+This cohort retains native TextSeal/Gumbel generation without fallback and SynthID's historical tuple-mask scorer. The paired studies instead use SynthID's official context mask. Consequently, the cohorts are reported separately; historical native-policy repetition is not evidence of an advantage under matched fallback.
 
-[LaTeX](tables/03_large_detection.tex) · [CSV](tables/03_large_detection.csv)
+In the paired studies, every 1,024-token pilot-null count is 0/100. At shorter lengths, the exceptions are SynthID depth 10 at 400 tokens in the 8B full-vocabulary and top-100 studies, and depth 2 at 256 tokens: 1/100 each. The nominal .001 thresholds were not tuned or empirically matched. Small null samples and boundary bootstrap intervals do not establish zero FPR or perfect detection.
 
-**PRC detection correction on the same saved historical watermarked responses**
+## Interpretation and paper assets
 
-| Tokens | Old prompted TP /500 | Completion-only TP /500 | Change (pp) |
-| --- | --- | --- | --- |
-| 128 | 68 | 46 | -4.4 |
-| 256 | 205 | 151 | -10.8 |
-| 400 | 339 | 274 | -13.0 |
-| 512 | 400 | 345 | -11.0 |
-| 768 | 469 | 436 | -6.6 |
-| 1024 | 480 | 466 | -2.8 |
+These results support **configuration-specific lexical diversity/detection tradeoffs**. They do not establish a general PRC advantage, a matched-FPR frontier, or equivalence to unwatermarked text. PRC-versus-ordinary Self-BLEU intervals include zero in all four regimes at both lengths, but repetition is not uniformly unchanged: at 0.6B/400 tokens, PRC's repeated-four-gram fraction is higher by 0.49 percentage points [0.06, 1.01]. Self-BLEU and repetition do not measure semantic quality. Fixed keys, repeated use of the same 50 prompts, and post-pilot choices limit generalization; overlapping historical and pilot nulls must not be pooled.
 
-Old values are historical prompt-conditioned scores, shown only to document the correction. They are not valid completion-only comparator results and are excluded from all paper tradeoff figures.
-
-[LaTeX](tables/03b_prc_redetection_change.tex) · [CSV](tables/03b_prc_redetection_change.csv)
-
-**Within-response repetition on the historical cohort at 400 and 1,024 tokens**
-
-| Tokens | Method | Repeated 4-grams (%) | Distinct-3 (%) |
-| --- | --- | --- | --- |
-| 400 | gumbel_max | 26.33 | 72.55 |
-| 400 | null | 1.63 | 96.86 |
-| 400 | online_prc | 1.30 | 97.23 |
-| 400 | synthid_text | 1.49 | 97.01 |
-| 400 | textseal | 12.22 | 86.19 |
-| 1024 | gumbel_max | 57.38 | 41.75 |
-| 1024 | null | 2.89 | 95.01 |
-| 1024 | online_prc | 2.70 | 95.21 |
-| 1024 | synthid_text | 2.58 | 95.39 |
-| 1024 | textseal | 33.04 | 65.25 |
-
-Means over 500 responses; no paired Self-BLEU can be inferred from a single response per prompt. Native generation policies differ.
-
-[LaTeX](tables/04_large_repetition.tex) · [CSV](tables/04_large_repetition.csv)
-
-![01_redetection](figures/01_redetection.png)
-
-Historical 500-response-per-setting comparison after completion-only correction. Left: each cutoff is a separate one-shot detection test; coincident baseline curves are retained. Right: 1,024-token repetition under the native mixed policies, with TextSeal/Gumbel fallback OFF. These repetition gaps are not the matched-policy result.
-
-[Vector PDF](figures/01_redetection.pdf) · [SVG](figures/01_redetection.svg)
-
-## 4. Original 8B paired comparison, native and matched policies
-
-The original native view has SynthID fallback ON and TextSeal/Gumbel OFF. The matched-on view enables fallback for every contextual baseline; PRC is position based and unchanged, and ordinary sampling is unchanged. Native context initialization and RNG conventions are retained, so this matches the fallback rule, not every implementation detail. The same PRC, ordinary and native SynthID responses appear in both views and count only once.
-
-**Original 8B full-vocabulary paired comparison at 1,024 tokens, T=1**
-
-| Setting / fallback | Self-BLEU [95% CI] | Detected /100 | Repeated 4-grams (%) | Distinct-3 (%) |
-| --- | --- | --- | --- | --- |
-| Ordinary | 0.01928 [0.01649, 0.02229] | -- | 2.92 | 95.14 |
-| PRC eta=.05 | 0.01890 [0.01581, 0.02227] | 97 | 2.38 | 95.61 |
-| SynthID d=2 | 0.01987 [0.01592, 0.02418] | 100 | 3.28 | 94.62 |
-| SynthID d=10 | 0.02206 [0.01909, 0.02518] | 100 | 2.42 | 95.54 |
-| SynthID d=30 | 0.02890 [0.02412, 0.03392] | 100 | NR | NR |
-| TextSeal a=.1 (off) | 0.03770 [0.03157, 0.04440] | 100 | 32.17 | 66.03 |
-| TextSeal a=.1 (on) | 0.04727 [0.04082, 0.05421] | 100 | 2.74 | 94.64 |
-| Gumbel-Max (off) | 1.00000 [1.00000, 1.00000] | 100 | 51.73 | 47.20 |
-| Gumbel-Max (on) | 0.20718 [0.18343, 0.23097] | 100 | 2.81 | 94.56 |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. NR: metric not reported for depth 30 in the saved summaries; no value is imputed. Native SynthID fallback is ON.
-
-[LaTeX](tables/05_8b_full_1024.tex) · [CSV](tables/05_8b_full_1024.csv)
-
-**Direct paired PRC-minus-baseline differences at 1,024 tokens**
-
-| Baseline | Self-BLEU difference [95% CI] | Detection difference (pp) [95% CI] |
-| --- | --- | --- |
-| SynthID d=2 | -0.00097 [-0.00459, +0.00265] | -3.0 [-7.0, +0.0] |
-| SynthID d=10 | -0.00316 [-0.00731, +0.00102] | -3.0 [-7.0, +0.0] |
-| SynthID d=30 | -0.01000 [-0.01546, -0.00506] | -3.0 [-7.0, +0.0] |
-| TextSeal a=.1 (off) | -0.01880 [-0.02560, -0.01205] | -3.0 [-7.0, +0.0] |
-| Gumbel-Max (off) | -0.98110 [-0.98419, -0.97773] | -3.0 [-7.0, +0.0] |
-| TextSeal a=.1 (on) | -0.02837 [-0.03531, -0.02201] | -3.0 [-7.0, +0.0] |
-| Gumbel-Max (on) | -0.18829 [-0.21248, -0.16445] | -3.0 [-7.0, +0.0] |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. Negative Self-BLEU favors PRC; positive detection difference favors PRC. Fallback labels identify separately generated arms.
-
-[LaTeX](tables/06_8b_contrasts_1024.tex) · [CSV](tables/06_8b_contrasts_1024.csv)
-
-**Original 8B full-vocabulary paired comparison at 400 tokens, T=1**
-
-| Setting / fallback | Self-BLEU [95% CI] | Detected /100 | Repeated 4-grams (%) | Distinct-3 (%) |
-| --- | --- | --- | --- | --- |
-| Ordinary | 0.01871 [0.01550, 0.02249] | -- | 1.29 | 97.34 |
-| PRC eta=.05 | 0.01901 [0.01640, 0.02182] | 55 | 1.09 | 97.47 |
-| SynthID d=2 | 0.01879 [0.01599, 0.02206] | 100 | 1.54 | 97.13 |
-| SynthID d=10 | 0.02187 [0.01862, 0.02547] | 100 | 1.01 | 97.65 |
-| SynthID d=30 | 0.03304 [0.02688, 0.04008] | 100 | NR | NR |
-| TextSeal a=.1 (off) | 0.05632 [0.04581, 0.06747] | 100 | 10.12 | 88.44 |
-| TextSeal a=.1 (on) | 0.05821 [0.04732, 0.06937] | 100 | 1.30 | 97.11 |
-| Gumbel-Max (off) | 1.00000 [1.00000, 1.00000] | 100 | 25.42 | 73.45 |
-| Gumbel-Max (on) | 0.39375 [0.33998, 0.44846] | 100 | 1.22 | 97.06 |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. NR: metric not reported for depth 30 in the saved summaries; no value is imputed. Native SynthID fallback is ON.
-
-[LaTeX](tables/05_8b_full_400.tex) · [CSV](tables/05_8b_full_400.csv)
-
-**Direct paired PRC-minus-baseline differences at 400 tokens**
-
-| Baseline | Self-BLEU difference [95% CI] | Detection difference (pp) [95% CI] |
-| --- | --- | --- |
-| SynthID d=2 | +0.00022 [-0.00345, +0.00399] | -45.0 [-56.0, -35.0] |
-| SynthID d=10 | -0.00286 [-0.00664, +0.00091] | -45.0 [-56.0, -35.0] |
-| SynthID d=30 | -0.01403 [-0.02071, -0.00831] | -45.0 [-56.0, -35.0] |
-| TextSeal a=.1 (off) | -0.03731 [-0.04821, -0.02716] | -45.0 [-56.0, -35.0] |
-| Gumbel-Max (off) | -0.98099 [-0.98360, -0.97818] | -45.0 [-56.0, -35.0] |
-| TextSeal a=.1 (on) | -0.03920 [-0.05065, -0.02844] | -45.0 [-56.0, -35.0] |
-| Gumbel-Max (on) | -0.37474 [-0.42993, -0.32084] | -45.0 [-56.0, -35.0] |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. Negative Self-BLEU favors PRC; positive detection difference favors PRC. Fallback labels identify separately generated arms.
-
-[LaTeX](tables/06_8b_contrasts_400.tex) · [CSV](tables/06_8b_contrasts_400.csv)
-
-![02_matched_policy_tradeoff](figures/02_matched_policy_tradeoff.png)
-
-8B T=1 comparison with fallback ON for all contextual baselines, at 400 and 1,024 tokens. Points and error bars show means and marginal 95% prompt-bootstrap intervals. Ordinary Self-BLEU is a gray vertical mean/band because ordinary text has no watermarked TPR. The logarithmic Self-BLEU axis retains Gumbel without hiding the near-ordinary settings. This is a set of tested configurations, not a fitted frontier or equal-FPR comparison.
-
-[Vector PDF](figures/02_matched_policy_tradeoff.pdf) · [SVG](figures/02_matched_policy_tradeoff.svg)
-
-## 5. Repeat-handling intervention and trajectory checks
-
-One hundred new responses per modified arm used the same prompts, sampling seeds, fixed keys and decoder. All 300 original/modified response pairs passed the full-trajectory check that divergence never precedes the first repeated context, with native-prefix and forced-repeat controls. Original and modified repeat/fallback counts and first-repeat/divergence positions were retained. This supports a specific implementation intervention; it does not establish why the TextSeal paper selected its protocol or any intent by its authors.
-
-**Effect of enabling repeated-context fallback**
-
-| Tokens | Method | Self-BLEU OFF -> ON | Paired ON-OFF Self-BLEU [95% CI] | Repeat-4 (%) OFF -> ON |
-| --- | --- | --- | --- | --- |
-| 400 | TextSeal | 0.05632 -> 0.05821 | +0.00189 [-0.00273, +0.00675] | 10.12 -> 1.30 |
-| 400 | Gumbel-Max | 1.00000 -> 0.39375 | -0.60625 [-0.66002, -0.55154] | 25.42 -> 1.22 |
-| 400 | SynthID d=10 | 0.02388 -> 0.02187 | -0.00202 [-0.00649, +0.00200] | 3.73 -> 1.01 |
-| 1024 | TextSeal | 0.03770 -> 0.04727 | +0.00957 [+0.00402, +0.01528] | 32.17 -> 2.74 |
-| 1024 | Gumbel-Max | 1.00000 -> 0.20718 | -0.79282 [-0.81657, -0.76903] | 51.73 -> 2.81 |
-| 1024 | SynthID d=10 | 0.02138 -> 0.02206 | +0.00067 [-0.00309, +0.00421] | 9.35 -> 2.42 |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. All these baseline arms detected 100/100 at both lengths. SynthID OFF is diagnostic and never replaces native ON in the main comparison.
-
-[LaTeX](tables/07_repeat_policy.tex) · [CSV](tables/07_repeat_policy.csv)
-
-For SynthID, removing fallback increased mean repeated contexts from 45.53 to 114.21 per 1,024-token response, but changed Self-BLEU by only -0.00067 [-0.00421, +0.00309]. The ablation therefore does not support fallback as the main explanation for SynthID's between-response diversity on this cohort. TextSeal fallback reduced repeated contexts but increased long-prefix Self-BLEU. Gumbel OFF is deterministic at fixed key; fallback ON breaks that determinism and substantially lowers Self-BLEU, while still leaving considerable overlap between the two responses.
-
-**Original-to-modified repeat trajectories**
-
-| Arm | Tokens | Responses with repeat | Mean repeats | Mean fallbacks | Median first repeat | Diverged /100 | Median first divergence |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| SynthID | 400 | 98/100 -> 98/100 | 9.34 -> 20.59 | 9.34 -> 0.00 | 110.5 -> 110.5 | 91 | 131.0 |
-| SynthID | 1024 | 100/100 -> 100/100 | 45.53 -> 114.21 | 45.53 -> 0.00 | 111.5 -> 111.5 | 100 | 134.5 |
-| textseal_on | 400 | 100/100 -> 100/100 | 45.77 -> 11.59 | 0.00 -> 11.59 | 117.0 -> 117.0 | 98 | 127.5 |
-| textseal_on | 1024 | 100/100 -> 100/100 | 346.71 -> 54.86 | 0.00 -> 54.86 | 117.0 -> 117.0 | 100 | 130.0 |
-| gumbel_on | 400 | 100/100 -> 100/100 | 105.36 -> 11.73 | 0.00 -> 11.73 | 115.5 -> 115.5 | 100 | 121.0 |
-| gumbel_on | 1024 | 100/100 -> 100/100 | 539.00 -> 55.82 | 0.00 -> 55.82 | 115.5 -> 115.5 | 100 | 121.0 |
-
-SynthID changes ON to OFF; TextSeal/Gumbel change OFF to ON. First-repeat positions are medians among affected responses; divergence positions are medians among diverged pairs. Both use zero-based completion positions. Full response-level first-repeat positions remain in the source diagnostic files.
-
-[LaTeX](tables/08_trajectories.tex) · [CSV](tables/08_trajectories.csv)
-
-![04_repeat_policy](figures/04_repeat_policy.png)
-
-Repeat fallback at 1,024 tokens: open circles are OFF, filled circles ON; each line connects the same method under the two policies. Left: between-response Self-BLEU on a log scale. Right: within-response repeated-four-gram fraction. Marginal 95% intervals are shown; paired policy effects are reported in the tables. Reduced within-response repetition need not reduce between-response overlap.
-
-[Vector PDF](figures/04_repeat_policy.pdf) · [SVG](figures/04_repeat_policy.svg)
-
-## 6. SynthID depth and short-prefix detection
-
-Depths 2 and 30 each added 100 full-length responses with native fallback ON; saved depth-10, PRC and ordinary pairs were reused. Every depth detected 100/100 at 400 and 1,024 tokens, but depth 30 had higher Self-BLEU than depths 2 and 10. This makes a comparison to depth 30 alone insufficient to establish superiority over SynthID. Later scoring of saved prefixes at 64, 128 and 256 tokens exposed a detection advantage of depth 10 over depth 2 at shorter lengths, with no additional observed gain for depth 30. No short-prefix Self-BLEU endpoint was substituted for the main long-prefix results.
-
-**Saved SynthID generations scored at short prefixes**
-
-| Depth | Tokens | Detected /100 | TPR (%) [95% CI] | Pilot FP /100 | Historical FP /500 |
-| --- | --- | --- | --- | --- | --- |
-| 2 | 64 | 45 | 45.0 [35.0, 55.0] | 0 | 1 |
-| 2 | 128 | 82 | 82.0 [75.0, 89.0] | 0 | 1 |
-| 2 | 256 | 100 | 100.0 [100.0, 100.0] | 1 | 1 |
-| 10 | 64 | 100 | 100.0 [100.0, 100.0] | 0 | 0 |
-| 10 | 128 | 100 | 100.0 [100.0, 100.0] | 0 | 1 |
-| 10 | 256 | 100 | 100.0 [100.0, 100.0] | 0 | 1 |
-| 30 | 64 | 100 | 100.0 [100.0, 100.0] | 0 | 1 |
-| 30 | 128 | 100 | 100.0 [100.0, 100.0] | 0 | 0 |
-| 30 | 256 | 100 | 100.0 [100.0, 100.0] | 0 | 0 |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. Official context mask and exact per-depth keys. Historical nulls were rescored for each depth, so these counts need not equal the legacy 500-prompt tuple-mask counts.
-
-[LaTeX](tables/09_short_prefixes.tex) · [CSV](tables/09_short_prefixes.csv)
-
-![05_synthid_depth](figures/05_synthid_depth.png)
-
-SynthID depth comparison on saved 8B full-vocabulary T=1 responses. Left: detection at 64/128/256 tokens with prompt-bootstrap intervals; depth-10 and depth-30 curves coincide. Right: Self-BLEU at the original 400/1,024-token endpoints. Depth 30 adds observed overlap without an observed detection gain over depth 10 on these measured cutoffs; no population equivalence or Bayesian-detector claim follows.
-
-[Vector PDF](figures/05_synthid_depth.pdf) · [SVG](figures/05_synthid_depth.svg)
-
-## 7. Matched top-100, 0.6B and temperature follow-ups
-
-Each follow-up generated its own temperature/model/decoder-matched ordinary responses. Incompatible old responses were not reused as controls. The top-100 pipeline truncates before watermarking with deterministic tie handling and common FP32 probability arithmetic. The 0.6B batch retains that FP32 probability path but uses full vocabulary, with TextSeal/Gumbel/SynthID fallback ON. Both differ numerically from the original 8B BF16 bucket/update paths. The final T=.7 experiment was separately audited to preserve the original 8B arithmetic and adds one BF16 logit division before the unchanged samplers; SynthID internal temperature remains 1, avoiding double scaling.
-
-**8B / top-k=100 / T=1 at 1,024 tokens**
-
-| Setting | Self-BLEU [95% CI] | Detected /100 | TPR (%) [95% CI] | Repeat-4 (%) | Distinct-3 (%) |
-| --- | --- | --- | --- | --- | --- |
-| Ordinary | 0.03039 [0.02669, 0.03427] | -- | -- | 3.49 | 93.33 |
-| PRC eta=.05 | 0.03329 [0.02872, 0.03827] | 85 | 85.0 [78.0, 92.0] | 3.61 | 93.40 |
-| SynthID d=2 | 0.03234 [0.02827, 0.03672] | 100 | 100.0 [100.0, 100.0] | 3.49 | 93.50 |
-| SynthID d=10 | 0.03675 [0.03187, 0.04184] | 100 | 100.0 [100.0, 100.0] | 3.79 | 93.33 |
-| SynthID d=30 | 0.04704 [0.04161, 0.05310] | 100 | 100.0 [100.0, 100.0] | 3.59 | 93.17 |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/10_8b_topk_1024.tex) · [CSV](tables/10_8b_topk_1024.csv)
-
-**8B / top-k=100 / T=1 at 400 tokens**
-
-| Setting | Self-BLEU [95% CI] | Detected /100 | TPR (%) [95% CI] | Repeat-4 (%) | Distinct-3 (%) |
-| --- | --- | --- | --- | --- | --- |
-| Ordinary | 0.02389 [0.02063, 0.02738] | -- | -- | 2.06 | 95.96 |
-| PRC eta=.05 | 0.02835 [0.02371, 0.03406] | 33 | 33.0 [24.0, 42.0] | 1.60 | 96.54 |
-| SynthID d=2 | 0.02711 [0.02338, 0.03119] | 100 | 100.0 [100.0, 100.0] | 1.70 | 96.43 |
-| SynthID d=10 | 0.03104 [0.02614, 0.03620] | 100 | 100.0 [100.0, 100.0] | 1.39 | 96.81 |
-| SynthID d=30 | 0.04262 [0.03641, 0.04900] | 100 | 100.0 [100.0, 100.0] | 1.30 | 96.71 |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/10_8b_topk_400.tex) · [CSV](tables/10_8b_topk_400.csv)
-
-**0.6B / full vocabulary / T=1 at 1,024 tokens**
-
-| Setting | Self-BLEU [95% CI] | Detected /100 | TPR (%) [95% CI] | Repeat-4 (%) | Distinct-3 (%) |
-| --- | --- | --- | --- | --- | --- |
-| Ordinary | 0.01415 [0.01242, 0.01601] | -- | -- | 2.04 | 96.66 |
-| PRC eta=.05 | 0.01353 [0.01210, 0.01503] | 99 | 99.0 [97.0, 100.0] | 2.63 | 95.87 |
-| SynthID d=2 | 0.01302 [0.01150, 0.01476] | 100 | 100.0 [100.0, 100.0] | 1.71 | 97.03 |
-| SynthID d=10 | 0.01442 [0.01240, 0.01664] | 100 | 100.0 [100.0, 100.0] | 2.06 | 96.50 |
-| TextSeal a=.1 (on) | 0.03802 [0.03395, 0.04221] | 100 | 100.0 [100.0, 100.0] | 2.31 | 95.51 |
-| Gumbel-Max (on) | 0.21869 [0.19130, 0.24809] | 100 | 100.0 [100.0, 100.0] | 2.82 | 94.77 |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/10_0p6b_full_1024.tex) · [CSV](tables/10_0p6b_full_1024.csv)
-
-**0.6B / full vocabulary / T=1 at 400 tokens**
-
-| Setting | Self-BLEU [95% CI] | Detected /100 | TPR (%) [95% CI] | Repeat-4 (%) | Distinct-3 (%) |
-| --- | --- | --- | --- | --- | --- |
-| Ordinary | 0.01509 [0.01305, 0.01749] | -- | -- | 0.94 | 97.98 |
-| PRC eta=.05 | 0.01336 [0.01186, 0.01498] | 79 | 79.0 [70.0, 88.0] | 1.43 | 97.35 |
-| SynthID d=2 | 0.01456 [0.01246, 0.01692] | 100 | 100.0 [100.0, 100.0] | 1.01 | 97.98 |
-| SynthID d=10 | 0.01665 [0.01388, 0.01994] | 100 | 100.0 [100.0, 100.0] | 1.92 | 96.86 |
-| TextSeal a=.1 (on) | 0.04689 [0.03963, 0.05446] | 100 | 100.0 [100.0, 100.0] | 1.79 | 96.73 |
-| Gumbel-Max (on) | 0.43261 [0.37023, 0.49801] | 100 | 100.0 [100.0, 100.0] | 1.24 | 97.18 |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/10_0p6b_full_400.tex) · [CSV](tables/10_0p6b_full_400.csv)
-
-**8B / full vocabulary / T=.7 at 1,024 tokens**
-
-| Setting | Self-BLEU [95% CI] | Detected /100 | TPR (%) [95% CI] | Repeat-4 (%) | Distinct-3 (%) |
-| --- | --- | --- | --- | --- | --- |
-| Ordinary | 0.05182 [0.04317, 0.06093] | -- | -- | 29.30 | 65.60 |
-| PRC eta=.05 | 0.04789 [0.04002, 0.05610] | 3 | 3.0 [0.0, 7.0] | 34.07 | 61.04 |
-| SynthID d=2 | 0.05886 [0.04987, 0.06748] | 93 | 93.0 [88.0, 97.0] | 30.46 | 64.44 |
-| SynthID d=10 | 0.06070 [0.05094, 0.07053] | 100 | 100.0 [100.0, 100.0] | 31.35 | 63.73 |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/10_8b_t07_1024.tex) · [CSV](tables/10_8b_t07_1024.csv)
-
-**8B / full vocabulary / T=.7 at 400 tokens**
-
-| Setting | Self-BLEU [95% CI] | Detected /100 | TPR (%) [95% CI] | Repeat-4 (%) | Distinct-3 (%) |
-| --- | --- | --- | --- | --- | --- |
-| Ordinary | 0.05277 [0.04407, 0.06187] | -- | -- | 9.79 | 85.89 |
-| PRC eta=.05 | 0.04607 [0.03913, 0.05288] | 1 | 1.0 [0.0, 3.0] | 11.32 | 84.63 |
-| SynthID d=2 | 0.06066 [0.05190, 0.07006] | 87 | 87.0 [80.0, 93.0] | 10.63 | 85.17 |
-| SynthID d=10 | 0.06368 [0.05373, 0.07419] | 100 | 100.0 [100.0, 100.0] | 10.44 | 85.31 |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/10_8b_t07_400.tex) · [CSV](tables/10_8b_t07_400.csv)
-
-**PRC-minus-SynthID-depth-2 results across completed regimes**
-
-| Regime | Tokens | Self-BLEU difference [95% CI] | Detection difference (pp) [95% CI] |
-| --- | --- | --- | --- |
-| 8B / full vocabulary / T=1 | 1024 | -0.00097 [-0.00459, +0.00265] | -3.0 [-7.0, +0.0] |
-| 8B / full vocabulary / T=1 | 400 | +0.00022 [-0.00345, +0.00399] | -45.0 [-56.0, -35.0] |
-| 8B / top-k=100 / T=1 | 1024 | +0.00095 [-0.00503, +0.00734] | -15.0 [-22.0, -8.0] |
-| 8B / top-k=100 / T=1 | 400 | +0.00124 [-0.00398, +0.00665] | -67.0 [-76.0, -58.0] |
-| 0.6B / full vocabulary / T=1 | 1024 | +0.00051 [-0.00141, +0.00248] | -1.0 [-3.0, +0.0] |
-| 0.6B / full vocabulary / T=1 | 400 | -0.00120 [-0.00395, +0.00117] | -21.0 [-30.0, -12.0] |
-| 8B / full vocabulary / T=.7 | 1024 | -0.01098 [-0.01976, -0.00227] | -90.0 [-95.0, -84.0] |
-| 8B / full vocabulary / T=.7 | 400 | -0.01460 [-0.02410, -0.00532] | -86.0 [-92.0, -79.0] |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. The 1,024-token endpoint was predeclared primary for the top-100, 0.6B and T=.7 follow-ups. The original depth study reported both lengths; all are exploratory sensitivity results on the reused cohort.
-
-[LaTeX](tables/11_primary_contrasts.tex) · [CSV](tables/11_primary_contrasts.csv)
-
-![03_paired_depth2](figures/03_paired_depth2.png)
-
-Direct paired PRC-minus-SynthID-depth-2 contrasts at 1,024 tokens. Left: Self-BLEU differences, where negative favors PRC. Right: detection differences in percentage points, where positive favors PRC. Error bars are paired prompt-bootstrap 95% intervals. Rows are separate matched-control experiments, not a pure one-factor model-size/truncation sweep; probability arithmetic differs for top-100 and 0.6B. The T=.7 study preserves the original 8B paths.
-
-[Vector PDF](figures/03_paired_depth2.pdf) · [SVG](figures/03_paired_depth2.svg)
-
-![06_repetition_sensitivity](figures/06_repetition_sensitivity.png)
-
-Within-response repetition at 1,024 tokens across the four completed regimes, showing ordinary, PRC, and SynthID depths 2/10. Error bars are marginal 95% prompt-bootstrap intervals. Cross-regime numerical paths differ as documented. These metrics concern individual responses and should not be substituted for between-response Self-BLEU.
-
-[Vector PDF](figures/06_repetition_sensitivity.pdf) · [SVG](figures/06_repetition_sensitivity.svg)
-
-![08_temperature](figures/08_temperature.png)
-
-The precision-faithful 8B full-vocabulary temperature sensitivity at 1,024 tokens. T=1 uses saved original outputs; T=.7 uses new matched controls. Left: Self-BLEU rises for every arm at the lower temperature. Right: PRC detection falls from 97/100 to 3/100, depth 2 from 100/100 to 93/100, and depth 10 remains 100/100. Intervals use prompt resampling; lines connect the two evaluated temperatures and do not imply an unmeasured sweep.
-
-[Vector PDF](figures/08_temperature.pdf) · [SVG](figures/08_temperature.svg)
-
-## 8. Null counts and the limits of calibration
-
-All cutoffs use the same nominal .001 threshold definitions within each detector. No method was tuned to the pilot nulls, no FPR matching was performed, and 0/100 does not establish a calibrated 0.1% tail. The historical 500-null cohort overlaps pilot prompts. Do not pool 100 pilot slots with 500 historical responses into 600 independent observations. Degenerate [0,0] or [100,100] bootstrap intervals describe the observed cluster sample, not zero population error or perfect detection.
-
-**Null counts: 8B / full vocabulary / T=1**
-
-| Detector | Cohort | Tokens | False positives | Responses |
-| --- | --- | --- | --- | --- |
-| gumbel | historical | 400 | 2 | 500 |
-| gumbel | historical | 1024 | 0 | 500 |
-| gumbel | pilot | 400 | 0 | 100 |
-| gumbel | pilot | 1024 | 0 | 100 |
-| prc | historical | 400 | 0 | 500 |
-| prc | historical | 1024 | 0 | 500 |
-| prc | pilot | 400 | 0 | 100 |
-| prc | pilot | 1024 | 0 | 100 |
-| synthid_depth10 | historical | 400 | 0 | 500 |
-| synthid_depth10 | historical | 1024 | 0 | 500 |
-| synthid_depth10 | pilot | 400 | 1 | 100 |
-| synthid_depth10 | pilot | 1024 | 0 | 100 |
-| synthid_depth2 | historical | 400 | 0 | 500 |
-| synthid_depth2 | historical | 1024 | 0 | 500 |
-| synthid_depth2 | pilot | 400 | 0 | 100 |
-| synthid_depth2 | pilot | 1024 | 0 | 100 |
-| synthid_depth30 | historical | 400 | 0 | 500 |
-| synthid_depth30 | historical | 1024 | 0 | 500 |
-| synthid_depth30 | pilot | 400 | 0 | 100 |
-| synthid_depth30 | pilot | 1024 | 0 | 100 |
-| textseal | historical | 400 | 0 | 500 |
-| textseal | historical | 1024 | 0 | 500 |
-| textseal | pilot | 400 | 0 | 100 |
-| textseal | pilot | 1024 | 0 | 100 |
-
-Historical and pilot cohorts are separate. Counts may be reused across generation-policy views because the detector is unchanged; they are not new evidence in each view.
-
-[LaTeX](tables/12_nulls_8b_full.tex) · [CSV](tables/12_nulls_8b_full.csv)
-
-**Null counts: 8B / top-k=100 / T=1**
-
-| Detector | Cohort | Tokens | False positives | Responses |
-| --- | --- | --- | --- | --- |
-| prc | pilot | 400 | 0 | 100 |
-| prc | pilot | 1024 | 0 | 100 |
-| synthid_depth10 | pilot | 400 | 1 | 100 |
-| synthid_depth10 | pilot | 1024 | 0 | 100 |
-| synthid_depth2 | pilot | 400 | 0 | 100 |
-| synthid_depth2 | pilot | 1024 | 0 | 100 |
-| synthid_depth30 | pilot | 400 | 0 | 100 |
-| synthid_depth30 | pilot | 1024 | 0 | 100 |
-
-Historical and pilot cohorts are separate. Counts may be reused across generation-policy views because the detector is unchanged; they are not new evidence in each view.
-
-[LaTeX](tables/12_nulls_8b_topk.tex) · [CSV](tables/12_nulls_8b_topk.csv)
-
-**Null counts: 0.6B / full vocabulary / T=1**
-
-| Detector | Cohort | Tokens | False positives | Responses |
-| --- | --- | --- | --- | --- |
-| gumbel_on | pilot | 400 | 0 | 100 |
-| gumbel_on | pilot | 1024 | 0 | 100 |
-| prc | pilot | 400 | 0 | 100 |
-| prc | pilot | 1024 | 0 | 100 |
-| synthid_depth10 | pilot | 400 | 0 | 100 |
-| synthid_depth10 | pilot | 1024 | 0 | 100 |
-| synthid_depth2 | pilot | 400 | 0 | 100 |
-| synthid_depth2 | pilot | 1024 | 0 | 100 |
-| textseal_on | pilot | 400 | 0 | 100 |
-| textseal_on | pilot | 1024 | 0 | 100 |
-
-Historical and pilot cohorts are separate. Counts may be reused across generation-policy views because the detector is unchanged; they are not new evidence in each view.
-
-[LaTeX](tables/12_nulls_0p6b_full.tex) · [CSV](tables/12_nulls_0p6b_full.csv)
-
-**Null counts: 8B / full vocabulary / T=.7**
-
-| Detector | Cohort | Tokens | False positives | Responses |
-| --- | --- | --- | --- | --- |
-| prc | pilot | 400 | 0 | 100 |
-| prc | pilot | 1024 | 0 | 100 |
-| synthid_depth10 | pilot | 400 | 0 | 100 |
-| synthid_depth10 | pilot | 1024 | 0 | 100 |
-| synthid_depth2 | pilot | 400 | 0 | 100 |
-| synthid_depth2 | pilot | 1024 | 0 | 100 |
-
-Historical and pilot cohorts are separate. Counts may be reused across generation-policy views because the detector is unchanged; they are not new evidence in each view.
-
-[LaTeX](tables/12_nulls_8b_t07.tex) · [CSV](tables/12_nulls_8b_t07.csv)
-
-The consolidated count correction is Gumbel 2/500 historical false positives at 400 tokens, not zero as stated in early Stage A prose. The paired SynthID depth-10 pilot count is 1/100 at 400. The original legacy SynthID historical detector gives 1/500 at 128 and 0/500 at 256, whereas the official-context-mask short-prefix reanalysis gives 1/500 at 128 and 256. These are different documented detector masks, not an unexplained contradiction. The tables retain this distinction.
-
-## 9. Replay, precision and common-history diagnostics
-
-**Prefix-specific replay observations: 8B top-100**
-
-| Study | Response source | Tokens | Window | Positions | Support / zero-token events | Endpoint contradictions |
-| --- | --- | --- | --- | --- | --- | --- |
-| topk | prc | 1024 | all | 102300 | 736 | 0 |
-| topk | prc | 1024 | early | 6300 | 378 | 0 |
-| topk | prc | 1024 | later | 96000 | 358 | 0 |
-| topk | prc | 400 | all | 39900 | 617 | 0 |
-| topk | prc | 400 | early | 6300 | 378 | 0 |
-| topk | prc | 400 | later | 33600 | 239 | 0 |
-| topk | null | 1024 | all | 102300 | 788 | 0 |
-| topk | null | 1024 | early | 6300 | 419 | 0 |
-| topk | null | 1024 | later | 96000 | 369 | 0 |
-| topk | null | 400 | all | 39900 | 635 | 0 |
-| topk | null | 400 | early | 6300 | 419 | 0 |
-| topk | null | 400 | later | 33600 | 216 | 0 |
-
-Top-100 events mean the observed token is outside the prompt-free replay top-100 set; full-vocabulary events mean zero observed-token probability. Early positions are 2-64; later positions 65-n. These are different diagnostics and must not be conflated. The primary detector is unchanged.
-
-[LaTeX](tables/13_replay_topk.tex) · [CSV](tables/13_replay_topk.csv)
-
-**Prefix-specific replay observations: 0.6B full vocabulary**
-
-| Study | Response source | Tokens | Window | Positions | Support / zero-token events | Endpoint contradictions |
-| --- | --- | --- | --- | --- | --- | --- |
-| small | prc | 1024 | all | 102300 | 0 | 0 |
-| small | prc | 1024 | early | 6300 | 0 | 0 |
-| small | prc | 1024 | later | 96000 | 0 | 0 |
-| small | prc | 400 | all | 39900 | 0 | 0 |
-| small | prc | 400 | early | 6300 | 0 | 0 |
-| small | prc | 400 | later | 33600 | 0 | 0 |
-| small | null | 1024 | all | 102300 | 0 | 0 |
-| small | null | 1024 | early | 6300 | 0 | 0 |
-| small | null | 1024 | later | 96000 | 0 | 0 |
-| small | null | 400 | all | 39900 | 0 | 0 |
-| small | null | 400 | early | 6300 | 0 | 0 |
-| small | null | 400 | later | 33600 | 0 | 0 |
-
-Top-100 events mean the observed token is outside the prompt-free replay top-100 set; full-vocabulary events mean zero observed-token probability. Early positions are 2-64; later positions 65-n. These are different diagnostics and must not be conflated. The primary detector is unchanged.
-
-[LaTeX](tables/13_replay_small.tex) · [CSV](tables/13_replay_small.csv)
-
-**Prefix-specific replay observations: 8B T=.7**
-
-| Study | Response source | Tokens | Window | Positions | Support / zero-token events | Endpoint contradictions |
-| --- | --- | --- | --- | --- | --- | --- |
-| temperature | prc | 1024 | all | 102300 | 0 | 8 |
-| temperature | prc | 1024 | early | 6300 | 0 | 0 |
-| temperature | prc | 1024 | later | 96000 | 0 | 8 |
-| temperature | prc | 400 | all | 39900 | 0 | 3 |
-| temperature | prc | 400 | early | 6300 | 0 | 0 |
-| temperature | prc | 400 | later | 33600 | 0 | 3 |
-| temperature | null | 1024 | all | 102300 | 0 | 8 |
-| temperature | null | 1024 | early | 6300 | 0 | 0 |
-| temperature | null | 1024 | later | 96000 | 0 | 8 |
-| temperature | null | 400 | all | 39900 | 0 | 4 |
-| temperature | null | 400 | early | 6300 | 0 | 0 |
-| temperature | null | 400 | later | 33600 | 0 | 4 |
-
-Top-100 events mean the observed token is outside the prompt-free replay top-100 set; full-vocabulary events mean zero observed-token probability. Early positions are 2-64; later positions 65-n. These are different diagnostics and must not be conflated. The primary detector is unchanged.
-
-[LaTeX](tables/13_replay_temperature.tex) · [CSV](tables/13_replay_temperature.csv)
-
-Top-100 generation had zero support violations in all 512,000 generated tokens and zero contradictory replay endpoints. Prompt-free replay nevertheless places 736/102,300 PRC tokens and 788/102,300 ordinary tokens outside its top-100 support at 1,024 tokens, concentrated early. Generation saw the prompt and replay does not, so these are not automatically generation violations. The observed token can be absent while its binary bucket still has positive probability. No tokens were dropped and no coordinates shifted.
-
-The 0.6B full-vocabulary study recorded no zero-probability observations or endpoint contradictions. At T=.7, both the PRC and ordinary 1,024-token cohorts have eight contradictory saved bucket scalars, all after position 64: BF16-aggregated p1=1 with an observed bucket-0 token. All observed tokens retain positive replay probability. This indicates rounding of the scalar, not that the entire bucket or observed token is actually impossible. The existing clipped-endpoint score was retained. These diagnostic counts do not establish the cause of the PRC detection loss.
-
-**Distribution measurements on 25 preselected common histories**
-
-| Decoder | Method | Collision probability | Max token probability | Top-100 retained mass | Ordinary base mass |
-| --- | --- | --- | --- | --- | --- |
-| full_vocab_fp32_reference | ordinary | 0.493972 | 0.608896 | 0.965926 | 0.965926 |
-| full_vocab_fp32_reference | synthid_depth2 | 0.569810 | 0.683616 | 0.969879 | 0.965926 |
-| full_vocab_fp32_reference | synthid_depth10 | 0.717703 | 0.799167 | 0.970507 | 0.965926 |
-| full_vocab_fp32_reference | synthid_depth30 | 0.724606 | 0.790109 | 0.950562 | 0.965926 |
-| top100_fp32 | ordinary | 0.507671 | 0.621708 | 1.000000 | 0.965926 |
-| top100_fp32 | synthid_depth2 | 0.586296 | 0.697667 | 1.000000 | 0.965926 |
-| top100_fp32 | synthid_depth10 | 0.739752 | 0.816823 | 1.000000 | 0.965926 |
-| top100_fp32 | synthid_depth30 | 0.781309 | 0.838859 | 1.000000 | 0.965926 |
-
-Five saved ordinary histories (prompts 0,7,19,31,49) at positions 0,32,128,400,1023. Means are descriptive, with no bootstrap inference. Both decoders use FP32 probability arithmetic; the full-vocabulary reference is not the original BF16 SynthID path. Native repeat fallback remains enabled.
-
-[LaTeX](tables/14_common_histories.tex) · [CSV](tables/14_common_histories.csv)
-
-![07_common_histories](figures/07_common_histories.png)
-
-Means on 25 preselected shared histories. Collision probability is the sum of squared token probabilities; maximum probability is the largest token probability. Retained mass is on the ordinary top-100 support after watermarking. Both decoders use FP32 arithmetic, so this controlled distribution probe is distinct from reproducing the historical BF16 full-vocabulary pipeline. No causal claim about whole-response Self-BLEU is inferred from these descriptive means.
-
-[Vector PDF](figures/07_common_histories.pdf) · [SVG](figures/07_common_histories.svg)
-
-## 10. Paper-ready interpretation and suggested wording
-
-Suggested results wording: "Under completion-only detection and fixed keys, PRC maintained low between-response lexical overlap relative to the evaluated TextSeal and Gumbel-Max settings. This did not establish a diversity advantage over shallow SynthID at temperature 1, and PRC detection was lower, especially at shorter prefixes. Matching repeated-context fallback substantially reduced the apparent within-response repetition gaps. In the precision-preserving temperature-0.7 sensitivity, PRC had lower Self-BLEU than SynthID depth 2 but suffered a large loss in detection. These exploratory results characterize specific configurations and nominal thresholds, rather than a matched-FPR frontier or general superiority."
-
-For a main paper, use the corrected 500-prompt detection table together with its policy caveat, the matched-policy paired comparison, and the direct depth-2 contrast figure. Use the repeat-policy intervention, depth/short-prefix results, model/decoder/temperature sensitivities, and numerical diagnostics as transparent supporting material. Do not omit the temperature detection loss or the shallow SynthID comparator. Every asset includes its cohort and detector assumptions.
-
-## 11. Completed, cancelled, and outside the evidence
-
-- Completed: corrected native 500-prompt comparison; fixed-key/fresh-response validation; Stage A pilot; three repeat-policy interventions; paired repetition/Self-BLEU synthesis; SynthID depths 2/30; short-prefix detection; matched top-100; 0.6B full-vocabulary; final 8B T=.7 sensitivity.
-
-- Validation only: TextSeal alpha=0 pairs, alpha=.5 short checks, and SynthID depth=20 short checks. These are not a completed TextSeal/SynthID parameter frontier.
-
-- Cancelled or not run: full depth-20 generation, broad alpha/depth/eta sweeps, more temperatures, more prompts, more than two response slots per prompt, Bayesian SynthID, attacks, multi-key replication, a held-out confirmation cohort, and large-scale empirical null calibration.
-
-- Historical proxy/native results were produced before the detection correction and remain archived as historical evidence. Prompt-conditioned PRC/TextSeal score columns and old proxy figures are superseded for the current completion-only paper comparison. No corrected common-method proxy panel was completed in this comparison branch; separate PRC redetection results do not by themselves repair the whole proxy panel.
-
-- No claims about authors' intent, semantic quality, broad superiority, equal FPR, or detector equivalence are supported by these experiments. Repeated use of the same cohort and post-pilot choices make the campaign exploratory even where an individual follow-up endpoint was fixed in advance.
-
-## 12. Cost, validation and reproducibility
-
-**Self-BLEU campaign cumulative planning charges**
-
-| Completed stage | Cumulative USD |
-| --- | --- |
-| Implementation validation and setup | 4.05505 |
-| Stage A scoring | 5.51880 |
-| SynthID OFF | 6.24467 |
-| TextSeal/Gumbel ON | 6.70584 |
-| Depths 2/30 + short-prefix analysis | 7.71132 |
-| Matched top-100 | 9.77418 |
-| 0.6B full vocabulary | 11.00279 |
-| Final 8B T=.7 | 12.51222 |
-
-Cumulative entries must not be summed. Charges include recorded resource-time estimates and conservative overhead/failure allowances, not settled Modal billing. This ledger does not claim to audit spending by other sessions or the earlier baseline/proxy campaigns. This consolidation launches no Modal workers.
-
-[LaTeX](tables/15_cost.tex) · [CSV](tables/15_cost.csv)
-
-The final temperature worker used $1.00943 of measured resource time plus a $0.50 allowance; its setup was pushed before full dispatch. Validation verified native temperature placement, ordinary-equivalent SynthID fallback, fixed PRC codewords, original arithmetic paths, completion-only replay inputs, first-coordinate abstention and exact smoke-prefix reproduction. The larger campaign additionally checks upstream TextSeal parity, per-depth SynthID keys, common top-100 support, paired no-divergence-before-repeat trajectories, and source/artifact hashes. Individual run reports retain all repairs and exceptions. The report builder checks repeated values across studies for exact numerical consistency and verifies every exported contrast mean against its source arms.
-
-Raw completions and model traces remain at their existing local ignored paths and the existing prc-completion-only Modal volume. They are not deleted, renamed or re-uploaded during cleanup. Versioned per-study manifests, summaries and archive indices remain authoritative. Source hashes for this report are listed in data/source_manifest.json; normalized rows and all contrasts are in data/results.json, data/contrasts.json and CSV exports. The one offline builder only reads saved aggregates and creates tables/figures; it cannot dispatch experiments.
-
-## Source register
-
-paired: [outputs/self_bleu_repeat/paired_comparison/summary.json](../../outputs/self_bleu_repeat/paired_comparison/summary.json)
-
-repetition: [outputs/self_bleu_repeat/matched_repetition/summary.json](../../outputs/self_bleu_repeat/matched_repetition/summary.json)
-
-repeat: [outputs/self_bleu_repeat/setup_v4/all_analysis.json](../../outputs/self_bleu_repeat/setup_v4/all_analysis.json)
-
-depth: [outputs/self_bleu_depth/depth2_30_v1/summary.json](../../outputs/self_bleu_depth/depth2_30_v1/summary.json)
-
-short: [outputs/self_bleu_depth/short_prefixes/summary.json](../../outputs/self_bleu_depth/short_prefixes/summary.json)
-
-topk: [outputs/self_bleu_topk/matched_v2/summary.json](../../outputs/self_bleu_topk/matched_v2/summary.json)
-
-small: [outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json](../../outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json)
-
-temperature: [outputs/self_bleu_temperature/t07_v1/summary.json](../../outputs/self_bleu_temperature/t07_v1/summary.json)
-
-large: [outputs/comparison_redetect/baseline_comparisons.csv](../../outputs/comparison_redetect/baseline_comparisons.csv)
-
-large_repetition: [outputs/comparison_redetect/repetition_audit.json](../../outputs/comparison_redetect/repetition_audit.json)
-
-trajectory: [outputs/self_bleu_repeat/setup_v4/synthid_trajectory.json](../../outputs/self_bleu_repeat/setup_v4/synthid_trajectory.json)
-
-followup_trajectory: [outputs/self_bleu_repeat/setup_v4/followup_trajectory.json](../../outputs/self_bleu_repeat/setup_v4/followup_trajectory.json)
-
-[outputs/self_bleu_validation/step3-v4/REPORT.md](../../outputs/self_bleu_validation/step3-v4/REPORT.md)
-
-[outputs/self_bleu_pilot/stage_a_v2/REPORT.md](../../outputs/self_bleu_pilot/stage_a_v2/REPORT.md)
-
-[outputs/self_bleu_repeat/setup_v4/REPORT.md](../../outputs/self_bleu_repeat/setup_v4/REPORT.md)
-
-[outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.md](../../outputs/self_bleu_repeat/setup_v4/FOLLOWUP_REPORT.md)
-
-[outputs/self_bleu_temperature/t07_v1/REPORT.md](../../outputs/self_bleu_temperature/t07_v1/REPORT.md)
-
-[baseline_comparison/README.md](../../baseline_comparison/README.md)
-
-[proxy_8b_detector_report.md](../../proxy_8b_detector_report.md)
-
-## Appendix: all saved direct paired contrasts
-
-This appendix retains ordinary-control, depth-to-depth and PRC-to-baseline contrasts, including unfavorable and inconclusive results. A dash denotes an unavailable or inapplicable metric; no metric is imputed. Percentage-point units apply only to detection/repetition/distinct-3. All differences are left minus right. The complete full-precision records accompany the formatted tables.
-
-**All contrasts: 8B / full vocabulary / T=1, 1,024 tokens**
-
-| Left minus right | Self-BLEU [95% CI] | Detection pp [95% CI] | Repeat-4 pp [95% CI] | Distinct-3 pp [95% CI] |
-| --- | --- | --- | --- | --- |
-| SynthID d=2 - SynthID d=10 | -0.00219 [-0.00589, +0.00148] | +0.0 [+0.0, +0.0] | -- | -- |
-| SynthID d=30 - SynthID d=10 | +0.00684 [+0.00209, +0.01190] | +0.0 [+0.0, +0.0] | -- | -- |
-| SynthID d=30 - SynthID d=2 | +0.00903 [+0.00347, +0.01472] | +0.0 [+0.0, +0.0] | -- | -- |
-| PRC eta=.05 - SynthID d=2 | -0.00097 [-0.00459, +0.00265] | -3.0 [-7.0, +0.0] | -0.89 [-2.09, +0.29] | +1.00 [-0.39, +2.40] |
-| PRC eta=.05 - SynthID d=10 | -0.00316 [-0.00731, +0.00102] | -3.0 [-7.0, +0.0] | -0.04 [-0.91, +0.80] | +0.08 [-0.97, +1.15] |
-| PRC eta=.05 - SynthID d=30 | -0.01000 [-0.01546, -0.00506] | -3.0 [-7.0, +0.0] | -- | -- |
-| PRC eta=.05 - Ordinary | -0.00038 [-0.00369, +0.00297] | -- | -0.54 [-2.11, +0.63] | +0.47 [-0.92, +2.09] |
-| SynthID d=2 - Ordinary | +0.00059 [-0.00334, +0.00487] | -- | +0.35 [-1.34, +1.79] | -0.53 [-2.09, +1.27] |
-| SynthID d=10 - Ordinary | +0.00278 [-0.00055, +0.00622] | -- | -0.50 [-1.98, +0.65] | +0.39 [-0.88, +1.91] |
-| SynthID d=30 - Ordinary | +0.00962 [+0.00529, +0.01458] | -- | -- | -- |
-| PRC eta=.05 - TextSeal a=.1 (off) | -0.01880 [-0.02560, -0.01205] | -3.0 [-7.0, +0.0] | -29.79 [-34.57, -24.92] | +29.58 [+24.74, +34.33] |
-| PRC eta=.05 - Gumbel-Max (off) | -0.98110 [-0.98419, -0.97773] | -3.0 [-7.0, +0.0] | -49.35 [-57.08, -41.75] | +48.42 [+40.92, +56.05] |
-| PRC eta=.05 - TextSeal a=.1 (on) | -0.02837 [-0.03531, -0.02201] | -3.0 [-7.0, +0.0] | -0.36 [-1.20, +0.49] | +0.97 [-0.09, +2.03] |
-| PRC eta=.05 - Gumbel-Max (on) | -0.18829 [-0.21248, -0.16445] | -3.0 [-7.0, +0.0] | -0.43 [-1.60, +0.65] | +1.05 [-0.29, +2.49] |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/16_all_contrasts_8b_full_1024.tex) · [CSV](tables/16_all_contrasts_8b_full_1024.csv)
-
-**All contrasts: 8B / full vocabulary / T=1, 400 tokens**
-
-| Left minus right | Self-BLEU [95% CI] | Detection pp [95% CI] | Repeat-4 pp [95% CI] | Distinct-3 pp [95% CI] |
-| --- | --- | --- | --- | --- |
-| SynthID d=2 - SynthID d=10 | -0.00308 [-0.00683, +0.00036] | +0.0 [+0.0, +0.0] | -- | -- |
-| SynthID d=30 - SynthID d=10 | +0.01117 [+0.00535, +0.01796] | +0.0 [+0.0, +0.0] | -- | -- |
-| SynthID d=30 - SynthID d=2 | +0.01425 [+0.00776, +0.02175] | +0.0 [+0.0, +0.0] | -- | -- |
-| PRC eta=.05 - SynthID d=2 | +0.00022 [-0.00345, +0.00399] | -45.0 [-56.0, -35.0] | -0.46 [-1.04, +0.03] | +0.34 [-0.22, +0.93] |
-| PRC eta=.05 - SynthID d=10 | -0.00286 [-0.00664, +0.00091] | -45.0 [-56.0, -35.0] | +0.08 [-0.29, +0.44] | -0.18 [-0.75, +0.37] |
-| PRC eta=.05 - SynthID d=30 | -0.01403 [-0.02071, -0.00831] | -45.0 [-56.0, -35.0] | -- | -- |
-| PRC eta=.05 - Ordinary | +0.00029 [-0.00376, +0.00420] | -- | -0.20 [-0.70, +0.25] | +0.13 [-0.52, +0.83] |
-| SynthID d=2 - Ordinary | +0.00007 [-0.00369, +0.00393] | -- | +0.25 [-0.40, +0.97] | -0.21 [-1.03, +0.58] |
-| SynthID d=10 - Ordinary | +0.00315 [-0.00084, +0.00694] | -- | -0.28 [-0.71, +0.13] | +0.31 [-0.25, +0.87] |
-| SynthID d=30 - Ordinary | +0.01432 [+0.00813, +0.02159] | -- | -- | -- |
-| PRC eta=.05 - TextSeal a=.1 (off) | -0.03731 [-0.04821, -0.02716] | -45.0 [-56.0, -35.0] | -9.03 [-11.72, -6.48] | +9.03 [+6.44, +11.65] |
-| PRC eta=.05 - Gumbel-Max (off) | -0.98099 [-0.98360, -0.97818] | -45.0 [-56.0, -35.0] | -24.34 [-31.51, -17.51] | +24.03 [+17.23, +31.15] |
-| PRC eta=.05 - TextSeal a=.1 (on) | -0.03920 [-0.05065, -0.02844] | -45.0 [-56.0, -35.0] | -0.22 [-0.67, +0.25] | +0.37 [-0.27, +1.00] |
-| PRC eta=.05 - Gumbel-Max (on) | -0.37474 [-0.42993, -0.32084] | -45.0 [-56.0, -35.0] | -0.13 [-0.54, +0.27] | +0.42 [-0.24, +1.07] |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/16_all_contrasts_8b_full_400.tex) · [CSV](tables/16_all_contrasts_8b_full_400.csv)
-
-**All contrasts: 8B / top-k=100 / T=1, 1,024 tokens**
-
-| Left minus right | Self-BLEU [95% CI] | Detection pp [95% CI] | Repeat-4 pp [95% CI] | Distinct-3 pp [95% CI] |
-| --- | --- | --- | --- | --- |
-| PRC eta=.05 - SynthID d=2 | +0.00095 [-0.00503, +0.00734] | -15.0 [-22.0, -8.0] | +0.12 [-0.74, +0.93] | -0.10 [-1.02, +0.84] |
-| PRC eta=.05 - SynthID d=10 | -0.00346 [-0.00957, +0.00274] | -15.0 [-22.0, -8.0] | -0.18 [-1.27, +0.88] | +0.07 [-1.11, +1.27] |
-| PRC eta=.05 - SynthID d=30 | -0.01376 [-0.02065, -0.00717] | -15.0 [-22.0, -8.0] | +0.02 [-0.90, +0.95] | +0.24 [-0.87, +1.28] |
-| PRC eta=.05 - Ordinary | +0.00290 [-0.00156, +0.00755] | -- | +0.12 [-0.72, +0.96] | +0.07 [-0.90, +1.08] |
-| SynthID d=2 - Ordinary | +0.00195 [-0.00341, +0.00717] | -- | +0.00 [-0.73, +0.75] | +0.17 [-0.79, +1.11] |
-| SynthID d=10 - Ordinary | +0.00636 [+0.00061, +0.01191] | -- | +0.30 [-0.71, +1.43] | +0.00 [-1.25, +1.18] |
-| SynthID d=30 - Ordinary | +0.01665 [+0.01096, +0.02235] | -- | +0.10 [-0.78, +1.00] | -0.16 [-1.18, +0.85] |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/16_all_contrasts_8b_topk_1024.tex) · [CSV](tables/16_all_contrasts_8b_topk_1024.csv)
-
-**All contrasts: 8B / top-k=100 / T=1, 400 tokens**
-
-| Left minus right | Self-BLEU [95% CI] | Detection pp [95% CI] | Repeat-4 pp [95% CI] | Distinct-3 pp [95% CI] |
-| --- | --- | --- | --- | --- |
-| PRC eta=.05 - SynthID d=2 | +0.00124 [-0.00398, +0.00665] | -67.0 [-76.0, -58.0] | -0.10 [-0.66, +0.41] | +0.11 [-0.56, +0.82] |
-| PRC eta=.05 - SynthID d=10 | -0.00269 [-0.00914, +0.00386] | -67.0 [-76.0, -58.0] | +0.21 [-0.25, +0.69] | -0.27 [-0.86, +0.31] |
-| PRC eta=.05 - SynthID d=30 | -0.01426 [-0.02081, -0.00715] | -67.0 [-76.0, -58.0] | +0.29 [-0.24, +0.79] | -0.17 [-0.87, +0.54] |
-| PRC eta=.05 - Ordinary | +0.00446 [-0.00068, +0.01021] | -- | -0.46 [-1.16, +0.20] | +0.58 [-0.23, +1.43] |
-| SynthID d=2 - Ordinary | +0.00322 [-0.00138, +0.00799] | -- | -0.36 [-1.13, +0.38] | +0.47 [-0.45, +1.43] |
-| SynthID d=10 - Ordinary | +0.00715 [+0.00218, +0.01203] | -- | -0.66 [-1.27, -0.08] | +0.85 [+0.18, +1.56] |
-| SynthID d=30 - Ordinary | +0.01873 [+0.01206, +0.02552] | -- | -0.75 [-1.41, -0.12] | +0.75 [-0.01, +1.54] |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/16_all_contrasts_8b_topk_400.tex) · [CSV](tables/16_all_contrasts_8b_topk_400.csv)
-
-**All contrasts: 0.6B / full vocabulary / T=1, 1,024 tokens**
-
-| Left minus right | Self-BLEU [95% CI] | Detection pp [95% CI] | Repeat-4 pp [95% CI] | Distinct-3 pp [95% CI] |
-| --- | --- | --- | --- | --- |
-| PRC eta=.05 - SynthID d=2 | +0.00051 [-0.00141, +0.00248] | -1.0 [-3.0, +0.0] | +0.92 [-0.53, +2.44] | -1.16 [-2.99, +0.54] |
-| PRC eta=.05 - SynthID d=10 | -0.00089 [-0.00302, +0.00111] | -1.0 [-3.0, +0.0] | +0.57 [-0.54, +1.73] | -0.63 [-1.95, +0.68] |
-| PRC eta=.05 - TextSeal a=.1 (on) | -0.02449 [-0.02863, -0.02039] | -1.0 [-3.0, +0.0] | +0.31 [-0.66, +1.51] | +0.36 [-0.95, +1.50] |
-| PRC eta=.05 - Gumbel-Max (on) | -0.20516 [-0.23436, -0.17785] | -1.0 [-3.0, +0.0] | -0.19 [-1.38, +1.14] | +1.10 [-0.48, +2.50] |
-| PRC eta=.05 - Ordinary | -0.00062 [-0.00290, +0.00172] | -- | +0.59 [-0.99, +2.05] | -0.78 [-2.43, +0.90] |
-| SynthID d=2 - Ordinary | -0.00113 [-0.00354, +0.00147] | -- | -0.33 [-1.86, +1.01] | +0.38 [-1.17, +2.07] |
-| SynthID d=10 - Ordinary | +0.00027 [-0.00262, +0.00331] | -- | +0.02 [-1.11, +1.07] | -0.15 [-1.34, +1.06] |
-| TextSeal a=.1 (on) - Ordinary | +0.02387 [+0.01927, +0.02850] | -- | +0.28 [-1.02, +1.29] | -1.15 [-2.24, +0.17] |
-| Gumbel-Max (on) - Ordinary | +0.20454 [+0.17749, +0.23353] | -- | +0.78 [-0.70, +2.00] | -1.89 [-3.24, -0.29] |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/16_all_contrasts_0p6b_full_1024.tex) · [CSV](tables/16_all_contrasts_0p6b_full_1024.csv)
-
-**All contrasts: 0.6B / full vocabulary / T=1, 400 tokens**
-
-| Left minus right | Self-BLEU [95% CI] | Detection pp [95% CI] | Repeat-4 pp [95% CI] | Distinct-3 pp [95% CI] |
-| --- | --- | --- | --- | --- |
-| PRC eta=.05 - SynthID d=2 | -0.00120 [-0.00395, +0.00117] | -21.0 [-30.0, -12.0] | +0.42 [-0.27, +1.05] | -0.63 [-1.46, +0.21] |
-| PRC eta=.05 - SynthID d=10 | -0.00329 [-0.00706, -0.00014] | -21.0 [-30.0, -12.0] | -0.49 [-1.32, +0.32] | +0.49 [-0.58, +1.59] |
-| PRC eta=.05 - TextSeal a=.1 (on) | -0.03353 [-0.04112, -0.02588] | -21.0 [-30.0, -12.0] | -0.35 [-1.19, +0.40] | +0.63 [-0.29, +1.55] |
-| PRC eta=.05 - Gumbel-Max (on) | -0.41925 [-0.48470, -0.35643] | -21.0 [-30.0, -12.0] | +0.19 [-0.31, +0.75] | +0.18 [-0.70, +1.00] |
-| PRC eta=.05 - Ordinary | -0.00174 [-0.00419, +0.00070] | -- | +0.49 [+0.06, +1.01] | -0.62 [-1.40, +0.05] |
-| SynthID d=2 - Ordinary | -0.00053 [-0.00335, +0.00251] | -- | +0.07 [-0.46, +0.67] | +0.01 [-0.71, +0.69] |
-| SynthID d=10 - Ordinary | +0.00155 [-0.00177, +0.00538] | -- | +0.98 [+0.32, +1.73] | -1.12 [-2.00, -0.32] |
-| TextSeal a=.1 (on) - Ordinary | +0.03179 [+0.02419, +0.03981] | -- | +0.85 [+0.28, +1.60] | -1.25 [-2.06, -0.61] |
-| Gumbel-Max (on) - Ordinary | +0.41751 [+0.35505, +0.48302] | -- | +0.30 [-0.04, +0.64] | -0.80 [-1.34, -0.26] |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/16_all_contrasts_0p6b_full_400.tex) · [CSV](tables/16_all_contrasts_0p6b_full_400.csv)
-
-**All contrasts: 8B / full vocabulary / T=.7, 1,024 tokens**
-
-| Left minus right | Self-BLEU [95% CI] | Detection pp [95% CI] | Repeat-4 pp [95% CI] | Distinct-3 pp [95% CI] |
-| --- | --- | --- | --- | --- |
-| PRC eta=.05 - SynthID d=2 | -0.01098 [-0.01976, -0.00227] | -90.0 [-95.0, -84.0] | +3.61 [-1.86, +8.71] | -3.40 [-8.22, +1.70] |
-| PRC eta=.05 - SynthID d=10 | -0.01281 [-0.02233, -0.00360] | -97.0 [-100.0, -93.0] | +2.71 [-1.61, +7.09] | -2.70 [-6.79, +1.23] |
-| PRC eta=.05 - Ordinary | -0.00393 [-0.01346, +0.00524] | -- | +4.77 [-0.97, +10.85] | -4.56 [-10.26, +0.84] |
-| SynthID d=2 - Ordinary | +0.00704 [-0.00282, +0.01653] | -- | +1.16 [-4.05, +6.46] | -1.16 [-6.21, +3.81] |
-| SynthID d=10 - Ordinary | +0.00887 [-0.00139, +0.01980] | -- | +2.06 [-3.54, +7.96] | -1.87 [-7.43, +3.38] |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/16_all_contrasts_8b_t07_1024.tex) · [CSV](tables/16_all_contrasts_8b_t07_1024.csv)
-
-**All contrasts: 8B / full vocabulary / T=.7, 400 tokens**
-
-| Left minus right | Self-BLEU [95% CI] | Detection pp [95% CI] | Repeat-4 pp [95% CI] | Distinct-3 pp [95% CI] |
-| --- | --- | --- | --- | --- |
-| PRC eta=.05 - SynthID d=2 | -0.01460 [-0.02410, -0.00532] | -86.0 [-92.0, -79.0] | +0.69 [-2.65, +4.00] | -0.54 [-4.14, +2.94] |
-| PRC eta=.05 - SynthID d=10 | -0.01761 [-0.02802, -0.00829] | -99.0 [-100.0, -97.0] | +0.89 [-2.36, +4.43] | -0.68 [-4.33, +2.67] |
-| PRC eta=.05 - Ordinary | -0.00670 [-0.01511, +0.00109] | -- | +1.53 [-1.89, +5.28] | -1.26 [-5.05, +2.15] |
-| SynthID d=2 - Ordinary | +0.00790 [-0.00291, +0.01873] | -- | +0.84 [-2.36, +4.04] | -0.72 [-3.91, +2.50] |
-| SynthID d=10 - Ordinary | +0.01091 [+0.00242, +0.01968] | -- | +0.65 [-2.16, +3.64] | -0.58 [-3.57, +2.23] |
-
-Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.
-
-[LaTeX](tables/16_all_contrasts_8b_t07_400.tex) · [CSV](tables/16_all_contrasts_8b_t07_400.csv)
+- **Main comparison:** [tradeoff figure](figures/02_matched_policy_tradeoff.pdf), [paired SynthID-depth-2 contrasts](figures/03_paired_depth2.pdf), and [500-response detection table](tables/03_large_detection.tex).
+- **Supporting results:** [repeat-policy figure](figures/04_repeat_policy.pdf), [depth figure](figures/05_synthid_depth.pdf), and [temperature figure](figures/08_temperature.pdf).
+- **Complete data and reusable tables:** [absolute results](data/absolute_results.csv), [paired contrasts](data/paired_contrasts.csv), and the [LaTeX/CSV asset catalogue](README.md).

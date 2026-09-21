@@ -2,12 +2,14 @@
 
 The campaign is closed. This package is generated offline from saved results.
 
-- [Full comparison report](REPORT.md): takeaways first, all completed arms, corrected nulls and limitations.
-- [Portable report PDF](comparison_report.pdf).
+- [Concise comparison report](REPORT.md): principal findings, essential tables and methodological limitations.
+- [Detailed results PDF](comparison_report.pdf): the complete September 19 results and diagnostics, retained as supporting material.
 - [LaTeX assembly](paper_assets.tex): figure/table fragments can also be included independently.
 - `figures/`: vector PDF/SVG and 300-dpi PNG exports.
 - `tables/`: matching LaTeX fragments and human-readable CSVs.
 - `data/`: full-precision normalized values, all paired contrasts, source hashes and checks.
+
+REPORT.md is maintained separately. The asset builder preserves it and regenerates only the detailed supporting material.
 
 ## Figure catalogue
 

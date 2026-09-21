@@ -1,5 +1,12 @@
 {
-  "builder_sha256": "cc2c2c1d51709b463ceb5ebd05cc57c93fa672f45efa37ce4a9a21741edbb643",
+  "asset_generation_builder_sha256": "cc2c2c1d51709b463ceb5ebd05cc57c93fa672f45efa37ce4a9a21741edbb643",
+  "builder_sha256": "a5fb5ed47beb8086b16076d8d0ecd05af208f0616067a5bc6caa52748ffebaed",
+  "editorial_revision": {
+    "date": "2026-09-21",
+    "numerical_assets_rebuilt": false,
+    "report_sha256": "ee30da3fc9678c7ef236dde5d0791f48431f089474840f14141f69ed7c2a1f9d",
+    "summary_maintained_separately": true
+  },
   "figures": [
     {
       "caption": "Historical 500-response-per-setting comparison after completion-only correction. Left: each cutoff is a separate one-shot detection test; coincident baseline curves are retained. Right: 1,024-token repetition under the native mixed policies, with TextSeal/Gumbel fallback OFF. These repetition gaps are not the matched-policy result.",

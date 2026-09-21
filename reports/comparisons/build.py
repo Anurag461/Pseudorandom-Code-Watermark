@@ -1,4 +1,6 @@
-"""Build the closed comparison report from saved results; never launches inference.
+"""Build detailed comparison assets from saved results; never launches inference.
+
+REPORT.md is the separately maintained paper summary and is not regenerated.
 
 python reports/comparisons/build.py            # numpy + matplotlib
 python reports/comparisons/build.py --pdf      # reportlab, after the first command
@@ -408,22 +410,7 @@ def exports(rows,contrasts,nulls,checks):
  return dict(duplicate_metric_checks=len(checks),contrast_mean_checks=verified,absolute_rows=len(rows),contrast_rows=len(contrasts),null_rows=len(nulls),evaluation_response_slots=2500,cohorts_not_pooled=True,new_generation=0,new_inference=0)
 
 def write_documents():
- text=[]
- for b in BLOCKS:
-  if b['type']=='heading':text += ['#'*b['level']+' '+b['text'],'']
-  elif b['type']=='paragraph':
-   s=b['text']
-   if s.startswith('../../'):s=f'[{s[6:]}]({s})'
-   elif ': ../../' in s:
-    a,path=s.split(': ',1);s=f'{a}: [{path[6:]}]({path})'
-   text += [s,'']
-  elif b['type']=='bullet':text += ['- '+b['text'],'']
-  elif b['type']=='table':
-   text += ['**'+b['caption']+'**','', '| '+' | '.join(b['headers'])+' |','| '+' | '.join(['---']*len(b['headers']))+' |']
-   text += ['| '+' | '.join(row)+' |' for row in b['rows']]
-   text += ['',b['note'],'',f"[LaTeX](tables/{b['name']}.tex) · [CSV](tables/{b['name']}.csv)",'']
-  elif b['type']=='figure':text += [f"![{b['name']}](figures/{b['name']}.png)",'',b['caption'],'',f"[Vector PDF](figures/{b['name']}.pdf) · [SVG](figures/{b['name']}.svg)",'']
- (OUT/'REPORT.md').write_text('\n'.join(text).rstrip()+'\n')
+ # Keep the edited paper summary separate from the exhaustive generated assets.
  save(OUT/'data/report_blocks.json',BLOCKS)
  lines=[r'\documentclass[10pt]{article}',r'\usepackage[margin=0.75in]{geometry}',r'\usepackage{graphicx,booktabs,array}',r'\usepackage[T1]{fontenc}',r'\usepackage[hidelinks]{hyperref}',r'\title{Watermark comparisons: paper assets}',r'\author{}',r'\date{19 September 2026}',r'\begin{document}',r'\maketitle',r'\noindent All results are completion-only at nominal $p<.001$. See REPORT.md for complete protocols, caveats, numerical paths, provenance, and unfavorable results. No matched empirical FPR claim is made. The paired studies use 50 prompts with two responses each; the historical comparison uses 500 responses per setting.']
  for r in FIGURES:
@@ -431,7 +418,7 @@ def write_documents():
  lines+=[r'\clearpage']
  for t in TABLES:lines += [r'\input{tables/'+t['name']+'.tex}']
  lines += [r'\end{document}'];(OUT/'paper_assets.tex').write_text('\n'.join(lines)+'\n')
- catalog=['# Paper assets and reproduction','', 'The campaign is closed. This package is generated offline from saved results.','', '- [Full comparison report](REPORT.md): takeaways first, all completed arms, corrected nulls and limitations.','- [Portable report PDF](comparison_report.pdf).','- [LaTeX assembly](paper_assets.tex): figure/table fragments can also be included independently.','- `figures/`: vector PDF/SVG and 300-dpi PNG exports.','- `tables/`: matching LaTeX fragments and human-readable CSVs.','- `data/`: full-precision normalized values, all paired contrasts, source hashes and checks.','','## Figure catalogue','']
+ catalog=['# Paper assets and reproduction','', 'The campaign is closed. This package is generated offline from saved results.','', '- [Concise comparison report](REPORT.md): principal findings, essential tables and methodological limitations.','- [Detailed results PDF](comparison_report.pdf): the complete September 19 results and diagnostics, retained as supporting material.','- [LaTeX assembly](paper_assets.tex): figure/table fragments can also be included independently.','- `figures/`: vector PDF/SVG and 300-dpi PNG exports.','- `tables/`: matching LaTeX fragments and human-readable CSVs.','- `data/`: full-precision normalized values, all paired contrasts, source hashes and checks.','','REPORT.md is maintained separately. The asset builder preserves it and regenerates only the detailed supporting material.','','## Figure catalogue','']
  for i,r in enumerate(FIGURES,1):catalog += [f"{i}. **{r['name']}**: {r['caption']}",'']
  catalog += ['## Table catalogue','']
  for t in TABLES:catalog += [f"- [{t['name']}](tables/{t['name']}.tex): {t['caption']}"]
