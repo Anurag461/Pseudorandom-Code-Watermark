@@ -1,0 +1,48 @@
+{
+  "worker_id": 7,
+  "replay": {
+    "root": "completion_only_raw_abstain_v1/integrated/2062dc7e552a33527352b037/batches/000350",
+    "cached": false,
+    "seconds": 3698.1108851,
+    "trace_metadata": {
+      "seconds": 3698.1108851,
+      "peak_allocated_bytes": 123815630336,
+      "peak_reserved_bytes": 123847311360,
+      "total_memory_bytes": 150110011392,
+      "memory_limit_fraction": 0.95,
+      "full_validation": false
+    }
+  },
+  "files": [
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2062dc7e552a33527352b037/batches/000350/trace.pt",
+      "sha256": "b8acacadd9e4517cc7b15e4c19bd7ab41f320c12dce419d59fa096d08e129fd8",
+      "bytes": 2619090
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_shared_null_T13088_N500_v1/attempts/replay/07/request.json",
+      "sha256": "b0e4a0e4524a021034343ba19cb3166df0bcf501b089b435f8c7811831b25439",
+      "bytes": 441006
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_shared_null_T13088_N500_v1/attempts/replay/07/response.json",
+      "sha256": "ddeb90ef6e7c093deff6b3f17b2cc815a0b23729c3643a2f59d25f5586f02e32",
+      "bytes": 717
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_shared_null_T13088_N500_v1/attempts/replay/07/worker.log",
+      "sha256": "52bc799df8e7332518addacc9a312afd2471270446ca6375aef2b610f4d7a8ca",
+      "bytes": 455
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_shared_null_T13088_N500_v1/attempts/replay/07/timing.json",
+      "sha256": "0abb65ad6eaad537a6273cea62bf6ac1e3409f15bf43d5825a978bee3a0389f0",
+      "bytes": 113
+    }
+  ]
+}

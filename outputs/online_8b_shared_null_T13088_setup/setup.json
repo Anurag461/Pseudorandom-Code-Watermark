@@ -1,0 +1,5655 @@
+{
+  "status": "setup_only_budget_deferred_no_launch_approval",
+  "created_utc": "2026-09-22T19:18:16.867306+00:00",
+  "run_id": "online_8b_shared_null_T13088_N500_v1",
+  "branch": "redetection",
+  "head": "b5a5b3584023b33ad27e4ace27509dea13c94b50",
+  "profile": "new-prc-watermark",
+  "paid_compute_launched": false,
+  "approval_received": false,
+  "budget_confirmed": false,
+  "last_user_instruction": "Prepare only; decide the budget later. Retain the original T13088 shared-null scope; ignore the subsequently cancelled extension discussion.",
+  "N": 500,
+  "T": 13088,
+  "batch_size": 50,
+  "prompt_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171,
+    172,
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258,
+    259,
+    260,
+    261,
+    262,
+    263,
+    264,
+    265,
+    266,
+    267,
+    268,
+    269,
+    270,
+    271,
+    272,
+    273,
+    274,
+    275,
+    276,
+    277,
+    278,
+    279,
+    280,
+    281,
+    282,
+    283,
+    284,
+    285,
+    286,
+    287,
+    288,
+    289,
+    290,
+    291,
+    292,
+    293,
+    294,
+    295,
+    296,
+    297,
+    298,
+    299,
+    300,
+    301,
+    302,
+    303,
+    304,
+    305,
+    306,
+    307,
+    308,
+    309,
+    310,
+    311,
+    312,
+    313,
+    314,
+    315,
+    316,
+    317,
+    318,
+    319,
+    320,
+    321,
+    322,
+    323,
+    324,
+    325,
+    326,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    336,
+    337,
+    338,
+    339,
+    340,
+    341,
+    342,
+    343,
+    344,
+    345,
+    346,
+    347,
+    348,
+    349,
+    350,
+    351,
+    352,
+    353,
+    354,
+    355,
+    356,
+    357,
+    358,
+    359,
+    360,
+    361,
+    362,
+    363,
+    364,
+    365,
+    366,
+    367,
+    368,
+    369,
+    370,
+    371,
+    372,
+    373,
+    374,
+    375,
+    376,
+    377,
+    378,
+    379,
+    380,
+    381,
+    382,
+    383,
+    384,
+    385,
+    386,
+    387,
+    388,
+    389,
+    390,
+    391,
+    392,
+    393,
+    394,
+    395,
+    396,
+    397,
+    398,
+    399,
+    400,
+    401,
+    402,
+    403,
+    404,
+    405,
+    406,
+    407,
+    408,
+    409,
+    410,
+    411,
+    412,
+    413,
+    414,
+    415,
+    416,
+    417,
+    418,
+    419,
+    420,
+    421,
+    422,
+    423,
+    424,
+    425,
+    426,
+    427,
+    428,
+    429,
+    430,
+    431,
+    432,
+    433,
+    434,
+    435,
+    436,
+    437,
+    438,
+    439,
+    440,
+    441,
+    442,
+    443,
+    444,
+    445,
+    446,
+    447,
+    448,
+    449,
+    450,
+    451,
+    452,
+    453,
+    454,
+    455,
+    456,
+    457,
+    458,
+    459,
+    460,
+    461,
+    462,
+    463,
+    464,
+    465,
+    466,
+    467,
+    468,
+    469,
+    470,
+    471,
+    472,
+    473,
+    474,
+    475,
+    476,
+    477,
+    478,
+    479,
+    480,
+    481,
+    482,
+    483,
+    484,
+    485,
+    486,
+    487,
+    488,
+    489,
+    490,
+    491,
+    492,
+    493,
+    494,
+    495,
+    496,
+    497,
+    498,
+    499
+  ],
+  "protocol": "completion_only_raw_abstain_v1",
+  "weights": [
+    "map",
+    "entropy"
+  ],
+  "target_fpr": 0.001,
+  "fpr_policy": "one_shot",
+  "model": {
+    "id": "Qwen/Qwen3-8B-Base",
+    "size": "8B",
+    "dtype": "bfloat16",
+    "revision": "49e3418fbbbca6ecbdf9608b4d22e5a407081db4",
+    "cache_directory": "models/Qwen3-8B-Base",
+    "weight_files": {
+      "model-00004-of-00005.safetensors": "ad8b708792105133e03fe19e2d56c89c709f677f01285f8b3ede8947d59fd9fe",
+      "model-00003-of-00005.safetensors": "c7dd5a191c8da555def0714550375b3c0117751add408fcdda0c2a79ac0186bc",
+      "model-00005-of-00005.safetensors": "fbf24915d47ea030bb68ab0b9488f4515a907185baa6dc26837c9c3f2326a550",
+      "model-00002-of-00005.safetensors": "9aa12339835bf7a093d3d0b0a0d2d77f8538301cfc7f8e7ec7a585858ebf7a1f",
+      "model-00001-of-00005.safetensors": "9983f1b9ef2f60e7c3730d9bc11ada914e6ec630639b5b020a89bd158cd0446b"
+    },
+    "index_sha256": "cd39d5e44c5aadfd1954b598883aea1c4a98822a2f7723d214ef2278b7fec2e4",
+    "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "metadata_sha256": {
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "config.json": "3bd01d7ad7a2e203ecbbe84e24087a51c6d2a108ee4bcc42d0016bf49564983a"
+    },
+    "tokenizer_revision": "49e3418fbbbca6ecbdf9608b4d22e5a407081db4"
+  },
+  "source_manifest_ref": {
+    "volume": "data",
+    "path": "_nulls/qwen3_8b_base/T13088/_manifest.json",
+    "bytes": 701,
+    "sha256": "4336576d079f4934f0868d2bb38c4615247c7b03f9069df00154ad967feffc92"
+  },
+  "source_file_refs": [
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0000.pt",
+      "sha256": "ff561a3a99cd489f735ac867bfb8904f3e38916718abceae219882738f7e0d64",
+      "bytes": 772429
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0001.pt",
+      "sha256": "e50d6a1aef27989fc6f980a38e8508185bea9c76afe4a81d6fc6ee301685317b",
+      "bytes": 768205
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0002.pt",
+      "sha256": "48340eee067d9a22ab458cc2e36a5bf68ad96e58cbd1be97aba4109752b1a3d0",
+      "bytes": 757517
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0003.pt",
+      "sha256": "d9c77db1b3bc950f305f3b0fcca1d1e13f3f6e19745f26114428d320cf5ea896",
+      "bytes": 772749
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0004.pt",
+      "sha256": "a19b29a8a6a28b9e56837ee238bc334c6a06745def8a4f4f15f89169bcbed917",
+      "bytes": 756365
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0005.pt",
+      "sha256": "985f0d7ee89f6156af94b9ee3f45bd8efac74e04187751625c3447a6caf0645e",
+      "bytes": 758989
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0006.pt",
+      "sha256": "1702d9f9c957fa38668e0b9810b440e367c934a6c4f957bc28a25f8ddc985135",
+      "bytes": 761165
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0007.pt",
+      "sha256": "44f15d9fd0b8c11740df7b35060f85fedc39459008b21cbc053d9a8f1b95d154",
+      "bytes": 759373
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0008.pt",
+      "sha256": "366dbfcb4e1982978ae573f051ecb7de2516395f5b8649b11ada86d748e9c379",
+      "bytes": 768269
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0009.pt",
+      "sha256": "ba944f17a21d33d556922e4e151d7fe720eaa8d55c9e626bf6893b509c3d6743",
+      "bytes": 771469
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0010.pt",
+      "sha256": "d2e20f31bbcbd6de3ded34b09419d6d3681f5ee7440c42cebecb3ad16fe1a41f",
+      "bytes": 756813
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0011.pt",
+      "sha256": "141689d3925b5b6d26767f819d18333824d03ca9d43b65f10a1bd8ea71f30fbe",
+      "bytes": 768973
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0012.pt",
+      "sha256": "c49d6bb8038cb6fd97093d52147e70e89c45de0df3a7614fc6c0c39052407934",
+      "bytes": 761869
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0013.pt",
+      "sha256": "fbc9ee5be94cc68b2d072d818206e89adc36c7494f728de8f48d5e5082d56d16",
+      "bytes": 768717
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0014.pt",
+      "sha256": "f45e0436ff9aa02aeb5c91d0477d7675433af7b87ac67f44dafc9ae28992186c",
+      "bytes": 769549
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0015.pt",
+      "sha256": "4ff4dfd5c125617ae954cce3923e605a24c23af2ba0cb7a03cea7ee750a5ba2e",
+      "bytes": 758925
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0016.pt",
+      "sha256": "baf21e48bf2523e5b2f1f8f0ae94ddec10205ffe2f8151fd396e3f85495f3f5b",
+      "bytes": 759309
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0017.pt",
+      "sha256": "9fae66f6633364c159a187f75768c40832ec1b5bc2ac92388145e41c074aa8c3",
+      "bytes": 753933
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0018.pt",
+      "sha256": "8bd9925a1cca32a56314e9fa201ed4326d3013554195aee28a08dd85759fd2df",
+      "bytes": 759181
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0019.pt",
+      "sha256": "ccb087cebba06a4ef2758beeee7e476576fe168291e9b8dd933328c856762443",
+      "bytes": 759053
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0020.pt",
+      "sha256": "479d86ca4eb97585494800f6f91293eacf785b1e80ad4dd9abe0554555b6d18c",
+      "bytes": 760653
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0021.pt",
+      "sha256": "0ca2a03f67776f24601a73e3319163673bfd655d4d024f252c47db17b6b4d1b5",
+      "bytes": 759949
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0022.pt",
+      "sha256": "df3e71e7a4552b4ac9293426391a6b3d94e9de13cb28035b498738245b9d157d",
+      "bytes": 757069
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0023.pt",
+      "sha256": "0686a98dea08a2a76519a9fd0d15207be8707c3c648c2a61e3f32a648a3c944c",
+      "bytes": 762381
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0024.pt",
+      "sha256": "111c203228da18f6253686f3724e55500b7b3c0726c3c47ee5f19c0a77038888",
+      "bytes": 757069
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0025.pt",
+      "sha256": "69934097a011cfe82dd2b5c2ec73becb75a3b8709e008955bf7f4a82ce4afa8a",
+      "bytes": 757837
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0026.pt",
+      "sha256": "7976dca5d2d2d2492e5ec2699c6ae3e327771a539a3a566369bcdf8158a16cab",
+      "bytes": 758541
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0027.pt",
+      "sha256": "1b9b311a28248280681c33ec476a726e1ecd81f036e4ff8c59926cfd04c695ee",
+      "bytes": 759757
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0028.pt",
+      "sha256": "a0437000176387baaa25d619d391349e37c924fc3b95e1d468eb3a19cb701f12",
+      "bytes": 759629
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0029.pt",
+      "sha256": "4fe822fb910918cac7163b8eeac5773065f9dd07ffda0a06beb567a5d2044d04",
+      "bytes": 767501
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0030.pt",
+      "sha256": "a6202a8a4d6f4bb860fca0caa30f65f217af1c2f41197fc5c213a7643c1313b2",
+      "bytes": 773645
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0031.pt",
+      "sha256": "e5836a3d00d79701821e077dcb2fa1cb85e30faa05c506574893df25220e0d77",
+      "bytes": 770701
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0032.pt",
+      "sha256": "7bcce9e27aeb2e7f171ea99530cc6df4bceaa4f9931a9651a711f45dcb82038e",
+      "bytes": 770509
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0033.pt",
+      "sha256": "2edbd3d7b198c9e7f46854dacf1ce0f2942fd5af3c0d4b8cf775ebfc3c5e412b",
+      "bytes": 773901
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0034.pt",
+      "sha256": "133fe4a9a13236757db2f3d45150dadd4a6f1cf4f1fa471ada65e59e9cdd1c79",
+      "bytes": 756301
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0035.pt",
+      "sha256": "91aed1aaedc8ca276c71db4a8301d21bc8ec97052e6dbb7a5b86c6cc186954f3",
+      "bytes": 759885
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0036.pt",
+      "sha256": "39eb00444aa1c27212522044db176b6e3efc964fb0276a2218b204c013f2a757",
+      "bytes": 766029
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0037.pt",
+      "sha256": "6b7dd3dd37dd9e0e92106da2325bae244ce8b64411729e170eed9583248b1ae5",
+      "bytes": 760333
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0038.pt",
+      "sha256": "8fb05bb669b48f247d95087b560ad2997c9d93d5761c9e53d919ba9d5ea82eba",
+      "bytes": 760397
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0039.pt",
+      "sha256": "30b159cf8e75bcb9c65bf4647b868f32d45c8d5e5a83eae19070546edcefe105",
+      "bytes": 771917
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0040.pt",
+      "sha256": "c9469411fde02e9a921e40909714b8499ac14eec2a51aec051895b58e106fa14",
+      "bytes": 775693
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0041.pt",
+      "sha256": "68e6a65a23d793e3cb03559e5e9d70b69065c036d654f6fb74dfb77118fd9e38",
+      "bytes": 771277
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0042.pt",
+      "sha256": "6c0984fd3de1f0cc853707773de10ebd39573f20360fb0cb86c3a525da22d36f",
+      "bytes": 754317
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0043.pt",
+      "sha256": "6ef4a6e65cd27db8c6edf508521d13a2f382a5dca6502670d0342104b83031a3",
+      "bytes": 756045
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0044.pt",
+      "sha256": "ae295d9f4fcdb6cc2db846655ce24384caf7294edae213c83f1be56840c81baa",
+      "bytes": 759629
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0045.pt",
+      "sha256": "6841f3d10ab4fe8ffa6a4191d1d9d96ed71916d5fb98932f03a3cad689c4cb1e",
+      "bytes": 771213
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0046.pt",
+      "sha256": "fd69f04730220454644431c8577ab745ebb11bd2a5bde7441537eecba887361f",
+      "bytes": 772301
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0047.pt",
+      "sha256": "736296bb345692057b0d1bfad7fbf1f8668bc68d70757527ff69c628a8425f9f",
+      "bytes": 772557
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0048.pt",
+      "sha256": "d2f6ad2c976f96042108eab1bc9b0bb253b46f7c8c36bdb8225b0f1e3f826386",
+      "bytes": 758413
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0049.pt",
+      "sha256": "739dfcfb689761a77ce93bba168e92e596990a757cb4187f32380120df166317",
+      "bytes": 761421
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0050.pt",
+      "sha256": "a589d3550ac24c248535354850ec0a826800323f09a4acce5b2677ac94007ae4",
+      "bytes": 767181
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0051.pt",
+      "sha256": "5289723663751c166725435af39e1cd6b67c725bde40bdcdb30d3e78c3713e5a",
+      "bytes": 757965
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0052.pt",
+      "sha256": "51a7116f4052a29c99445a9db3166a6d0df5d9c27801376d87b456aef74d0793",
+      "bytes": 753997
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0053.pt",
+      "sha256": "2b4512981e6b69d6e44eec6b3af93e8cd24d87c43506db09c6a0742c05f5eecb",
+      "bytes": 764813
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0054.pt",
+      "sha256": "a5c897704988fc8504cad59c26e0a997dd08d91fe4662e944a0694da5cfd7c9f",
+      "bytes": 761805
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0055.pt",
+      "sha256": "684d012143b707d4065d1faace389b74bea94f25beab1c4d997ef809be2bf48c",
+      "bytes": 762893
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0056.pt",
+      "sha256": "ab8d7a2067d4bc390a478567a83d6727b8ecf59b2cc7f6e0c0e1366815002403",
+      "bytes": 774797
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0057.pt",
+      "sha256": "b72b6fdee486df390ce20c0f71ef7e7186f23e05bc994d3d88b590c4e8129881",
+      "bytes": 765005
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0058.pt",
+      "sha256": "041270ba84b4dea166d503bd3d08dcfa682a20c2dcb41376848d1e6332e874fb",
+      "bytes": 756621
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0059.pt",
+      "sha256": "e80d9c4cf404d8c9cc442ca80fa024ed9ce8e8c2eeb517f3e3fcd13d7d4b5fdd",
+      "bytes": 754637
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0060.pt",
+      "sha256": "2bc2eea08581b2630a3c8e78276bbf563713a61db3c9d0703c58ee1c7f5fc482",
+      "bytes": 755533
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0061.pt",
+      "sha256": "f3a60ee0da518da84072cc9767509eae2e650acf3ea9f71a5f9840c89b7f7741",
+      "bytes": 755661
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0062.pt",
+      "sha256": "800614220d3e3273301236771460486838e6214d3c9efd30727b6771a6811dbf",
+      "bytes": 764301
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0063.pt",
+      "sha256": "dbaa41c6184c4679d00de954269d2e8f1989f24107e3c8c16fa20ac99bcc367e",
+      "bytes": 772173
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0064.pt",
+      "sha256": "21f40158d4cfeaa8c039e63a2c350f59d54bb34b2420956717240d2e8f049000",
+      "bytes": 770893
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0065.pt",
+      "sha256": "9cc5ee76652f15eea742f48aff903b54a3f06c29c36796fb70da32137205c688",
+      "bytes": 757197
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0066.pt",
+      "sha256": "b3a3db42bcdb1ea232a829699fa8a9bbaa8dfc103bcd2b03ec9246219da30a59",
+      "bytes": 776397
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0067.pt",
+      "sha256": "744283b1cd76a6cc939c4a8d278d67116bbc81d6e0957590c47480b19c75abe5",
+      "bytes": 758349
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0068.pt",
+      "sha256": "d98507b8b64779a11e99ad783fc3442eb885f500696a415304327ffcd25f62c1",
+      "bytes": 757837
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0069.pt",
+      "sha256": "f7eeead4c7043f98e1029891ab06e1656715886cc9db7c7320d60a9cf7e7bf50",
+      "bytes": 770061
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0070.pt",
+      "sha256": "e1f73acba7a57b9a34382d6da83e3e14bf1db28be07ed62773edcc879a0193d1",
+      "bytes": 757901
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0071.pt",
+      "sha256": "a34fa7dcf8ab92c666debd5f8282c489e651686a641cb0ec9d0d87820633c78a",
+      "bytes": 756557
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0072.pt",
+      "sha256": "9b39f6361ef2063df5dfdcb72625464e5c7776d91ed6ce89935ec1d728780d7a",
+      "bytes": 773197
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0073.pt",
+      "sha256": "7290d1be0805fd2d317b73eb66645d19c999ee8d02ad81b7a9138bd64499b95e",
+      "bytes": 758797
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0074.pt",
+      "sha256": "07dcf5b4783638336ae18dbee252b4d5ab17e27e1f0b1d436bafb35feab98c27",
+      "bytes": 756365
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0075.pt",
+      "sha256": "73da4e69449ca5d96c6dfa86746dd4a16f3f05264eb4b4141c7fb3f1107ab5de",
+      "bytes": 761357
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0076.pt",
+      "sha256": "019aaf47223d8e31d82447561743decee611e21e569511448acbb87e3210c9a6",
+      "bytes": 760653
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0077.pt",
+      "sha256": "6590874fe1f3c5a4eb3963691876d632914a2879a92020d231d2c605349587a0",
+      "bytes": 758861
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0078.pt",
+      "sha256": "d69fb4936ab6ac574df57bd258974dd78e051c4caa990fbe00624ac17464c7ea",
+      "bytes": 773005
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0079.pt",
+      "sha256": "efabe9642fe62466584b0f7cd0134723be51f30728f588ed06a558add839e38c",
+      "bytes": 768333
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0080.pt",
+      "sha256": "bc044a52dd3699e229f246b9df7d210231cc92829e3aee4b96b44439af10df22",
+      "bytes": 765005
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0081.pt",
+      "sha256": "82e76b22a99447e19a7891f08b5d5312f15e6c620c3f6261d6506e7b7d16a864",
+      "bytes": 770637
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0082.pt",
+      "sha256": "4f3d986f2236a5069d537836d4c467f04e16db95eada2b6174ecc6e996e2c4b9",
+      "bytes": 774157
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0083.pt",
+      "sha256": "d564eaf998c2753d31c531e353933958636b814b7b6eea184ca0c569154f1546",
+      "bytes": 759437
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0084.pt",
+      "sha256": "9c276b3054ee1edd1808fe7defabe85513aaf597ce895c55f22851be94ba8592",
+      "bytes": 763533
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0085.pt",
+      "sha256": "7256fe6c25bee151f5c8b8b293cadd11f0a4805e12127b327e2d445f00997e7e",
+      "bytes": 758221
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0086.pt",
+      "sha256": "a9386443df83e7328c3a971a3b277098c64c8ae0a76821d3d795292d50b8ee31",
+      "bytes": 757325
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0087.pt",
+      "sha256": "36f24a9a3d88502365a24759f5eaa6170e7ec71e680ea416fc0bb5434af09e40",
+      "bytes": 760589
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0088.pt",
+      "sha256": "98397fcbcdd2e368413f89fdeed0fb04d3e66fdb718617189701b6ed45c63033",
+      "bytes": 763533
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0089.pt",
+      "sha256": "b207db038c0b02e84d80b93c839e70c9d046ad2213dc28507ec1be03a37d86be",
+      "bytes": 755853
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0090.pt",
+      "sha256": "c19bd8905d3ad679ac0944fe6c0229c4aa2bf0241d291e471d831961208c0ac4",
+      "bytes": 759501
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0091.pt",
+      "sha256": "b8788d5d9d90e6c42deec823f8342a9959481291b81d0d4058b21dad8a6600ab",
+      "bytes": 758349
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0092.pt",
+      "sha256": "9d9bfc6659fb0285803848b37411ae3610132a5aa7bdb4d80f015faf4309cabf",
+      "bytes": 762445
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0093.pt",
+      "sha256": "b2baeaa1c41bdd468bdeb13fca0f420fc4b30bc88b9b5ec30330f9e1488e2515",
+      "bytes": 772621
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0094.pt",
+      "sha256": "64506d87a38c19c0669253372f1d8aac3f56d0bdee943ea552b06d2a21e7ed56",
+      "bytes": 776205
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0095.pt",
+      "sha256": "5f30f6b9bd12d46336f7ae1655d3792b72884634c29a24bc1a33d6355d8bc53e",
+      "bytes": 775117
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0096.pt",
+      "sha256": "bd76d3c6be363ba6881d184a633dc99ab5be129699913256134127f03a741b2f",
+      "bytes": 762061
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0097.pt",
+      "sha256": "ae1d66c008db3847618c1bd9285c69bb721ae672eeeeb501ecb87b083ce8efb2",
+      "bytes": 761421
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0098.pt",
+      "sha256": "18d9710c049dcf88f3c5987dfa63faa1b6cb8671fb89dcab8520d678ebee7fdd",
+      "bytes": 761293
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0099.pt",
+      "sha256": "ea41070033c529af782c238aa266d23ff1e65eb57ddcd448273419554f88e309",
+      "bytes": 771661
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0100.pt",
+      "sha256": "63e33588db992061cbeb46282ec17b6dddacc15cf2dacbbab12ed0e0e41ebf16",
+      "bytes": 770957
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0101.pt",
+      "sha256": "dae4b195d83d391044b8158522eb7d7462f0e9429af18f85f7db5d0201ad0abc",
+      "bytes": 772365
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0102.pt",
+      "sha256": "0fb9716c43675619173156e6bbd0acb9372df8d0bde30ff1070c57bc70aa5a47",
+      "bytes": 755981
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0103.pt",
+      "sha256": "98f93453884206c4f3f7f85293c676073f11eeb54287047d2f74903d445aabe4",
+      "bytes": 757197
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0104.pt",
+      "sha256": "a236629605da2b2b1d1b6aae60d102608401badb2a075a95141c2c6d42e2f1ca",
+      "bytes": 771469
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0105.pt",
+      "sha256": "cc4ccbcdc636ae1911d1d8551a156fc9f21c9f32c8cb6a9855d53a6fee86b844",
+      "bytes": 760077
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0106.pt",
+      "sha256": "25dbbe27ce7b9c81c2009286437955db3d3dbf2561b08b9f6bd8de51f25627c8",
+      "bytes": 758413
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0107.pt",
+      "sha256": "9ec6648056729a614dd64718606749f35e5bc8fb98670abd908160fa815b510a",
+      "bytes": 765773
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0108.pt",
+      "sha256": "45cfd081951e0ac9c060604c03a727cd624d5c4ba6596e479afa8f64b9cfaeae",
+      "bytes": 772173
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0109.pt",
+      "sha256": "d609edbc516c2433b598853af2917f5912cb3fceeab2d7f304c5d4a80f4f7f51",
+      "bytes": 762317
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0110.pt",
+      "sha256": "d03d5796f145db0cc2449e38e4a69d9fa4bd9793358b771aaa4e36355048e439",
+      "bytes": 759437
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0111.pt",
+      "sha256": "d343e7e64d7195413e91584d9836adebc7b8f28d6aa736c46fc0243920f28280",
+      "bytes": 772173
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0112.pt",
+      "sha256": "8082010f3cc2e2c98e927e776bcaaaecc61defe1f90b16ed9f3bf8c9dcfd365f",
+      "bytes": 770317
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0113.pt",
+      "sha256": "06cc13bf0b96289ac730b05a53029e733aa79577d801f165eb3f53a2a8c3fcf9",
+      "bytes": 772749
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0114.pt",
+      "sha256": "a0f443700a773d422d45776dddbc266fa7f517911b961f6d91b7b9086ebba1a2",
+      "bytes": 771405
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0115.pt",
+      "sha256": "c178ed89dcabfee997d80b58ffc3b04c8162adb69aeef85cbc956926382c0ec5",
+      "bytes": 754509
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0116.pt",
+      "sha256": "d4f51a39e8972bb2d571e2b51485d5de99722e3569eba9e4b3116eebe408d82d",
+      "bytes": 756173
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0117.pt",
+      "sha256": "f3396485699098951e32b49a74171de41a9925e42349352cc3ac5dc856372651",
+      "bytes": 757261
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0118.pt",
+      "sha256": "5f2e0e1623717c2add8e1e17bfbdc169009db4c47640a71e459fa41ecd069c18",
+      "bytes": 761293
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0119.pt",
+      "sha256": "a07ade2d5cea6fa842faf71c215784f59c5f9f8d85c7f8a2ce65d096ccc715ef",
+      "bytes": 760077
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0120.pt",
+      "sha256": "e186ee3dc21d03ad07c323942534628d609061e0ac459dca77f7af3519cad8e0",
+      "bytes": 756877
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0121.pt",
+      "sha256": "11b96147f1cd2eefc9ad1c91417456f2e0a5a5097f99e956d4ed4841bfefae67",
+      "bytes": 771405
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0122.pt",
+      "sha256": "21694ab6763e238c9c4c04a4a117e2902fd94f5f2d49e137ea60d33a2c76466f",
+      "bytes": 758029
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0123.pt",
+      "sha256": "faa1ee92657f248733cf944859587d96c8b159043058a01720fb0ec8ae397136",
+      "bytes": 759885
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0124.pt",
+      "sha256": "86adb227244689ff960703fcef8d5f93578f9bc4c82cba231a9e6cfac9cc6b90",
+      "bytes": 757837
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0125.pt",
+      "sha256": "371dc5c741942b5bf9f4abb696b1703e3070c2cc714fbacb3c654bb63e1c8026",
+      "bytes": 768397
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0126.pt",
+      "sha256": "511b8e54c68818d5ee844f754591bddcaef83a5e8ca95ef690d9ab85234562cf",
+      "bytes": 759501
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0127.pt",
+      "sha256": "e19ba45b2d3f85b68010f0022f22527290a434d19737588d40e58ba15420299c",
+      "bytes": 758413
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0128.pt",
+      "sha256": "b947911604827e06ad620fce51aa4968b18d6f328f3bd1cedafc88a2cf2fc017",
+      "bytes": 767053
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0129.pt",
+      "sha256": "83a24f1dffbb0e93c0717562b027ef9c60996720170fde7a70aa039479e7be7e",
+      "bytes": 760653
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0130.pt",
+      "sha256": "026a6951252d9f1bc44f10f4bbe57a618f196ecf26044df45969d87cbd63772d",
+      "bytes": 756173
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0131.pt",
+      "sha256": "fd90c4cdcaccee94d1512aa3967e6bd7ca8b40ce75fe27875bf99f79fd51d523",
+      "bytes": 757261
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0132.pt",
+      "sha256": "56f224278e542829234de7f6294bffc9cdbc734dbf4d5029848a5073c5b75853",
+      "bytes": 758989
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0133.pt",
+      "sha256": "fe3f33406533baff60ad1c6860495a3e72a898d174db8a2eaf1f13769b4f5f82",
+      "bytes": 762317
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0134.pt",
+      "sha256": "6271ca0564b6f179a22b4f4f62c6b2ff23620bb1948123ad1f9e765625fb7df8",
+      "bytes": 772365
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0135.pt",
+      "sha256": "9aeee064621d9519ca9970f7be43e751ca21003adc337de1a999d31cdc51778e",
+      "bytes": 772365
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0136.pt",
+      "sha256": "77f73df3ffe5f53aa41a7d3bea05d84276646f2d171b6915a8ab5f36b3e447c2",
+      "bytes": 756237
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0137.pt",
+      "sha256": "b987a1b9ea0e6949f8fc8a9cac346120efe7e49e155bc1c063bbf4d42fd2b466",
+      "bytes": 754957
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0138.pt",
+      "sha256": "815c5d34d50006ed24c7309e97c3e1c1d80e82a64c5cf83233ea18d7b884347e",
+      "bytes": 756621
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0139.pt",
+      "sha256": "c6111f957b4fa244c928e89436c8830906c671dcc1f0d00a93bfd29d6b11f62e",
+      "bytes": 755661
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0140.pt",
+      "sha256": "63c02947127f75394b2bc04bd540e2c408567ac7eb3ced6ad1b9b68681867d02",
+      "bytes": 773133
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0141.pt",
+      "sha256": "c6525a8599fc75c3e617becf01f5ca8b2a8e58a6eea50663206db33648bcd0c3",
+      "bytes": 761037
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0142.pt",
+      "sha256": "5bc9dde9607ba3877e04c70244ed228e8af15a125478c4b1c32b61cf686b1628",
+      "bytes": 768269
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0143.pt",
+      "sha256": "cf90f4ca47b31980337269b36bc0523647fc59a491e7499ffd6a2f4ad3d35f7e",
+      "bytes": 759629
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0144.pt",
+      "sha256": "f71c383bbdfd2c4aa5ae9fda41f1e23f7673d7e93f37319acaeb9a38cabd159a",
+      "bytes": 760717
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0145.pt",
+      "sha256": "466e23775122456263ba4a71fc289ac3a255571dd824b56d442d7c96ae3c77aa",
+      "bytes": 753805
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0146.pt",
+      "sha256": "4e8e5cbfe7245ea0c1a378d189d6334c01ed02ae79b895be8262fcc3e6e75d5c",
+      "bytes": 755277
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0147.pt",
+      "sha256": "a27cbfaa870d863d274bcb56d41b5e9110780bc0db544e81fc681efff7beabaa",
+      "bytes": 755213
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0148.pt",
+      "sha256": "6fc6cd6b6ebbfac271ecc66314c20faac55099d854a0c59f969cd6b781fb33f1",
+      "bytes": 765901
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0149.pt",
+      "sha256": "9cf5223798352c1168a3a0ca8240e14bb294aea52e2fd504593735784c2d6932",
+      "bytes": 757389
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0150.pt",
+      "sha256": "204a91a49568c5bdd2e8d130e07ef4c496e80431840297b662822366f55368d6",
+      "bytes": 773453
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0151.pt",
+      "sha256": "573b0f6f08c37033cdb61d95d2ae2d5f8621209880e7c4911170c0fe12540cea",
+      "bytes": 770061
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0152.pt",
+      "sha256": "9938dd41ab760a72d7eb6e916946f4c5f8994de9bf2160b2e1996cad2a60a22b",
+      "bytes": 765901
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0153.pt",
+      "sha256": "6ee1cc2288e98830a6fdfa96f2bfe816b9440f397a15d3f6ceb5ad30057627ad",
+      "bytes": 756621
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0154.pt",
+      "sha256": "06d6cad501f2de2b2979fd2bd13d006fc796ff1992ba4121a37e3d214c2e6922",
+      "bytes": 758797
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0155.pt",
+      "sha256": "44a944671c95eea2694874982a03140d5c53e0382dfb6756c058be6ac5c9ae89",
+      "bytes": 756045
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0156.pt",
+      "sha256": "8fd0dfc43f334b873298eb67f0031045550e07a9b5e2d796326b3cc170791726",
+      "bytes": 756173
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0157.pt",
+      "sha256": "394b8adf489d315f7bce77da5d97c8f8858a8df09f15802ff85861cbcee2ebd0",
+      "bytes": 757965
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0158.pt",
+      "sha256": "541db3f7e0a09b6bedffcaca7d088f6407f083bc1e65d9ddcfb91a515abab90c",
+      "bytes": 758989
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0159.pt",
+      "sha256": "8bd6b054b1cda5d2562b3e79757319eb3e897afeabbe14b10b2a0e861d0b369d",
+      "bytes": 757453
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0160.pt",
+      "sha256": "7b5c25847c68067052b077490c83ccf436ba4fca933a6fcd5e600de4bd35c329",
+      "bytes": 761357
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0161.pt",
+      "sha256": "923ea15f3c43c51dc87398263779117b2d4459e7458d8437c466cc6cf0599ce7",
+      "bytes": 758861
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0162.pt",
+      "sha256": "763b4c04d6ea9f8415edba7fc08c2f6e87dc80cff8e46c4029bb4a8dc05414c1",
+      "bytes": 759437
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0163.pt",
+      "sha256": "db24c0b08e6edede11873b85f43635e1e3302bad8a4002b340dda8655d89ad6f",
+      "bytes": 760333
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0164.pt",
+      "sha256": "910fdfef413d637e1323eb8b20f0415f916a1168602445a80a2822b7bc2c2af1",
+      "bytes": 771149
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0165.pt",
+      "sha256": "4fa524db5ad5aad3c97983baec24b0e1abd3f55d6d70757ee373ac72aa751ebf",
+      "bytes": 760653
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0166.pt",
+      "sha256": "5304fa9c51a66595a5c28b3593b86af6fa29d3ca4a78e61880d05c339046f8ec",
+      "bytes": 761997
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0167.pt",
+      "sha256": "97a776eb2b0eb997c0fe7011d634432293eecd5e7c2ecda8b232b2d23169e572",
+      "bytes": 769933
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0168.pt",
+      "sha256": "ff73899262b6312d25d64771560dbfaf9d3b72016237450d83794c54067d6a6a",
+      "bytes": 772429
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0169.pt",
+      "sha256": "c9ccc507430efeec1cdbf8bc3914cc15d51103c801d051412cb95be139a7c0e8",
+      "bytes": 773837
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0170.pt",
+      "sha256": "7e46373b42d28bda7e6cb6f9e1bc1692a3bf4ff2d614e865309a9f8a55233a2b",
+      "bytes": 767373
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0171.pt",
+      "sha256": "199f6e08747526f0e9637715e11642dccd111c72351e73651a0155062ede2b54",
+      "bytes": 757773
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0172.pt",
+      "sha256": "76aa412cde8d37fdbf911358ff3de211d82d7d9d05735a60ffdb5e679bd99187",
+      "bytes": 760525
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0173.pt",
+      "sha256": "47744a754c35d916fd9265b55e9c0ecf643388fe4f030dd6a3fc3c7f170a9cc5",
+      "bytes": 761741
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0174.pt",
+      "sha256": "d4757bf8d7e533e62d6941988e760b1d10477e67635713caf1737b788e417f16",
+      "bytes": 758157
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0175.pt",
+      "sha256": "3f83fe85c5ebbd66ecf7bfcbf7b498dd828610e0a4821a76eef103d38cd8ea07",
+      "bytes": 760653
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0176.pt",
+      "sha256": "0142eb7c68c23e029f91b106b728d2509ad27a4695f94a925bea4264ccf531de",
+      "bytes": 757837
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0177.pt",
+      "sha256": "e2637e48f1fbe7df0fc8f5196f1e5e248ed3aa55c8b6aa6374de2f3442201d1d",
+      "bytes": 762125
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0178.pt",
+      "sha256": "a85d140d0331f891031b7526b8503579e0f151c6a6c1b030cb441839558eec34",
+      "bytes": 763085
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0179.pt",
+      "sha256": "6281b2ce7f95290ed5a14a7a03c408a380a3c571c2d12b7751551127b2af0802",
+      "bytes": 761293
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0180.pt",
+      "sha256": "f676931af3181e180821e531af510e3b169f02aa15627b2471e39575aaefa67a",
+      "bytes": 768333
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0181.pt",
+      "sha256": "419cdd109a8c202d758869d8e3c2136be6a3695cc17b9a4e5f4654a8a35f46fa",
+      "bytes": 761229
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0182.pt",
+      "sha256": "3275e21aba458b5f81f6c375ac3edc8ed9cc1d50759d1e1531d2412eb20a7ae5",
+      "bytes": 757709
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0183.pt",
+      "sha256": "a03ca56ff3481bcf017fce5806f071cfac6b38788aaea59d240bde1e9fcab0bb",
+      "bytes": 756621
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0184.pt",
+      "sha256": "16a5032ea1b6777ef872b8b673ac6070294eb75f94b5b813f9ce8d7d6a466e73",
+      "bytes": 762893
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0185.pt",
+      "sha256": "a53f82663b42215b7a3499cff4a3825e1e4fdd0a824dac7b832a9e7338a9ee2c",
+      "bytes": 763469
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0186.pt",
+      "sha256": "d0e4713389d365e391cc1335260fe87c1e7e51ba265e249715aa74564f4f35ce",
+      "bytes": 764749
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0187.pt",
+      "sha256": "23eda69dcdda79afee58a3ae36f3a4b08c3a40d754d67bc48a97f5c938865377",
+      "bytes": 755597
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0188.pt",
+      "sha256": "4e63d1fa1b1d0a22d6cf00566463be462da1f21c4fff289e10abc643621cd11e",
+      "bytes": 758925
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0189.pt",
+      "sha256": "9c9073fa3fbe70916c4f34317af1ba42194502a0449892d0510e93f84223c796",
+      "bytes": 767309
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0190.pt",
+      "sha256": "ecb0d454e6636848d4a7ed3d0f25a43d6aa1e5f557afb5de7dfb099b5ec24cbe",
+      "bytes": 760141
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0191.pt",
+      "sha256": "4e91eb2e759cd757533a1cdce46ff219801a709a864ee3bdd0bd5d8eabf58294",
+      "bytes": 758733
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0192.pt",
+      "sha256": "e76644e3ad8721816591bbf4c4e827812b5f2b0e8f3237b7eb0fd3ea7946b91d",
+      "bytes": 761869
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0193.pt",
+      "sha256": "fdd99201ab61f5479615548f02958e64d1b9ba51398e6cd5021afd4b073e6daf",
+      "bytes": 757773
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0194.pt",
+      "sha256": "6450f91b2fdb8c37818e92dba719b9de09f45163f362b50a3d56c565816dbc42",
+      "bytes": 760589
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0195.pt",
+      "sha256": "69a0d38e3485039012aa44ebc1cae7470cac42ec03762a86cddc63e11f77368b",
+      "bytes": 760461
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0196.pt",
+      "sha256": "0fbdaae7261056abd1f03868b85460d9056d48f5b71ead8a1fdf0c075a419240",
+      "bytes": 754125
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0197.pt",
+      "sha256": "e9912d9f739d95d0a1d68395f8376fcfb93a79ba98f74e7261aebf10dfc8ef70",
+      "bytes": 753869
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0198.pt",
+      "sha256": "ef637bf04d485b3af4938cb6a80a7fe37b28106df2e1e9426d8087dc7e64faa3",
+      "bytes": 760269
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0199.pt",
+      "sha256": "6d80b81de86f9f25f95aa0f13e93dc94d608030e1d7280fbfa4134f1ae2afd75",
+      "bytes": 768141
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0200.pt",
+      "sha256": "1d4fa356f028cfe8d40993f54060f4950e00e52595f8d0d78883b7f906277681",
+      "bytes": 771725
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0201.pt",
+      "sha256": "645c51c0628834430e40e018ce5e23f5deb14da0092bb34c1b449cc41e93400e",
+      "bytes": 771917
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0202.pt",
+      "sha256": "df90fa7237c3a631e6a4e06966aed0ee555fa2a4363f22ac9f810f5c9b724028",
+      "bytes": 760525
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0203.pt",
+      "sha256": "afd10104614e12b4cf5bce672330121ff08e049c49989d74fc1c40ee64225d79",
+      "bytes": 761549
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0204.pt",
+      "sha256": "24c37e4f1c1af9d017bab172fd7e0fdd1eb3f7d2de6132adf6694fca415b7fa3",
+      "bytes": 760845
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0205.pt",
+      "sha256": "34573d7b16c2b8e106bbafa44ced940eb6493a802d6c961ec52883b6196c6dd1",
+      "bytes": 761933
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0206.pt",
+      "sha256": "346ced245890990787fffa3287eb15ab51c4faa33a28a6bfe44ce49bbdce1a7d",
+      "bytes": 756813
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0207.pt",
+      "sha256": "9c4645f0a605c8adbd7586c523d4136476ca2665bfa202da35e7dbf342720232",
+      "bytes": 757069
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0208.pt",
+      "sha256": "5409bf60d35a55be3bc9d8db0ecac76f17b5c5716d5c0fd4befc51090cc030cc",
+      "bytes": 774605
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0209.pt",
+      "sha256": "5247d6e03ff09e1c6c7f931088097009bb41cbb8fd4acc5e5d147bee8387d4ce",
+      "bytes": 759117
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0210.pt",
+      "sha256": "3bb144b77538c61c98d24f0716b819075e733582dcc56d69cfd015e0ff48eca3",
+      "bytes": 763469
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0211.pt",
+      "sha256": "d1ad5974b7c5bb8fc5aacd511e8506436ee3b6f21ae0d8d38450665625949322",
+      "bytes": 763661
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0212.pt",
+      "sha256": "de28bd395ee59ea304c172a39827ce19ed5a34f03f93bbec9311333bf4f52585",
+      "bytes": 754957
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0213.pt",
+      "sha256": "188b0f28d316b3803dbe05ca772183d3e8f8838e6ed8c5c2df6c35b148f49f3c",
+      "bytes": 765645
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0214.pt",
+      "sha256": "87877625d6f0d821aca3be7579fc601e94175b7f9d1899af5ba115fc68d36acb",
+      "bytes": 757901
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0215.pt",
+      "sha256": "f793f5529f55858daf11a7c14950245b296b5c883e1123206fd9e1a061eb7c03",
+      "bytes": 773837
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0216.pt",
+      "sha256": "a2c80c2ae742102dcad1fdbc5f0a194ace88717dff855bef44d1e7d64696d6da",
+      "bytes": 763277
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0217.pt",
+      "sha256": "bb145b78b80fa6c520415d4427c33fa0d28f53a4d65f4c707e25720ad3f0e9d4",
+      "bytes": 770765
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0218.pt",
+      "sha256": "d272043bbea01e0f24a0101ad28f87af98b0079f552be9f5de643d9416832129",
+      "bytes": 758093
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0219.pt",
+      "sha256": "e985803622d9f0c644a694afe65897226eaeea7f16a51edd80390102d07b55d9",
+      "bytes": 760077
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0220.pt",
+      "sha256": "d79d1424a2f56be66264f5113e7e276998a5ae006e9aca34fd74c89f0bc6b86d",
+      "bytes": 772109
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0221.pt",
+      "sha256": "b60285bf41e5ae487c38bcc107e735e28dde9cc3f54e65aed2951ea666c7d372",
+      "bytes": 757837
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0222.pt",
+      "sha256": "8f3344441803b38c1338833ea08e78ba2997ec7d4e94fbf7b80c37c2cff56953",
+      "bytes": 754509
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0223.pt",
+      "sha256": "3cc3ecfe6d6bb94df990318d5de126280368e5d0e3b3ec73b2dd5e21da40dc42",
+      "bytes": 772813
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0224.pt",
+      "sha256": "2f06455a3b931eebb73104c50e94b1b0625503862d0ae5dec02fa58435c8b89f",
+      "bytes": 764429
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0225.pt",
+      "sha256": "76c5409fe00c524b953c5463b7ac76321929ceb9e7bfa6f4e076e17fb559d7be",
+      "bytes": 771469
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0226.pt",
+      "sha256": "d2a85d094f6af245eb5e3cc1132d8a8bb5fc8e8a33238150a7a6911bec8c7a0a",
+      "bytes": 757773
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0227.pt",
+      "sha256": "2bb70afcdb23c684f83036c991c8423666c1c1f6bdb6f186c506de2c979670fa",
+      "bytes": 758285
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0228.pt",
+      "sha256": "f3db49d6002d2d1f8075f2d090b8b7c5acc5652ee10edbb4b5da549d2ed025d4",
+      "bytes": 757197
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0229.pt",
+      "sha256": "b45431b278b371bc7da2751fc1c3a3d165f35d117df3072f05c3440c4333ef73",
+      "bytes": 755917
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0230.pt",
+      "sha256": "5a58bdff8e135d0f9709e35940fa616ebaabc893be24e29d23197967aeb125a8",
+      "bytes": 756749
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0231.pt",
+      "sha256": "ff84eeb0b57dcfb93ca58885cf6d0440fc3405bce66fe00f3a9994552080acbb",
+      "bytes": 765389
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0232.pt",
+      "sha256": "bdce41bb7570f4d6228e85280867946bda671a54c272e168f4ac0920e3abb6f9",
+      "bytes": 759629
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0233.pt",
+      "sha256": "fd0a1f158dd5d5d007aab46dd9089bf110548cc5d1b682f441866efcb94182db",
+      "bytes": 772429
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0234.pt",
+      "sha256": "ff64f2743c0a7e1ab15697457a9024bc98575763cef831e6136fde8ecc843833",
+      "bytes": 758733
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0235.pt",
+      "sha256": "dd9a0ae24c355443f75374fe003aae33935737d4f552c73b582054e857f97253",
+      "bytes": 758669
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0236.pt",
+      "sha256": "eefcccd8c32b5ea136c7184b9d0862bd543c7547768291416502192fb48d62e4",
+      "bytes": 756813
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0237.pt",
+      "sha256": "51ed99c76742f173e4e93ebfd3a453d518ec6a5e2ab91b84074c6f39e7306529",
+      "bytes": 759181
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0238.pt",
+      "sha256": "0adfe9c5f43a117650c1f35d37726808e579f6d2b0121298835a0b83fdd84fac",
+      "bytes": 772173
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0239.pt",
+      "sha256": "bb23ebdfb243f1138eec387bef697fc4dfae9e5814716dc277dbd55bb4a3c937",
+      "bytes": 773133
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0240.pt",
+      "sha256": "abc4205f06e8cafff4daa316e0de5eed32a5a4bdac7d0ed298449c10732c8dda",
+      "bytes": 770125
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0241.pt",
+      "sha256": "e7984c3d4b43bd29719d6a81529008f20762c86fd01fd54fea0859bf6d6f1697",
+      "bytes": 762125
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0242.pt",
+      "sha256": "8a7851a8c610478529cad5da4639a736ebad6ddc857b143353a39d4b16cecfde",
+      "bytes": 757197
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0243.pt",
+      "sha256": "d337d9eaa4269a0362bee1538d662b392430e6a22ded3f3d2015ae99fbc895f1",
+      "bytes": 757709
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0244.pt",
+      "sha256": "05db84237448b91812e7f09b03b630753e577d4505b4e43c0621f304ab3ffbf4",
+      "bytes": 755789
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0245.pt",
+      "sha256": "1e75d88e6a044c3f3e44a5fc8790792777774f87d5529962775515ccc5e195e9",
+      "bytes": 753997
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0246.pt",
+      "sha256": "9dca5edfaf71b116748ad9d074f3f0c2527d01e9d4facfe4e78eef68209692fe",
+      "bytes": 758797
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0247.pt",
+      "sha256": "57b277d570c53b9faad978cf4948aea5f0d270eb92fabf6c17c637287ab88a18",
+      "bytes": 757773
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0248.pt",
+      "sha256": "12519773d6365f11d21313227e01b15d3a41ea543a0b4322072d70644afdc56c",
+      "bytes": 772109
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0249.pt",
+      "sha256": "7c978f79f22e6a10adbe0ac46dfdaf7c0a21d47b0d44822ac43df4980e19fccc",
+      "bytes": 758029
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0250.pt",
+      "sha256": "fb5e3f004fb165a478f55f75d28161af107c3d9ef8b52febabb85d16235d51c8",
+      "bytes": 759245
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0251.pt",
+      "sha256": "bbb4dac97cd7448a53c455f45f25c419ee5b42bb898e2aff618b9f9a1efc66f6",
+      "bytes": 757517
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0252.pt",
+      "sha256": "3af1491cedeb9c6118ec2eb35aa4f9e8f1263857428969edbface748ca66ca96",
+      "bytes": 760461
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0253.pt",
+      "sha256": "32c0fc165b9fa821d9fa4486e6ed97991a48e218fef6642af877b677dc514681",
+      "bytes": 767757
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0254.pt",
+      "sha256": "a5471b480e2a61dea29312d0ce1f93ae9d152575eab4e27235b749d08744ed95",
+      "bytes": 770765
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0255.pt",
+      "sha256": "117cfb316ad3100ce0fe5daac8293687bf76fc5d50c731f117dc1ec1856d599c",
+      "bytes": 763533
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0256.pt",
+      "sha256": "d7b6c3eb4e9e39346fae544d34af56be2ef4a9df54518837c56293aa7ad2af4d",
+      "bytes": 772045
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0257.pt",
+      "sha256": "c471c53c65f41c811ffdb63936eccfc3ff7abd7f1c0ebc597bbc5784e6eb6b0a",
+      "bytes": 771725
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0258.pt",
+      "sha256": "aa3fabc086c4495b42a24e090df5fef82dff72b0576ca9351fce5c6699a4afb6",
+      "bytes": 757389
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0259.pt",
+      "sha256": "8a1fdf3bd406b52530d9ef671d7cf1fb62eddfc6731b2b78fd9ad9d175c060f6",
+      "bytes": 759501
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0260.pt",
+      "sha256": "56d5a4d0fe0bbc1eaa53898aaa0c4fa73a90881419c846635a655a8fda30c73d",
+      "bytes": 773261
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0261.pt",
+      "sha256": "38afe9c930b134207c4313ede7a25dfe3cc56523c268d53c0fe51a8232972358",
+      "bytes": 772749
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0262.pt",
+      "sha256": "e66cb95d84222249462e555d4455a3d8a646eb9e50e7a5639cd71a48d863fe1c",
+      "bytes": 758797
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0263.pt",
+      "sha256": "73e5951338831f26e69201f8385c2f148e7c8b1d7787a163f0d3978121138908",
+      "bytes": 756749
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0264.pt",
+      "sha256": "207a89d00ce3c3698642c278da820b32827686bfbb80d9ea4cedd34d208bdcd5",
+      "bytes": 768077
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0265.pt",
+      "sha256": "af9c7b38f69b39e85f3d83807b3d44889d7c7a52ec57cfc23a446d5ddf1691c4",
+      "bytes": 761869
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0266.pt",
+      "sha256": "fc29acb03b4cdacb3867ae10193cf9c71e056b4e8ae5eeaf39ea3717588edb4a",
+      "bytes": 770829
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0267.pt",
+      "sha256": "022af316a25762b7c191dbff246c5ebc81fd68a0cd2309f32ce6a44528e2770f",
+      "bytes": 773133
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0268.pt",
+      "sha256": "b529b60a30bd7ec2acfc445b8c7d9987e05e5241f025669999f5066b7d1747bc",
+      "bytes": 758029
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0269.pt",
+      "sha256": "8691bad5f2fea36c92292a3d5f0ec0f32a076223850eaa55614dd42c7c0b5178",
+      "bytes": 757773
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0270.pt",
+      "sha256": "6cda81487c51f9ceca107bfc2d8e5f87d3106d0c5994f0196b772268bbe6cd4b",
+      "bytes": 757005
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0271.pt",
+      "sha256": "19c705521e1c0de82c0ca69955b0d8980588fe11069c7a0414b1f3f576c72a1a",
+      "bytes": 759053
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0272.pt",
+      "sha256": "d0f509b6853491d7e4e26046c724c53ed89be58129fe9b0b5d05e91870a6607d",
+      "bytes": 760141
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0273.pt",
+      "sha256": "59c776eb7835affd34020c10cd524846f4772c58c3045cbbb200f44109ea6a60",
+      "bytes": 769933
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0274.pt",
+      "sha256": "87329704ae388e1844b95d174c4e4cd4a045f4e0bc35f330c3d8b5a3afa19581",
+      "bytes": 772877
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0275.pt",
+      "sha256": "d70d078c487a28b2c58dffb99a2a7d7bd1c135754ed8cf33dde2ba70bf04ef38",
+      "bytes": 764621
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0276.pt",
+      "sha256": "deb39873abcf81f489fa69055d85547bd02e6b28ca3ccad39e891bb2d051f899",
+      "bytes": 755725
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0277.pt",
+      "sha256": "a4a768c537142d3ebbc666d59cb96346fc0e4577af0270425c577a8e04eb6621",
+      "bytes": 758413
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0278.pt",
+      "sha256": "203d38072f9614d6a8b0a1c4cb038698fbf81defc2edce65ca9fa6a0ec24ac58",
+      "bytes": 773453
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0279.pt",
+      "sha256": "a40d48ec598e668a5dba0b5734c2e2af07e0f45999a03191666295a9414bdd3b",
+      "bytes": 762573
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0280.pt",
+      "sha256": "ba4b94f95163946fd1afafe265a27ea697c0c77ca6cc67fcc8a929a1ed486810",
+      "bytes": 760013
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0281.pt",
+      "sha256": "3690f58adc7a818e352795613b28c8209c4e1d4804d4e2b006098cfe8b53550e",
+      "bytes": 762189
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0282.pt",
+      "sha256": "4ba5573ecfd3ed28e18d20b5b08426f871e4bf0a038b786cf0635337bf25dfe2",
+      "bytes": 761165
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0283.pt",
+      "sha256": "687ced8779e19163c5aaf2bf0d9e6ed1820f69eea82e701d708789f03fc8088c",
+      "bytes": 772621
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0284.pt",
+      "sha256": "94fae96eb6d9c1e5f62333b2c0df877a091109b27ec50f572710c6b8e9e4472d",
+      "bytes": 762317
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0285.pt",
+      "sha256": "20aec3ee70e7e08b03585c2173056444582f47c2638a5df5d2651ca2b66307a8",
+      "bytes": 759949
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0286.pt",
+      "sha256": "0609bf7a393db4daf3fa7893c4234ee03fd54a58ef97cf99911827eb2a7fa31a",
+      "bytes": 761549
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0287.pt",
+      "sha256": "0782a55f546eeca53a18046bb61d46d87d8f8c66d4b99d7bc60388d16b5a1828",
+      "bytes": 760141
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0288.pt",
+      "sha256": "f56465ab5aff392217b3cca7c317acd67de2e4de9760a2d0f5b139afd197612a",
+      "bytes": 773517
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0289.pt",
+      "sha256": "10120883ed762d4a26d2eb1497fc98493582b2aff579f833deff22bb9faafecf",
+      "bytes": 760077
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0290.pt",
+      "sha256": "de6b898a91ba5ee477c8b56ad3644a6138d789a51eb38260b99ec54bae070146",
+      "bytes": 770253
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0291.pt",
+      "sha256": "55520a1ebe4da8052c68b916765b3b1276c7af1e266636ff9efe41455e6cd086",
+      "bytes": 759117
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0292.pt",
+      "sha256": "d4b48bcae420ed0d8c06a9dfe983d49e5adaf15c5acef3511839e8ddbb2eb5b1",
+      "bytes": 758861
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0293.pt",
+      "sha256": "80ecab7ad4c8c8e638507bd33ca55a249992e43b91a209a13788307ffbb9710b",
+      "bytes": 759949
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0294.pt",
+      "sha256": "6eb869fe864580223f80ae2de2d246827f35169fdc5bc9e6d30597344a3748ae",
+      "bytes": 765261
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0295.pt",
+      "sha256": "84d800113b5ffaabea7bf4b917592394400705607de92549c452950b3296495b",
+      "bytes": 766541
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0296.pt",
+      "sha256": "3c2234a260585c313813c353082ff49f07188d35bd48bec20285adbf25f59dad",
+      "bytes": 772237
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0297.pt",
+      "sha256": "1913028151d82f74429c5ab6f30948c33750e49ea9aac29ee572daa57f32fc7e",
+      "bytes": 756621
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0298.pt",
+      "sha256": "c3dc6007359c8ec9b0d15d12209f33dd49e247b63cfb7da84d4f498980c0c121",
+      "bytes": 770573
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0299.pt",
+      "sha256": "7236dce3040d2b2fa036b285f6023d0f84875468b2e97f3ecd3411d0b56def30",
+      "bytes": 771149
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0300.pt",
+      "sha256": "9f714fdc0d6cbe646fe3f6442bcade7c875c95508d0b434c64c3840e9512aa53",
+      "bytes": 761805
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0301.pt",
+      "sha256": "10dba1e59d5c86892fa858d0787f7b90cc2fa11b7a63cd558c48d90855db7a32",
+      "bytes": 763405
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0302.pt",
+      "sha256": "2ee4332795751f0a9d202b2da4375c13af80f4a8efb2928af19a7e8c7d7f0756",
+      "bytes": 755661
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0303.pt",
+      "sha256": "813dfc7d0d55c0617c218fa11af3e516788c0036e63b516be84a8a9878ddf5ba",
+      "bytes": 755853
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0304.pt",
+      "sha256": "074dd4d9eb37fab93b5940bc40f7fa7e09f6180ff46a5a73fed982865c5d113e",
+      "bytes": 758541
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0305.pt",
+      "sha256": "6a61e24abef969057576b0b334cffa8e7655219f50105cb287e83d94e19d1f0e",
+      "bytes": 771149
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0306.pt",
+      "sha256": "c5d0ad7f8a9adbdfe13dd9adcb03d89a256adb187ca7bb5191d910b3dfc9c3ea",
+      "bytes": 754893
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0307.pt",
+      "sha256": "7ac4a26f670f1725f0f260a71bef76d5a414601fc48ccdfe0c93d5064b24581c",
+      "bytes": 773133
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0308.pt",
+      "sha256": "a3a70a2f5cb03487a9ffe91960acb3f626fa7c84fadf58c20cec67ec6836218b",
+      "bytes": 763213
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0309.pt",
+      "sha256": "7cd2575bcbdc1adcf3f5af6bc47561b54f5ac8cc2bc7b8028efcfd67596905b7",
+      "bytes": 756109
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0310.pt",
+      "sha256": "4b5be553cfd41a73030df23a62a377643137138bde3c36dbc95518c93b829d7c",
+      "bytes": 773709
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0311.pt",
+      "sha256": "5776f981d7b79478aa52752434708fd687c3ed14ba982c47062ac2ba99baf3d6",
+      "bytes": 760013
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0312.pt",
+      "sha256": "bf8a2e31eaab48afe06595012896c97d02adc0a88513d77126edb41e05a9a0b9",
+      "bytes": 756685
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0313.pt",
+      "sha256": "251be88ed3e0cfecc391d6410dd414247690021698d99b20afae4fdff146afd6",
+      "bytes": 760141
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0314.pt",
+      "sha256": "be1b19ac8f4db960c69d56b3a063911a8fe2459d27e737faf6ed16a6cc0bce07",
+      "bytes": 759245
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0315.pt",
+      "sha256": "6ae530d5b1f8e7fcab9fb2fdc1b1f0b12159f22b4ce34b109b7e0762d865a90c",
+      "bytes": 754765
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0316.pt",
+      "sha256": "7f391b81274bdc671288df910364e9a8a79971cb0c654c26fc4c9ac84864b84c",
+      "bytes": 757837
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0317.pt",
+      "sha256": "a1ab72309076c6ec4a70d3eb11c75ca3d2bcb7ee695504e743b51ba7dd382c8b",
+      "bytes": 757965
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0318.pt",
+      "sha256": "417151a260d930fb887861da1cd13320477d7ca483fc3bc9e7a8da3946557f17",
+      "bytes": 770829
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0319.pt",
+      "sha256": "48bd18c792e1624293e4092d691a7cdcb84a2c1dc4d427160730359a25b60d6c",
+      "bytes": 771213
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0320.pt",
+      "sha256": "de26fe6c2aaa8913e398895ad03c25f4a958899af235ed4abd9616423b0c7836",
+      "bytes": 758989
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0321.pt",
+      "sha256": "223d49077d96ee11b90423c7c9b3e67aba7fe8b10c39e80d146e8561771397f4",
+      "bytes": 761997
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0322.pt",
+      "sha256": "c04592317911bbddb045cb3980dc4a4544aec2976a6efe76fc6edbbc24873cf7",
+      "bytes": 769933
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0323.pt",
+      "sha256": "7e3e418ba2ab8008815a7d3a3c1307f6d841abcb305de458ea6658f2a503a84f",
+      "bytes": 762253
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0324.pt",
+      "sha256": "ffbad86ac31ab405d01c787a2c8a565bc670a0863af14c3c8aba9ec5f1735bf0",
+      "bytes": 756813
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0325.pt",
+      "sha256": "9d466572c468c7f7e7cd2d1f94dae9dad34d13a92c46c857e0397c81ce042952",
+      "bytes": 759629
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0326.pt",
+      "sha256": "7b38d01fa1a6cb3b4c77b41d60514fdb52b32906458c641667683d365a216c34",
+      "bytes": 766797
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0327.pt",
+      "sha256": "d597ccce0c4a49a90e956383cb74884539ac709a5b1842a2e3034c77c0c48dcb",
+      "bytes": 771469
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0328.pt",
+      "sha256": "a547197caff46b7b46193b78ec0ed1cf79805179785d1dd4929e6cb553a6c2d5",
+      "bytes": 757133
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0329.pt",
+      "sha256": "9065542559c7f9aacaea4f9312f6932ff3e0071a3d752e926a2fc330865f1f54",
+      "bytes": 770829
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0330.pt",
+      "sha256": "78ab656b76352c59899f77d80f7da855128226eee3971769f8afa9353b11906e",
+      "bytes": 757581
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0331.pt",
+      "sha256": "abcccc09fcc3ed4d55b007581bc7e534d6351c9e2696eaad57d5381b03c6c0f4",
+      "bytes": 757837
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0332.pt",
+      "sha256": "fa27e98dd2539fc08ba458d3d5f357752b8eae42c2e4649087bb765c0d87e2b6",
+      "bytes": 768397
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0333.pt",
+      "sha256": "626185747e2e6455bf160d8cecb09f1aea5f8d08d7a37aec6ee95179ca02705f",
+      "bytes": 760973
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0334.pt",
+      "sha256": "f626ac1f2d8cff28b362b006b1831b232512431a3cd10b92623f23a2fea53790",
+      "bytes": 764749
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0335.pt",
+      "sha256": "bc6f128aefb57c1742e7f906c8e9bb0de317cf8fe3d260b6d45b96ea7d93d763",
+      "bytes": 757709
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0336.pt",
+      "sha256": "c12b5978b000296e20876694cf7d93fbd014d59339e406558ccc670c77a220a8",
+      "bytes": 772045
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0337.pt",
+      "sha256": "efc92dfc9f55daed821ee787a5c74971101c479b5f55d4f0101967aa789a9663",
+      "bytes": 761165
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0338.pt",
+      "sha256": "f648f035f83d1a2d3bfffd0dc0e58239c856b1963d2424ffc4b9acdba711e613",
+      "bytes": 755917
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0339.pt",
+      "sha256": "4dc90d1446f51d51798f0ca42a1cab77dced3f20c245fab41a02b99359fe19a1",
+      "bytes": 756237
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0340.pt",
+      "sha256": "bda3201f03ae387e5965278f6abcd1c344d307646418551961fef5683f99375a",
+      "bytes": 770061
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0341.pt",
+      "sha256": "078bf7622a4cb191bbe46d4f3a5a7b34a17cf01bbb5ceb229bafec8fd65bfb3b",
+      "bytes": 761933
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0342.pt",
+      "sha256": "0fd3b81477fa13ccba837fe2fe776acb0c5494e7f1596ac5b2fb50a76c30e8f4",
+      "bytes": 759373
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0343.pt",
+      "sha256": "ace9067e63a3d3d663a650eaa01d54376faea11b2f15c38f4a216048ebdab422",
+      "bytes": 756173
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0344.pt",
+      "sha256": "2c27c535b2e7892af4bff94fa4af10678ae73ebec69d6cd7f315cd6055332cd1",
+      "bytes": 755277
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0345.pt",
+      "sha256": "475eccef10563aff21225625c938f3710a929eeeb3e6a31d4cb3d7175e71c725",
+      "bytes": 760717
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0346.pt",
+      "sha256": "99df94fc936657e91a9c3b2a01baabd8aa269186a30efd1f7c2852a6eb99e30f",
+      "bytes": 771149
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0347.pt",
+      "sha256": "d6fd5848342f1d38c63731c9d2e60e726578dbd736924630ab8347228a209531",
+      "bytes": 773389
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0348.pt",
+      "sha256": "c375bad279a834322327d5f174b2221c6c408d1e060612896555414e11e9deb9",
+      "bytes": 762893
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0349.pt",
+      "sha256": "5e2f4cd797d55df619a6b4e29536498748c6196d8b448460343cfd55e59371a7",
+      "bytes": 754829
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0350.pt",
+      "sha256": "40cbb36dd808ff801b930c1494b6c1cde332e1355881fc6917f2791d4d560b38",
+      "bytes": 755981
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0351.pt",
+      "sha256": "707b0dbcd4017a99164e441a9bc5de2e99c3fec19b75e4e599b3109eb75b2805",
+      "bytes": 757197
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0352.pt",
+      "sha256": "bae8f125890711dd35fdfc8a5fdc760c4ea368a5db0d805889e0af35b85aad5f",
+      "bytes": 757709
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0353.pt",
+      "sha256": "3981b3e46e38af5dda5537a73240618b256807d336e5a9d54614f47a65b47bab",
+      "bytes": 755853
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0354.pt",
+      "sha256": "6d03c0011c7f5089ba6c526369c48e191732e549b4bde0d1b656ed808ff4ae3e",
+      "bytes": 755597
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0355.pt",
+      "sha256": "ceb96acc5bf2614fcc2f70552c8c3ac7994352a2331b7a791039fdc8b0e4b34f",
+      "bytes": 759245
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0356.pt",
+      "sha256": "9d7a20676860225febc823c1182042b2a3fc86aa03cb240d0dfc7ae65b9e323f",
+      "bytes": 758349
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0357.pt",
+      "sha256": "e0c8220ab8c9297f0b3285a3b9de2c0749e10d0e4e4fc3017a1d0254d3bb52cb",
+      "bytes": 758797
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0358.pt",
+      "sha256": "b3c47c81621f983d2f9912a23e61ed447eb5206b74074d8a706f7f0f6ba4f5cf",
+      "bytes": 763917
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0359.pt",
+      "sha256": "999e49b4dc7f1d0a30fe0e79884528630a174c2c41b8b241ebbd3ab6605cd7b1",
+      "bytes": 756877
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0360.pt",
+      "sha256": "89ddf7679e0e5666763e649a68f04d823cf94957904e092d1865b8d221f8e0f7",
+      "bytes": 754829
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0361.pt",
+      "sha256": "328f73b810ed3a6863cd93ab83b37f3ffd46e30d4088a20ff361646b5f2506ea",
+      "bytes": 772877
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0362.pt",
+      "sha256": "bf78047bd7cb0ad227e28f086ba7e413347a81f21f6fbeadd9b7e01be7edefdd",
+      "bytes": 769229
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0363.pt",
+      "sha256": "dbc76ebebf46d2125756b61d6aea1e6e5253c93e8b582086744ff1490a6f1546",
+      "bytes": 769421
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0364.pt",
+      "sha256": "3b934933505dc8d42f6360b2ca4cac90da7738f0164a624004770ad998803713",
+      "bytes": 780237
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0365.pt",
+      "sha256": "7d7f3bc79d7300b843245aea21d23f557d6a57e2b7d6a6d8b7ccaacd41b9c55b",
+      "bytes": 757901
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0366.pt",
+      "sha256": "85338e1d4b9141211bd33385193f60766f21f0399935c062ee7c4867a6f0ca65",
+      "bytes": 757133
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0367.pt",
+      "sha256": "93bfcb299a8867505a9ef558bd3f6afb528f8553377a9aaff05c143db5d1a672",
+      "bytes": 763405
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0368.pt",
+      "sha256": "3de87a691d9d77abb677d0f69be3bcfcfbb4a9f2c473fa112b5b595960522458",
+      "bytes": 757069
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0369.pt",
+      "sha256": "a2702691e6219f8ae11343792aec2e12576e347be1ac9f7a3a22f06eebdd6248",
+      "bytes": 773325
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0370.pt",
+      "sha256": "d2fa1d3cb1b2b7b3c35d7b6c8c3cf85d51f9ee627374ea9b6c2fc68e2f1b9faf",
+      "bytes": 761613
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0371.pt",
+      "sha256": "60b29f912a20643130c575ab7a7ec1a2441614ae62de061e6a865ccb74a0b90b",
+      "bytes": 761229
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0372.pt",
+      "sha256": "186c74c09c6140d323248adc1fd946f3bae3332ad50b21d74e19a703ae4ac82d",
+      "bytes": 769101
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0373.pt",
+      "sha256": "0ab1203a09e94cbab72bbb2d668de171a9295a619445514835b40b79b88e8315",
+      "bytes": 772045
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0374.pt",
+      "sha256": "a991dce2068ee2e8880b4e7691d098701e06400051d119fb0dcba1cd0ed6bd8e",
+      "bytes": 763533
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0375.pt",
+      "sha256": "c75771e290a7690453292563c898947895491b2d019122e2e2cabc20b8329bb7",
+      "bytes": 760333
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0376.pt",
+      "sha256": "c20cdc1b0e9c44f3df9949918c1983841af284f426ee05d84978bf9a9b4b1538",
+      "bytes": 760205
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0377.pt",
+      "sha256": "75edd1ebf58b7797a3a742d4f358952f2e3ba179f738c162425491be29926668",
+      "bytes": 759693
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0378.pt",
+      "sha256": "07796f22103fb9c8b9960efb9d2bbce26f3c43ab5e896aa968526fc496d8887f",
+      "bytes": 761741
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0379.pt",
+      "sha256": "bddb490967ef9bf2a39fc259bd47f367fa6bbcf5c684d8c39b8f1b287790eb35",
+      "bytes": 758733
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0380.pt",
+      "sha256": "59a6dff3d51475aa70af714b3e95cda968bcde74b93f9f6bf61cb82158675ee0",
+      "bytes": 770701
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0381.pt",
+      "sha256": "29f031451dcb3ea58f777a4e804307e48625db301adbe91356c13044a402ad82",
+      "bytes": 771853
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0382.pt",
+      "sha256": "2329f295773de9771bd65be478e275c24d57f372021286c677b9f95501a27c06",
+      "bytes": 764493
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0383.pt",
+      "sha256": "b5db91558801219ab39fbf414d3021bbfe2a3b078320fa60cf3c52c851e66911",
+      "bytes": 755661
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0384.pt",
+      "sha256": "90fe8a8904f2b6177269e5ebe5cf7d128d9030e2b09e473cc1d965cdad118f90",
+      "bytes": 758413
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0385.pt",
+      "sha256": "ad064e6376635ef63b464cec29a5b7c75f1e8d6d6be6ef585e66291750f305f7",
+      "bytes": 760141
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0386.pt",
+      "sha256": "690c3dcc14a3e1a5c16889b4bc7474c49b83f21da768232cd212c1ff4fe0c048",
+      "bytes": 769165
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0387.pt",
+      "sha256": "c262bbd67b235320d1f84dc2ed86b72373b08fd0d68e41eff431ac221c8e5313",
+      "bytes": 753229
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0388.pt",
+      "sha256": "c91b004dceb56aabb4117b8985c7b0bb7da584b8dc8c2bd22d9b86d9a3d05882",
+      "bytes": 779277
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0389.pt",
+      "sha256": "353220c20ff4ae5686089ce6bf558759fb4bf520a9dc5befa53fea8e04267e2e",
+      "bytes": 771661
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0390.pt",
+      "sha256": "1a57d5fb1bf05dcad2ab4af34097091d3e9ac8d69ab2cdb812bdb76a9e40959d",
+      "bytes": 758925
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0391.pt",
+      "sha256": "1f9cc5799cc58712dc9c3dea47eb96ece7689e167ccacafb12867128eeb083a8",
+      "bytes": 759501
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0392.pt",
+      "sha256": "8b064ee272022f6b2359dd9deddfad52af00d172ccdc14e86b523a35bafabdec",
+      "bytes": 756749
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0393.pt",
+      "sha256": "e42770433dfbb4330ccd7b60d402f24ff284c0317228e76b9d4448687480c71a",
+      "bytes": 757069
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0394.pt",
+      "sha256": "26678c1e5aec121a49c6e2596de865b4dc93bee651a3dc0ee31f50198f282e5d",
+      "bytes": 757965
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0395.pt",
+      "sha256": "f41a7232a098fb4f1618b8c38820e2cd4158ebd605d243a948894af76890a369",
+      "bytes": 758477
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0396.pt",
+      "sha256": "476b82b3e3d7fcacf3b1a4c848461ce76509df83fe95d391da158c9404b8a6fc",
+      "bytes": 755725
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0397.pt",
+      "sha256": "209f88c83341e61c3042d70144b3fee62c6434237971fe2e51f137e489c92300",
+      "bytes": 755661
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0398.pt",
+      "sha256": "ae43ac083c6a938306bd3ff04a834e9a6e263e2556a3241127aa03f3a29a9e80",
+      "bytes": 762637
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0399.pt",
+      "sha256": "96c7516f1ccc1fe22e6f4d27e62121b8b3fd5e6ddb2feb302bec0a0dddcbff92",
+      "bytes": 754189
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0400.pt",
+      "sha256": "762911fdd1ca61269774840798ec7d12429ab79c7e7dfdf9fda51848494385fb",
+      "bytes": 755789
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0401.pt",
+      "sha256": "f4829dc06a538de7ae9be8df36d0c0ec6593de6225234475777c727aee0b44d9",
+      "bytes": 771277
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0402.pt",
+      "sha256": "b8e7f0d3f85be045ca36fa62ebcd26e7edfc72840406d890bbfa44887351dc51",
+      "bytes": 754637
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0403.pt",
+      "sha256": "116933229ec190b72a8ee1c5f1e1af9560cc3ab9306369491c29ab5c34ba57d8",
+      "bytes": 758093
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0404.pt",
+      "sha256": "469108ad47b60eccbbc73ed6e58e91e844783768a5daf433ef95d45047254736",
+      "bytes": 760141
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0405.pt",
+      "sha256": "9806acc708e3c9f739b3375f2dc81cabb858c9dff44454f50e7368a9079fa965",
+      "bytes": 761549
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0406.pt",
+      "sha256": "db15b66f37ed3c64e78c4c0bd9335bde843b752aab7f13a5d88bc7361249c0f4",
+      "bytes": 758413
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0407.pt",
+      "sha256": "dcb0ddb32f67102e460feaf96da19660eea88f44174eb3cd975d44714017a7e6",
+      "bytes": 760781
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0408.pt",
+      "sha256": "94475bf2773e9734ab6d2a11b403f01330c1a047523713f1047028fbfe29cde0",
+      "bytes": 773773
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0409.pt",
+      "sha256": "169a131b1ff33b061158abcd127c732f2d12de9d6617eb7265085a19a02e277b",
+      "bytes": 759885
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0410.pt",
+      "sha256": "165398f08e6d1e08bb907f53122045b4764322af6e73688564403189806535fa",
+      "bytes": 758541
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0411.pt",
+      "sha256": "3d2a1ccfbec83ce7412c625d8d8051fc168ad1b6a2c4d60cff834ef0ffee4cee",
+      "bytes": 766669
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0412.pt",
+      "sha256": "7bbe7c0c64f1186bc9e59cb771e93815185f1cf29775a802bec2f3ce1edf079a",
+      "bytes": 758349
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0413.pt",
+      "sha256": "a77f3d26b7d60e8a9ccf8a3de841303b7ba1d0d5509173be003ef55f76ae2dbc",
+      "bytes": 757581
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0414.pt",
+      "sha256": "8dd094f67adc8b7e7c31d6a5eb83bc8bae514026c8ce61f65a99ea288b0e8e4a",
+      "bytes": 771789
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0415.pt",
+      "sha256": "aeda1d1575ae3849a8b197f67273546f8c0d3332f65ce36d78708d9ae40f2751",
+      "bytes": 758989
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0416.pt",
+      "sha256": "2f23f53f4e5c19c2d76b6b9a0e935f75bf97e69d512cc79bf6abb5d0b7ce2191",
+      "bytes": 758477
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0417.pt",
+      "sha256": "8a83da387e92fc4c0631244cd8165ec645ebcec569c57e5ce40b3849d6f32d38",
+      "bytes": 760781
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0418.pt",
+      "sha256": "9c059e708d9738980a92cf2dc34c26ba9060ae35cf9cf33ee176e04a11253090",
+      "bytes": 759117
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0419.pt",
+      "sha256": "c918bca171142055510d56d1aa3365fe0cb8d7b62a3c7a253caaff90e29858e7",
+      "bytes": 758797
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0420.pt",
+      "sha256": "412c8294ab02d229266aac4f5c31a1c0a8114c45bddf1484645471cdfeeed80d",
+      "bytes": 759821
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0421.pt",
+      "sha256": "873cde6bac09267d8c15f2bb580c7d761d359187d6b15abd03f871783bba0950",
+      "bytes": 764493
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0422.pt",
+      "sha256": "859710e43a87cb7bceffd719f04142300546caae30a3dead8573a47eac0418f2",
+      "bytes": 770573
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0423.pt",
+      "sha256": "e8880e161e69dbec08c324144a5585359bc2735de540cfacb9ed88fd33359681",
+      "bytes": 765517
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0424.pt",
+      "sha256": "31b71081473f5a67944a89ad4e5da56535732b44245044d92fb4fdc33d54ca4c",
+      "bytes": 770125
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0425.pt",
+      "sha256": "5556c316db478cecec87bed1686b64300e13aa1aa24d9bb0edbb1b00ccf6d3c6",
+      "bytes": 758477
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0426.pt",
+      "sha256": "ecd9fd74fcb9fc3046546419ce3846f71b116e7c12920da2bf56d8c1d9acb8dc",
+      "bytes": 759693
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0427.pt",
+      "sha256": "f8e693632c184f35f5b0b0bfd8e9b2ad63acdfea7ba2adab8ebdf35eae7d6249",
+      "bytes": 765069
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0428.pt",
+      "sha256": "f2cf413225095370398c803cea8116044b1395511bce6711818b06a959dc6336",
+      "bytes": 760397
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0429.pt",
+      "sha256": "9ed4a848160db3d13c28eaa3237df80ed62ec0c07259d03f2cb78e7089f7a110",
+      "bytes": 758221
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0430.pt",
+      "sha256": "f5666618ab55e303c3e531698b314e3ef354fec22601fa36a281512c7ba555d1",
+      "bytes": 759053
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0431.pt",
+      "sha256": "c29e5571efaab8d11f02d4c92019b0d49dfd774ac97e97e6476557e697f0b120",
+      "bytes": 760653
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0432.pt",
+      "sha256": "a7ba835e4f2e541a2daba587ad467824d1309d5d217d985ce13f8617a82d560e",
+      "bytes": 763021
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0433.pt",
+      "sha256": "2ef6eca2b70a26f8c1dd65f50cc723cf8c5e97d8d96f7db2fc2127df6beba9ec",
+      "bytes": 772045
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0434.pt",
+      "sha256": "d0977ed421a493f963f6fa79c804a68af3e629b53c0ecaac706258299adb6481",
+      "bytes": 759565
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0435.pt",
+      "sha256": "19f978c1c0b35feff801c3d00ae34c8a70c34902f1fc565e5eb0db14f7c2c444",
+      "bytes": 756109
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0436.pt",
+      "sha256": "f7c6100080669433266b3c1a21014e60a10c22dfe2ac774289335e2903254f7b",
+      "bytes": 758477
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0437.pt",
+      "sha256": "05e105dc962e0605bc51ec6275e227b5d76fc0313ba8d63897e0acc3884b902c",
+      "bytes": 762573
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0438.pt",
+      "sha256": "a81b81886b76f5e6fa5fa800dd84c1a8c4010cd6773233716124dcaa8d17f5f9",
+      "bytes": 772685
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0439.pt",
+      "sha256": "fab2f74a6346fdb15f0851054032c8228aa649d1bbf24b585fccaa6fcf0d24f0",
+      "bytes": 757581
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0440.pt",
+      "sha256": "0053002c7dd1980287d83750e591533b88ce8dfc678f2740571ae3e5b38b3f8b",
+      "bytes": 758797
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0441.pt",
+      "sha256": "7ab3dbc9face671815912c40f428df3d51488c900f3b7b90ae68341d89401ef6",
+      "bytes": 772173
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0442.pt",
+      "sha256": "488180a592b28a59bcb06ec4415cf564b34fe0beeb0c74ca0b66728eef4be261",
+      "bytes": 756877
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0443.pt",
+      "sha256": "11afad05e97661bff1ca9effd422e55007ece5770e809ec1f8446d4ead163c45",
+      "bytes": 757389
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0444.pt",
+      "sha256": "6c97efb535946795461e4ba8812da4c562b5a2a823c009b578bdbcd206074aff",
+      "bytes": 756813
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0445.pt",
+      "sha256": "39935146a5dbfaaa558de2fb90303f78d80f35cf23f1a9e737bf82bc54611eca",
+      "bytes": 758541
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0446.pt",
+      "sha256": "b951bf5def6d9e04191effbb7b45f0bd231b78a349feddfb6083bf037e9917c0",
+      "bytes": 758477
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0447.pt",
+      "sha256": "3371cb4b45b694da88cac152417b414f51fcdffe88efd3ac22f718b1e499486b",
+      "bytes": 762637
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0448.pt",
+      "sha256": "30a45336ae0f8b0609ed1259a232775ea25d92d657045c7be2e08be45e58abf7",
+      "bytes": 755853
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0449.pt",
+      "sha256": "5df09f54f827883d8144c60b9dbc32a79f34fb8b24bbb2fa21cbb43562bdcd63",
+      "bytes": 756941
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0450.pt",
+      "sha256": "5089db51e98713c86b9ff359675063b0d88864c0a700aade3a445695dbabd155",
+      "bytes": 769869
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0451.pt",
+      "sha256": "95443d74884c0a1164e19d08a28e9cb077ca7d35d490d64dd0c630d1f3f17383",
+      "bytes": 772685
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0452.pt",
+      "sha256": "81edfedb219195c0b76459f7a14a5a296624eaff4f0a308579b2f4a2c1793a19",
+      "bytes": 758029
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0453.pt",
+      "sha256": "432e6360fceab3584485493e25cd83ca09566eb64d5ac6fa676179244f6755a7",
+      "bytes": 753549
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0454.pt",
+      "sha256": "3198bb0c85abb1974e02047e1d0ac7cdb9dab2b9036285bd3a6fdcf978223b52",
+      "bytes": 758797
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0455.pt",
+      "sha256": "e5944b06f9ac2f87ca6973935fce756e9db8b34ed9cfde8b9d5f927ec16ada72",
+      "bytes": 757837
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0456.pt",
+      "sha256": "58ecb35644eb74552ae4856d469591ce4ac819558722097fc74c29aa5e5ac31b",
+      "bytes": 760717
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0457.pt",
+      "sha256": "95fe94f9397d7a3fca4d34a6796af4db90b54418c9cf586443a5b5db4566ecd4",
+      "bytes": 757069
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0458.pt",
+      "sha256": "ce716a91149c33b8f7c513b3566f7c76c9c5cc055aee801646221b71f0c70577",
+      "bytes": 758477
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0459.pt",
+      "sha256": "d49da1c31b5539072d38ade8064f3a18c7585b58c5e8c61be49929e32873cc9f",
+      "bytes": 772365
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0460.pt",
+      "sha256": "2dcbf2fa30b40893388a37f08a029fc056dec88d89c02fca36807f9e63a2ccbc",
+      "bytes": 762445
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0461.pt",
+      "sha256": "b301b8ae17ed2c62146e8d8fe88e6a317a7ed2a0084e3784dd4d3bb1586e5087",
+      "bytes": 771981
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0462.pt",
+      "sha256": "78502fb696a4d47df5551325eddd634cb65f0897daa87c608c08c2456d36eb9a",
+      "bytes": 769805
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0463.pt",
+      "sha256": "598d37438fcfa65b8ab97ce632dc77cd47528b341f8471e8e80840a8ce8cced0",
+      "bytes": 757005
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0464.pt",
+      "sha256": "b6803b5fa18b38cec4336520accff59556b1c810a77fcfd26ba18d0dab622656",
+      "bytes": 760909
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0465.pt",
+      "sha256": "f736d33ae95825d92128945da827c0ddccba6a399c489e304bf624b77ec7a316",
+      "bytes": 757133
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0466.pt",
+      "sha256": "c794aab98f2a8b4ef816da9edd751a9b6b3755c46afaea68d47470e61e8456d1",
+      "bytes": 757069
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0467.pt",
+      "sha256": "d18d86ea040ef50055f4815dc2ee0a25bbe53554d6ae11a1cbecaca71b071c07",
+      "bytes": 772045
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0468.pt",
+      "sha256": "07e267e6b249af53d5124083d1dc850a638004dab4f25e0f1ad23ac47fd9d03e",
+      "bytes": 758029
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0469.pt",
+      "sha256": "283b9ff85a9d7d058f6878b0b0b444a94bf3f6f6015035e7389fea08fbcc2a71",
+      "bytes": 774541
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0470.pt",
+      "sha256": "4c0e8b1020a6f038579cf895245be328074cbb0d28270fdc18a7fb33899330a1",
+      "bytes": 760589
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0471.pt",
+      "sha256": "0cf6af0c150ff7acb6e87ac6c8b66a9a83ada67b8f36f79fb9c3aead29070dc8",
+      "bytes": 758861
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0472.pt",
+      "sha256": "64839fb7b837b2ed60b74a303cacb7c0af3d58696a48ff4f297ec1379b0adfcc",
+      "bytes": 776141
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0473.pt",
+      "sha256": "b4565792d790f93338dc05d6bfa37dc871d788dcd20a1994ab11e55c986a91ae",
+      "bytes": 755469
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0474.pt",
+      "sha256": "88846f785a850ca6ea02fd5088af6d4dd9404afe424765e9deeb2b955248ef6b",
+      "bytes": 756301
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0475.pt",
+      "sha256": "f9cf934e94416e6aee9d18612e336a675e515d92fcc24217d6fd42dedf20320e",
+      "bytes": 758157
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0476.pt",
+      "sha256": "de4fe8e8538489e9176121e0f3a61d8558f241dd443658493c316b425116ce71",
+      "bytes": 763533
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0477.pt",
+      "sha256": "129b6079afddfdb6e2fee6852478eef06174e1898e5ce42c21b97a100c7b22a3",
+      "bytes": 763725
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0478.pt",
+      "sha256": "7488af396deaf137c574f061492321a1c8f74ae6e7d81ced1cea9570233100e9",
+      "bytes": 757389
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0479.pt",
+      "sha256": "8274fc73a6f5c2d61a337f7a31bc719269d3fd316845f96a1adc9d104dafcfe7",
+      "bytes": 753613
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0480.pt",
+      "sha256": "6a3bb51e88da613b1c7c357caedc9ead5be00986894976f1e1a01f68ed402abb",
+      "bytes": 757517
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0481.pt",
+      "sha256": "9b20a34b98cc1bedd4c720ff79bfed29f971458bdd947676bb70e0514940194d",
+      "bytes": 765389
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0482.pt",
+      "sha256": "7093cfe32414f24e358736f8888a11e4fd83cfab5593710b1c7e1232cccaea7a",
+      "bytes": 754765
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0483.pt",
+      "sha256": "5216731e1511149a8425483aebe5294c90facfaaa479f6353c9fb84bef7f31ad",
+      "bytes": 769037
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0484.pt",
+      "sha256": "391eb3ade6c87182385faa6a307c53d1cd16aabfb1e003769d948e1db3a55adf",
+      "bytes": 774605
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0485.pt",
+      "sha256": "fbfacea945859c4d4bac1ee70c65813c695abfbb908970939d9be22c92388d70",
+      "bytes": 758861
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0486.pt",
+      "sha256": "886804168da4861f5685156952d9a873c5ff3b83f6528dead1e467d31c4f4efb",
+      "bytes": 771341
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0487.pt",
+      "sha256": "10a45e4870a5c476adcb9e1289835174468955c58e47c6337d00318c1d307250",
+      "bytes": 756493
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0488.pt",
+      "sha256": "ad34460bc7278d3cf666b12b3a0fe60862cebd03892d502908e0285503ea4745",
+      "bytes": 757453
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0489.pt",
+      "sha256": "5027d17b67234c9aef1bf6050baaf7b283acdcf6aa9631325a7c1945d7748e36",
+      "bytes": 761037
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0490.pt",
+      "sha256": "9f2ceb9419b071a9e3f201ba50886a2b444b8610eec8b045eb213b1ea6981d7e",
+      "bytes": 757581
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0491.pt",
+      "sha256": "229db452f97967503407a21d1b409bd603514a1e97130456310b661f741f9775",
+      "bytes": 757005
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0492.pt",
+      "sha256": "a20209390fade51b7e1bdbb0756a9531c2e18d491c74f0405bebdabe2f7a5b28",
+      "bytes": 755661
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0493.pt",
+      "sha256": "f10e8f1457b0c74394eb32c282c0ba1692a320894c5598e8f542703a4641198a",
+      "bytes": 772301
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0494.pt",
+      "sha256": "c8d97ac627bd2f1c920b7de39e13a4e339ba7e235420795ef51a96c1af3817b4",
+      "bytes": 761485
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0495.pt",
+      "sha256": "f8cb9c34431fe181c2f00c492d2870b2f800e291e394330be832c99540ed9c1a",
+      "bytes": 755661
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0496.pt",
+      "sha256": "93453311487d6c83e5fb817da04b8e68e7c704cc21483345f9aaaabcce1695a1",
+      "bytes": 758413
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0497.pt",
+      "sha256": "6f46f6bbd73fa9e7c02e2ffa1fed08a58b33387709bbe640858ad5feff962a5c",
+      "bytes": 771981
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0498.pt",
+      "sha256": "9a02e509a6fd6ea7c81f54727d1021092a834bf892c05dd586d55ed81c3bddb5",
+      "bytes": 758669
+    },
+    {
+      "volume": "data",
+      "path": "_nulls/qwen3_8b_base/T13088/null_0499.pt",
+      "sha256": "7678514972d91f115566b07075a374bb97601fa88eb09166e0784bc231a949f5",
+      "bytes": 753997
+    }
+  ],
+  "historical_file_hash_evidence": {
+    "volume": "results",
+    "path": "completion_only_raw_abstain_v1/integrated/433db57896e26ee35997f7cf/manifest.json",
+    "bytes": 434875,
+    "sha256": "ca2467ae5d1eb0c86034018bdfd7b3c12f0835252f0516797a2f1bc16812262b"
+  },
+  "partition_sha256": "503d1cf93958f0d765606ed3e25aa87a1a777cd08d8f44436b0c6ae9716aa184",
+  "keys": [
+    {
+      "id": "eta015",
+      "eta": 0.15,
+      "generation_T": 6144,
+      "artifact": {
+        "volume": "data",
+        "path": "online_causal_prc_v1/qwen3_8b_base/n6144_T6144_t3_eta0.15_rr99of100_sampler-poscdf-v1/artifacts.pt",
+        "bytes": 686950,
+        "sha256": "f8cc0bed33b394234f796427eb74933708e63813385198bb3b4940e9b99c6c62"
+      },
+      "lengths": [
+        6144,
+        6128,
+        6112,
+        6096,
+        6080,
+        6064,
+        6048,
+        6032,
+        6016,
+        6000,
+        5984,
+        5968,
+        5952,
+        5936,
+        5920,
+        5904,
+        5888,
+        5872,
+        5856,
+        5840,
+        5824,
+        5808,
+        5792,
+        5776,
+        5760,
+        5744,
+        5728,
+        5712,
+        5696,
+        5680,
+        5664,
+        5648,
+        5632,
+        5616,
+        5600,
+        5584,
+        5568,
+        5552,
+        5536,
+        5520,
+        5504,
+        5488,
+        5472,
+        5456,
+        5440,
+        5424,
+        5408,
+        5392,
+        5376,
+        5360,
+        5344,
+        5328,
+        5312,
+        5296,
+        5280,
+        5264,
+        5248,
+        5232,
+        5216,
+        5200,
+        5184,
+        5168,
+        5152,
+        5136,
+        5120,
+        5104,
+        5088,
+        5072,
+        5056,
+        5040,
+        5024,
+        5008,
+        4992,
+        4976,
+        4960,
+        4944,
+        4928,
+        4912,
+        4896,
+        4880,
+        4864,
+        4848,
+        4832,
+        4816,
+        4800,
+        4784,
+        4768,
+        4752,
+        4736,
+        4720,
+        4704,
+        4688,
+        4672,
+        4656
+      ],
+      "watermarked_sources": [
+        {
+          "prepared": {
+            "volume": "results",
+            "path": "online_8b_eta015_remaining400_v1/combined/8B/prepared.json",
+            "bytes": 508806,
+            "sha256": "48b9c80a6d7cfdf833a407f25fceed35c97e1d1692071301c401e2ad73fde50f"
+          },
+          "report": {
+            "volume": "results",
+            "path": "online_8b_eta015_remaining400_v1/combined/8B/full.json",
+            "bytes": 436086,
+            "sha256": "c8e890f17638032fbfd4d819ad0ba937bba1bed15faccd8c7adfc954e6643063"
+          }
+        },
+        {
+          "prepared": {
+            "volume": "results",
+            "path": "online_8b_eta015_N500_prefixes_v1/8B/prepared.json",
+            "bytes": 510086,
+            "sha256": "001a38884b6131ee4a3141e05eaeaa1c1b0841a1193faff277ec6fa42ab95b90"
+          },
+          "report": {
+            "volume": "results",
+            "path": "online_8b_eta015_N500_prefixes_v1/8B/full.json",
+            "bytes": 23686791,
+            "sha256": "fe425e29447dbeac6e96a50f363c459105da1c86d1f5241006af09386a68992e"
+          }
+        }
+      ],
+      "reused_watermarked_counts": {
+        "6144": {
+          "map": {
+            "detected": 465,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 436,
+            "count": 500
+          }
+        },
+        "6128": {
+          "map": {
+            "detected": 465,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 435,
+            "count": 500
+          }
+        },
+        "6112": {
+          "map": {
+            "detected": 465,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 435,
+            "count": 500
+          }
+        },
+        "6096": {
+          "map": {
+            "detected": 465,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "6080": {
+          "map": {
+            "detected": 464,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "6064": {
+          "map": {
+            "detected": 462,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "6048": {
+          "map": {
+            "detected": 462,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "6032": {
+          "map": {
+            "detected": 462,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "6016": {
+          "map": {
+            "detected": 462,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "6000": {
+          "map": {
+            "detected": 462,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5984": {
+          "map": {
+            "detected": 462,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5968": {
+          "map": {
+            "detected": 462,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5952": {
+          "map": {
+            "detected": 463,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5936": {
+          "map": {
+            "detected": 463,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5920": {
+          "map": {
+            "detected": 463,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5904": {
+          "map": {
+            "detected": 463,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 436,
+            "count": 500
+          }
+        },
+        "5888": {
+          "map": {
+            "detected": 464,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5872": {
+          "map": {
+            "detected": 464,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 435,
+            "count": 500
+          }
+        },
+        "5856": {
+          "map": {
+            "detected": 464,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 435,
+            "count": 500
+          }
+        },
+        "5840": {
+          "map": {
+            "detected": 464,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 435,
+            "count": 500
+          }
+        },
+        "5824": {
+          "map": {
+            "detected": 464,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 435,
+            "count": 500
+          }
+        },
+        "5808": {
+          "map": {
+            "detected": 464,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5792": {
+          "map": {
+            "detected": 463,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5776": {
+          "map": {
+            "detected": 463,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5760": {
+          "map": {
+            "detected": 461,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5744": {
+          "map": {
+            "detected": 461,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5728": {
+          "map": {
+            "detected": 460,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5712": {
+          "map": {
+            "detected": 459,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5696": {
+          "map": {
+            "detected": 460,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5680": {
+          "map": {
+            "detected": 460,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5664": {
+          "map": {
+            "detected": 460,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5648": {
+          "map": {
+            "detected": 460,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5632": {
+          "map": {
+            "detected": 457,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5616": {
+          "map": {
+            "detected": 459,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5600": {
+          "map": {
+            "detected": 458,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 434,
+            "count": 500
+          }
+        },
+        "5584": {
+          "map": {
+            "detected": 458,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5568": {
+          "map": {
+            "detected": 458,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5552": {
+          "map": {
+            "detected": 456,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5536": {
+          "map": {
+            "detected": 458,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5520": {
+          "map": {
+            "detected": 455,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5504": {
+          "map": {
+            "detected": 455,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5488": {
+          "map": {
+            "detected": 458,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5472": {
+          "map": {
+            "detected": 458,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "5456": {
+          "map": {
+            "detected": 457,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5440": {
+          "map": {
+            "detected": 456,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5424": {
+          "map": {
+            "detected": 457,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5408": {
+          "map": {
+            "detected": 457,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5392": {
+          "map": {
+            "detected": 457,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5376": {
+          "map": {
+            "detected": 456,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5360": {
+          "map": {
+            "detected": 456,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5344": {
+          "map": {
+            "detected": 455,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5328": {
+          "map": {
+            "detected": 454,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "5312": {
+          "map": {
+            "detected": 454,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5296": {
+          "map": {
+            "detected": 454,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5280": {
+          "map": {
+            "detected": 454,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5264": {
+          "map": {
+            "detected": 454,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5248": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5232": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5216": {
+          "map": {
+            "detected": 456,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "5200": {
+          "map": {
+            "detected": 455,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5184": {
+          "map": {
+            "detected": 454,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "5168": {
+          "map": {
+            "detected": 455,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "5152": {
+          "map": {
+            "detected": 455,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "5136": {
+          "map": {
+            "detected": 455,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "5120": {
+          "map": {
+            "detected": 456,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "5104": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "5088": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "5072": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5056": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "5040": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "5024": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "5008": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 433,
+            "count": 500
+          }
+        },
+        "4992": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "4976": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "4960": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "4944": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "4928": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "4912": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "4896": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "4880": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "4864": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "4848": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "4832": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "4816": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "4800": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "4784": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 432,
+            "count": 500
+          }
+        },
+        "4768": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "4752": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "4736": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "4720": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "4704": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "4688": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "4672": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "4656": {
+          "map": {
+            "detected": 448,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        }
+      }
+    },
+    {
+      "id": "eta020",
+      "eta": 0.2,
+      "generation_T": 14336,
+      "artifact": {
+        "volume": "data",
+        "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/artifacts.pt",
+        "bytes": 687415,
+        "sha256": "46f946da9e44dcb42dcf4a98e10cbe2760f60a67a33dbd7a31910eef397e3550"
+      },
+      "lengths": [
+        13088,
+        13072,
+        13056,
+        13040,
+        13024,
+        13008,
+        12992,
+        12976,
+        12960,
+        12944,
+        12928,
+        12912,
+        12896,
+        12880,
+        12864,
+        12848,
+        12832,
+        12816,
+        12800,
+        12784,
+        12768,
+        12752,
+        12736,
+        12720,
+        12704,
+        12688,
+        12672,
+        12656,
+        12640,
+        12624,
+        12608,
+        12592,
+        12576,
+        12560,
+        12544,
+        12528,
+        12512,
+        12496,
+        12480,
+        12464,
+        12448,
+        12432,
+        12416,
+        12400,
+        12384,
+        12368,
+        12352,
+        12336,
+        12320,
+        12304,
+        12288,
+        12272,
+        12256,
+        12240,
+        12224,
+        12208,
+        12192,
+        12176,
+        12160,
+        12144,
+        12128,
+        12112,
+        12096,
+        12080,
+        12064,
+        12048,
+        12032,
+        12016,
+        12000,
+        11984,
+        11968,
+        11952,
+        11936,
+        11920,
+        11904,
+        11888,
+        11872,
+        11856,
+        11840
+      ],
+      "watermarked_sources": [
+        {
+          "prepared": {
+            "volume": "results",
+            "path": "online_8b_eta020_N500_prefixes_v1/8B/prepared.json",
+            "bytes": 534257,
+            "sha256": "36c450f91e048d37b2d606f2aeb479a10f640053f49e5c4d4bb0686948ddda60"
+          },
+          "report": {
+            "volume": "results",
+            "path": "online_8b_eta020_N500_prefixes_v1/8B/full.json",
+            "bytes": 39861970,
+            "sha256": "67416ed46755b87ce602d5b2cd7a8fa4e37551ef5080db9dc27c6301c0e98591"
+          }
+        }
+      ],
+      "reused_watermarked_counts": {
+        "13088": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "13072": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "13056": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "13040": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "13024": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "13008": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12992": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12976": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12960": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12944": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12928": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12912": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12896": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12880": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12864": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12848": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12832": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12816": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12800": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12784": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12768": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12752": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12736": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12720": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12704": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12688": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 431,
+            "count": 500
+          }
+        },
+        "12672": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12656": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12640": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12624": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12608": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12592": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12576": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12560": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 430,
+            "count": 500
+          }
+        },
+        "12544": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12528": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12512": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12496": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12480": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12464": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 427,
+            "count": 500
+          }
+        },
+        "12448": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12432": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12416": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12400": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12384": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12368": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12352": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12336": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12320": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12304": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12288": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12272": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12256": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12240": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12224": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 427,
+            "count": 500
+          }
+        },
+        "12208": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12192": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "12176": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12160": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 427,
+            "count": 500
+          }
+        },
+        "12144": {
+          "map": {
+            "detected": 453,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 427,
+            "count": 500
+          }
+        },
+        "12128": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 427,
+            "count": 500
+          }
+        },
+        "12112": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 427,
+            "count": 500
+          }
+        },
+        "12096": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 427,
+            "count": 500
+          }
+        },
+        "12080": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12064": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 427,
+            "count": 500
+          }
+        },
+        "12048": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 427,
+            "count": 500
+          }
+        },
+        "12032": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 427,
+            "count": 500
+          }
+        },
+        "12016": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "12000": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "11984": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "11968": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "11952": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "11936": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        },
+        "11920": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "11904": {
+          "map": {
+            "detected": 452,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "11888": {
+          "map": {
+            "detected": 451,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "11872": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "11856": {
+          "map": {
+            "detected": 450,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 429,
+            "count": 500
+          }
+        },
+        "11840": {
+          "map": {
+            "detected": 449,
+            "count": 500
+          },
+          "entropy": {
+            "detected": 428,
+            "count": 500
+          }
+        }
+      }
+    }
+  ],
+  "generation_count": 0,
+  "watermarked_replay_count": 0,
+  "reference_replays": 0,
+  "benchmarks": 0,
+  "automatic_retries": 0,
+  "detection": {
+    "raw_completion_ids": true,
+    "prompt_prefix": false,
+    "special_token_prefix": false,
+    "first_coordinate_abstention": true,
+    "dtype": "bfloat16",
+    "tf32": false,
+    "cache": "static",
+    "trace_dtype": "float32",
+    "score_dtype": "float64",
+    "max_memory_fraction": 0.95
+  },
+  "stages": {
+    "prepare": {
+      "gpu": null,
+      "workers": 1,
+      "cpu": 4,
+      "memory_mib": 16384,
+      "work_timeout_seconds": 600,
+      "allowance_usd": 0.15
+    },
+    "replay": {
+      "gpu": "H200",
+      "workers": 10,
+      "cpu": 4,
+      "memory_mib": 65536,
+      "work_timeout_seconds": 4350,
+      "allowance_usd": 64.7
+    },
+    "score": {
+      "gpu": null,
+      "workers": 1,
+      "cpu": 4,
+      "memory_mib": 8192,
+      "work_timeout_seconds": 600,
+      "allowance_usd": 0.15
+    }
+  },
+  "proposed_total_allowance_usd": 65,
+  "allowance_status": "user go-ahead for quoted55\u201365 range; capped at65, including all stages",
+  "estimated_total_usd": [
+    55,
+    65
+  ],
+  "estimated_elapsed_minutes": [
+    70,
+    90
+  ],
+  "runtime_source_sha256": {
+    "online_8b_shared_null.py": "54f85e40503a0bd04ec2a04c5369a5d6712e6a26440f8cf47a1f43fec3210e46",
+    "fixed_4b_comparison.py": "523c3cbd2f3138d0672d2d59050dc903611d76c008e72a9b5057159a65f64429",
+    "online_prc_redetection.py": "eca8ff340d518604ac3dccf7b521ee321620ea48ba45a6edece5c7e89f56df83",
+    "modal_run.py": "87e2d017950edc1c298b28a279a9246a74cfcdb4d84024fc337d570873fc1ef3",
+    "qwen.py": "0334edc2cd4049a365fadf8591bc4108a2c709797fe153542a59ce626ef5a5ef",
+    "detectors.py": "f728bd15d4524ac3a4aa4b323d441bf3e5732275ed2eaf09ebebf9efbe0035b5",
+    "prc.py": "20a731e18640903d82ff0d7bb5a53f87d6206e0d8b3987654c065a816c4fb6bc",
+    "online_prc.py": "babe6a7ff1fb2397bf2b3cd76448d82c34ae879c6d1214e386e1285d036ba4cb",
+    "watermark_expt.py": "5d73e1b4ea1db9982a49dcd63278ac8ee31c6dda74b5d8faf13c6d3b560ccd8e",
+    "constants.py": "872a1b18fd84d9737c5e1e9cabae2dbb16e55e538edb7264efed8e51efa3839b",
+    "prompts.jsonl": "0bf0560438d9d4b7a85ebf8b7349d6d028aa02b11a381982742ee55b4430530c"
+  },
+  "execution": {
+    "git_commit": "b5a5b3584023b33ad27e4ace27509dea13c94b50",
+    "files": {
+      "online_8b_shared_null.py": "54f85e40503a0bd04ec2a04c5369a5d6712e6a26440f8cf47a1f43fec3210e46",
+      "fixed_4b_comparison.py": "523c3cbd2f3138d0672d2d59050dc903611d76c008e72a9b5057159a65f64429",
+      "online_prc_redetection.py": "eca8ff340d518604ac3dccf7b521ee321620ea48ba45a6edece5c7e89f56df83",
+      "modal_run.py": "87e2d017950edc1c298b28a279a9246a74cfcdb4d84024fc337d570873fc1ef3",
+      "qwen.py": "0334edc2cd4049a365fadf8591bc4108a2c709797fe153542a59ce626ef5a5ef",
+      "detectors.py": "f728bd15d4524ac3a4aa4b323d441bf3e5732275ed2eaf09ebebf9efbe0035b5",
+      "prc.py": "20a731e18640903d82ff0d7bb5a53f87d6206e0d8b3987654c065a816c4fb6bc",
+      "online_prc.py": "babe6a7ff1fb2397bf2b3cd76448d82c34ae879c6d1214e386e1285d036ba4cb",
+      "watermark_expt.py": "5d73e1b4ea1db9982a49dcd63278ac8ee31c6dda74b5d8faf13c6d3b560ccd8e",
+      "constants.py": "872a1b18fd84d9737c5e1e9cabae2dbb16e55e538edb7264efed8e51efa3839b",
+      "prompts.jsonl": "0bf0560438d9d4b7a85ebf8b7349d6d028aa02b11a381982742ee55b4430530c"
+    },
+    "gpu": "H200",
+    "source_hashes_authoritative": true,
+    "allocator": "expandable_segments:True"
+  },
+  "csv": "outputs/redetection/redetection_results_summary.csv",
+  "cache_reuse_decision": {
+    "check": "raw saved token-storage bytes; no unpickling, model execution or scoring",
+    "prompt_idx": 0,
+    "eta010_cached_null_bank": "T4096",
+    "requested_null_bank": "T13088",
+    "prefix_length": 3072,
+    "eta010_prefix_sha256": "ba2c92a3259f07d6869147913fa56732a7cd8aabdbced3ba7dc81f9f524cf5ba",
+    "requested_prefix_sha256": "a9e7d9854fe584d9d5b9d2246fc3823b5a9019a17403ac46a4f249be512a7a3e",
+    "prefix_matches": false,
+    "first_mismatching_coordinate_1based": 5,
+    "conclusion": "The eta=.10 cached detector trace cannot be extended onto this T13088 bank; even prompt0 has a different prefix.",
+    "kv_cache_saved": false,
+    "kv_evidence": "modal_run._recover_redetection_batch serializes probabilities, identity, hashes and telemetry only; no KV tensors.",
+    "compatible_shorter_trace_length": 1024
+  },
+  "scope_exclusions": [
+    "eta=.20 FPR aboveT13088, includingT14336",
+    "new null generations",
+    "0.6B replay",
+    "eta=.05/.10 rescoring",
+    "naive scoring"
+  ],
+  "preparation_pending_cloud_checks": [
+    "all500 current source-file and full-token hashes",
+    "original prompt corpus and key/partition compatibility",
+    "checkpoint weights and metadata hashes",
+    "frozen watermarked report identities before GPU dispatch"
+  ]
+}

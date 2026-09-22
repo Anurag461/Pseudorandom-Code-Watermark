@@ -1,0 +1,2125 @@
+{
+  "checked_utc": "2026-09-22T16:04:32.594277+00:00",
+  "read_only": true,
+  "source_tag": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1",
+  "source_count": 500,
+  "source_files": [
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0499.pt",
+      "bytes": 918565
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0498.pt",
+      "bytes": 925541
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0497.pt",
+      "bytes": 925285
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0496.pt",
+      "bytes": 923365
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0495.pt",
+      "bytes": 940837
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0494.pt",
+      "bytes": 943269
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0493.pt",
+      "bytes": 939877
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0492.pt",
+      "bytes": 925093
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0491.pt",
+      "bytes": 923429
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0490.pt",
+      "bytes": 924965
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0489.pt",
+      "bytes": 924965
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0488.pt",
+      "bytes": 924581
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0487.pt",
+      "bytes": 923621
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0486.pt",
+      "bytes": 927461
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0485.pt",
+      "bytes": 926309
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0484.pt",
+      "bytes": 921829
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0483.pt",
+      "bytes": 923109
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0482.pt",
+      "bytes": 928165
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0481.pt",
+      "bytes": 937893
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0480.pt",
+      "bytes": 941797
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0479.pt",
+      "bytes": 930725
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0478.pt",
+      "bytes": 921253
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0477.pt",
+      "bytes": 928869
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0476.pt",
+      "bytes": 926245
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0475.pt",
+      "bytes": 941285
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0474.pt",
+      "bytes": 928229
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0473.pt",
+      "bytes": 925349
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0472.pt",
+      "bytes": 924837
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0471.pt",
+      "bytes": 938981
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0470.pt",
+      "bytes": 929125
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0469.pt",
+      "bytes": 924709
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0468.pt",
+      "bytes": 919141
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0467.pt",
+      "bytes": 937189
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0466.pt",
+      "bytes": 920549
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0465.pt",
+      "bytes": 925221
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0464.pt",
+      "bytes": 922597
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0463.pt",
+      "bytes": 925541
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0462.pt",
+      "bytes": 941925
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0461.pt",
+      "bytes": 924389
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0460.pt",
+      "bytes": 923237
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0459.pt",
+      "bytes": 928997
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0458.pt",
+      "bytes": 927333
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0457.pt",
+      "bytes": 927589
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0456.pt",
+      "bytes": 939685
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0455.pt",
+      "bytes": 927525
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0454.pt",
+      "bytes": 921189
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0453.pt",
+      "bytes": 927141
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0452.pt",
+      "bytes": 926117
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0451.pt",
+      "bytes": 923429
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0450.pt",
+      "bytes": 923621
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0374.pt",
+      "bytes": 922853
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0373.pt",
+      "bytes": 942565
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0372.pt",
+      "bytes": 929445
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0371.pt",
+      "bytes": 939685
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0370.pt",
+      "bytes": 926757
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0369.pt",
+      "bytes": 932197
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0368.pt",
+      "bytes": 924389
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0367.pt",
+      "bytes": 921701
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0366.pt",
+      "bytes": 923301
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0365.pt",
+      "bytes": 923749
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0364.pt",
+      "bytes": 922981
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0363.pt",
+      "bytes": 921957
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0362.pt",
+      "bytes": 938917
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0361.pt",
+      "bytes": 926181
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0360.pt",
+      "bytes": 922533
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0359.pt",
+      "bytes": 924325
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0358.pt",
+      "bytes": 921893
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0357.pt",
+      "bytes": 925861
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0356.pt",
+      "bytes": 940197
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0355.pt",
+      "bytes": 940901
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0354.pt",
+      "bytes": 936101
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0353.pt",
+      "bytes": 924133
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0352.pt",
+      "bytes": 939429
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0351.pt",
+      "bytes": 946213
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0350.pt",
+      "bytes": 933861
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0399.pt",
+      "bytes": 939685
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0398.pt",
+      "bytes": 923557
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0397.pt",
+      "bytes": 936485
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0396.pt",
+      "bytes": 926821
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0395.pt",
+      "bytes": 926053
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0394.pt",
+      "bytes": 925989
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0393.pt",
+      "bytes": 931301
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0392.pt",
+      "bytes": 923621
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0391.pt",
+      "bytes": 921829
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0390.pt",
+      "bytes": 922597
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0389.pt",
+      "bytes": 940709
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0388.pt",
+      "bytes": 923365
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0387.pt",
+      "bytes": 922341
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0386.pt",
+      "bytes": 925605
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0385.pt",
+      "bytes": 923045
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0384.pt",
+      "bytes": 932197
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0383.pt",
+      "bytes": 928101
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0382.pt",
+      "bytes": 949477
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0381.pt",
+      "bytes": 930725
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0380.pt",
+      "bytes": 942373
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0379.pt",
+      "bytes": 920293
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0378.pt",
+      "bytes": 940901
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0377.pt",
+      "bytes": 927973
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0376.pt",
+      "bytes": 931493
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0375.pt",
+      "bytes": 921637
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0449.pt",
+      "bytes": 927653
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0448.pt",
+      "bytes": 922661
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0447.pt",
+      "bytes": 928613
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0446.pt",
+      "bytes": 940325
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0445.pt",
+      "bytes": 926053
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0444.pt",
+      "bytes": 917861
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0443.pt",
+      "bytes": 930085
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0442.pt",
+      "bytes": 933221
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0441.pt",
+      "bytes": 923109
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0440.pt",
+      "bytes": 924645
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0439.pt",
+      "bytes": 925733
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0438.pt",
+      "bytes": 940453
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0437.pt",
+      "bytes": 928997
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0436.pt",
+      "bytes": 923749
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0435.pt",
+      "bytes": 941925
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0434.pt",
+      "bytes": 923621
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0433.pt",
+      "bytes": 935397
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0432.pt",
+      "bytes": 924709
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0431.pt",
+      "bytes": 924581
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0430.pt",
+      "bytes": 939493
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0429.pt",
+      "bytes": 942885
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0428.pt",
+      "bytes": 941605
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0427.pt",
+      "bytes": 930149
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0426.pt",
+      "bytes": 942053
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0425.pt",
+      "bytes": 921573
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0424.pt",
+      "bytes": 919461
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0423.pt",
+      "bytes": 941541
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0422.pt",
+      "bytes": 927909
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0421.pt",
+      "bytes": 924197
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0420.pt",
+      "bytes": 943333
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0419.pt",
+      "bytes": 925605
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0418.pt",
+      "bytes": 917797
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0417.pt",
+      "bytes": 923301
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0416.pt",
+      "bytes": 928229
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0415.pt",
+      "bytes": 919461
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0414.pt",
+      "bytes": 923685
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0413.pt",
+      "bytes": 922405
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0412.pt",
+      "bytes": 923301
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0411.pt",
+      "bytes": 926117
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0410.pt",
+      "bytes": 926757
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0409.pt",
+      "bytes": 927845
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0408.pt",
+      "bytes": 941669
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0407.pt",
+      "bytes": 927077
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0406.pt",
+      "bytes": 935205
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0405.pt",
+      "bytes": 924261
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0404.pt",
+      "bytes": 923685
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0403.pt",
+      "bytes": 926437
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0402.pt",
+      "bytes": 922085
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0401.pt",
+      "bytes": 923301
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0400.pt",
+      "bytes": 922533
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0349.pt",
+      "bytes": 921829
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0348.pt",
+      "bytes": 930597
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0347.pt",
+      "bytes": 922021
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0346.pt",
+      "bytes": 921701
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0345.pt",
+      "bytes": 927333
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0344.pt",
+      "bytes": 923365
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0343.pt",
+      "bytes": 929765
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0342.pt",
+      "bytes": 922149
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0341.pt",
+      "bytes": 922405
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0340.pt",
+      "bytes": 922405
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0339.pt",
+      "bytes": 923429
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0338.pt",
+      "bytes": 930213
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0337.pt",
+      "bytes": 922341
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0336.pt",
+      "bytes": 936037
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0335.pt",
+      "bytes": 923301
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0334.pt",
+      "bytes": 943589
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0333.pt",
+      "bytes": 925093
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0332.pt",
+      "bytes": 925221
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0331.pt",
+      "bytes": 923813
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0330.pt",
+      "bytes": 933413
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0329.pt",
+      "bytes": 921381
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0328.pt",
+      "bytes": 924133
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0327.pt",
+      "bytes": 939109
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0326.pt",
+      "bytes": 939429
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0325.pt",
+      "bytes": 941733
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0324.pt",
+      "bytes": 924197
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0323.pt",
+      "bytes": 925989
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0322.pt",
+      "bytes": 924709
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0321.pt",
+      "bytes": 924325
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0320.pt",
+      "bytes": 923685
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0319.pt",
+      "bytes": 942629
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0318.pt",
+      "bytes": 925413
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0317.pt",
+      "bytes": 928677
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0316.pt",
+      "bytes": 924773
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0315.pt",
+      "bytes": 928677
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0314.pt",
+      "bytes": 924389
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0313.pt",
+      "bytes": 926757
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0312.pt",
+      "bytes": 926437
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0311.pt",
+      "bytes": 931365
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0310.pt",
+      "bytes": 922661
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0309.pt",
+      "bytes": 941413
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0308.pt",
+      "bytes": 927525
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0307.pt",
+      "bytes": 938021
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0306.pt",
+      "bytes": 925797
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0305.pt",
+      "bytes": 923301
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0304.pt",
+      "bytes": 924837
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0303.pt",
+      "bytes": 929573
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0302.pt",
+      "bytes": 930213
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0301.pt",
+      "bytes": 935205
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0300.pt",
+      "bytes": 931749
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0299.pt",
+      "bytes": 937189
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0298.pt",
+      "bytes": 941925
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0297.pt",
+      "bytes": 911589
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0296.pt",
+      "bytes": 924453
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0295.pt",
+      "bytes": 930085
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0294.pt",
+      "bytes": 928293
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0293.pt",
+      "bytes": 925925
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0292.pt",
+      "bytes": 921637
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0291.pt",
+      "bytes": 925669
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0290.pt",
+      "bytes": 940581
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0289.pt",
+      "bytes": 940197
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0288.pt",
+      "bytes": 925477
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0287.pt",
+      "bytes": 941413
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0286.pt",
+      "bytes": 924325
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0285.pt",
+      "bytes": 936997
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0284.pt",
+      "bytes": 921061
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0283.pt",
+      "bytes": 920549
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0282.pt",
+      "bytes": 923813
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0281.pt",
+      "bytes": 930469
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0280.pt",
+      "bytes": 925733
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0279.pt",
+      "bytes": 934757
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0278.pt",
+      "bytes": 926053
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0277.pt",
+      "bytes": 932453
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0276.pt",
+      "bytes": 926949
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0275.pt",
+      "bytes": 924901
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0224.pt",
+      "bytes": 939557
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0223.pt",
+      "bytes": 923877
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0222.pt",
+      "bytes": 923173
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0221.pt",
+      "bytes": 929253
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0220.pt",
+      "bytes": 929829
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0219.pt",
+      "bytes": 920869
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0218.pt",
+      "bytes": 928293
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0217.pt",
+      "bytes": 930597
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0216.pt",
+      "bytes": 926437
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0215.pt",
+      "bytes": 925029
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0214.pt",
+      "bytes": 921893
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0213.pt",
+      "bytes": 922661
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0212.pt",
+      "bytes": 934757
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0211.pt",
+      "bytes": 924517
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0210.pt",
+      "bytes": 942501
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0209.pt",
+      "bytes": 923749
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0208.pt",
+      "bytes": 924453
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0207.pt",
+      "bytes": 923109
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0206.pt",
+      "bytes": 944421
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0205.pt",
+      "bytes": 939237
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0204.pt",
+      "bytes": 943653
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0203.pt",
+      "bytes": 921701
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0202.pt",
+      "bytes": 926309
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0201.pt",
+      "bytes": 924005
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0200.pt",
+      "bytes": 923877
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0099.pt",
+      "bytes": 923749
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0098.pt",
+      "bytes": 942693
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0097.pt",
+      "bytes": 925925
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0096.pt",
+      "bytes": 926373
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0095.pt",
+      "bytes": 945061
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0094.pt",
+      "bytes": 938085
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0093.pt",
+      "bytes": 939877
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0092.pt",
+      "bytes": 923941
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0091.pt",
+      "bytes": 926117
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0090.pt",
+      "bytes": 941093
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0089.pt",
+      "bytes": 926693
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0088.pt",
+      "bytes": 923749
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0087.pt",
+      "bytes": 922213
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0086.pt",
+      "bytes": 924197
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0085.pt",
+      "bytes": 935269
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0084.pt",
+      "bytes": 921573
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0083.pt",
+      "bytes": 923237
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0082.pt",
+      "bytes": 925029
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0081.pt",
+      "bytes": 924325
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0080.pt",
+      "bytes": 920037
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0079.pt",
+      "bytes": 926181
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0078.pt",
+      "bytes": 923365
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0077.pt",
+      "bytes": 937445
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0076.pt",
+      "bytes": 925349
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0075.pt",
+      "bytes": 939621
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0074.pt",
+      "bytes": 920997
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0073.pt",
+      "bytes": 939237
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0072.pt",
+      "bytes": 925285
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0071.pt",
+      "bytes": 920933
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0070.pt",
+      "bytes": 928677
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0069.pt",
+      "bytes": 943781
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0068.pt",
+      "bytes": 942629
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0067.pt",
+      "bytes": 938661
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0066.pt",
+      "bytes": 912869
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0065.pt",
+      "bytes": 942117
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0064.pt",
+      "bytes": 944677
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0063.pt",
+      "bytes": 943717
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0062.pt",
+      "bytes": 923621
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0061.pt",
+      "bytes": 929317
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0060.pt",
+      "bytes": 936997
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0059.pt",
+      "bytes": 922405
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0058.pt",
+      "bytes": 927333
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0057.pt",
+      "bytes": 926565
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0056.pt",
+      "bytes": 948517
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0055.pt",
+      "bytes": 927205
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0054.pt",
+      "bytes": 920421
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0053.pt",
+      "bytes": 924453
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0052.pt",
+      "bytes": 927397
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0051.pt",
+      "bytes": 926437
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0050.pt",
+      "bytes": 935781
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0174.pt",
+      "bytes": 938213
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0173.pt",
+      "bytes": 924645
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0172.pt",
+      "bytes": 938725
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0171.pt",
+      "bytes": 923173
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0170.pt",
+      "bytes": 921445
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0169.pt",
+      "bytes": 926693
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0168.pt",
+      "bytes": 924453
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0167.pt",
+      "bytes": 924133
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0166.pt",
+      "bytes": 950309
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0165.pt",
+      "bytes": 922085
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0164.pt",
+      "bytes": 938213
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0163.pt",
+      "bytes": 922405
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0162.pt",
+      "bytes": 936805
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0161.pt",
+      "bytes": 925605
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0160.pt",
+      "bytes": 922917
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0159.pt",
+      "bytes": 938085
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0158.pt",
+      "bytes": 923749
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0157.pt",
+      "bytes": 930405
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0156.pt",
+      "bytes": 926821
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0155.pt",
+      "bytes": 934053
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0154.pt",
+      "bytes": 943333
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0153.pt",
+      "bytes": 930981
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0152.pt",
+      "bytes": 943909
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0151.pt",
+      "bytes": 926117
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0150.pt",
+      "bytes": 924389
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0249.pt",
+      "bytes": 925861
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0248.pt",
+      "bytes": 941669
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0247.pt",
+      "bytes": 922917
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0246.pt",
+      "bytes": 926693
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0245.pt",
+      "bytes": 943269
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0244.pt",
+      "bytes": 925925
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0243.pt",
+      "bytes": 926117
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0242.pt",
+      "bytes": 924773
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0241.pt",
+      "bytes": 941541
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0240.pt",
+      "bytes": 924133
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0239.pt",
+      "bytes": 921701
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0238.pt",
+      "bytes": 937573
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0237.pt",
+      "bytes": 924005
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0236.pt",
+      "bytes": 929061
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0235.pt",
+      "bytes": 926693
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0234.pt",
+      "bytes": 922469
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0233.pt",
+      "bytes": 938533
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0232.pt",
+      "bytes": 935653
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0231.pt",
+      "bytes": 928101
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0230.pt",
+      "bytes": 926629
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0229.pt",
+      "bytes": 922981
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0228.pt",
+      "bytes": 941605
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0227.pt",
+      "bytes": 942117
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0226.pt",
+      "bytes": 926245
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0225.pt",
+      "bytes": 919461
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0149.pt",
+      "bytes": 925669
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0148.pt",
+      "bytes": 942565
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0147.pt",
+      "bytes": 927909
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0146.pt",
+      "bytes": 943909
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0145.pt",
+      "bytes": 933861
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0144.pt",
+      "bytes": 919333
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0143.pt",
+      "bytes": 927141
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0142.pt",
+      "bytes": 928485
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0141.pt",
+      "bytes": 943397
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0140.pt",
+      "bytes": 924965
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0139.pt",
+      "bytes": 935525
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0138.pt",
+      "bytes": 942245
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0137.pt",
+      "bytes": 926885
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0136.pt",
+      "bytes": 929189
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0135.pt",
+      "bytes": 923813
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0134.pt",
+      "bytes": 929381
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0133.pt",
+      "bytes": 926949
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0132.pt",
+      "bytes": 929957
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0131.pt",
+      "bytes": 926693
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0130.pt",
+      "bytes": 923365
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0129.pt",
+      "bytes": 923493
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0128.pt",
+      "bytes": 924453
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0127.pt",
+      "bytes": 927717
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0126.pt",
+      "bytes": 939173
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0125.pt",
+      "bytes": 930405
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0049.pt",
+      "bytes": 923109
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0048.pt",
+      "bytes": 922341
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0047.pt",
+      "bytes": 922213
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0046.pt",
+      "bytes": 925669
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0045.pt",
+      "bytes": 922981
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0044.pt",
+      "bytes": 945189
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0043.pt",
+      "bytes": 922597
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0042.pt",
+      "bytes": 938469
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0041.pt",
+      "bytes": 923877
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0040.pt",
+      "bytes": 924645
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0039.pt",
+      "bytes": 930725
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0038.pt",
+      "bytes": 925221
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0037.pt",
+      "bytes": 920869
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0036.pt",
+      "bytes": 922597
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0035.pt",
+      "bytes": 926629
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0034.pt",
+      "bytes": 926821
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0033.pt",
+      "bytes": 926565
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0032.pt",
+      "bytes": 926053
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0031.pt",
+      "bytes": 923493
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0030.pt",
+      "bytes": 923813
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0029.pt",
+      "bytes": 931045
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0028.pt",
+      "bytes": 924005
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0027.pt",
+      "bytes": 923941
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0026.pt",
+      "bytes": 930213
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0025.pt",
+      "bytes": 927845
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0274.pt",
+      "bytes": 924837
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0273.pt",
+      "bytes": 943589
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0272.pt",
+      "bytes": 918437
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0271.pt",
+      "bytes": 921893
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0270.pt",
+      "bytes": 922917
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0269.pt",
+      "bytes": 924133
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0268.pt",
+      "bytes": 922981
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0267.pt",
+      "bytes": 924581
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0266.pt",
+      "bytes": 921637
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0265.pt",
+      "bytes": 924709
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0264.pt",
+      "bytes": 923429
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0263.pt",
+      "bytes": 943845
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0262.pt",
+      "bytes": 922469
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0261.pt",
+      "bytes": 939877
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0260.pt",
+      "bytes": 942245
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0259.pt",
+      "bytes": 940453
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0258.pt",
+      "bytes": 940325
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0257.pt",
+      "bytes": 936933
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0256.pt",
+      "bytes": 927141
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0255.pt",
+      "bytes": 925541
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0254.pt",
+      "bytes": 926181
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0253.pt",
+      "bytes": 924069
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0252.pt",
+      "bytes": 938725
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0251.pt",
+      "bytes": 928357
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0250.pt",
+      "bytes": 919333
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0199.pt",
+      "bytes": 930341
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0198.pt",
+      "bytes": 923685
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0197.pt",
+      "bytes": 921381
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0196.pt",
+      "bytes": 922277
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0195.pt",
+      "bytes": 940517
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0194.pt",
+      "bytes": 927269
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0193.pt",
+      "bytes": 939237
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0192.pt",
+      "bytes": 926437
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0191.pt",
+      "bytes": 924581
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0190.pt",
+      "bytes": 942181
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0189.pt",
+      "bytes": 924581
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0188.pt",
+      "bytes": 927461
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0187.pt",
+      "bytes": 923301
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0186.pt",
+      "bytes": 925029
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0185.pt",
+      "bytes": 939429
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0184.pt",
+      "bytes": 927205
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0183.pt",
+      "bytes": 944805
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0182.pt",
+      "bytes": 922725
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0181.pt",
+      "bytes": 924773
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0180.pt",
+      "bytes": 925349
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0179.pt",
+      "bytes": 942949
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0178.pt",
+      "bytes": 926117
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0177.pt",
+      "bytes": 925733
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0176.pt",
+      "bytes": 923045
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0175.pt",
+      "bytes": 935141
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0124.pt",
+      "bytes": 934885
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0123.pt",
+      "bytes": 941477
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0122.pt",
+      "bytes": 940517
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0121.pt",
+      "bytes": 939237
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0120.pt",
+      "bytes": 925413
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0119.pt",
+      "bytes": 942565
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0118.pt",
+      "bytes": 924325
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0117.pt",
+      "bytes": 923365
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0116.pt",
+      "bytes": 924389
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0115.pt",
+      "bytes": 923045
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0114.pt",
+      "bytes": 924965
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0113.pt",
+      "bytes": 923237
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0112.pt",
+      "bytes": 936357
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0111.pt",
+      "bytes": 927781
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0110.pt",
+      "bytes": 925669
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0109.pt",
+      "bytes": 921125
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0108.pt",
+      "bytes": 924389
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0107.pt",
+      "bytes": 927141
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0106.pt",
+      "bytes": 923941
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0105.pt",
+      "bytes": 927909
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0104.pt",
+      "bytes": 935589
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0103.pt",
+      "bytes": 920997
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0102.pt",
+      "bytes": 926309
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0101.pt",
+      "bytes": 921061
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0100.pt",
+      "bytes": 942821
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0024.pt",
+      "bytes": 926181
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0023.pt",
+      "bytes": 924773
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0022.pt",
+      "bytes": 921317
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0021.pt",
+      "bytes": 924005
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0020.pt",
+      "bytes": 929957
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0019.pt",
+      "bytes": 926309
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0018.pt",
+      "bytes": 933477
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0017.pt",
+      "bytes": 921637
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0016.pt",
+      "bytes": 930981
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0015.pt",
+      "bytes": 921125
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0014.pt",
+      "bytes": 923365
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0013.pt",
+      "bytes": 927525
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0012.pt",
+      "bytes": 927781
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0011.pt",
+      "bytes": 923429
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0010.pt",
+      "bytes": 924837
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0009.pt",
+      "bytes": 940453
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0008.pt",
+      "bytes": 922021
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0007.pt",
+      "bytes": 928677
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0006.pt",
+      "bytes": 925157
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0005.pt",
+      "bytes": 927653
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0004.pt",
+      "bytes": 926181
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0003.pt",
+      "bytes": 938917
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0002.pt",
+      "bytes": 941605
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0001.pt",
+      "bytes": 927525
+    },
+    {
+      "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/wm/wm_0000.pt",
+      "bytes": 929253
+    }
+  ],
+  "artifact": {
+    "volume": "data",
+    "path": "online_causal_prc_v1/qwen3_8b_base/n14336_T14336_t3_eta0.20_rr99of100_sampler-poscdf-v1_kvcache-static-v1/artifacts.pt",
+    "bytes": 687415,
+    "sha256": "46f946da9e44dcb42dcf4a98e10cbe2760f60a67a33dbd7a31910eef397e3550"
+  },
+  "artifact_hash_verified": true,
+  "integrated_manifests_inspected": 58,
+  "matching_0p6b_source_caches": [],
+  "checkpoint_metadata": [
+    {
+      "path": "models/Qwen3-8B-Base/config.json",
+      "sha256": "3bd01d7ad7a2e203ecbbe84e24087a51c6d2a108ee4bcc42d0016bf49564983a",
+      "bytes": 729
+    },
+    {
+      "path": "models/Qwen3-8B-Base/tokenizer.json",
+      "sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "bytes": 7031645
+    },
+    {
+      "path": "models/Qwen3-0.6B-Base/config.json",
+      "sha256": "504a6b58c4271583724e66584b6b7698aea18450209df6b2f7582df0e89cee59",
+      "bytes": 727
+    },
+    {
+      "path": "models/Qwen3-0.6B-Base/tokenizer.json",
+      "sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "bytes": 7031645
+    }
+  ],
+  "configs": {
+    "8B": {
+      "architectures": [
+        "Qwen3ForCausalLM"
+      ],
+      "attention_bias": false,
+      "attention_dropout": 0.0,
+      "bos_token_id": 151643,
+      "eos_token_id": 151643,
+      "head_dim": 128,
+      "hidden_act": "silu",
+      "hidden_size": 4096,
+      "initializer_range": 0.02,
+      "intermediate_size": 12288,
+      "max_position_embeddings": 32768,
+      "max_window_layers": 36,
+      "model_type": "qwen3",
+      "num_attention_heads": 32,
+      "num_hidden_layers": 36,
+      "num_key_value_heads": 8,
+      "rms_norm_eps": 1e-06,
+      "rope_scaling": null,
+      "rope_theta": 1000000,
+      "sliding_window": null,
+      "tie_word_embeddings": false,
+      "torch_dtype": "bfloat16",
+      "transformers_version": "4.51.0",
+      "use_cache": true,
+      "use_sliding_window": false,
+      "vocab_size": 151936
+    },
+    "0.6B": {
+      "architectures": [
+        "Qwen3ForCausalLM"
+      ],
+      "attention_bias": false,
+      "attention_dropout": 0.0,
+      "bos_token_id": 151643,
+      "eos_token_id": 151643,
+      "head_dim": 128,
+      "hidden_act": "silu",
+      "hidden_size": 1024,
+      "initializer_range": 0.02,
+      "intermediate_size": 3072,
+      "max_position_embeddings": 32768,
+      "max_window_layers": 28,
+      "model_type": "qwen3",
+      "num_attention_heads": 16,
+      "num_hidden_layers": 28,
+      "num_key_value_heads": 8,
+      "rms_norm_eps": 1e-06,
+      "rope_scaling": null,
+      "rope_theta": 1000000,
+      "sliding_window": null,
+      "tie_word_embeddings": true,
+      "torch_dtype": "bfloat16",
+      "transformers_version": "4.51.0",
+      "use_cache": true,
+      "use_sliding_window": false,
+      "vocab_size": 151936
+    }
+  },
+  "tokenizer_ids_compatible": true,
+  "detector_checkpoint_listing": [
+    {
+      "path": "models/Qwen3-0.6B-Base/.cache",
+      "bytes": 11
+    },
+    {
+      "path": "models/Qwen3-0.6B-Base/tokenizer_config.json",
+      "bytes": 9678
+    },
+    {
+      "path": "models/Qwen3-0.6B-Base/config.json",
+      "bytes": 727
+    },
+    {
+      "path": "models/Qwen3-0.6B-Base/tokenizer.json",
+      "bytes": 7031645
+    },
+    {
+      "path": "models/Qwen3-0.6B-Base/model.safetensors",
+      "bytes": 1192135096
+    }
+  ],
+  "paid_compute_launched": false
+}

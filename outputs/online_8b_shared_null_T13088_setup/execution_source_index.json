@@ -1,0 +1,30 @@
+{
+  "runtime_source_sha256": {
+    "online_8b_shared_null.py": "54f85e40503a0bd04ec2a04c5369a5d6712e6a26440f8cf47a1f43fec3210e46",
+    "fixed_4b_comparison.py": "523c3cbd2f3138d0672d2d59050dc903611d76c008e72a9b5057159a65f64429",
+    "online_prc_redetection.py": "eca8ff340d518604ac3dccf7b521ee321620ea48ba45a6edece5c7e89f56df83",
+    "modal_run.py": "87e2d017950edc1c298b28a279a9246a74cfcdb4d84024fc337d570873fc1ef3",
+    "qwen.py": "0334edc2cd4049a365fadf8591bc4108a2c709797fe153542a59ce626ef5a5ef",
+    "detectors.py": "f728bd15d4524ac3a4aa4b323d441bf3e5732275ed2eaf09ebebf9efbe0035b5",
+    "prc.py": "20a731e18640903d82ff0d7bb5a53f87d6206e0d8b3987654c065a816c4fb6bc",
+    "online_prc.py": "babe6a7ff1fb2397bf2b3cd76448d82c34ae879c6d1214e386e1285d036ba4cb",
+    "watermark_expt.py": "5d73e1b4ea1db9982a49dcd63278ac8ee31c6dda74b5d8faf13c6d3b560ccd8e",
+    "constants.py": "872a1b18fd84d9737c5e1e9cabae2dbb16e55e538edb7264efed8e51efa3839b",
+    "prompts.jsonl": "0bf0560438d9d4b7a85ebf8b7349d6d028aa02b11a381982742ee55b4430530c"
+  },
+  "archived_sources_sha256": {
+    "online_prc.py": "babe6a7ff1fb2397bf2b3cd76448d82c34ae879c6d1214e386e1285d036ba4cb",
+    "prompts.jsonl": "0bf0560438d9d4b7a85ebf8b7349d6d028aa02b11a381982742ee55b4430530c",
+    "prc.py": "20a731e18640903d82ff0d7bb5a53f87d6206e0d8b3987654c065a816c4fb6bc",
+    "online_prc_redetection.py": "eca8ff340d518604ac3dccf7b521ee321620ea48ba45a6edece5c7e89f56df83",
+    "constants.py": "872a1b18fd84d9737c5e1e9cabae2dbb16e55e538edb7264efed8e51efa3839b",
+    "watermark_expt.py": "5d73e1b4ea1db9982a49dcd63278ac8ee31c6dda74b5d8faf13c6d3b560ccd8e",
+    "run_native_8b_shared_null.py": "e780b32288e0d1a8a85cd027076d840f4acb8a6ff3d2afadbcfc96abd3897008",
+    "online_8b_shared_null.py": "54f85e40503a0bd04ec2a04c5369a5d6712e6a26440f8cf47a1f43fec3210e46",
+    "qwen.py": "0334edc2cd4049a365fadf8591bc4108a2c709797fe153542a59ce626ef5a5ef",
+    "fixed_4b_comparison.py": "523c3cbd2f3138d0672d2d59050dc903611d76c008e72a9b5057159a65f64429",
+    "detectors.py": "f728bd15d4524ac3a4aa4b323d441bf3e5732275ed2eaf09ebebf9efbe0035b5",
+    "modal_run.py": "87e2d017950edc1c298b28a279a9246a74cfcdb4d84024fc337d570873fc1ef3"
+  },
+  "note": "Frozen runtime bytes used by the completed run. Additional controller scripts document orchestration; no new compute was performed."
+}

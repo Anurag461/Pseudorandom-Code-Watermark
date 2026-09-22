@@ -1,0 +1,23 @@
+{
+  "pilot_assessment": {
+    "pilot_method_seconds": 1861.882758131,
+    "pilot_worker_wall_seconds": 1912.494968777,
+    "pilot_upper_resource_estimate_usd": 2.7039033532826706,
+    "peak_allocated_bytes": 89433866240,
+    "peak_allocated_fraction": 0.595788817885376,
+    "remaining_worker_seconds_with_15pct_margin": 2199.3692140935495,
+    "remaining450_estimate_usd_with_margin": 27.817863842475635,
+    "total_estimate_with_pilot_allowance_reserved_usd": 32.61786384247563,
+    "fits_reviewed_remaining_allowance": true,
+    "auto_continue": false,
+    "decision": "request separate approval"
+  },
+  "spent_upper_usd": 2.8539033532826705,
+  "reported_cost_usd": 2.56467834,
+  "selection": "H200",
+  "conditional_approval_reference": "user-20260922-continue-total-under35-else-original-a100",
+  "budget_usd": 35,
+  "estimated_total_usd": 30.721767195758307,
+  "remaining_worker_seconds_with_margin": 2199.3692140935495,
+  "deadline_total_resource_envelope_usd": 33.10390335328267
+}

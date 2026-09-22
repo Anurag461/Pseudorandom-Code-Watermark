@@ -1,0 +1,13 @@
+{
+  "recorded_utc": "2026-09-22T16:35:56.654109+00:00",
+  "approval_reference": "user-20260922-continue-total-under35-else-original-a100",
+  "explicit_user_approval": true,
+  "user_instruction": "if estimated cost is still under 35 total, then just continue. otherwise, go back to the original plan set up. just get this run done and make sure the stay within budget.",
+  "total_budget_usd": 35,
+  "scope": "500 saved eta=.20 8B completions, detector0.6B, T14336, posterior and entropy TPR only; reuse first50 traces",
+  "primary_continuation": "9 H200 workers, one batch50 each, conditional on measured pilot and total cost below35 including already incurred preparation and pilot, plus scoring",
+  "fallback": "original A10080GB batch25, remaining450 only if successful first50 can be reused, with all incurred costs included in35",
+  "no_new_generations": true,
+  "no_extra_validation": true,
+  "no_automatic_paid_retry": true
+}

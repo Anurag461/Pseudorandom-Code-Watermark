@@ -1,0 +1,86 @@
+{
+  "status": "complete",
+  "updated_utc": "2026-09-22T18:53:59.921007+00:00",
+  "approved_stages": [
+    "prepare",
+    "pilot",
+    "replay",
+    "score"
+  ],
+  "not_approved_stages": [],
+  "budget_before_usd": 35,
+  "first_phase_allowance_usd": 4.75,
+  "paid_compute_launched": true,
+  "approval_reference": "user-20260922-please-run-first50-h200-batch50",
+  "prepare_worker_seconds": 172.054695866,
+  "verified_records": 500,
+  "prepared_batches": 10,
+  "active_batch_prompt_ids": null,
+  "active_gpu": null,
+  "remaining450_status": "complete",
+  "app_ids": {
+    "prepare": "ap-b0I01cFZ6lW1jrRxm5yS4L",
+    "pilot": "ap-poIcgSdRMuxm5Ym4VxLsrI",
+    "replay": "ap-62Vy1lP6hgaiRR6SDqQC95",
+    "score": "ap-B4ZcB0FhRKHSuSeO4ri0nU"
+  },
+  "conditionally_approved_stages": [
+    "replay",
+    "score"
+  ],
+  "conditional_approval_reference": "user-20260922-continue-total-under35-else-original-a100",
+  "pilot_assessment": {
+    "pilot_method_seconds": 1861.882758131,
+    "pilot_worker_wall_seconds": 1912.494968777,
+    "pilot_upper_resource_estimate_usd": 2.7039033532826706,
+    "peak_allocated_bytes": 89433866240,
+    "peak_allocated_fraction": 0.595788817885376,
+    "remaining_worker_seconds_with_15pct_margin": 2199.3692140935495,
+    "remaining450_estimate_usd_with_margin": 27.817863842475635,
+    "total_estimate_with_pilot_allowance_reserved_usd": 32.61786384247563,
+    "fits_reviewed_remaining_allowance": true,
+    "auto_continue": false,
+    "decision": "request separate approval"
+  },
+  "spent_upper_usd": 26.614108697212743,
+  "reported_cost_usd": 25.43796444,
+  "selection": "H200",
+  "budget_usd": 35,
+  "estimated_total_usd": 30.721767195758307,
+  "remaining_worker_seconds_with_margin": 2199.3692140935495,
+  "deadline_total_resource_envelope_usd": 33.10390335328267,
+  "completed_records": 500,
+  "resource_cost_upper_estimate_usd": 26.623645055291252,
+  "budget_remaining_using_upper_estimate_usd": 8.376354944708748,
+  "result_root": "completion_only_raw_abstain_v1/integrated/0263dfa535b7b6b4a3ee39a2",
+  "counts": {
+    "map": {
+      "wm": {
+        "detected": 437,
+        "count": 500
+      },
+      "null": {
+        "detected": 0,
+        "count": 0
+      }
+    },
+    "entropy": {
+      "wm": {
+        "detected": 418,
+        "count": 500
+      },
+      "null": {
+        "detected": 0,
+        "count": 0
+      }
+    }
+  },
+  "completed_stages": [
+    "prepare",
+    "pilot",
+    "replay",
+    "score"
+  ],
+  "budget_remaining_reported_usd": 9.562035560000002,
+  "verification": "All downloaded artifact hashes, ordered coverage0\u2013499, ten trace shards, and exactly one final CSV row verified locally; no extra paid validation"
+}
