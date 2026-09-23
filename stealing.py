@@ -419,6 +419,43 @@ def score_prc(name, start, stop):
     return str(path)
 
 
+PPL_MODEL = "/cache/models/Qwen3-4B-Base"
+
+
+@app.function(image=spoof_image, gpu="A10G", memory=32768, timeout=7200, max_containers=10,
+              retries=modal.Retries(max_retries=2), volumes={"/cache": hf_cache, "/results": results})
+def perplexity(scheme, name):
+    """Per-text perplexity of the 400 completion tokens given the eval prompt, under Qwen3-4B-Base.
+
+    Spoof texts answer the 500 eval prompts; query500 and calib rows use their own prompts.
+    """
+    import torch
+    from transformers import AutoModelForCausalLM
+    path = Path(f"/results/{OUT}/ppl/{scheme}/{name}.json")
+    if path.exists():
+        return str(path)
+    results.reload()
+    tokens = _text_sets(scheme)[name][:EVAL_PROMPTS]
+    if name == "calib":
+        prompts = torch.load(f"/results/{OUT}/prompts.pt")["calib"][:len(tokens)]
+    elif name == "query500":
+        prompts = torch.load(f"/results/{OUT}/prompts.pt")["query"][:len(tokens)]
+    else:
+        prompts = _eval_prompts()[:len(tokens)]
+    model = AutoModelForCausalLM.from_pretrained(PPL_MODEL, torch_dtype=torch.bfloat16).cuda().eval()
+    values = []
+    with torch.no_grad():
+        for b in range(0, len(tokens), 25):
+            ids = torch.cat([prompts[b:b + 25], tokens[b:b + 25]], 1).cuda()
+            logits = model(ids).logits[:, PROMPT_TOKENS - 1:-1].float()
+            nll = torch.nn.functional.cross_entropy(logits.transpose(1, 2), ids[:, PROMPT_TOKENS:], reduction="none")
+            values += nll.mean(1).exp().cpu().tolist()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"scheme": scheme, "name": name, "ppl": values}))
+    results.commit()
+    return str(path)
+
+
 @app.function(image=spoof_image, cpu=1, memory=4096, timeout=86400, volumes={"/results": results})
 def orchestrate_attack(schemes: list, variants: list, n_query: int, alphas: list):
     """E3 in the cloud: spoof for every scheme/variant, then score calib, positives and spoofs."""
@@ -443,9 +480,69 @@ def orchestrate_attack(schemes: list, variants: list, n_query: int, alphas: list
             failed += 1
             print("FAILED score", repr(error), flush=True)
     print(f"scored {len(calls) - failed}/{len(calls)}", flush=True)
+    names = [(scheme, name) for scheme in schemes for name in _text_sets(scheme)]
+    for (scheme, name), call in zip(names, [perplexity.spawn(*n) for n in names]):
+        try:
+            call.get()
+        except Exception as error:
+            print("FAILED ppl", scheme, name, repr(error), flush=True)
+    print("perplexity done", flush=True)
 
 
 def launch_attack(schemes="prc,kgw2,exp,synthid", variants="ctx1,pos", n_query=10_000, alphas=SPOOF_ALPHAS):
     call = modal.Function.from_name("prc-stealing", "orchestrate_attack").spawn(
         schemes.split(","), variants.split(","), n_query, list(alphas))
     print("spawned", call.object_id)
+
+
+ATTACK_CSV = "outputs/attacks/stealing_spoof_results.csv"
+
+
+@app.local_entrypoint()
+def summarize_attack(schemes: str = "prc,kgw2,exp,synthid"):
+    """Spoof success at FPR 1e-3 per scheme, variant and alpha, raw and quality-filtered."""
+    import csv
+    import numpy as np
+    rows = []
+    read = lambda p: json.loads(b"".join(results.read_file(p)))
+    for scheme in schemes.split(","):
+        scores = {}
+        for entry in results.listdir(f"{OUT}/scores/{scheme}"):
+            payload = read(entry.path)
+            values = payload["rows"] if scheme == "prc" else payload["stats"]
+            scores.setdefault(payload["name"], []).append((payload["start"], values))
+        scores = {k: [v for _, chunk in sorted(parts) for v in chunk] for k, parts in scores.items()}
+        ppl = {}
+        for entry in results.listdir(f"{OUT}/ppl/{scheme}"):
+            payload = read(entry.path)
+            ppl[payload["name"]] = np.array(payload["ppl"])
+        if scheme == "prc":
+            detected = {k: np.array([r["decision"] for r in v]) for k, v in scores.items()}
+            threshold = "Hoeffding FPR<=1e-3"
+        else:
+            calib = np.sort(scores["calib"])
+            cut = calib[int(1e-3 * len(calib)) - 1]  # 1e-3 quantile of 5,000 unwatermarked texts
+            detected = {k: np.array(v) <= cut for k, v in scores.items()}
+            threshold = f"stat<={cut:.4g} (1e-3 quantile of {len(calib)} unwatermarked)"
+        quality_cut = np.quantile(ppl["calib"], 0.95) if "calib" in ppl else np.inf
+        for name in sorted(detected):
+            d = detected[name][:EVAL_PROMPTS] if name == "calib" else detected[name]
+            p = ppl.get(name, np.full(len(d), np.nan))[:len(d)]
+            good = p <= quality_cut
+            variant, _, rest = name.partition("_N")
+            rows.append({"scheme": scheme, "set": name,
+                         "variant": variant if rest else name, "n_query": rest.split("_a")[0] if rest else "",
+                         "alpha": rest.split("_a")[1] if rest else "", "texts": len(d),
+                         "detected@1e-3": f"{d.sum()}/{len(d)} ({d.mean():.1%})",
+                         "detected & ppl-ok": f"{(d & good).sum()}/{len(d)} ({(d & good).mean():.1%})",
+                         "median ppl": f"{np.nanmedian(p):.3g}", "ppl-ok cut (calib p95)": f"{quality_cut:.3g}",
+                         "threshold": threshold})
+    path = Path(ATTACK_CSV)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+    for r in rows:
+        print(f"{r['scheme']:8s} {r['set']:22s} detected {r['detected@1e-3']:>16s}  "
+              f"quality-ok {r['detected & ppl-ok']:>16s}  ppl {r['median ppl']}")
