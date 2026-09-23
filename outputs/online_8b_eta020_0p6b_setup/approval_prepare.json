@@ -1,0 +1,12 @@
+{
+  "stage": "prepare",
+  "plan_sha256": "0b11cf8c450c5a89b00355abd963fecddac0f8dda1aa7f76ec285b3dab18b2b4",
+  "approval_reference": "user-20260922-please-run-first50-h200-batch50",
+  "explicit_user_approval": true,
+  "user_instruction": "please run",
+  "scope": "CPU preparation and first 50 real completions on H200 batch50 only; remaining450 requires separate approval",
+  "authorized_spend_usd": 0.15,
+  "confirmed_available_budget_usd": 35,
+  "first_phase_total_allowance_usd": 4.75,
+  "recorded_utc": "2026-09-22T16:19:09.586830+00:00"
+}

@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "protocol": "completion_only_raw_abstain_v1",
+  "counts": {
+    "256": {
+      "map": {
+        "wm": {
+          "detected": 35,
+          "count": 100
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 25,
+          "count": 100
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    }
+  },
+  "settings": {
+    "eta": 0.05,
+    "t": 3,
+    "n": 256,
+    "r": 253,
+    "r_setting": "253/256"
+  },
+  "trace_shard_sha256": {
+    "completion_only_raw_abstain_v1/integrated/01d480ae687f86d8b994e3e4/batches/000000": "2d9d7b756edd679ba52de21da0d8170cbc6d81fdf1f2edecaa7ac6a0516a7d42"
+  }
+}

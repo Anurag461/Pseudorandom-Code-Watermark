@@ -1,0 +1,10 @@
+{
+  "checked_utc": "2026-09-21T05:35:22.685160+00:00",
+  "app_id": "ap-DWrkldj8cT5pjFB89Rztyo",
+  "container_id": "ta-01M317616RA40C6D27PNV8PTPR",
+  "device": "NVIDIA H200",
+  "memory_used_MiB": 118117,
+  "memory_total_MiB": 143771,
+  "utilization_percent": 99,
+  "kind": "read-only telemetry from the approved active worker; no extra model work"
+}

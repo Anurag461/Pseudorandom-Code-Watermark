@@ -1,0 +1,103 @@
+{
+  "fetched_at_utc": "2026-09-20T22:08:47.777292+00:00",
+  "report_end_utc": "2026-09-20T23:00:00+00:00",
+  "stage_app_ids": {
+    "prepare": "ap-74czeYcCbygVJowk6kuLXP",
+    "generate": "ap-zYbQrA2etgC4udQJLgNtdI",
+    "freeze": "ap-VC6JnhZbVzB2aElnjMWqei",
+    "replay_4b": "ap-lmiikeifcvSPibtJYVpRCG",
+    "replay_0p6b": "ap-dpNpTWPbYOgXe6fHQ4loAV",
+    "score": "ap-wQdP4EN9kD9pIBSKnnTaxG"
+  },
+  "cost_by_stage_usd": {
+    "prepare": "0.00988003",
+    "generate": "0.17829656",
+    "freeze": "0.00229091",
+    "replay_4b": "0.14728834",
+    "replay_0p6b": "0.06416753",
+    "score": "0.00112540"
+  },
+  "all_stages_reported": true,
+  "total_experiment_cost_usd": "0.40304877",
+  "identified_intervening_diagnostic_usd": "0.01946503",
+  "remaining_budget_estimate_usd": "6.09748620",
+  "rows": [
+    {
+      "object_id": "ap-74czeYcCbygVJowk6kuLXP",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 20:00:00+00:00",
+      "cost": "0.00988003",
+      "cost_by_resource": {
+        "Memory": "0.00398392",
+        "CPU": "0.00589612",
+        "L40S": "0E-8"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-VC6JnhZbVzB2aElnjMWqei",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 20:00:00+00:00",
+      "cost": "0.00229091",
+      "cost_by_resource": {
+        "CPU": "0.00136646",
+        "Memory": "0.00092445"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-dpNpTWPbYOgXe6fHQ4loAV",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 22:00:00+00:00",
+      "cost": "0.06416753",
+      "cost_by_resource": {
+        "CPU": "0.00430942",
+        "Memory": "0.00291546",
+        "A100-80GB": "0.05694264"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-lmiikeifcvSPibtJYVpRCG",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 21:00:00+00:00",
+      "cost": "0.14728834",
+      "cost_by_resource": {
+        "Memory": "0.01621337",
+        "H100": "0.12508363",
+        "CPU": "0.00599135"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-wQdP4EN9kD9pIBSKnnTaxG",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 22:00:00+00:00",
+      "cost": "0.00112540",
+      "cost_by_resource": {
+        "CPU": "0.00084094",
+        "Memory": "0.00028446"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-zYbQrA2etgC4udQJLgNtdI",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 20:00:00+00:00",
+      "cost": "0.17829656",
+      "cost_by_resource": {
+        "H100": "0.15141714",
+        "CPU": "0.00725269",
+        "Memory": "0.01962673"
+      },
+      "tags": {}
+    }
+  ],
+  "note": "Provider-reported after completion, before workspace credits. Missing billing stays null, not zero."
+}

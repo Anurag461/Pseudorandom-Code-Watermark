@@ -1,0 +1,45 @@
+{
+  "started_at_utc": "2026-09-19T20:30:45.108378+00:00",
+  "csv_out": "outputs/redetection/redetection_results_summary.csv",
+  "main": [
+    {
+      "manifest": "main_a10g",
+      "gpu": "A10G",
+      "settings": 9,
+      "app_url": "https://modal.com/apps/new-prc-watermark/main/ap-2E9kwuCVxYwYAsFtyaR6zZ",
+      "local_log": "outputs/fixed_0p6b_redetect_setup/full-main-a10g.log",
+      "state_at_launch": "started",
+      "status": "completed"
+    },
+    {
+      "manifest": "main_a100",
+      "gpu": "A100-80GB",
+      "settings": 9,
+      "app_url": "https://modal.com/apps/new-prc-watermark/main/ap-cqkmW8DHvkL3ByTDa4Ratb",
+      "local_log": "outputs/fixed_0p6b_redetect_setup/full-main-a100.log",
+      "state_at_launch": "started",
+      "status": "completed"
+    }
+  ],
+  "replicates": {
+    "manifest": "replicates_a10g",
+    "settings": 2,
+    "state_at_launch": "queued after main_a10g",
+    "status": "completed",
+    "app_url": "https://modal.com/apps/new-prc-watermark/main/ap-8rfshA72NgOPJKcn4ksVmy"
+  },
+  "deferred": [
+    {
+      "eta": 0.2,
+      "n": 8192,
+      "reason": "user deferred on 2026-09-19"
+    }
+  ],
+  "cache_bundle": "cache_bundle.json",
+  "note": "All runs completed; historical launch fields are preserved. Completion is verified against saved reports and the result CSV.",
+  "status": "completed",
+  "completed_main_settings": 18,
+  "completed_replicate_settings": 2,
+  "completion_verified_on": "2026-09-19",
+  "completion_verification": "completion_verification.json"
+}

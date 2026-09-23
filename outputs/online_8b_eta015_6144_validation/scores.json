@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "protocol": "completion_only_raw_abstain_v1",
+  "counts": {
+    "6144": {
+      "map": {
+        "wm": {
+          "detected": 94,
+          "count": 100
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 90,
+          "count": 100
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    }
+  },
+  "settings": {
+    "eta": 0.15,
+    "t": 3,
+    "r_setting": "causal round(0.99L), startup-clamped"
+  },
+  "trace_shard_sha256": {
+    "completion_only_raw_abstain_v1/integrated/f909991323f756d25cec0038/batches/000000": "e0caace8187a6d60f61ae926afad24193b6e1b3a4dc564abcebd1f8c58475967"
+  },
+  "scoring_device": "cloud CPU",
+  "additional_gpu_runs": 0,
+  "independent_reference_completed": false,
+  "independent_reference_stopped_by_user": true
+}

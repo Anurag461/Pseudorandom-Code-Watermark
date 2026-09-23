@@ -1,0 +1,21 @@
+{
+  "stage": "prepare",
+  "case": "eta010_T3072_N500",
+  "wall_seconds": 42.074282373,
+  "resources": {
+    "hardware": "4 CPU cores, 16 GiB RAM",
+    "gpu": null,
+    "memory_mib": 16384,
+    "work_timeout_seconds": 180,
+    "expected_minutes": [
+      1,
+      2.5
+    ],
+    "expected_usd": [
+      0.006,
+      0.015
+    ],
+    "allowance_usd": 0.025,
+    "workload": "Validate archived key, partition, 500 token hashes and cached checkpoint; prepare 5 completion-only batches; no historical rescoring or model execution."
+  }
+}

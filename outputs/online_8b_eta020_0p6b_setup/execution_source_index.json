@@ -1,0 +1,33 @@
+{
+  "runtime_source_sha256": {
+    "online_8b_eta020_0p6b.py": "a729acbcbca276bfe0f96260bb2990cb734b04971392fe2f5ee13c7a95325fa9",
+    "fixed_4b_comparison.py": "523c3cbd2f3138d0672d2d59050dc903611d76c008e72a9b5057159a65f64429",
+    "online_8b_to_0p6b.py": "2ebd84fdab1cb37f6530b1c31d51ac98c0b41871cade6b1f64ebc5055e23a184",
+    "online_prc_redetection.py": "eca8ff340d518604ac3dccf7b521ee321620ea48ba45a6edece5c7e89f56df83",
+    "modal_run.py": "87e2d017950edc1c298b28a279a9246a74cfcdb4d84024fc337d570873fc1ef3",
+    "qwen.py": "0334edc2cd4049a365fadf8591bc4108a2c709797fe153542a59ce626ef5a5ef",
+    "detectors.py": "f728bd15d4524ac3a4aa4b323d441bf3e5732275ed2eaf09ebebf9efbe0035b5",
+    "prc.py": "20a731e18640903d82ff0d7bb5a53f87d6206e0d8b3987654c065a816c4fb6bc",
+    "online_prc.py": "babe6a7ff1fb2397bf2b3cd76448d82c34ae879c6d1214e386e1285d036ba4cb",
+    "watermark_expt.py": "5d73e1b4ea1db9982a49dcd63278ac8ee31c6dda74b5d8faf13c6d3b560ccd8e",
+    "constants.py": "872a1b18fd84d9737c5e1e9cabae2dbb16e55e538edb7264efed8e51efa3839b",
+    "prompts.jsonl": "0bf0560438d9d4b7a85ebf8b7349d6d028aa02b11a381982742ee55b4430530c"
+  },
+  "archived_sources_sha256": {
+    "eta020_budgeted_continue.py": "11f24e82cf49dbb7d4811601d35e3f998ae8143c3795147e2db137bba9189a95",
+    "online_prc.py": "babe6a7ff1fb2397bf2b3cd76448d82c34ae879c6d1214e386e1285d036ba4cb",
+    "online_8b_to_0p6b.py": "2ebd84fdab1cb37f6530b1c31d51ac98c0b41871cade6b1f64ebc5055e23a184",
+    "prompts.jsonl": "0bf0560438d9d4b7a85ebf8b7349d6d028aa02b11a381982742ee55b4430530c",
+    "prc.py": "20a731e18640903d82ff0d7bb5a53f87d6206e0d8b3987654c065a816c4fb6bc",
+    "online_prc_redetection.py": "eca8ff340d518604ac3dccf7b521ee321620ea48ba45a6edece5c7e89f56df83",
+    "constants.py": "872a1b18fd84d9737c5e1e9cabae2dbb16e55e538edb7264efed8e51efa3839b",
+    "online_8b_eta020_0p6b.py": "a729acbcbca276bfe0f96260bb2990cb734b04971392fe2f5ee13c7a95325fa9",
+    "eta020_a100_fallback.py": "b513cf7455c46c4a99dbb119b7c500405b67b3f24db2971143cbddfb4d4aad7c",
+    "watermark_expt.py": "5d73e1b4ea1db9982a49dcd63278ac8ee31c6dda74b5d8faf13c6d3b560ccd8e",
+    "qwen.py": "0334edc2cd4049a365fadf8591bc4108a2c709797fe153542a59ce626ef5a5ef",
+    "fixed_4b_comparison.py": "523c3cbd2f3138d0672d2d59050dc903611d76c008e72a9b5057159a65f64429",
+    "detectors.py": "f728bd15d4524ac3a4aa4b323d441bf3e5732275ed2eaf09ebebf9efbe0035b5",
+    "modal_run.py": "87e2d017950edc1c298b28a279a9246a74cfcdb4d84024fc337d570873fc1ef3"
+  },
+  "note": "Frozen runtime bytes used by the completed run. Additional controller scripts document orchestration; no new compute was performed."
+}

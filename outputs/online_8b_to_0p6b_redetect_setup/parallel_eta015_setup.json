@@ -1,0 +1,87 @@
+{
+  "status": "awaiting_explicit_approval",
+  "case": "eta015_T6144_N100",
+  "eta": 0.15,
+  "T": 6144,
+  "N": 100,
+  "stages": [
+    "two parallel GPU replay workers",
+    "one subsequent CPU scoring worker"
+  ],
+  "batch_size": 50,
+  "gpu_workers": 2,
+  "prompt_ranges": [
+    [
+      0,
+      49
+    ],
+    [
+      50,
+      99
+    ]
+  ],
+  "adapter_sha256": "a3bc72f23dbd16ae70798af91f4754b20e8d550ec255a4204bfcd9ed47e814bc",
+  "prepared_result_sha256": "851d2f41fe4b78e2d731fa1efb68d55f1ebe4733bdb265d512ea2c306ad5f87e",
+  "original_setup_sha256": "4b46dfea7b2fdc69d405444a0ae4cd87f473b7566707d9ebe5df07c727a5c675",
+  "model": "Qwen/Qwen3-0.6B-Base",
+  "revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+  "protocol": "completion_only_raw_abstain_v1",
+  "per_worker_resources": {
+    "gpu": "A100-80GB",
+    "cpu": 4,
+    "memory_mib": 16384,
+    "work_timeout_seconds": 1000,
+    "function_timeout_seconds": 1030,
+    "startup_timeout_seconds": 30,
+    "scaledown_window_seconds": 2,
+    "retries": 0
+  },
+  "gpu_expected_elapsed_minutes": [
+    11,
+    15
+  ],
+  "gpu_expected_total_cost_usd": [
+    1.05,
+    1.45
+  ],
+  "gpu_total_allowance_usd": 1.75,
+  "cpu_score": {
+    "cpu": 4,
+    "memory_mib": 8192,
+    "lengths": [
+      6144
+    ],
+    "weights": [
+      "map",
+      "entropy"
+    ],
+    "expected_elapsed_minutes": [
+      0.25,
+      2
+    ],
+    "expected_cost_usd": [
+      0.002,
+      0.009
+    ],
+    "allowance_usd": 0.035,
+    "work_timeout_seconds": 300,
+    "retries": 0
+  },
+  "remaining_conservative_total_usd": 1.785,
+  "rounded_conservative_total_usd": 1.79,
+  "estimated_balance_before_usd": "3.96240755",
+  "estimated_balance_after_allowance_usd": 2.17740755,
+  "paid_cost_to_date_usd": "1.63169696",
+  "new_generation_count": 0,
+  "null_count": 0,
+  "null_cost_usd": 0,
+  "reference_replays": 0,
+  "benchmarks": 0,
+  "automatic_retries": 0,
+  "reporting_lengths": [
+    6144
+  ],
+  "eta015_T4096_excluded": true,
+  "completed_eta005_and_eta010_replay_reuse": true,
+  "extra_reproducibility_archive_upload": false
+}

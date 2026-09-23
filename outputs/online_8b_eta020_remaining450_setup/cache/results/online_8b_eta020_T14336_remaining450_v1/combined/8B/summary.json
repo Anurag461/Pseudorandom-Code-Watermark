@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "protocol": "completion_only_raw_abstain_v1",
+  "counts": {
+    "14336": {
+      "map": {
+        "wm": {
+          "detected": 452,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 433,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    }
+  },
+  "reported_lengths": [
+    14336
+  ],
+  "stop_rule": "none; all frozen comparison lengths",
+  "settings": {
+    "eta": 0.2,
+    "t": 3,
+    "r_setting": "causal round(0.99L), startup-clamped"
+  },
+  "trace_shard_sha256": {
+    "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a/batches/000000": "fbce4378a69cc1e4cbb569812c9444c233665632e4ddfb31822df25591d3c507",
+    "completion_only_raw_abstain_v1/integrated/ba61a52bdf2b3ae02c8256bd/batches/000000": "779f8e0e5718dec1e9de2601ee956e29d17842ea660439e9b25640a969b5221b",
+    "completion_only_raw_abstain_v1/integrated/ba61a52bdf2b3ae02c8256bd/batches/000050": "2de1370218440915d3052d8b3a55ddddccea91ad381ba6ca689fa602c99cd47c",
+    "completion_only_raw_abstain_v1/integrated/ba61a52bdf2b3ae02c8256bd/batches/000100": "775097d7fb17a51c04ddcb2622925aef1ade9365a06e541a05d11e906794b4a2",
+    "completion_only_raw_abstain_v1/integrated/ba61a52bdf2b3ae02c8256bd/batches/000150": "39082403672a5e9e633d2cd8d50759a96ec7fe88ef275229fd4f36f33974a5c1",
+    "completion_only_raw_abstain_v1/integrated/ba61a52bdf2b3ae02c8256bd/batches/000200": "836c1af95c7a8e2f52c3394764e34481a46a6a9609db1e801b711082af390304",
+    "completion_only_raw_abstain_v1/integrated/ba61a52bdf2b3ae02c8256bd/batches/000250": "0763376370fee7efc13f557dac5baf745a3076cf70fa0fbbe148dd2e635ab480",
+    "completion_only_raw_abstain_v1/integrated/ba61a52bdf2b3ae02c8256bd/batches/000300": "9430f3bb4b9b3d064e67e4962b5c10f6c8ac39eded6559c335e8b2fadd095e02",
+    "completion_only_raw_abstain_v1/integrated/ba61a52bdf2b3ae02c8256bd/batches/000350": "998b5fa1523cb26303d57451912c5a166187770efd957a179b4924fa8a6c143c",
+    "completion_only_raw_abstain_v1/integrated/ba61a52bdf2b3ae02c8256bd/batches/000400": "0ec166383bf5346b14d3eb1bb58fa4ac06c62900291ca40fe1acda06c11f3e96"
+  },
+  "reuse": {
+    "completed_first_batch": 50,
+    "new": 450,
+    "first_batch_replayed": false,
+    "first_batch_rescored": false
+  }
+}

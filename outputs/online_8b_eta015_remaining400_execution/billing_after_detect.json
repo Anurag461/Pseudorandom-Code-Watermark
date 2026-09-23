@@ -1,0 +1,859 @@
+{
+  "checked_utc": "2026-09-21T04:07:29.082402+00:00",
+  "read_only": true,
+  "app_ids": [
+    "ap-74oPtw92UaCPwKJQzaIGEo",
+    "ap-FJFpAHhr285oC0EyRszlna",
+    "ap-WybnYBYxYV2XBVFExnvljv",
+    "ap-e7VjXL1zxVOg3uTmfHhiyv",
+    "ap-jKSj0iAhFtHqpsvyenejqY"
+  ],
+  "reported_task_cost_usd": "28.55494862",
+  "task_rows": [
+    {
+      "object_id": "ap-74oPtw92UaCPwKJQzaIGEo",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 02:00:00+00:00",
+      "cost": "0.01762228",
+      "cost_by_resource": {
+        "CPU": "0.01051115",
+        "Memory": "0.00711114"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-FJFpAHhr285oC0EyRszlna",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 02:00:00+00:00",
+      "cost": "5.74495522",
+      "cost_by_resource": {
+        "H200": "4.97635975",
+        "CPU": "0.20738486",
+        "Memory": "0.56121061"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-FJFpAHhr285oC0EyRszlna",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 03:00:00+00:00",
+      "cost": "8.05229513",
+      "cost_by_resource": {
+        "H200": "6.97500952",
+        "CPU": "0.29067661",
+        "Memory": "0.78660900"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-WybnYBYxYV2XBVFExnvljv",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 03:00:00+00:00",
+      "cost": "12.16927268",
+      "cost_by_resource": {
+        "H200": "6.78982443",
+        "A100-80GB": "3.84314599",
+        "CPU": "0.57380849",
+        "Memory": "0.96249377"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-WybnYBYxYV2XBVFExnvljv",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 04:00:00+00:00",
+      "cost": "2.51632667",
+      "cost_by_resource": {
+        "H200": "2.11866921",
+        "A100-80GB": "0.06250035",
+        "CPU": "0.09302347",
+        "Memory": "0.24213364"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-e7VjXL1zxVOg3uTmfHhiyv",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 03:00:00+00:00",
+      "cost": "0.05022344",
+      "cost_by_resource": {
+        "CPU": "0.02995673",
+        "Memory": "0.02026671"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-jKSj0iAhFtHqpsvyenejqY",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 02:00:00+00:00",
+      "cost": "0.00425320",
+      "cost_by_resource": {
+        "CPU": "0.00253690",
+        "Memory": "0.00171630"
+      },
+      "tags": {}
+    }
+  ],
+  "workspace_rows": [
+    {
+      "object_id": "ap-1DtJWoBTh6aMWOUmehnzun",
+      "description": "prc-online-8b-to-0p6b",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 00:00:00+00:00",
+      "cost": "0.00229098",
+      "cost_by_resource": {
+        "CPU": "0.00136650",
+        "Memory": "0.00092448"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-1byaUF7Aja9we12ieLm85z",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 03:00:00+00:00",
+      "cost": "14.01803031",
+      "cost_by_resource": {
+        "H100": "11.89753357",
+        "CPU": "0.57492211",
+        "Memory": "1.54557463"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-1byaUF7Aja9we12ieLm85z",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 04:00:00+00:00",
+      "cost": "3.40510715",
+      "cost_by_resource": {
+        "H100": "2.88413181",
+        "CPU": "0.14350684",
+        "Memory": "0.37746850"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-3PryyfMvPzx38fgaXS8z2R",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 07:00:00+00:00",
+      "cost": "1.88293437",
+      "cost_by_resource": {
+        "H200": "1.63102382",
+        "CPU": "0.06797130",
+        "Memory": "0.18393925"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-3R0HvB7hADoNOa4IqM7yes",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 06:00:00+00:00",
+      "cost": "0.22035654",
+      "cost_by_resource": {
+        "H200": "0.19087589",
+        "CPU": "0.00795456",
+        "Memory": "0.02152609"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-4qGwMifO2i2GHzwPaermKa",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.00140668",
+      "cost_by_resource": {
+        "CPU": "0.00105112",
+        "Memory": "0.00035556"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-5pKLX3JdRZgFQIiJgY8Pl1",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.00229093",
+      "cost_by_resource": {
+        "CPU": "0.00136647",
+        "Memory": "0.00092446"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-6g39ohHlTV7nHCVm8gFXCP",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 01:00:00+00:00",
+      "cost": "0.04513339",
+      "cost_by_resource": {
+        "CPU": "0.03372527",
+        "Memory": "0.01140812"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-74czeYcCbygVJowk6kuLXP",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 20:00:00+00:00",
+      "cost": "0.00988003",
+      "cost_by_resource": {
+        "L40S": "0E-8",
+        "CPU": "0.00589612",
+        "Memory": "0.00398392"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-74oPtw92UaCPwKJQzaIGEo",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 02:00:00+00:00",
+      "cost": "0.01762228",
+      "cost_by_resource": {
+        "CPU": "0.01051115",
+        "Memory": "0.00711114"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-9Em0YlKFP4JSrPLI8g6jGg",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 08:00:00+00:00",
+      "cost": "3.40950826",
+      "cost_by_resource": {
+        "H200": "2.94847859",
+        "CPU": "0.12623847",
+        "Memory": "0.33479120"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-AqWhf8g15H81M0U2ABntTE",
+      "description": "prc-startup-diagnostic",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 08:00:00+00:00",
+      "cost": "0.00061680",
+      "cost_by_resource": {
+        "CPU": "0.00036790",
+        "Memory": "0.00024890"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-CWDvuK8lVI9sy3EOLzYTIJ",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.03286784",
+      "cost_by_resource": {
+        "A100-80GB": "0.02916711",
+        "CPU": "0.00220737",
+        "Memory": "0.00149336"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-FJFpAHhr285oC0EyRszlna",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 02:00:00+00:00",
+      "cost": "5.74495522",
+      "cost_by_resource": {
+        "H200": "4.97635975",
+        "CPU": "0.20738486",
+        "Memory": "0.56121061"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-FJFpAHhr285oC0EyRszlna",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 03:00:00+00:00",
+      "cost": "8.05229513",
+      "cost_by_resource": {
+        "H200": "6.97500952",
+        "CPU": "0.29067661",
+        "Memory": "0.78660900"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-FT5N0eZB67GHOhKBxGaabg",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.11111212",
+      "cost_by_resource": {
+        "H100": "0.09436121",
+        "CPU": "0.00451978",
+        "Memory": "0.01223112"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-FfU53HGeCx5wrVDMs18Ajd",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 01:00:00+00:00",
+      "cost": "1.78618725",
+      "cost_by_resource": {
+        "A100-80GB": "1.69002159",
+        "CPU": "0.04952333",
+        "Memory": "0.04664232"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-FfU53HGeCx5wrVDMs18Ajd",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 02:00:00+00:00",
+      "cost": "1.88486522",
+      "cost_by_resource": {
+        "A100-80GB": "1.79356692",
+        "CPU": "0.04463631",
+        "Memory": "0.04666199"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-FgvS06xARvTu758a8idEnk",
+      "description": "prc-online-8b-to-0p6b",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.05790918",
+      "cost_by_resource": {
+        "A100-80GB": "0.05138895",
+        "CPU": "0.00388912",
+        "Memory": "0.00263111"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-FgvS06xARvTu758a8idEnk",
+      "description": "prc-online-8b-to-0p6b",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 00:00:00+00:00",
+      "cost": "0.22381148",
+      "cost_by_resource": {
+        "A100-80GB": "0.19861163",
+        "CPU": "0.01503093",
+        "Memory": "0.01016892"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-FowKykylnEG7hOFLvhLNx8",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 08:00:00+00:00",
+      "cost": "0.00406284",
+      "cost_by_resource": {
+        "CPU": "0.00242336",
+        "Memory": "0.00163948"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-G6nmkMaMQHrc6vDX7eMNhF",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.00370068",
+      "cost_by_resource": {
+        "CPU": "0.00220734",
+        "Memory": "0.00149334"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-JL8vJdod4n3fG3VqdlcZM3",
+      "description": "prc-online-8b-to-0p6b",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.00704887",
+      "cost_by_resource": {
+        "CPU": "0.00420443",
+        "Memory": "0.00284444"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-Kk7ZXyr1qhfxbcdHhVIm3L",
+      "description": "prc-online-8b-to-0p6b",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 00:00:00+00:00",
+      "cost": "0.00098461",
+      "cost_by_resource": {
+        "CPU": "0.00073573",
+        "Memory": "0.00024887"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-NePyIo8VK28v3MJ65nRlzo",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 22:00:00+00:00",
+      "cost": "0.00387691",
+      "cost_by_resource": {
+        "CPU": "0.00231246",
+        "Memory": "0.00156445"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-NkOceyr693ue2CZKXKltgF",
+      "description": "prc-positional-bias-diagnostic-v1",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 17:00:00+00:00",
+      "cost": "0.00123352",
+      "cost_by_resource": {
+        "CPU": "0.00073575",
+        "Memory": "0.00049776"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-Q7f489VIWRb8JHB7wxvKPf",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 08:00:00+00:00",
+      "cost": "0.27968736",
+      "cost_by_resource": {
+        "H200": "0.23204177",
+        "CPU": "0.01671256",
+        "Memory": "0.03093303"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-Q7f489VIWRb8JHB7wxvKPf",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 09:00:00+00:00",
+      "cost": "4.10851830",
+      "cost_by_resource": {
+        "H200": "3.55885543",
+        "CPU": "0.14831177",
+        "Memory": "0.40135110"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-TgqJmm8A0sMfft6UsvnlxX",
+      "description": "prc-online-8b-to-0p6b",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 00:00:00+00:00",
+      "cost": "1.33296191",
+      "cost_by_resource": {
+        "A100-80GB": "1.18287831",
+        "CPU": "0.08952023",
+        "Memory": "0.06056337"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-UgmqtX5hcuEfUhIu7LhZQn",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 02:00:00+00:00",
+      "cost": "0.10802906",
+      "cost_by_resource": {
+        "A10G": "0.07822231",
+        "CPU": "0.01963176",
+        "Memory": "0.01017499"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-VC6JnhZbVzB2aElnjMWqei",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 20:00:00+00:00",
+      "cost": "0.00229091",
+      "cost_by_resource": {
+        "CPU": "0.00136646",
+        "Memory": "0.00092445"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-VKfiCfN2T0NCDDLRJZqfIf",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.07881648",
+      "cost_by_resource": {
+        "H100": "0.06693436",
+        "CPU": "0.00320607",
+        "Memory": "0.00867605"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-WybnYBYxYV2XBVFExnvljv",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 03:00:00+00:00",
+      "cost": "12.16927268",
+      "cost_by_resource": {
+        "H200": "6.78982443",
+        "A100-80GB": "3.84314599",
+        "CPU": "0.57380849",
+        "Memory": "0.96249377"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-WybnYBYxYV2XBVFExnvljv",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 04:00:00+00:00",
+      "cost": "2.51632667",
+      "cost_by_resource": {
+        "H200": "2.11866921",
+        "A100-80GB": "0.06250035",
+        "CPU": "0.09302347",
+        "Memory": "0.24213364"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-XTGjBUYpHYiEuHfqmJzs3Q",
+      "description": "prc-online-8b-to-0p6b",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 00:00:00+00:00",
+      "cost": "0.00154735",
+      "cost_by_resource": {
+        "CPU": "0.00115623",
+        "Memory": "0.00039112"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-YMyYMa75bMVYb12bQ64vLh",
+      "description": "prc-online-8b-to-0p6b",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 00:00:00+00:00",
+      "cost": "0.00182866",
+      "cost_by_resource": {
+        "CPU": "0.00136644",
+        "Memory": "0.00046222"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-bevqgUFWZxGaETQBoagvDY",
+      "description": "prc-positional-bias-diagnostic-v1",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 17:00:00+00:00",
+      "cost": "0.00326011",
+      "cost_by_resource": {
+        "CPU": "0.00194456",
+        "Memory": "0.00131556"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-bevqgUFWZxGaETQBoagvDY",
+      "description": "prc-positional-bias-diagnostic-v1",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 18:00:00+00:00",
+      "cost": "0.01497140",
+      "cost_by_resource": {
+        "CPU": "0.00892998",
+        "Memory": "0.00604142"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-dJaYTsUXcXcTaduCYrki8A",
+      "description": "prc-online-8b-to-0p6b-parallel",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 00:00:00+00:00",
+      "cost": "1.06740567",
+      "cost_by_resource": {
+        "A100-80GB": "0.94722213",
+        "CPU": "0.07168577",
+        "Memory": "0.04849777"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-dpNpTWPbYOgXe6fHQ4loAV",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 22:00:00+00:00",
+      "cost": "0.06416753",
+      "cost_by_resource": {
+        "A100-80GB": "0.05694264",
+        "CPU": "0.00430942",
+        "Memory": "0.00291546"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-e7VjXL1zxVOg3uTmfHhiyv",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 03:00:00+00:00",
+      "cost": "0.05022344",
+      "cost_by_resource": {
+        "CPU": "0.02995673",
+        "Memory": "0.02026671"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-hHTuCC01rF65K1nmpZPaoa",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 10:00:00+00:00",
+      "cost": "0.00317204",
+      "cost_by_resource": {
+        "CPU": "0.00189203",
+        "Memory": "0.00128002"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-hKHQZAhwCJgquahCc3KL5h",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 09:00:00+00:00",
+      "cost": "0.47469221",
+      "cost_by_resource": {
+        "H200": "0.40355263",
+        "CPU": "0.02207323",
+        "Memory": "0.04906635"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-hKHQZAhwCJgquahCc3KL5h",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 10:00:00+00:00",
+      "cost": "3.08939630",
+      "cost_by_resource": {
+        "H200": "2.67607785",
+        "CPU": "0.11152289",
+        "Memory": "0.30179556"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-jKSj0iAhFtHqpsvyenejqY",
+      "description": "prc-online-8b-eta015-remaining400",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 02:00:00+00:00",
+      "cost": "0.00425320",
+      "cost_by_resource": {
+        "CPU": "0.00253690",
+        "Memory": "0.00171630"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-l91utsySHvQVvZ2xDVbudo",
+      "description": "prc-startup-diagnostic",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 08:00:00+00:00",
+      "cost": "0.00044057",
+      "cost_by_resource": {
+        "CPU": "0.00026279",
+        "Memory": "0.00017778"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-lAsN6taUyhFFUgMlQHi0HO",
+      "description": "prc-online-8b-to-0p6b",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 00:00:00+00:00",
+      "cost": "0.00500347",
+      "cost_by_resource": {
+        "CPU": "0.00298442",
+        "Memory": "0.00201905"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-lmiikeifcvSPibtJYVpRCG",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 21:00:00+00:00",
+      "cost": "0.14728834",
+      "cost_by_resource": {
+        "H100": "0.12508363",
+        "CPU": "0.00599135",
+        "Memory": "0.01621337"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-mO68ejuHlU13FsuKRbnKsl",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 01:00:00+00:00",
+      "cost": "0.08695733",
+      "cost_by_resource": {
+        "A10G": "0.07801766",
+        "CPU": "0.00404491",
+        "Memory": "0.00489476"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-mqlgxv1kcjZWr5SZN31aoy",
+      "description": "prc-startup-diagnostic",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 08:00:00+00:00",
+      "cost": "0.00070492",
+      "cost_by_resource": {
+        "CPU": "0.00042046",
+        "Memory": "0.00028446"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-nU8i1Ytz93fG3KWjv8bWI5",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.00229085",
+      "cost_by_resource": {
+        "CPU": "0.00136642",
+        "Memory": "0.00092443"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-rLf6eBhfN55c4nEaLKl5VW",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.00112528",
+      "cost_by_resource": {
+        "CPU": "0.00084085",
+        "Memory": "0.00028443"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-sEQUMbtFbNePOzfCEB5G4p",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 07:00:00+00:00",
+      "cost": "0.00387692",
+      "cost_by_resource": {
+        "CPU": "0.00231246",
+        "Memory": "0.00156446"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-ue3QU77qtox88ulhv446Bs",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 03:00:00+00:00",
+      "cost": "0.06124117",
+      "cost_by_resource": {
+        "CPU": "0.03652847",
+        "Memory": "0.02471271"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-wQdP4EN9kD9pIBSKnnTaxG",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 22:00:00+00:00",
+      "cost": "0.00112540",
+      "cost_by_resource": {
+        "CPU": "0.00084094",
+        "Memory": "0.00028446"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-wkyBVYgDELalf4cQwsQ5jW",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.03443380",
+      "cost_by_resource": {
+        "A100-80GB": "0.03055676",
+        "CPU": "0.00231254",
+        "Memory": "0.00156451"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-xQ1TnpsxSkXQl5DDSfUphc",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.10393370",
+      "cost_by_resource": {
+        "H100": "0.08826498",
+        "CPU": "0.00422778",
+        "Memory": "0.01144093"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-xhL5w0Dqo2cVeVGNidRVCa",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 23:00:00+00:00",
+      "cost": "0.12752642",
+      "cost_by_resource": {
+        "H100": "0.10830094",
+        "CPU": "0.00518748",
+        "Memory": "0.01403800"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-yUj4oPM8skpyng5PypDBjS",
+      "description": "prc-watermark",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 06:00:00+00:00",
+      "cost": "0.00618858",
+      "cost_by_resource": {
+        "CPU": "0.00369129",
+        "Memory": "0.00249728"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-zYbQrA2etgC4udQJLgNtdI",
+      "description": "prc-fixed-4b-100",
+      "environment_name": "main",
+      "interval_start": "2026-09-20 20:00:00+00:00",
+      "cost": "0.17829656",
+      "cost_by_resource": {
+        "H100": "0.15141714",
+        "CPU": "0.00725269",
+        "Memory": "0.01962673"
+      },
+      "tags": {}
+    }
+  ]
+}

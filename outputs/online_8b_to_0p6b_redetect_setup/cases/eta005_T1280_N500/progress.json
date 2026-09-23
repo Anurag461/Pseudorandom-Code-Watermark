@@ -1,0 +1,792 @@
+{
+  "eta": 0.05,
+  "N": 500,
+  "T": 1280,
+  "lengths": [
+    1280,
+    1264,
+    1248,
+    1232,
+    1216,
+    1200,
+    1184,
+    1168,
+    1152,
+    1136,
+    1120,
+    1104,
+    1088,
+    1072,
+    1056,
+    1040,
+    1024,
+    1008,
+    992,
+    976,
+    960,
+    944,
+    928,
+    912,
+    896,
+    880,
+    864,
+    848,
+    768,
+    512,
+    400,
+    256,
+    128
+  ],
+  "completed_stages": [
+    "prepare",
+    "replay",
+    "score"
+  ],
+  "stage_app_ids": {
+    "prepare": "ap-JL8vJdod4n3fG3VqdlcZM3",
+    "replay": "ap-FgvS06xARvTu758a8idEnk",
+    "score": "ap-XTGjBUYpHYiEuHfqmJzs3Q"
+  },
+  "timing_seconds": {
+    "prepare": 72.28341264800001,
+    "replay": 353.273336318,
+    "score": 14.240479976
+  },
+  "pending_stages": [],
+  "status": "complete",
+  "counts": {
+    "1280": {
+      "map": {
+        "wm": {
+          "detected": 463,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 434,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1264": {
+      "map": {
+        "wm": {
+          "detected": 463,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 431,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1248": {
+      "map": {
+        "wm": {
+          "detected": 461,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 427,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1232": {
+      "map": {
+        "wm": {
+          "detected": 458,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 425,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1216": {
+      "map": {
+        "wm": {
+          "detected": 457,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 425,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1200": {
+      "map": {
+        "wm": {
+          "detected": 456,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 425,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1184": {
+      "map": {
+        "wm": {
+          "detected": 455,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 419,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1168": {
+      "map": {
+        "wm": {
+          "detected": 454,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 417,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1152": {
+      "map": {
+        "wm": {
+          "detected": 453,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 416,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1136": {
+      "map": {
+        "wm": {
+          "detected": 450,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 414,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1120": {
+      "map": {
+        "wm": {
+          "detected": 451,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 417,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1104": {
+      "map": {
+        "wm": {
+          "detected": 451,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 410,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1088": {
+      "map": {
+        "wm": {
+          "detected": 451,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 407,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1072": {
+      "map": {
+        "wm": {
+          "detected": 446,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 407,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1056": {
+      "map": {
+        "wm": {
+          "detected": 446,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 403,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1040": {
+      "map": {
+        "wm": {
+          "detected": 444,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 402,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1024": {
+      "map": {
+        "wm": {
+          "detected": 440,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 396,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "1008": {
+      "map": {
+        "wm": {
+          "detected": 439,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 397,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "992": {
+      "map": {
+        "wm": {
+          "detected": 439,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 399,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "976": {
+      "map": {
+        "wm": {
+          "detected": 435,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 393,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "960": {
+      "map": {
+        "wm": {
+          "detected": 433,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 389,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "944": {
+      "map": {
+        "wm": {
+          "detected": 428,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 385,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "928": {
+      "map": {
+        "wm": {
+          "detected": 426,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 386,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "912": {
+      "map": {
+        "wm": {
+          "detected": 428,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 385,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "896": {
+      "map": {
+        "wm": {
+          "detected": 423,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 386,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "880": {
+      "map": {
+        "wm": {
+          "detected": 419,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 381,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "864": {
+      "map": {
+        "wm": {
+          "detected": 416,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 380,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "848": {
+      "map": {
+        "wm": {
+          "detected": 411,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 378,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "768": {
+      "map": {
+        "wm": {
+          "detected": 397,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 348,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "512": {
+      "map": {
+        "wm": {
+          "detected": 290,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 226,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "400": {
+      "map": {
+        "wm": {
+          "detected": 226,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 174,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "256": {
+      "map": {
+        "wm": {
+          "detected": 126,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 84,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    },
+    "128": {
+      "map": {
+        "wm": {
+          "detected": 37,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 30,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    }
+  },
+  "cost_by_stage_usd": {
+    "prepare": "0.00704887",
+    "replay": "0.28172066",
+    "score": "0.00154735"
+  },
+  "actual_cost_usd": "0.29031688",
+  "all_apps_stopped": true
+}

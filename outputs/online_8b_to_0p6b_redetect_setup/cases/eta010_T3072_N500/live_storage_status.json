@@ -1,0 +1,24 @@
+{
+  "checked_utc": "2026-09-21T00:34:05.814216+00:00",
+  "case": "eta010_T3072_N500",
+  "completed_batches": 4,
+  "total_batches": 5,
+  "traces": [
+    {
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000300/trace.pt",
+      "bytes": 1230034
+    },
+    {
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000200/trace.pt",
+      "bytes": 1230034
+    },
+    {
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000100/trace.pt",
+      "bytes": 1230034
+    },
+    {
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000000/trace.pt",
+      "bytes": 1230034
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "gpu": "H200",
+  "batch_size": 50,
+  "rate_usd_per_second": 0.00134892,
+  "rates_checked": "2026-09-22",
+  "pricing_url": "https://modal.com/pricing",
+  "memory_spec_url": "https://www.nvidia.com/en-gb/data-center/h200/",
+  "kv_cache_gib": {
+    "batch25": 38.28125,
+    "batch50": 76.5625,
+    "batch100": 153.125
+  },
+  "kv_formula": "2 (K,V) * 28 layers * 8 KV heads * 128 head_dim * 2 BF16 bytes * batch * 14336 / 2**30",
+  "H200_0p6b_exact_shape_measured": false,
+  "A100_reference_two_batch25_method_seconds": 3652.6696193927924,
+  "H200_speedup_needed_to_equal_A100_cost": 1.7251381215469614,
+  "method": "Exploratory 1.5\u20132.35x speedup scenario from A100, not a measured H200 runtime; pilot is required before commitment.",
+  "first_phase_allowance_usd": 4.75,
+  "pilot_deadline_resource_envelope_usd": 4.57553664,
+  "remaining_deadline_resource_envelope_usd": 30.13217496,
+  "subsequent_approval_required": true,
+  "hard_provider_dollar_cap": false
+}

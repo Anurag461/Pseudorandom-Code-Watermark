@@ -1,0 +1,17 @@
+{
+  "batches": [
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/1d5f7c9a9df2d22cf13acecf/batches/000350",
+      "cached": false,
+      "seconds": 648.848283012
+    }
+  ],
+  "files": [
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/1d5f7c9a9df2d22cf13acecf/batches/000350/trace.pt",
+      "sha256": "12c18ccff529efbbe49bb6593e29ecbcded21325ff707a4f3a2a210fc2cd2ef5",
+      "bytes": 1230226
+    }
+  ]
+}

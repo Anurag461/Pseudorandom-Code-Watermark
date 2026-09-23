@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "checked_utc": "2026-09-21T05:14:41.190531+00:00",
+  "scope": "AST, source hashes, scalar cache metadata and pure Python mocked guards only; no native/model execution or experiment scoring.",
+  "tests": 3,
+  "command": "/usr/bin/python3 outputs/online_8b_eta020_batch50_setup/test_metadata.py -v",
+  "setup_sha256": "df9a5eac31c821437cec51ebc9580a49465762f823d95194dee9f17a0e305421",
+  "approval_files_present": [],
+  "paid_compute_launched": false
+}

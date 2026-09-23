@@ -1,0 +1,10 @@
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.4.0
+Model uses weight tying.
+/cache/models/Qwen3-0.6B-Base/tokenizer.json
+{"root": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000000", "cached": false, "seconds": 331.288060632}
+{"root": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000100", "cached": false, "seconds": 331.87299839499997}
+{"root": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000200", "cached": false, "seconds": 331.23340063699993}
+{"root": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000300", "cached": false, "seconds": 330.59111475300006}
+{"root": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000400", "cached": false, "seconds": 331.1294330610001}

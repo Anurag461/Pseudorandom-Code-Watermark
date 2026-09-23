@@ -1,0 +1,12 @@
+{
+  "status": "verified_local_only",
+  "path": "outputs/online_0p6b_redetect_setup/.archive/rerun_driver_source-4e6ed82e4f4d18e8d2e4f5ba.tar.gz",
+  "sha256": "395223a14efb6500dcb8e0874cfd308cb9acbe2d603b04bcf04b935b128a3156",
+  "bytes": 3237,
+  "files": [
+    {
+      "path": "/Users/christineli/Desktop/research+projects/prc watermarking/Pseudorandom-Code-Watermark/rerun_online_prc.py",
+      "sha256": "8eaa7fed43489500b5a62d40b7ef7079d7faaedb4265174ebe47611fa3915479"
+    }
+  ]
+}

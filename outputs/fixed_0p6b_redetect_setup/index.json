@@ -1,0 +1,1275 @@
+{
+  "schema_version": 1,
+  "protocol": "completion_only_raw_abstain_v1",
+  "cpu_preflight_passed": true,
+  "csv_out": "outputs/redetection/redetection_results_summary.csv",
+  "main_settings": 18,
+  "replicate_settings": 2,
+  "deferred": [
+    {
+      "eta": 0.2,
+      "n": 8192,
+      "reason": "user deferred on 2026-09-19"
+    }
+  ],
+  "manifests": {
+    "main_a10g": {
+      "path": "outputs/fixed_0p6b_redetect_setup/manifests/main_a10g.json",
+      "sha256": "6d8e8579331712e14988cea7947ef615078c8b14e47225f3f8fc8972fd530bc4",
+      "group": "main",
+      "gpu": "A10G",
+      "settings": 9
+    },
+    "main_a100": {
+      "path": "outputs/fixed_0p6b_redetect_setup/manifests/main_a100.json",
+      "sha256": "48f4dd9993f091aff218040d6407bfb1efd61e0dfb0bae6cd759554fe518467a",
+      "group": "main",
+      "gpu": "A100-80GB",
+      "settings": 9
+    },
+    "replicates_a10g": {
+      "path": "outputs/fixed_0p6b_redetect_setup/manifests/replicates_a10g.json",
+      "sha256": "793b0594670b27d604b3bf06ee4681bbb1dd86ecfc9fb76f55c54e649afc103b",
+      "group": "replicates",
+      "gpu": "A10G",
+      "settings": 2
+    }
+  },
+  "settings": [
+    {
+      "id": "fixed_0p6b_eta005_n256",
+      "group": "main",
+      "manifest": "main_a10g",
+      "n": 256,
+      "eta": 0.05,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/ee9a3eba4ec1f197fe0600ec",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n256/088ea0b006405e3309986d4a/setup.json",
+      "artifact_sha256": "645e27f79bf002b0234872b17a87c45fcd7b88556f0589d10595eb27ece5161e",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta005_n256",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 334,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 237,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 126,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "b2e3fade5e37ad2147ba60c6a883b40d66741e60643fb70aad1adebbf6469753",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "8390cf1247f1459fc29a13d4bf75094b32c7a76016408debc9504707313e90af",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta005_n512",
+      "group": "main",
+      "manifest": "main_a10g",
+      "n": 512,
+      "eta": 0.05,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/72585f241bc0f4cfc1b2c092",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n512/2ce4e3718a73c961ff1e542f/setup.json",
+      "artifact_sha256": "62f5c9ede737653d6b45a319628e08adbfec1d404c8f1ce951f20be2193761ab",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta005_n512",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 479,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 423,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 344,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "294734a4a44cbd167b9cf07a26eabc5e11c71b2ed02630d5e7d19a103cc266a9",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "dda7180d5fc8d4644bb228594051c3aa5e358e0a787bcc276c437273ee9382b2",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta005_n1024",
+      "group": "main",
+      "manifest": "main_a100",
+      "n": 1024,
+      "eta": 0.05,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "candidates": 1000,
+      "batches": 8,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/55deff00968e8a1c6ac6213d",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n1024/5b4677c5697162177f8b3740/setup.json",
+      "artifact_sha256": "c245fe1851f600d2754e37305e90d3da414e33e67201b07347801cc66e7475f1",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta005_n1024",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 496,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 490,
+              "count": 500
+            },
+            "null": {
+              "detected": 1,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 463,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "d2a2ba289bb51e1182bf3b81cba9f6f295caccac9b19ffe2e6cb696f5716fb05",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "e6d33d45c2dfbcd0880617f553125b33b038ca29b520e5c4409eae2aeab59f26",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta005_n2048",
+      "group": "main",
+      "manifest": "main_a100",
+      "n": 2048,
+      "eta": 0.05,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "candidates": 1000,
+      "batches": 8,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/26edf5193e6061745ea46c9e",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n2048/70446f013cd2ca6ce5ccd6e1/setup.json",
+      "artifact_sha256": "84c463a9a8c9ce3bebebaaf113d79cf3ae9d61dfec0b40e46e7d4e9912b7bfe1",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta005_n2048",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 498,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 497,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 495,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "f8b8e530c88083cfe853096a21c2ed55c468ccfb69e91fba9b98525c46cf4d5f",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "5f63ae5f6597dad275ac33aa7575fff5c690fbcbc1362d41473772a07d428e9f",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta010_n256",
+      "group": "main",
+      "manifest": "main_a10g",
+      "n": 256,
+      "eta": 0.1,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/65150c8d400d82e5bbd80a5d",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta010_n256/555846d831adeadb435d208f/setup.json",
+      "artifact_sha256": "dca9923ec1776ebaed2a7c1643f6636d7251fcb435205d24e348851dcc57ebd7",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta010_n256",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 151,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 99,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 47,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "c062f57cc1ef9527358f1bd88d57a68c10d51b8e1c7c6c35397d6d515260b102",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "1f777ddd2acbdd8c12958543dc6b4e0338a7393409c10a5aeb4a80792fcfbaac",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta010_n400",
+      "group": "main",
+      "manifest": "main_a10g",
+      "n": 400,
+      "eta": 0.1,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/5f593e793ca390fc4c26b3a5",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta010_n400/49c02a9b682856650ef8434c/setup.json",
+      "artifact_sha256": "efc4ea41353447e138c491b8942bc60013fc74eb96a2a519d61f97cfcae34786",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta010_n400",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 276,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 192,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 120,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "e21b035e2570b250d03c31320dbc5ed62f909868968791e99ea0feb226683da0",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "d2a709747747b43e2f96203c8b28dcec9e0e750c26fb7578a43a27b448d0afd4",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta010_n512",
+      "group": "main",
+      "manifest": "main_a10g",
+      "n": 512,
+      "eta": 0.1,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/03b3c9dbb5a7c8b26273b5f0",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta010_n512/c757f2caf8974196932a58e3/setup.json",
+      "artifact_sha256": "669544c42f0f9456f7b71e3c317901a87033461c1bc9ac1bab56c5c9324798f6",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta010_n512",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 341,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 251,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 168,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "fc7d962fbc71abdb4832c7f63d91c01e7a7aa4819dc1f12cc7ba159447bbd491",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "d7b49370d0640f41786bc0656e1b29e1c2ead5a0758b30485e8ad72b7ee57a60",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta010_n1024",
+      "group": "main",
+      "manifest": "main_a100",
+      "n": 1024,
+      "eta": 0.1,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "candidates": 1000,
+      "batches": 8,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/1c593a51d22e269031a2477b",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta010_n1024/ec13e0f0b6a08242acbbbe92/setup.json",
+      "artifact_sha256": "c4872f7ae30f11b345d045953534f6c5e79791620cff2b3e6e6065cbe6d35f90",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta010_n1024",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 481,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 448,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 385,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "2c2ead9076cd19fdea570b8169d0559bba1aa3f13f7e794b7544ec18631aaf6f",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "6c91bee17f85f3b41de8cf5cf6fc33d6fb221a97ca83e9bbe6c6d704f4315830",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta015_n256",
+      "group": "main",
+      "manifest": "main_a10g",
+      "n": 256,
+      "eta": 0.15,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/17cee94b237e8fd8f9467eac",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n256/ed75b870b5de04141773675d/setup.json",
+      "artifact_sha256": "0c66dfe8dad1f0921c3c40f97c7b9fa3b9de90bf4e86bda8556b15a0546d2e45",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta015_n256",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 50,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 42,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 12,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "4603220d9e9184ef21b5615aa4148004ebcd5907fb58ed6f28184dd2e2564c40",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "a42dabd1a94ac4a3bc1fa57b21c382eec55b8e9ff5660ada7d04edeed879c9e5",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta015_n400",
+      "group": "main",
+      "manifest": "main_a10g",
+      "n": 400,
+      "eta": 0.15,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/0f46e12aff1fecf2147659b8",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n400/50f8a9a01c16d57ed74d5c3e/setup.json",
+      "artifact_sha256": "27a9cbf48c168f038f2c6cf1a72f540dc8bd818f2f0093b3ac839727925a35bb",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta015_n400",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 94,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 49,
+              "count": 500
+            },
+            "null": {
+              "detected": 1,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 29,
+              "count": 500
+            },
+            "null": {
+              "detected": 1,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "988560fab18c95daa0787c7e1d36e05c70d6cf3f1e27a28ab42a9b61923ae331",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "3acb2570af5700cb380f569056ca077795e0cf4b49ee027ba34324e1c0b275b7",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta015_n512",
+      "group": "main",
+      "manifest": "main_a10g",
+      "n": 512,
+      "eta": 0.15,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/4abea76949f58a98644e215e",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n512/1a5176d87244a6043a07285f/setup.json",
+      "artifact_sha256": "891740fa606ae6276a8725c90c80f6baf1df81d39776cfe5dc4fd5cb8838e4c7",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta015_n512",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 160,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 112,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 56,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "654eef37f6b2abc538293b8f3d810619a14a64869d3ce35deefd6d80f8ed7db4",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "817bf16286869006802d756b38bafbdbe04d6d8cbbb03da5c68dc5d829f55587",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta015_n1024",
+      "group": "main",
+      "manifest": "main_a100",
+      "n": 1024,
+      "eta": 0.15,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "candidates": 1000,
+      "batches": 8,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/f79139b4509d956cbf385dd1",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n1024/b5134d8cf736fb01cf463af9/setup.json",
+      "artifact_sha256": "ac1a86bddfc478ec3e24e51f40fdb3a673bd6327e7cb186c768f5d6c48683cf8",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta015_n1024",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 385,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 309,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 201,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "7d9892c9daf647d49fc1cbd3ab525aa3704abc329fa2ba7faa1202b92ee86209",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "75809ea0696d0bee118393a3cf31ae07a67307a41685708f9e076d07d5c08af5",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta015_n2048",
+      "group": "main",
+      "manifest": "main_a100",
+      "n": 2048,
+      "eta": 0.15,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "candidates": 1000,
+      "batches": 8,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/35c77b8597ae7f8cc90e2f6b",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n2048/d2107e5d6135df44105f13f8/setup.json",
+      "artifact_sha256": "b9d60d4bb41bae7344818e3b17fa4df70c12626eb5b66dedb04bb3f601a554bd",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta015_n2048",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 487,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 476,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 441,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "fc8e47a3ac84fd7bdc764a32cd26e9e80b3dd7b5eeadb0be5105f7633fb274e6",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "ae1bbabc659e127a360753dbaba7ef4880b767fef78b99db86efe710cea98b8e",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta020_n2048",
+      "group": "main",
+      "manifest": "main_a100",
+      "n": 2048,
+      "eta": 0.2,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "candidates": 1000,
+      "batches": 8,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/060095c0af4fac4cfc9cae17",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta020_n2048/2eb53d1b4025db122925ec68/setup.json",
+      "artifact_sha256": "970f67d264d5b2ffe1d99eece1ca8671161b89f2ca0a93fbe98fd0e8df482be2",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta020_n2048",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 364,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 301,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 229,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 1000,
+        "key_partition_semantic_sha256": "abd1b9c5bf262cfa2c4d86de66111929e334ab641d5ac3b699445528663c2a14",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "a66550de7284da88734a2c2e63a3258ff06da9384ed029c5447c47822b4ce6b7",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta020_n4096",
+      "group": "main",
+      "manifest": "main_a100",
+      "n": 4096,
+      "eta": 0.2,
+      "gpu": "A100-80GB",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/7f27b4cc6f12b39b35f6ac0a",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta020_n4096/26049041cda277a35b7fe836/setup.json",
+      "artifact_sha256": "8d84d205cbcf80d226b0b5c9421886d301ff982e749cb3ec661dd1be3d8857ca",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta020_n4096",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 484,
+              "count": 500
+            },
+            "null": {
+              "detected": 1,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 476,
+              "count": 500
+            },
+            "null": {
+              "detected": 1,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 447,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 1000,
+        "key_partition_semantic_sha256": "e1a7d98be74d1eb2af10092bd3e97bb58782d9213a7b14f2cb496d3b9b1ce872",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [],
+        "source_request_sha256": "8953fb7cd24470be12a52ffe395776cf966c9e49e27d55db2fd4b10dcb572938",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta005_n416",
+      "group": "main",
+      "manifest": "main_a10g",
+      "n": 416,
+      "eta": 0.05,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/f9827a8cc9d3501b8a13b17e",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n416/63aa8690b49c05d251fb54f4/setup.json",
+      "artifact_sha256": "167c6975a5453c5bdc1436a6ce5efa47882760f02b496e879f3adafaec1f3ad8",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta005_n416",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 456,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 384,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 255,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 1000,
+        "key_partition_semantic_sha256": "e5856ac5ee43f37fe20d6a69ccb9a38bb1d521c4d4fc86658dbf038860ff1955",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [
+          {
+            "path": "n416_t3_eta0.05_T416_r412/shard_results/qwen3_0p6b_base/n416_t3_eta0.05_T416_r412__qwen3_0p6b_base__fpr-0.001__p0000-0499__workspace.json",
+            "sha256": "06578f427f504eb0bbac360f8f475da321869cf6b05abb2678863c893cf2a3fd"
+          }
+        ],
+        "source_request_sha256": "641c12c0be0feab41649010b8ed6d7790d47456be629b8d38967257012b2e493",
+        "setup_script_sha256": "6ff2ef0d65b892f79da6176d4ceb98a7a303f2c2e50ccb96f75376fb6b21fbcd",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta010_n768",
+      "group": "main",
+      "manifest": "main_a100",
+      "n": 768,
+      "eta": 0.1,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "candidates": 1000,
+      "batches": 8,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/ff4048f366d743b14c75d446",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta010_n768/d3d3caada62775866d971146/setup.json",
+      "artifact_sha256": "5b3781830b4e491aa50df7d254195b91c9c4a9bfb14ee0a04e34b833d1ac61b4",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta010_n768",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 458,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 395,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 283,
+              "count": 500
+            },
+            "null": {
+              "detected": 1,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 1000,
+        "key_partition_semantic_sha256": "f69690c9fc4429337bd9da2cfc4ef674a14fbd322958c9a2439feb1587b60a29",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [
+          {
+            "path": "n768_t3_eta0.10_T768_r760/shard_results/qwen3_0p6b_base/n768_t3_eta0.10_T768_r760__qwen3_0p6b_base__fpr-0.001__p0000-0499__workspace.json",
+            "sha256": "2ecd16a0dfed4d6f94251d32e1d73ffcfd7e571c1560c32617170961a2634f2f"
+          }
+        ],
+        "source_request_sha256": "8d1af6787929065a770fd4c0967e1959e59472a22d1570d8ef707256a20f1a26",
+        "setup_script_sha256": "6ff2ef0d65b892f79da6176d4ceb98a7a303f2c2e50ccb96f75376fb6b21fbcd",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta015_n1504",
+      "group": "main",
+      "manifest": "main_a100",
+      "n": 1504,
+      "eta": 0.15,
+      "gpu": "A100-80GB",
+      "batch_size": 125,
+      "candidates": 1000,
+      "batches": 8,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/8f73908289279692c83162d3",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta015_n1504/e39057d0c9d693f30a498574/setup.json",
+      "artifact_sha256": "f8a83351134efe21c89ccee881afffa4dd9c70f19bce2717e6ea5ddba1cbfe2f",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta015_n1504",
+        "group": "main",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 455,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 424,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 341,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 1000,
+        "key_partition_semantic_sha256": "6d4535bc1061009712931069ffbc1c2fa94b8f2ecec48f538dffa4bfde7c0c7d",
+        "source_summary": "hoeffding_results_summary.csv",
+        "source_summary_sha256": "d096914dffbb2181aa1f706c4ffb0b0c99ce666cab499bd822b54eaba31f862c",
+        "source_report_evidence": [
+          {
+            "path": "n1504_t3_eta0.15_T1504_r1489/shard_results/qwen3_0p6b_base/n1504_t3_eta0.15_T1504_r1489__qwen3_0p6b_base__fpr-0.001__p0000-0499__workspace.json",
+            "sha256": "f7478105c70f9464e05e3ae00e6293448c052b65b8c1694619de0b3e5398ef33"
+          }
+        ],
+        "source_request_sha256": "119a0d424602b0eb4c4ad36c9691908839561dc63e1dbb76efe854c523daf0e3",
+        "setup_script_sha256": "6ff2ef0d65b892f79da6176d4ceb98a7a303f2c2e50ccb96f75376fb6b21fbcd",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta005_n256_seed54321",
+      "group": "replicates",
+      "manifest": "replicates_a10g",
+      "n": 256,
+      "eta": 0.05,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/8de0404063bd16fd26ed466a",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n256_seed54321/42c0aa663f0c599d8f7dad99/setup.json",
+      "artifact_sha256": "84c870491e0fe9d0c929e629954a797b7da7eb1e4bf9e44f412e0798c23e0501",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta005_n256_seed54321",
+        "group": "replicates",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 339,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 237,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 134,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "9e9aeebdf9178e861e8872842a930549fd10193f7278838df302fc21e10b8902",
+        "source_summary": "outputs/fixed_replicate_n256_t3_eta0.05_prompts500_seed54321.json",
+        "source_summary_sha256": "ab74d01bdfdf40006855db28d401d55708fe898c523ba4164d8dfa942bea7a0c",
+        "source_report_evidence": [],
+        "source_request_sha256": "7801c483ce3cc05b51a1f8f48242715ed1061f08920d4c6a5641c92a1eaf61eb",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    },
+    {
+      "id": "fixed_0p6b_eta005_n256_seed67890",
+      "group": "replicates",
+      "manifest": "replicates_a10g",
+      "n": 256,
+      "eta": 0.05,
+      "gpu": "A10G",
+      "batch_size": 100,
+      "candidates": 1000,
+      "batches": 10,
+      "remote_volume": "prc-completion-only",
+      "remote_root": "completion_only_raw_abstain_v1/integrated/86f8d0b4824e9fef7c09e669",
+      "remote_setup_file": "setups/fixed_0p6b_single_block/fixed_0p6b_eta005_n256_seed67890/008be3be2c19dcde8cb18968/setup.json",
+      "artifact_sha256": "e952cc5451e353532778f7712529c165088a6ec44ec4ec12d5ab36b2063a6e96",
+      "audit": {
+        "passed": true,
+        "id": "fixed_0p6b_eta005_n256_seed67890",
+        "group": "replicates",
+        "original_counts_reproduced": {
+          "map": {
+            "wm": {
+              "detected": 317,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "entropy": {
+            "wm": {
+              "detected": 226,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          },
+          "naive": {
+            "wm": {
+              "detected": 136,
+              "count": 500
+            },
+            "null": {
+              "detected": 0,
+              "count": 500
+            }
+          }
+        },
+        "verified_candidates": 1000,
+        "token_hashes_matched_to_original_reports": 0,
+        "key_partition_semantic_sha256": "d858dd340dac19d17cdfdcf096e8960a2e050f47c4077efb9697045c8b94972d",
+        "source_summary": "outputs/fixed_replicate_n256_t3_eta0.05_prompts500_seed67890.json",
+        "source_summary_sha256": "438bc716feba4636efe52443f493d33792f946b71d2eda3106b7b6f43363e61b",
+        "source_report_evidence": [],
+        "source_request_sha256": "6f058b3024e88654914c750ea9d3169f1c3651e15b4ce6a9442e9b471e55f61e",
+        "setup_script_sha256": "e0a55af735ba7f86ef092990f4dc39e4eea2658e2cef3ca97efa02843cb4cf3d",
+        "gpu_jobs_launched": 0
+      }
+    }
+  ]
+}

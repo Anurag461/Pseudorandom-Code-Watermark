@@ -1,0 +1,11 @@
+{
+  "stage": "prepare",
+  "explicit_user_approval": true,
+  "approval_reference": "user-go-ahead-eta020-batch50-20260920",
+  "plan_sha256": "df9a5eac31c821437cec51ebc9580a49465762f823d95194dee9f17a0e305421",
+  "authorized_spend_usd": 0.05,
+  "total_allowance_usd": 9.5,
+  "user_message": "go ahead",
+  "approved_question": "Approve all three stages for this single batch with a new $9.50 allowance?",
+  "recorded_utc": "2026-09-21T05:27:51.263931+00:00"
+}

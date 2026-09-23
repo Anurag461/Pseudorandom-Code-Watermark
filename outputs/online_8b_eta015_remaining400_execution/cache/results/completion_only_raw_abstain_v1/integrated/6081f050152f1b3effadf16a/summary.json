@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "protocol": "completion_only_raw_abstain_v1",
+  "counts": {
+    "6144": {
+      "map": {
+        "wm": {
+          "detected": 371,
+          "count": 400
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 346,
+          "count": 400
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    }
+  },
+  "reported_lengths": [
+    6144
+  ],
+  "stop_rule": "none; all frozen comparison lengths",
+  "settings": {
+    "eta": 0.15,
+    "t": 3,
+    "r_setting": "causal round(0.99L), startup-clamped"
+  },
+  "trace_shard_sha256": {
+    "completion_only_raw_abstain_v1/integrated/6081f050152f1b3effadf16a/batches/000000": "ed14126a911e5ee991e3aa34ec9af192d3ba8b4fb233ba829dd6595ec0a9f52f",
+    "completion_only_raw_abstain_v1/integrated/6081f050152f1b3effadf16a/batches/000100": "aacb837d63ca1525c9b52ba6dc80b2faf4db3ad5435a10ba97b40fa55af4ef39",
+    "completion_only_raw_abstain_v1/integrated/6081f050152f1b3effadf16a/batches/000200": "66e3d92f136deefd941cc5293236174726d39292650a32e92a9eed1ee24644b7",
+    "completion_only_raw_abstain_v1/integrated/6081f050152f1b3effadf16a/batches/000300": "d0d26ca58d3331bb1b228f636e7d640410b3a450b56842b9a3c8320978775377"
+  }
+}

@@ -1,8 +1,30 @@
 # Redetection results
 
-Updated September 17, 2026. This folder collects all completed redetection settings and their earlier diagnostics from this work.
+The **online PRC 8B → 0.6B comparison is complete** at eta=.05/.10/.15, T=1280/3072/6144 and N=500/500/100, respectively. MAP TPR is **92.6%, 90.8%, 92.0%**; entropy TPR is **86.8%, 88.0%, 84.0%**. All 124 agreed eta/length points are reported, with shorter lengths scored from the same saved traces. Each completion was replayed once; eta=.15 used two parallel A100 workers with disjoint batches of 50. No new generation, nulls, independent reference pass, benchmark or retry ran. All apps are stopped. Provider-reported spending was **$2.70079218**. See the [results, paired 8B comparison and cache provenance](../online_8b_to_0p6b_redetect_setup/RESULTS.md).
 
-The current protocol uses BF16 Qwen3-Base detectors (0.6B and 8B), raw completion tokens with no prepended special token, and coordinate 1 score zero. Original candidates, keys, partitions, PRC indices and threshold formula are preserved. Every setting has 500 watermarked and 500 null candidates; t=3 and target FPR=0.001.
+The **fixed PRC 4B → {4B, 0.6B} comparisons at eta=.05, n=T=512 and 256 are complete**, with N=100 at each length. At n512, MAP/entropy TPR is **83%/67%** with 4B detection and **78%/64%** with 0.6B. At n256, it is **46%/27%** with 4B and **35%/25%** with 0.6B. Each cohort was generated once and reused by both detectors. No nulls or empirical FPR were included. The twelve approved stages cost **$0.50338169**. See the [results and provenance](../fixed_4b_eta005_n512_n256_N100_setup/RESULTS.md).
+
+The **fixed PRC 4B → {4B, 0.6B} comparison at eta=.05, n=T=1024 is complete**.
+Exactly 100 watermarked completions were generated once and reused by both
+detectors. For the 4B detector, MAP TPR is **98/100 (98%)** and entropy TPR is
+**93/100 (93%)**; for the 0.6B detector, they are **93/100 (93%)** and
+**90/100 (90%)**. No null cohort was generated, so empirical FPR is unmeasured.
+All six approved stages cost **$0.40304877** in provider-reported charges. See
+the [complete results and provenance](../fixed_4b_eta005_n1024_N100_setup/RESULTS.md).
+
+The **online PRC 8B → 8B campaign at eta=.05, .10, .15 is complete**, with shorter recorded prefixes stopping after the first redetected MAP TPR below 90%. At the longest lengths (1280, 3072 and 4096), MAP TPR is 96.2%, 94.2% and 88.0%; entropy TPR is 90.0%, 91.0% and 84.0%, respectively. Each point uses 500 watermarked and 500 null candidates.
+
+Updated September 20, 2026. This folder collects all completed redetection settings and their earlier diagnostics from this work. The CSV contains 429 rows: 22 fixed 0.6B rows, six fixed 4B-generation rows, 156 online 0.6B rows, 119 online 8B full-cohort rows, 125 8B→0.6B rows and the 100-prompt 6144-token pilot. Counts include recorded prefixes, seed replicates and separately labeled reruns; they are not independent generation-run counts. All 305 rows present before this online 8B→0.6B comparison were preserved; its 124 rows were appended with explicit N=500 or N=100. Source hashes and coverage checks are preserved locally.
+
+The online 8B → 8B eta=.15, n=6144 pilot completed primary generation, replay and scoring for 100 watermarked prompts: MAP 94/100 (94%) and entropy 90/100 (90%). No null cohort was evaluated, and the additional independent reference pass was stopped by the user. The CSV labels this as a pilot with unmeasured FPR; the remaining 400 prompts were not run. Among the 298 earlier CSV rows with full null evaluation, 292 have zero false positives for both detectors; six prefix rows have 1/500 (0.2%) for at least one detector. No experiment or scoring was launched during this reconciliation.
+
+The four main **online PRC 0.6B → 0.6B families are complete**, covering 154 recorded lengths at eta=.05, .10, .15 and .20. Only the longest watermarked completions were replayed; all 2,000 null traces were reused from verified fixed-run caches, and shorter lengths were scored on CPU. All 36 trace shards were read back and verified. See the [online result summary](../online_0p6b_redetect_setup/RESULTS.md) for results and cache provenance.
+
+An independent eta=.05, T=512 rerun reproduced MAP 447/500 (89.4%) and entropy 395/500 (79.0%), with zero false positives. All 500 freshly recomputed watermarked traces and every detector score matched the first run exactly; verified null traces were reused. The CSV includes a separately labeled rerun row. Additional reproducibility archives remain local as requested.
+
+The remaining **18 main fixed-PRC 0.6B → 0.6B single-block settings and two seed replicates are complete**. Eta=.20, n8192 remains deferred. Across the 18 main settings, mean TPR changes are −1.62 percentage points for posterior weighting and −1.00 for entropy weighting. The [full result table](../fixed_0p6b_redetect_setup/RESULTS.md) gives all old/new TPRs, false-positive counts, hardware choices and cache verification. These 20 settings are included in the CSV and JSON indexes below; the following table preserves the six earlier settings.
+
+The current protocol uses BF16 Qwen3-Base detectors (0.6B, 4B and 8B), raw completion tokens with no prepended special token, and coordinate 1 score zero. Original candidates, keys, partitions, PRC indices and threshold formula are preserved. Earlier full-cohort self-detection settings have 500 watermarked and 500 null candidates; the new online 8B→0.6B comparison has N=500/500/100 watermarked candidates and no nulls; the 6144-token pilot and the paired fixed 4B comparison each have 100 watermarked and zero null candidates. All use t=3 and target FPR=0.001.
 
 | Generation → detection | η | n | Detector | Prompted TPR | Raw-completion TPR | Change | Raw FP |
 |---|---:|---:|---|---:|---:|---:|---:|
@@ -21,7 +43,7 @@ The current protocol uses BF16 Qwen3-Base detectors (0.6B and 8B), raw completio
 
 The prompted controls for the 0.6B detector settings had 0/500 false positives. The n=640 prompted columns use the matched-execution BF16 control (76.4% / 64.2%); the historical saved values were 76.2% / 64.0%. The n=400 and n=448 constructions are fixed-block PRC; n=640, n=1024, n=1280 and n=3104 use online PRC.
 
-The largest observed reduction is at 8B → 0.6B, n=640: 3.6 points for posterior mean and 4.2 for entropy weighting. At n=3104, the corresponding reductions are 1.2 and 0.4 points. These results cover six settings; other paper settings have not yet been redetected under this protocol.
+Within this earlier table, the largest observed reduction is at 8B → 0.6B, n=640: 3.6 points for posterior mean and 4.2 for entropy weighting. At n=3104, the corresponding reductions are 1.2 and 0.4 points. This earlier table covers six settings; the linked single-block report adds 20 completed settings, including two seed replicates. The earlier n=3104 execution (448/500 MAP) is retained separately from the later 4096-prefix replay (449/500 MAP); the [saved consistency audit](../online_0p6b_redetect_setup/n3104_consistency.json) verified execution variation on the same candidates, model, key and partition.
 
 Earlier EOT and coordinate-1 diagnostics (posterior mean; all false positives are 0/500):
 

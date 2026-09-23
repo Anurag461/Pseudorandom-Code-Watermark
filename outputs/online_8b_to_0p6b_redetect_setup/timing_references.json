@@ -1,0 +1,122 @@
+{
+  "method": "Non-executing scalar pickle-opcode inspection; no tensor deserialization or model execution.",
+  "references": [
+    {
+      "length": 1024,
+      "batch_size": 125,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta010_n1024/cache/completion_only_raw_abstain_v1/integrated/f4dec6f7f6d747d166e633bb/batches/000000/trace.pt",
+      "sha256": "35dae457dffcaa9d44e9edb6f273cca0c4c5ac033f2f5e18e96fabe2c17f6da4",
+      "full_validation": true,
+      "peak_allocated_bytes": 17010068992,
+      "seconds": 111.49911196500001
+    },
+    {
+      "length": 1024,
+      "batch_size": 125,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta010_n1024/cache/completion_only_raw_abstain_v1/integrated/f4dec6f7f6d747d166e633bb/batches/000125/trace.pt",
+      "sha256": "7e0a351b9ec1d5b57130ab3c26a34fd071f168453fa7c689fe22d186bca513de",
+      "full_validation": false,
+      "peak_allocated_bytes": 17010068992,
+      "seconds": 55.037688101999976
+    },
+    {
+      "length": 1024,
+      "batch_size": 125,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta010_n1024/cache/completion_only_raw_abstain_v1/integrated/f4dec6f7f6d747d166e633bb/batches/000250/trace.pt",
+      "sha256": "c4e2d6b064c11e168631dc438d6b73a390292ef1656338e0474c045bffd1956b",
+      "full_validation": false,
+      "peak_allocated_bytes": 17010068992,
+      "seconds": 54.98605374200001
+    },
+    {
+      "length": 1024,
+      "batch_size": 125,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta010_n1024/cache/completion_only_raw_abstain_v1/integrated/f4dec6f7f6d747d166e633bb/batches/000375/trace.pt",
+      "sha256": "ff4b090337d773fee410addee4ad185f7a9458e51afb4275660b0b62afbb603d",
+      "full_validation": false,
+      "peak_allocated_bytes": 17010068992,
+      "seconds": 55.513455056
+    },
+    {
+      "length": 2048,
+      "batch_size": 125,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta015_n2048/cache/completion_only_raw_abstain_v1/integrated/d699e18bca296a5064fc7875/batches/000000/trace.pt",
+      "sha256": "daa6b17bce3f8cb7929f037200099348057d2dc5632f330b6f85bcd63b3f4958",
+      "full_validation": true,
+      "peak_allocated_bytes": 32752030208,
+      "seconds": 378.78985881700004
+    },
+    {
+      "length": 2048,
+      "batch_size": 125,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta015_n2048/cache/completion_only_raw_abstain_v1/integrated/d699e18bca296a5064fc7875/batches/000125/trace.pt",
+      "sha256": "85efcd982fb4fe12b256de9eda5d97e1742f4334cc4a1a03e993f7e0fc4638fb",
+      "full_validation": false,
+      "peak_allocated_bytes": 32752030208,
+      "seconds": 189.16593969299998
+    },
+    {
+      "length": 2048,
+      "batch_size": 125,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta015_n2048/cache/completion_only_raw_abstain_v1/integrated/d699e18bca296a5064fc7875/batches/000250/trace.pt",
+      "sha256": "1c7d5cdc2f31877022e0be97d74bdf336fb0002e4b23814a07dbd372d1b6ed37",
+      "full_validation": false,
+      "peak_allocated_bytes": 32752030208,
+      "seconds": 196.221241623
+    },
+    {
+      "length": 2048,
+      "batch_size": 125,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta015_n2048/cache/completion_only_raw_abstain_v1/integrated/d699e18bca296a5064fc7875/batches/000375/trace.pt",
+      "sha256": "af8afdcff863e75ae22a72ae4726d6315706303b987135186bba54e2f5ad9110",
+      "full_validation": false,
+      "peak_allocated_bytes": 32752030208,
+      "seconds": 198.356557149
+    },
+    {
+      "length": 4096,
+      "batch_size": 100,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta020_n4096/cache/completion_only_raw_abstain_v1/integrated/9bef8259fa1a4bf1ceb817fd/batches/000000/trace.pt",
+      "sha256": "4738ac554b57593b479be8e3f3373cfc9e1f4f0dc858e649b182e4e5bf040d4f",
+      "full_validation": true,
+      "peak_allocated_bytes": 51637611520,
+      "seconds": 1122.313189562
+    },
+    {
+      "length": 4096,
+      "batch_size": 100,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta020_n4096/cache/completion_only_raw_abstain_v1/integrated/9bef8259fa1a4bf1ceb817fd/batches/000100/trace.pt",
+      "sha256": "08e68900d00846a37599a8c06746e2c4f6baf0d22717b23b8f42e4aa7fda561a",
+      "full_validation": false,
+      "peak_allocated_bytes": 51637611520,
+      "seconds": 573.331245771
+    },
+    {
+      "length": 4096,
+      "batch_size": 100,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta020_n4096/cache/completion_only_raw_abstain_v1/integrated/9bef8259fa1a4bf1ceb817fd/batches/000200/trace.pt",
+      "sha256": "de8ac1374b4bedcf2ea78c0617c902bddcfb30addab34512bcb1942ca6344152",
+      "full_validation": false,
+      "peak_allocated_bytes": 51637611520,
+      "seconds": 563.869342372
+    },
+    {
+      "length": 4096,
+      "batch_size": 100,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta020_n4096/cache/completion_only_raw_abstain_v1/integrated/9bef8259fa1a4bf1ceb817fd/batches/000300/trace.pt",
+      "sha256": "7908725b7e3e82ffbb21665d0fbdcab3dc65fa8473fee205f7613a52791f6216",
+      "full_validation": false,
+      "peak_allocated_bytes": 51637611520,
+      "seconds": 570.887861648
+    },
+    {
+      "length": 4096,
+      "batch_size": 100,
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta020_n4096/cache/completion_only_raw_abstain_v1/integrated/9bef8259fa1a4bf1ceb817fd/batches/000400/trace.pt",
+      "sha256": "b0c9a160b7cf62aa73bf2f10a739c3c0359acead48e22ec5c15001c38584420f",
+      "full_validation": false,
+      "peak_allocated_bytes": 51637611520,
+      "seconds": 571.775172184
+    }
+  ]
+}

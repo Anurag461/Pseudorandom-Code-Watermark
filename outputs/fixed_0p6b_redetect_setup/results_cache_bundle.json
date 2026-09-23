@@ -1,0 +1,23 @@
+{
+  "volume": "prc-completion-only",
+  "remote_root": "setups/fixed_0p6b_single_block/completed/c3e6d96e0edeb8b31f28a03e",
+  "bundle_sha256": "c3e6d96e0edeb8b31f28a03edb043f76230dbc3f782abd2f5b4fa3a49aa473fd",
+  "files": {
+    "RESULTS.md": "0575cedbcff93e0ead64dd477bf992b24038f05816ddbee35edfd500536822a5",
+    "results_summary.json": "6c00fd0b98d8cf332966ff13e1b9880ad242216c3ea767437bce56cdb1c90bc1",
+    "completion_verification.json": "98d06e44c309944c458c3b5021e80befece8b7bfbfcc264908c8397f962a862b",
+    "launch.json": "8af969402b9a8f9a8838c12203442a619e3de128cb403cb396d9ba9772fce8d5",
+    "README.md": "e38111001bfa81517c530d0af617ac3a026e1c34013be0afd2e192850859fe51",
+    "full-main-a10g.log": "af0cff5fe8eec0cd276e233e65b59fcc63baf2cf75d70621d7ce3f8471e5edf7",
+    "full-main-a100.log": "cac0f8549dfb0a1b449c13dd48d07b212bc43c8c941155c947ed0ec485779ada",
+    "full-replicates-a10g.log": "a687bbb13f2c4f0b64acf0481828f219153295bbe7ba1992b620620d309092f8",
+    "combined/README.md": "f5f36e5c62b24e7fefa0a032903b7c580c1418f8464e09e38d5791d06cf15225",
+    "combined/summary.json": "72e2478460ae80a0f0b803c4b7f9b46cb348d366e72e896bd2c02b5daf6fff9b",
+    "combined/cache_index.json": "0bbb6638ce679c32ceb43b8b2225a1e7c48184b37cece1c1b875d0d449f170a4",
+    "combined/redetection_results_summary.csv": "adbd1a96eefad43a27a07b052ed99808d96c41dee899bfb19fbd0e38184856c4"
+  },
+  "read_back_verified": true,
+  "completed_settings": 20,
+  "trace_shards": 184,
+  "probabilities": 19596000
+}

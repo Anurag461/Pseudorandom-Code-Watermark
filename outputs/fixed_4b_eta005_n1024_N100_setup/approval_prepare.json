@@ -1,0 +1,25 @@
+{
+  "recorded_at_utc": "2026-09-20T20:41:17.240266+00:00",
+  "stage": "prepare",
+  "user_message": "ok then go ahead with the prepared run",
+  "approved_workload": {
+    "id": "prepare",
+    "workload": "Verify original key/partition and 100 prompt IDs; download/hash pinned 4B checkpoint and verify cached 0.6B; cache reviewed setup. No generation or scoring.",
+    "hardware": "4 physical CPU cores (reservation and limit), 16 GiB RAM; one worker; no GPU",
+    "estimated_time_minutes": [
+      2,
+      5
+    ],
+    "work_timeout_seconds": 600,
+    "estimated_cost_usd": [
+      0.02,
+      0.04
+    ],
+    "allowance_usd": 0.1,
+    "remaining_after_allowance_usd": 6.42
+  },
+  "paid_stage_scope": "CPU preparation only; later stages require separate approval per presented runbook.",
+  "intervening_workspace_usage_usd": "0.01946503",
+  "conservative_remaining_budget_before_stage_usd": "6.50053497",
+  "no_retries": true
+}

@@ -1,0 +1,22 @@
+{
+  "case": "eta005_T1280_N500",
+  "stage": "score",
+  "approval_reference": "User yes approved all nine listed runs and USD 4.30 proposal; approval.json; eta015 T6144 N100 only; no nulls",
+  "plan_sha256": "4b46dfea7b2fdc69d405444a0ae4cd87f473b7566707d9ebe5df07c727a5c675",
+  "resources": {
+    "hardware": "4 CPU cores, 8 GiB RAM",
+    "gpu": null,
+    "memory_mib": 8192,
+    "work_timeout_seconds": 300,
+    "expected_minutes": [
+      0.25,
+      2
+    ],
+    "expected_usd": [
+      0.002,
+      0.009
+    ],
+    "allowance_usd": 0.035,
+    "workload": "Existing cloud prefix_scores for all 33 frozen lengths, MAP and entropy; no early stopping, no LM calls."
+  }
+}
