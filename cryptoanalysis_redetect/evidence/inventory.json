@@ -1,0 +1,5442 @@
+[
+  {
+    "file": "gen_result/temperature_1.0/1748357173909375233.json",
+    "group_id": "1748357173909375233",
+    "temperature": 1.0,
+    "file_sha256": "7fc9118080a56f64e3bc801f10a82db1e12c75bbf336090bd5d095da77db316b",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748357190152244122.json",
+    "group_id": "1748357190152244122",
+    "temperature": 1.0,
+    "file_sha256": "b2aaee6759758b27084182001ca77056709d67704fbf77f2256675c802a96763",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748357195723256177.json",
+    "group_id": "1748357195723256177",
+    "temperature": 1.0,
+    "file_sha256": "c95ed94379b5d806c7dcde0faa84f48b647328eaeeada162f02896784e9e7d39",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748357201752890414.json",
+    "group_id": "1748357201752890414",
+    "temperature": 1.0,
+    "file_sha256": "f25363473436f7cc6a5ce2a50c302fa70ff78e6c475548ae7f4938a2f7f1e73e",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748357208552572616.json",
+    "group_id": "1748357208552572616",
+    "temperature": 1.0,
+    "file_sha256": "65ef5416d99bfa2b5077fec92d8e5bf7318b3a41717ea2c7b6066bcef86b9a05",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748357214278490220.json",
+    "group_id": "1748357214278490220",
+    "temperature": 1.0,
+    "file_sha256": "d133e53237a262b9f8a7235ce4d7df2265c55b87a4bd5b39c4f17536be6c4339",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748357220199681753.json",
+    "group_id": "1748357220199681753",
+    "temperature": 1.0,
+    "file_sha256": "0291f6921d4b11ef3923c328ebd13ced979b679e0a82efa27dda5151437dc6b4",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748358870607760572.json",
+    "group_id": "1748358870607760572",
+    "temperature": 1.0,
+    "file_sha256": "cc88f2db70fabe29c737ce45f320d04f493b474fbbd162e401fa94aed7967ad3",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748358896712974632.json",
+    "group_id": "1748358896712974632",
+    "temperature": 1.0,
+    "file_sha256": "968e9cfdcd00f57abd7eeff97df5b7d33f9b9b953b4fa324c25e8a26bdda9f76",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748358897464692198.json",
+    "group_id": "1748358897464692198",
+    "temperature": 1.0,
+    "file_sha256": "c7008d6356a2c15b747f46f87d551ad3c432fbdd1f3994c9dd080719a100dc69",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748358910954448737.json",
+    "group_id": "1748358910954448737",
+    "temperature": 1.0,
+    "file_sha256": "43501b57358c2e8fa784d1a4faeb7937ad9ffa96401cea52e528244e58fddcaa",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748358912603687172.json",
+    "group_id": "1748358912603687172",
+    "temperature": 1.0,
+    "file_sha256": "7d2c3e0ad69ef8c32fa1562ddf7bcc656546937b773cbfb6c672301514b6eeb5",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748358914556176888.json",
+    "group_id": "1748358914556176888",
+    "temperature": 1.0,
+    "file_sha256": "ee1b9bd5d4b98ba35c9240086ce39e734b2d243388dd3451798b378ef70a7e02",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748358915352685735.json",
+    "group_id": "1748358915352685735",
+    "temperature": 1.0,
+    "file_sha256": "cc78240d7f79c9d6dcfff7cf760db4bdc1e2e086fe801fdf880c329d47e6ed2e",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748360548599647767.json",
+    "group_id": "1748360548599647767",
+    "temperature": 1.0,
+    "file_sha256": "72765343c3dd2e5ac024fe12c4ed050119a7ae1d65af84e4ecf09fcdb18a5e18",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748360590521204255.json",
+    "group_id": "1748360590521204255",
+    "temperature": 1.0,
+    "file_sha256": "69872360478725d15d733a20ad709d2f2f06886e05e4621677c08dc4b1b5649b",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748360590521262841.json",
+    "group_id": "1748360590521262841",
+    "temperature": 1.0,
+    "file_sha256": "62fa4f3707fdcafc434890644bddf00f65c58aa2ac79a4bc801620b8cb528630",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748360603963689425.json",
+    "group_id": "1748360603963689425",
+    "temperature": 1.0,
+    "file_sha256": "c82444920080bda46c2feb5ae076e6c2115ba797e5a84c556851940133b0aace",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748360607286154895.json",
+    "group_id": "1748360607286154895",
+    "temperature": 1.0,
+    "file_sha256": "ebbdc650f93c94bfad955e62559e87d8a372b2504697c52e01d9d2dd6d6c9ea1",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748360622419889861.json",
+    "group_id": "1748360622419889861",
+    "temperature": 1.0,
+    "file_sha256": "98ead6a42098d8eea30faa9ae137951ece352cb994eccceed81135993958d6cf",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748360626521038619.json",
+    "group_id": "1748360626521038619",
+    "temperature": 1.0,
+    "file_sha256": "2be57655f572e3eed3f3860e5fe77623ad9a74c82bcd34dc7efa2371fae91428",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748362226739536484.json",
+    "group_id": "1748362226739536484",
+    "temperature": 1.0,
+    "file_sha256": "980ac834c2938e4e9773d398023b03d25484610b2551b2f260a28f64e9aaa73d",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748362263232296121.json",
+    "group_id": "1748362263232296121",
+    "temperature": 1.0,
+    "file_sha256": "a9d3172f57c00b2d2cd47bd322c95da9b5b7a133680020e6cc27ce44720e175b",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748362295719896129.json",
+    "group_id": "1748362295719896129",
+    "temperature": 1.0,
+    "file_sha256": "6b4483e306e87f39f4ae3ceeca1357e2c935c0ed948814a801ca5aee8c233670",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748362302188574631.json",
+    "group_id": "1748362302188574631",
+    "temperature": 1.0,
+    "file_sha256": "58c3fea64367912e4631653f7c0abcb9dc76bb78dc285e29558486939c2096f3",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748362307442381046.json",
+    "group_id": "1748362307442381046",
+    "temperature": 1.0,
+    "file_sha256": "953b7326a6c301680a0f9a72f01a431a3f3b6dfa7e0d71c12974a2e0349baf15",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748362330596244625.json",
+    "group_id": "1748362330596244625",
+    "temperature": 1.0,
+    "file_sha256": "da305e3991e45083729563ea93692047473f7f9d4432cc9cec8a70663b966647",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748362339808571237.json",
+    "group_id": "1748362339808571237",
+    "temperature": 1.0,
+    "file_sha256": "4bdf3aabfb8a68f73b24f6382a3c66e87d7aa2dc7a9d6231a1613df86cface2c",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748363906340627731.json",
+    "group_id": "1748363906340627731",
+    "temperature": 1.0,
+    "file_sha256": "3cfc252a4e657867e40fe617b3612777044b093d80add9565e056e295a3f138f",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748363971659758100.json",
+    "group_id": "1748363971659758100",
+    "temperature": 1.0,
+    "file_sha256": "695ef2f060ca6a58f633920272e79234cb652b2e6303fd3c49fda634d9459b52",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748363998526930872.json",
+    "group_id": "1748363998526930872",
+    "temperature": 1.0,
+    "file_sha256": "8f046a131841cee9980d7aae0e5febda49b627d039647aa0fa41c4286b8443e4",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748364002475243636.json",
+    "group_id": "1748364002475243636",
+    "temperature": 1.0,
+    "file_sha256": "1b4ab313697add9c18a68d696b21fc809a656de2d9187a9a6e88fb0601d9c6c9",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748364011250381158.json",
+    "group_id": "1748364011250381158",
+    "temperature": 1.0,
+    "file_sha256": "61049b9ce8b41034004f7e88741a1a109a17e1f35006c7e8254653427b8332a8",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748364043629142532.json",
+    "group_id": "1748364043629142532",
+    "temperature": 1.0,
+    "file_sha256": "239947a0185163fb51c1cde03a386db769ac07535389856e527bcda226f51895",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748364049137937386.json",
+    "group_id": "1748364049137937386",
+    "temperature": 1.0,
+    "file_sha256": "0419fa1b52098eda8aa892d6cc96adfbdedcebfa2a01f30747e14b14b0e2790f",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748365575477101483.json",
+    "group_id": "1748365575477101483",
+    "temperature": 1.0,
+    "file_sha256": "5de1c79995acfd5e9d3fadbae24b294eb3f8a81be91d16e944a4eeaa26f42972",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748365671594223095.json",
+    "group_id": "1748365671594223095",
+    "temperature": 1.0,
+    "file_sha256": "f8720a04880cc8f965fef72b4cf247464e027b783410a166d001e36ecf22854f",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748365699589766540.json",
+    "group_id": "1748365699589766540",
+    "temperature": 1.0,
+    "file_sha256": "35dddf5b33f81b802147f406f3b6c77e1ab2dda5447aade44fd4c5950f75db45",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748365700274410788.json",
+    "group_id": "1748365700274410788",
+    "temperature": 1.0,
+    "file_sha256": "22f01096c82ac6b389554668d0d6f9af8eca7d659aad317223419d3f5b3b8abb",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748365712574606919.json",
+    "group_id": "1748365712574606919",
+    "temperature": 1.0,
+    "file_sha256": "1f1c0a21884d8f1c488bfd3b005ec9a2a84b7920ac2cc089e51363593f88a5c3",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748365749086879797.json",
+    "group_id": "1748365749086879797",
+    "temperature": 1.0,
+    "file_sha256": "c62975fcab6ae177a08c7d721bba9c5a36208537ccb04a737beab12560786937",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748365760456596572.json",
+    "group_id": "1748365760456596572",
+    "temperature": 1.0,
+    "file_sha256": "1130de2f7138040776fadcc9fa912670ce7786729aef00d928d9813f2dac649d",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748367258154463686.json",
+    "group_id": "1748367258154463686",
+    "temperature": 1.0,
+    "file_sha256": "dd0ebfdf9e419343f98e901d61b222008ca82bd5dae4d107cce4ea7116545b74",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748367352748657820.json",
+    "group_id": "1748367352748657820",
+    "temperature": 1.0,
+    "file_sha256": "bc4c55a0405eb307d25164d7979030581e729d1383ec333338a83eabfa214784",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748367391120961025.json",
+    "group_id": "1748367391120961025",
+    "temperature": 1.0,
+    "file_sha256": "76b2bfe2646f81197b59106c8f5e4a3742f5869c8339cfce7d616ce08ff79cde",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748367395172580134.json",
+    "group_id": "1748367395172580134",
+    "temperature": 1.0,
+    "file_sha256": "aa41a74ffcaa3dda804bda9cbfb410253915dc69e87d4807e64464286066d0a9",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748367396605678533.json",
+    "group_id": "1748367396605678533",
+    "temperature": 1.0,
+    "file_sha256": "543157134149d5211215a7a2f40133c1d66333ba4cc69345f9299f1c7176ec36",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748367446784230849.json",
+    "group_id": "1748367446784230849",
+    "temperature": 1.0,
+    "file_sha256": "c90b65b5c16881196b0a5d3b6fd4f169780af341a9f80c1a0ea4d03e6806ee87",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748367461435701566.json",
+    "group_id": "1748367461435701566",
+    "temperature": 1.0,
+    "file_sha256": "2f09b5d0dea93b1a1c1fb488b13bd73ce4625dbbadb69d190ec62fe4e5c29399",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748368922206219874.json",
+    "group_id": "1748368922206219874",
+    "temperature": 1.0,
+    "file_sha256": "9f596e77acccdaab673e854336189d166de8e37ef41bd5c89508d1ff29c83c9d",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748369039642845090.json",
+    "group_id": "1748369039642845090",
+    "temperature": 1.0,
+    "file_sha256": "c27049643574d3ccfa964208ed2d1625733dbd8020ca48a1ffde579af33f83b9",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748369075991245884.json",
+    "group_id": "1748369075991245884",
+    "temperature": 1.0,
+    "file_sha256": "7d8d0d332d8ca3c63585b785befaf3e099d0a7cfab546aa90680e0dc935d53a2",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748369104722086927.json",
+    "group_id": "1748369104722086927",
+    "temperature": 1.0,
+    "file_sha256": "1740781dc5c29cf9a9dfbc8b46ae6803ced30580f3a0f5068d09b0676bb437c6",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748369107235454343.json",
+    "group_id": "1748369107235454343",
+    "temperature": 1.0,
+    "file_sha256": "6156f6d0c8ebece0573a0bedc0573352dc3f6c09e2e4620a03c868c83cf7d3f7",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748369134529031834.json",
+    "group_id": "1748369134529031834",
+    "temperature": 1.0,
+    "file_sha256": "ceaf180de4b3213673978f78e31610fca565d89d7fc1a2f015dbf665b111bdb4",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748369147028653095.json",
+    "group_id": "1748369147028653095",
+    "temperature": 1.0,
+    "file_sha256": "5f7b9c606d29f3d73395bf4b1615fc33c6b5613ec8fc7e3d63ec72fe29107115",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748370592775190937.json",
+    "group_id": "1748370592775190937",
+    "temperature": 1.0,
+    "file_sha256": "6b3c92e75882933cc52d757a8d58768af6ac733748b88aa6120b059dae25bc03",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748370736734215461.json",
+    "group_id": "1748370736734215461",
+    "temperature": 1.0,
+    "file_sha256": "f2b3103577eb74e6dc3d7a6d2334f42900e33d4480859d16611e1849b895426d",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748370765841857781.json",
+    "group_id": "1748370765841857781",
+    "temperature": 1.0,
+    "file_sha256": "028f33a8852dd46d69710a0c385ef4304247a8d49f95302d1ab50a4641613be8",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748370792498279100.json",
+    "group_id": "1748370792498279100",
+    "temperature": 1.0,
+    "file_sha256": "2d80db221c6bf8447dce52358deaab5a0676aaea0c37e2b4fbb1cd1f581ee152",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748370813794234260.json",
+    "group_id": "1748370813794234260",
+    "temperature": 1.0,
+    "file_sha256": "261d30c8b9d833765083d791730486f1378892762befccd741f431af4ffe9c42",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748370826671466471.json",
+    "group_id": "1748370826671466471",
+    "temperature": 1.0,
+    "file_sha256": "c6edfa9abfd8c8af2b0e7d9075f3c128e2524322a20f617f8c1d37874cec84a0",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748370849821998822.json",
+    "group_id": "1748370849821998822",
+    "temperature": 1.0,
+    "file_sha256": "201151465bfabc1ba9bd5bc51e7a3c813708a46d1c749fac2f340ae4ed47bf5a",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.0/1748372254674392795.json",
+    "group_id": "1748372254674392795",
+    "temperature": 1.0,
+    "file_sha256": "6f358cf43c85f9210c323bdc2d168d676075a7bc2ecc087809226866ca135533",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748402150078932357.json",
+    "group_id": "1748402150078932357",
+    "temperature": 1.2,
+    "file_sha256": "e01b11411d0aa2364d57e18444e00937016051c42f2f8322621f05e2b646fb2f",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748420995168485162.json",
+    "group_id": "1748420995168485162",
+    "temperature": 1.2,
+    "file_sha256": "99ae445e82020a28fb06f9d92727de64916de88d1ba70b5cbaa47a7669055906",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748421040747029083.json",
+    "group_id": "1748421040747029083",
+    "temperature": 1.2,
+    "file_sha256": "5bb3dfb55040f123d9aa2f45ee68ab36d46c446d18fc3fe5a14469ddd91142ab",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748421093524592113.json",
+    "group_id": "1748421093524592113",
+    "temperature": 1.2,
+    "file_sha256": "26bcd1ea636a526cd62ffe0555017db09fd1cb40afad2a824f0d35188d016647",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748422608969186231.json",
+    "group_id": "1748422608969186231",
+    "temperature": 1.2,
+    "file_sha256": "a4373dcd8de754649e0f3f01f8d96388af3540a361672ae29664e5cc2bf55001",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748422676233606564.json",
+    "group_id": "1748422676233606564",
+    "temperature": 1.2,
+    "file_sha256": "2293911ed69cd1bf575981a16d69b36ed6783fe2129ca2dfe6faccab526030fa",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748422718317025098.json",
+    "group_id": "1748422718317025098",
+    "temperature": 1.2,
+    "file_sha256": "4485c827e2e76d1e072226aaeebe8ddd85f33c5d8182cce7aa747b29d2d9376a",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748424253216488991.json",
+    "group_id": "1748424253216488991",
+    "temperature": 1.2,
+    "file_sha256": "0ea5b97cf39ba412c25f1f14e31171937537c16870e33361b7a536befd0ca857",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748424294498922616.json",
+    "group_id": "1748424294498922616",
+    "temperature": 1.2,
+    "file_sha256": "2a3f8ee9d0d14ea55c6c9da634d0544c6cfe6be69781606e7197ee5707812c43",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748424336197800487.json",
+    "group_id": "1748424336197800487",
+    "temperature": 1.2,
+    "file_sha256": "9f150825a433706983ab97558b9810a23d8f0e38681497a7f7ad9e026e6fd3d9",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748425884237238842.json",
+    "group_id": "1748425884237238842",
+    "temperature": 1.2,
+    "file_sha256": "e801d2394b229b01cca78630bf296c0dc7f839a7bb18e9780098daecc4283bcb",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748425949410854233.json",
+    "group_id": "1748425949410854233",
+    "temperature": 1.2,
+    "file_sha256": "47d94ffd5f9eb492d0b180c315100f288d336fc1d6fbbb0c79981667d0bb24b5",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748425986402613180.json",
+    "group_id": "1748425986402613180",
+    "temperature": 1.2,
+    "file_sha256": "54c16ad0b26aaa1e08afe63376ddba1e19e97a54c4fa7e554239cf6720239ca1",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748427539936867812.json",
+    "group_id": "1748427539936867812",
+    "temperature": 1.2,
+    "file_sha256": "1490ccda7609db79b26f478f1ecf3d5d1ead2a21e02ddd0cb7489c213a086dab",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748427588883957758.json",
+    "group_id": "1748427588883957758",
+    "temperature": 1.2,
+    "file_sha256": "6ac152aba4c805b59881d958b63305e93a14ff68e53d23ae8ae08e2e2d525849",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748427603355775711.json",
+    "group_id": "1748427603355775711",
+    "temperature": 1.2,
+    "file_sha256": "f89e5965f29d0274782cfdc2b2fd5096eb517e9b16e7ee6ce8ecb853d8cf6d05",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748429192724016533.json",
+    "group_id": "1748429192724016533",
+    "temperature": 1.2,
+    "file_sha256": "04e19589429fc6e1878dda5e535d5d9c506154207af5f4cbe009c274feef8c28",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748429214461123187.json",
+    "group_id": "1748429214461123187",
+    "temperature": 1.2,
+    "file_sha256": "1ff8c4aaa9fe14444d1b0f9f3e5a1350dce7459b6f6cc9cfb9a8507bfbdbf829",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748429215093070197.json",
+    "group_id": "1748429215093070197",
+    "temperature": 1.2,
+    "file_sha256": "1bc97faab88c4e4dd20b1e6f22d50c267079669b4412e087406a58d8b7f637f2",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748430795435731012.json",
+    "group_id": "1748430795435731012",
+    "temperature": 1.2,
+    "file_sha256": "1898720c71d0bcffb799d45b1623401b43cf1b480f3b2c70a57c7612bac0638a",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748430857659356346.json",
+    "group_id": "1748430857659356346",
+    "temperature": 1.2,
+    "file_sha256": "57bacdd46a94b2b8680efd78fc6bd82dccb5ab48d221bf31616ed2d9f5b2382d",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748430870943863952.json",
+    "group_id": "1748430870943863952",
+    "temperature": 1.2,
+    "file_sha256": "a7745845a9653bdc559fc4bd53360f109a7f619ab4139437c01ccae9477b463a",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748432421298545674.json",
+    "group_id": "1748432421298545674",
+    "temperature": 1.2,
+    "file_sha256": "c760de698cde37715167e1a29222a843c0a486b00ac1f92c1456938ce296b1ef",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748432486425451724.json",
+    "group_id": "1748432486425451724",
+    "temperature": 1.2,
+    "file_sha256": "6841a860d6154fcf909f8e09e7c519c9358d23f0677f772653a809f82be33e49",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748432514650914181.json",
+    "group_id": "1748432514650914181",
+    "temperature": 1.2,
+    "file_sha256": "205569a15cfaa95ac5a631e62548f3b02462fc2bb7e94b3ecbbf15301cf0b5ac",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748434042038851038.json",
+    "group_id": "1748434042038851038",
+    "temperature": 1.2,
+    "file_sha256": "a5c60b0d8db3d92b09d4b47173b48c61fcf9c497637f5f76a3ba42d13edfce5f",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748434149507746309.json",
+    "group_id": "1748434149507746309",
+    "temperature": 1.2,
+    "file_sha256": "16dd13d65c9794bb0f471f917ed5925e9e1a16593eff50214564d0bfd2d0ddc2",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748434161932921039.json",
+    "group_id": "1748434161932921039",
+    "temperature": 1.2,
+    "file_sha256": "b887dfbbd455b2e5a2c6a6c957134766e8cce57faf21f9e68daa9494bd262ede",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748435792229226005.json",
+    "group_id": "1748435792229226005",
+    "temperature": 1.2,
+    "file_sha256": "24b5d46aef6e1e3ba9f6461afebff72ea3a9faa5c054f98eb877021c35d4d0e7",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748436590467563121.json",
+    "group_id": "1748436590467563121",
+    "temperature": 1.2,
+    "file_sha256": "61372a70411a3dd875a7ceab131d7c9999b3d741f850a82124254f77621d1712",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748437382301714773.json",
+    "group_id": "1748437382301714773",
+    "temperature": 1.2,
+    "file_sha256": "7ae670c57ac75e9d8b146f75282d2fefb1286743bb1d2886350f78e6ab4f6579",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748438189470686214.json",
+    "group_id": "1748438189470686214",
+    "temperature": 1.2,
+    "file_sha256": "273488db766ba17fb63f4a68e48d531e0217e2fc5b823d9868b60a6687e022d1",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748439032132688671.json",
+    "group_id": "1748439032132688671",
+    "temperature": 1.2,
+    "file_sha256": "3a49bdd03e0ee608da1f43ee95b1c929559789c73a808139695348aa8938f791",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748439866113204632.json",
+    "group_id": "1748439866113204632",
+    "temperature": 1.2,
+    "file_sha256": "bdcdcc87e813fad77c93c8c1915765fb08604615963a72e85304449e9ae57f82",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748440711719401746.json",
+    "group_id": "1748440711719401746",
+    "temperature": 1.2,
+    "file_sha256": "9ba3872cf8042114daa05d788185fbb56b1f034848593b5f5f121261adde185f",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748441481951446694.json",
+    "group_id": "1748441481951446694",
+    "temperature": 1.2,
+    "file_sha256": "c317873647e85272d4416b5474dac4cfe9436013930f2cd9209067be37bfe9c6",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748442325392248856.json",
+    "group_id": "1748442325392248856",
+    "temperature": 1.2,
+    "file_sha256": "6030c05f68305292bbc3391ba46ee4303e407336b48686f46242964d38886b98",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748443085660778726.json",
+    "group_id": "1748443085660778726",
+    "temperature": 1.2,
+    "file_sha256": "2eea1ad3f4ec364d87370058c9f66356f64acb516895592d92856b3023b5ab61",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748443912418361044.json",
+    "group_id": "1748443912418361044",
+    "temperature": 1.2,
+    "file_sha256": "b65f7fbea132429d7fdd9148bd078de43b37c599fb1bd9479b9fe7bb2ecf3a76",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748444682684292600.json",
+    "group_id": "1748444682684292600",
+    "temperature": 1.2,
+    "file_sha256": "da3860c4de81e751bf3e514080b6c9964f793c9892e614a22a6a2f2d27f2be1b",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748445505088435550.json",
+    "group_id": "1748445505088435550",
+    "temperature": 1.2,
+    "file_sha256": "4300ea3d45cc1c52f8d2f1ff8dda7332ecb7a6754c4a0187c9a161d701ae5cd6",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748446335030718971.json",
+    "group_id": "1748446335030718971",
+    "temperature": 1.2,
+    "file_sha256": "cccb361c888c3842b268fa71b6ea5b2aca5004d53cd8c96d41eb480c4a117151",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748447171376123967.json",
+    "group_id": "1748447171376123967",
+    "temperature": 1.2,
+    "file_sha256": "c4c756a3b8df3ef934b70f3b313cf3b3781059e954bdaa4425fddfba622e61d6",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748447957675834553.json",
+    "group_id": "1748447957675834553",
+    "temperature": 1.2,
+    "file_sha256": "b5d0e01b4d20f5909232584080dbd4b805fae49e2347e8429c9af698cde227b0",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748448753640499869.json",
+    "group_id": "1748448753640499869",
+    "temperature": 1.2,
+    "file_sha256": "b9a6854b9cf0ef59da9d2d55a8d0807208676cd6b8f5d3ffef440a0f9df815a4",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748449544829799730.json",
+    "group_id": "1748449544829799730",
+    "temperature": 1.2,
+    "file_sha256": "19c67816f5b41e6cef02c7cf13945e6dee3abd52454a879246fe8ef0ab92b068",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748451193584354156.json",
+    "group_id": "1748451193584354156",
+    "temperature": 1.2,
+    "file_sha256": "7df73787146b14dc12a70dccfa7f108be2709eb65b7be9562aaef1768c726293",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748452783931854040.json",
+    "group_id": "1748452783931854040",
+    "temperature": 1.2,
+    "file_sha256": "30d11b021c42a103c360b9cad6b30dbb97d07fa3f6d986a45fa54f0026113a8e",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748454387719915836.json",
+    "group_id": "1748454387719915836",
+    "temperature": 1.2,
+    "file_sha256": "5a5ffcad9201903bf1097d2cb0e75a664eb916cfba0bc085951bbf4c0c54e11f",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748456002419297815.json",
+    "group_id": "1748456002419297815",
+    "temperature": 1.2,
+    "file_sha256": "9129fbee7f729329815557fb9b4cd7fbc262ce8472483bd7dbce97e2eb1d9f21",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748458299074836843.json",
+    "group_id": "1748458299074836843",
+    "temperature": 1.2,
+    "file_sha256": "880bd9c040b7444b36336df9ee1bbe8f9f55548688c85e602f5e22ab20295809",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748459900499321528.json",
+    "group_id": "1748459900499321528",
+    "temperature": 1.2,
+    "file_sha256": "1c8b29a031aee494417fca0157298685d75e400459a775d783b5f68e6ffdd9f0",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748461565461883475.json",
+    "group_id": "1748461565461883475",
+    "temperature": 1.2,
+    "file_sha256": "6d1f53b4b99d15a7abf273c59fdedd67b99c332b066e4b5d84a29b9b9e6c1d91",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748463145562273645.json",
+    "group_id": "1748463145562273645",
+    "temperature": 1.2,
+    "file_sha256": "23e158a59f22e39ce2ea0341d9c7f1032f82af4acd142c710f7c08c9d609dba5",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748464741392570991.json",
+    "group_id": "1748464741392570991",
+    "temperature": 1.2,
+    "file_sha256": "b8b4ac84e017d64ee96685dd5e8f2712cb3786f6be8fbf06550ee2454d72c0ff",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748466346388526044.json",
+    "group_id": "1748466346388526044",
+    "temperature": 1.2,
+    "file_sha256": "7b93ad86e93b6119893401376a10f4ef72f96ed16a38542c2bbcf38cb61fdc0d",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748467919411215991.json",
+    "group_id": "1748467919411215991",
+    "temperature": 1.2,
+    "file_sha256": "5f8a810dda298d96473c712edd6100e092845933b0fa462791b15608484cb97a",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748469508730475270.json",
+    "group_id": "1748469508730475270",
+    "temperature": 1.2,
+    "file_sha256": "ccbdd1b4a59b209fd5c76dc7604cb41e948f07abbd824c326328bfc91bb3b454",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748471099327057833.json",
+    "group_id": "1748471099327057833",
+    "temperature": 1.2,
+    "file_sha256": "b7076d56818a26ac5ee3b643470e81f8dfefae5156d2439f097c525fe49dfe24",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748472687440331895.json",
+    "group_id": "1748472687440331895",
+    "temperature": 1.2,
+    "file_sha256": "6c123cdd76550e0714bf865fb19d3396dee3f3850b95ed32bf8920d0e63248ab",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748474302215768476.json",
+    "group_id": "1748474302215768476",
+    "temperature": 1.2,
+    "file_sha256": "e0ae39c582f9827530681bc0f6870a580e6e4ddf24a75a432ae1199e7348c216",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748475951764340384.json",
+    "group_id": "1748475951764340384",
+    "temperature": 1.2,
+    "file_sha256": "8ff0d99c98e3ba40e0445e034430be90a71ddb6bd3cf17f0115848733c468617",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748477551471763283.json",
+    "group_id": "1748477551471763283",
+    "temperature": 1.2,
+    "file_sha256": "f3346b5206e0d77efc5ca12c41fabcf6200704240939ea8250c3cfb3899c2f10",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.2/1748479133465227739.json",
+    "group_id": "1748479133465227739",
+    "temperature": 1.2,
+    "file_sha256": "952ee4f438fa68774065a813789c59a57b61c50b181af035e95af21c1da45e7a",
+    "prompts": 16,
+    "saved_det_true": 0,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748402173162096394.json",
+    "group_id": "1748402173162096394",
+    "temperature": 1.4,
+    "file_sha256": "d7a804f2ea5c0f85656f2f475ce0002a2dda47b1049f43f7a4e10ba71842a815",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748402183322346467.json",
+    "group_id": "1748402183322346467",
+    "temperature": 1.4,
+    "file_sha256": "78e33f1e1214bda50497852c1544e78ff487ed44463fa8e8d21a6703efd9664b",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748402264785640852.json",
+    "group_id": "1748402264785640852",
+    "temperature": 1.4,
+    "file_sha256": "376f92881f5fbf6d2c63e50e4e7ee79a9d6f96cf6c63a1f90f50b533594f219b",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748403742237488089.json",
+    "group_id": "1748403742237488089",
+    "temperature": 1.4,
+    "file_sha256": "27849d22ca92e9b6f76fbe9714df9fc2a562166bfb4f900aec9f2cc686d0e939",
+    "prompts": 16,
+    "saved_det_true": 14,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748403771607920882.json",
+    "group_id": "1748403771607920882",
+    "temperature": 1.4,
+    "file_sha256": "319e242058e984945ed3c84536da6b9dac34d1c48f46a9d016e3c09b071181b9",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748403820791847695.json",
+    "group_id": "1748403820791847695",
+    "temperature": 1.4,
+    "file_sha256": "98b0a8764c8d580e5f9c96753891f1b19d2d614debab73b67c518e11fd1884c8",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748403829223591287.json",
+    "group_id": "1748403829223591287",
+    "temperature": 1.4,
+    "file_sha256": "dee194a59e6b5effb70d72dd0fb537078d9afc0d0c9fb0bd98aa9e47993a1fe7",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748403837220676223.json",
+    "group_id": "1748403837220676223",
+    "temperature": 1.4,
+    "file_sha256": "1c1a42f8f06a9b5390f6b5fa02c63a4e0e0a2af2dcc3bc9d4d0688139144a743",
+    "prompts": 16,
+    "saved_det_true": 7,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748403861381292264.json",
+    "group_id": "1748403861381292264",
+    "temperature": 1.4,
+    "file_sha256": "5d42daed1dbfee17839998cf00a64765aa641f3612fa2ddc6a7cdc29be2f9cde",
+    "prompts": 16,
+    "saved_det_true": 12,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748403870597088456.json",
+    "group_id": "1748403870597088456",
+    "temperature": 1.4,
+    "file_sha256": "46ae6009f605a27c519a3d1e72af39111e7a43998149bc8a90b15345aa26ade1",
+    "prompts": 16,
+    "saved_det_true": 7,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748405362992950299.json",
+    "group_id": "1748405362992950299",
+    "temperature": 1.4,
+    "file_sha256": "2d2835395e36a34597831fe9f3966a84d8680bdaaee044500a4e52bcfd5a0b81",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748405394506930299.json",
+    "group_id": "1748405394506930299",
+    "temperature": 1.4,
+    "file_sha256": "d934c5c3a1f5cea7bec45a83194ce9b02c6e00a1e6d2e8ec6cecbc3c0a143a99",
+    "prompts": 16,
+    "saved_det_true": 8,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748405414729711428.json",
+    "group_id": "1748405414729711428",
+    "temperature": 1.4,
+    "file_sha256": "90cb4af55a507aba5973540c6eb3e17acba2f4b9816aa54a83c4097f5887ef5c",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748405415306450905.json",
+    "group_id": "1748405415306450905",
+    "temperature": 1.4,
+    "file_sha256": "1d11b8795d49f486b4c72bd0f9adc0becf5ec823682e31b9e74f53d868d9e229",
+    "prompts": 16,
+    "saved_det_true": 13,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748405453175199139.json",
+    "group_id": "1748405453175199139",
+    "temperature": 1.4,
+    "file_sha256": "4bbf28cfea1c5eb04259d1d568654acf52e0589d1b24e2858b1aae26a664ef4e",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748405455140127412.json",
+    "group_id": "1748405455140127412",
+    "temperature": 1.4,
+    "file_sha256": "54df3a010e85a6389d7127191b95c4e8bde12e2e2c1bb7215e907e5e5be44259",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748405486416324030.json",
+    "group_id": "1748405486416324030",
+    "temperature": 1.4,
+    "file_sha256": "0ae0db11b85a0bc74aa1c3ff1c4cd4782ea698940273eaab58a57f6c4cf210ac",
+    "prompts": 16,
+    "saved_det_true": 8,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748406953494826949.json",
+    "group_id": "1748406953494826949",
+    "temperature": 1.4,
+    "file_sha256": "4fdf7d7bab1225b48252ce768340b22f52f0d81c349868d960e3ce3cb861f4e0",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748407028879705631.json",
+    "group_id": "1748407028879705631",
+    "temperature": 1.4,
+    "file_sha256": "f310bcab1c6334d93e3c6e691848ea25343138f52ec3a9fe63af23bff0e67a18",
+    "prompts": 16,
+    "saved_det_true": 7,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748407044346771319.json",
+    "group_id": "1748407044346771319",
+    "temperature": 1.4,
+    "file_sha256": "b2d7d207d3692d74ab619ec41c2d40a8cb8ae277866603000fda5d93eb0968bf",
+    "prompts": 16,
+    "saved_det_true": 8,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748407046744116974.json",
+    "group_id": "1748407046744116974",
+    "temperature": 1.4,
+    "file_sha256": "b2f2797c35da8ae5f045190d8df79f70dee6095389b43c7bd142c2c896459d7d",
+    "prompts": 16,
+    "saved_det_true": 8,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748407066866957650.json",
+    "group_id": "1748407066866957650",
+    "temperature": 1.4,
+    "file_sha256": "3efe3308632ddf7afc86de76555694a3612cfebf5fcd81adf3552c7d98091827",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748407109507694070.json",
+    "group_id": "1748407109507694070",
+    "temperature": 1.4,
+    "file_sha256": "aea8b3c210a0081da96106d05de96cebfcd59d78e0ef4e69372c05763a2f99b6",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748407155080342621.json",
+    "group_id": "1748407155080342621",
+    "temperature": 1.4,
+    "file_sha256": "b641e9c86dc29bd3d1b901751314c77a5e07c790fdaaca1e55af2af73e16e87e",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748408598649843528.json",
+    "group_id": "1748408598649843528",
+    "temperature": 1.4,
+    "file_sha256": "0967b29ec2e32df1c7c480122fff7b2032a231e9ddc0c4d002d98cfded6cbf25",
+    "prompts": 16,
+    "saved_det_true": 8,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748408622375020326.json",
+    "group_id": "1748408622375020326",
+    "temperature": 1.4,
+    "file_sha256": "f483305d1ed709e60f8a670b0a5fc4a0cfa35035f64f9603f4bd94e92d044f7b",
+    "prompts": 16,
+    "saved_det_true": 8,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748408680831974108.json",
+    "group_id": "1748408680831974108",
+    "temperature": 1.4,
+    "file_sha256": "b080e1509971342ebbdad6085115384a676cfe579c6d05a828369df27761d0ac",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748408685939343351.json",
+    "group_id": "1748408685939343351",
+    "temperature": 1.4,
+    "file_sha256": "1fed2bc54fa34e71262106e4eb20bad36fde8de5cf83b34b0dfeb83323f001bf",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748408702399839933.json",
+    "group_id": "1748408702399839933",
+    "temperature": 1.4,
+    "file_sha256": "c137adbb3b71e1c5b21d24c07471ffd9318f2a4852c4079d7df6eebaf86f23e1",
+    "prompts": 16,
+    "saved_det_true": 12,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748408766634491698.json",
+    "group_id": "1748408766634491698",
+    "temperature": 1.4,
+    "file_sha256": "593177f65c718299c3da0654d53da85ad67961da4c0eaf5f06c298b588bc2d64",
+    "prompts": 16,
+    "saved_det_true": 7,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748408781983306004.json",
+    "group_id": "1748408781983306004",
+    "temperature": 1.4,
+    "file_sha256": "1644f28badbd0563e552308a9f3a47a6b6a52109f101acc2aa37fd848e6a80fc",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748410192541413566.json",
+    "group_id": "1748410192541413566",
+    "temperature": 1.4,
+    "file_sha256": "0401e7823dc5fd75137e4a361f55aae0d52e37e9c474898ec6e0118e8bca5995",
+    "prompts": 16,
+    "saved_det_true": 7,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748410229779776542.json",
+    "group_id": "1748410229779776542",
+    "temperature": 1.4,
+    "file_sha256": "8d55e416da4ad2f4d587524e806476200387f149e397a73ff42daa4f467b6af0",
+    "prompts": 16,
+    "saved_det_true": 6,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748410279124083669.json",
+    "group_id": "1748410279124083669",
+    "temperature": 1.4,
+    "file_sha256": "77f1f6aea4125d599c12247f2b78dad9bd3566d6a54cab0482a4993c6cf24933",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748410297147398824.json",
+    "group_id": "1748410297147398824",
+    "temperature": 1.4,
+    "file_sha256": "27591609262e2f9479ad57fa8384f0c5f37eb24669f88cb709b1b4331ae5d897",
+    "prompts": 16,
+    "saved_det_true": 6,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748410306353705714.json",
+    "group_id": "1748410306353705714",
+    "temperature": 1.4,
+    "file_sha256": "0522cea212dc5412f04cd9db53bf47a016904abd26564a9a552a0069545a22dc",
+    "prompts": 16,
+    "saved_det_true": 6,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748410362493184602.json",
+    "group_id": "1748410362493184602",
+    "temperature": 1.4,
+    "file_sha256": "026d467823645d4cba7d4ab44c7b68bf13da831c08c9a3c55be7e26a0d350443",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748410374532477324.json",
+    "group_id": "1748410374532477324",
+    "temperature": 1.4,
+    "file_sha256": "694c48dd92ea495c5c0f4095b4e4eef36557a0d08485dc6594dfe32bb2b4d8cc",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748411811619736315.json",
+    "group_id": "1748411811619736315",
+    "temperature": 1.4,
+    "file_sha256": "dbd62c15d1671c3685ea22debc7a248924fe63d2d47ec98c0a342b406ba7ec24",
+    "prompts": 16,
+    "saved_det_true": 12,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748411854614532445.json",
+    "group_id": "1748411854614532445",
+    "temperature": 1.4,
+    "file_sha256": "0c3776dee58e502c994a1b2968e6de43d6bf3ac644cbaaaf026ffb3189dd7e33",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748411899263362994.json",
+    "group_id": "1748411899263362994",
+    "temperature": 1.4,
+    "file_sha256": "1bd6a0c957527aaf388d20f72d9668209061f1a14d05085eb39ccfcc3e823dfb",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748411915137236590.json",
+    "group_id": "1748411915137236590",
+    "temperature": 1.4,
+    "file_sha256": "4b699686c23ffbb5f7a7ed08306ddb02b9fe32998f0ac9c186e72277c78e98fa",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748411942533103881.json",
+    "group_id": "1748411942533103881",
+    "temperature": 1.4,
+    "file_sha256": "6c31fdfff79cf78598878ca52c625ef235f7b933720b441741a776309f03ded1",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748411964200926029.json",
+    "group_id": "1748411964200926029",
+    "temperature": 1.4,
+    "file_sha256": "ca6941cfbc0cb6fd4afbc763fe545533c17470189c5f05d3d2b2b0cb26aff27e",
+    "prompts": 16,
+    "saved_det_true": 8,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748412038835981891.json",
+    "group_id": "1748412038835981891",
+    "temperature": 1.4,
+    "file_sha256": "25d4c78987487e162c76528e281cdc1d2a9ef562013354970cbd5ec1fc603850",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748413420138657440.json",
+    "group_id": "1748413420138657440",
+    "temperature": 1.4,
+    "file_sha256": "506818eaaf53c50c62f1b12a04b1a95ad2eea352f22e9ee0b30587b1eca69df1",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748413499985469747.json",
+    "group_id": "1748413499985469747",
+    "temperature": 1.4,
+    "file_sha256": "4329c640efcfd6e3beee66f1d4205fb06b60c25c3197f0bb1be820ab5c9f18ed",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748413537674340765.json",
+    "group_id": "1748413537674340765",
+    "temperature": 1.4,
+    "file_sha256": "759bc892c2acb559d4270bd8b8bd76163498c645bede9c08d687f0572869ff0d",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748413540754840572.json",
+    "group_id": "1748413540754840572",
+    "temperature": 1.4,
+    "file_sha256": "9cd35d3a93f5267434b4d452bc5f01f4137a52af333d8e2191e085eb28e071ca",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748413565721224982.json",
+    "group_id": "1748413565721224982",
+    "temperature": 1.4,
+    "file_sha256": "0fd886b111583b4ef2d1c206ad9064beb7c1407ad8cb4eb9bf345f53596b9efd",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748413590303663684.json",
+    "group_id": "1748413590303663684",
+    "temperature": 1.4,
+    "file_sha256": "0b1f886fad4363cbca8e6bf0e053c02d3f7d1caba2b1b3a0d1b9d53745c9813d",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748413678308616906.json",
+    "group_id": "1748413678308616906",
+    "temperature": 1.4,
+    "file_sha256": "cf7dbdedb59cdbf19dbed1d5d15c1c27aef0500b109383da4d69a9c7165eb0eb",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748415037535932857.json",
+    "group_id": "1748415037535932857",
+    "temperature": 1.4,
+    "file_sha256": "0bfa7e45b787005ec8088c1ea8999afc6a05f7af2ebcd9b5d6be17af0e948158",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748415112271315256.json",
+    "group_id": "1748415112271315256",
+    "temperature": 1.4,
+    "file_sha256": "4ea3706d4eadbf670e8bb3db2dbdf43feee26cfe092644fd9019eb5e811867b0",
+    "prompts": 16,
+    "saved_det_true": 7,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748415148858367903.json",
+    "group_id": "1748415148858367903",
+    "temperature": 1.4,
+    "file_sha256": "9a29ef6be27c9077e2e4ac689ab0ae2a7c787e5811385b06a48e426edcc0de51",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748415157419408902.json",
+    "group_id": "1748415157419408902",
+    "temperature": 1.4,
+    "file_sha256": "67663427dbccf90db72c18a34b665931f417e4c4f379b8c34da1cd1f44c9f43d",
+    "prompts": 16,
+    "saved_det_true": 9,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748415193769419578.json",
+    "group_id": "1748415193769419578",
+    "temperature": 1.4,
+    "file_sha256": "a375c9ef1056ebb3d7e5214bd1bf3636092c13df417a0f20b89cb03f3b11ad01",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748415274617712205.json",
+    "group_id": "1748415274617712205",
+    "temperature": 1.4,
+    "file_sha256": "1eaa0328e83f76e7bc2a5c6ca1d5864549c08e84c660c6b4c5ad9f3af059a935",
+    "prompts": 16,
+    "saved_det_true": 10,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748415335741628518.json",
+    "group_id": "1748415335741628518",
+    "temperature": 1.4,
+    "file_sha256": "a6543a7ef786828b28017d99258dc94ef6e6066914dfb8656763d97f64e20b27",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748416629171694760.json",
+    "group_id": "1748416629171694760",
+    "temperature": 1.4,
+    "file_sha256": "e70e57bfdf3d357c821ee7b719d51d10b398b64a5805aea54c2e6b81d36c4953",
+    "prompts": 16,
+    "saved_det_true": 13,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748416719251733467.json",
+    "group_id": "1748416719251733467",
+    "temperature": 1.4,
+    "file_sha256": "e43e54e8de0f5dffd25764bd883ed1d2bfbfd3409292c999566d82f12dc77952",
+    "prompts": 16,
+    "saved_det_true": 7,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748416754567219343.json",
+    "group_id": "1748416754567219343",
+    "temperature": 1.4,
+    "file_sha256": "288fbbdfb6b45b29acab6cd2cc6a5edbea6afc7c939ffb52b215b3f9ed7b5ca5",
+    "prompts": 16,
+    "saved_det_true": 11,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748416759302017075.json",
+    "group_id": "1748416759302017075",
+    "temperature": 1.4,
+    "file_sha256": "1256837c92ab58c98c08cdcb5db7b41f4236f634e74c9f2d3f8dedc4a360a490",
+    "prompts": 16,
+    "saved_det_true": 7,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.4/1748416788575493026.json",
+    "group_id": "1748416788575493026",
+    "temperature": 1.4,
+    "file_sha256": "815634c86238601bd391b684a411803024bbe15632a58a7119df71be13539764",
+    "prompts": 16,
+    "saved_det_true": 13,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748402254743413050.json",
+    "group_id": "1748402254743413050",
+    "temperature": 1.6,
+    "file_sha256": "1ac33285dd3914fd12110d479d6a85c0cedd9ce52a72f406640138747ffec306",
+    "prompts": 16,
+    "saved_det_true": 15,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748421008014626819.json",
+    "group_id": "1748421008014626819",
+    "temperature": 1.6,
+    "file_sha256": "f2296776abce806719137b60c316b726de62394c891c18c88ac9ac94205f4f50",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748421047661381472.json",
+    "group_id": "1748421047661381472",
+    "temperature": 1.6,
+    "file_sha256": "1a88c712aae0288aea9b1396ed68393fff589b21140aa6f330bd9976151d20b5",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748422686803416392.json",
+    "group_id": "1748422686803416392",
+    "temperature": 1.6,
+    "file_sha256": "8135ade24d1685b9969cd45b79f9b9cb13527219248b379c114234010adcf81b",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748422709948918467.json",
+    "group_id": "1748422709948918467",
+    "temperature": 1.6,
+    "file_sha256": "ead4f7af5d82f55c97f752d7cbb79d4aafe98495fc6823a950c674a82055a862",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748424392239584957.json",
+    "group_id": "1748424392239584957",
+    "temperature": 1.6,
+    "file_sha256": "16d6a701ace7fb0804a5d1715be0f2da7c82b861402e4b8b57007119474d92f1",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748424392555767300.json",
+    "group_id": "1748424392555767300",
+    "temperature": 1.6,
+    "file_sha256": "3ab5a413a1a4ced5bf3e00f433c7da607201d12bcd911365d50c66a2072dc7e3",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748426026764851173.json",
+    "group_id": "1748426026764851173",
+    "temperature": 1.6,
+    "file_sha256": "f401c8ac001692c3c6b4987559548b7f91d889ff9cf7286c9a730a216c0c88bf",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748426059688676658.json",
+    "group_id": "1748426059688676658",
+    "temperature": 1.6,
+    "file_sha256": "7376b89bd9f5f2d6bf798665f18068cb665454d7efeb76296b70278d2ec596e3",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748427661288162827.json",
+    "group_id": "1748427661288162827",
+    "temperature": 1.6,
+    "file_sha256": "6169bd041275430d7aa4201e70c3d0e68f3ca90614058427ebc55283b9b9afd4",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748427726224884097.json",
+    "group_id": "1748427726224884097",
+    "temperature": 1.6,
+    "file_sha256": "9acd13f955c48dd1afcced4929dbf6b546d8858bde4f880276245a62abdd60f7",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748429308413957290.json",
+    "group_id": "1748429308413957290",
+    "temperature": 1.6,
+    "file_sha256": "3a439664a864fca7e56857401170ce134f021450f59170e4627dac17ed82029c",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748429390525583992.json",
+    "group_id": "1748429390525583992",
+    "temperature": 1.6,
+    "file_sha256": "1c1a62d9ab088bf21d76ca32bc7c7c7aeef9c10cd23eead4e093308426b57073",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748430934828986693.json",
+    "group_id": "1748430934828986693",
+    "temperature": 1.6,
+    "file_sha256": "7e2c44093ccdaf12609474b0c1035f4926c6ba93675c045160de4f535168067f",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748431058887273513.json",
+    "group_id": "1748431058887273513",
+    "temperature": 1.6,
+    "file_sha256": "9ed2eb9bb6f689fa39e4d2b46be089ae32a8a2e6e3ec8f5c78f97ceeeab8ebd2",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748432532855894204.json",
+    "group_id": "1748432532855894204",
+    "temperature": 1.6,
+    "file_sha256": "1e06a1268a43a9fd939e13e5ed08ee60161f97001014219b479414803d0fe405",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748432730401859797.json",
+    "group_id": "1748432730401859797",
+    "temperature": 1.6,
+    "file_sha256": "2df62fd7f9a5b5617c854b38ecf221c5c9fa1c478d5f089977a02817ccb2843b",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748434149209493745.json",
+    "group_id": "1748434149209493745",
+    "temperature": 1.6,
+    "file_sha256": "a6759939260ec3ba289541e0c326970c40b8331d7b6d7a4d8b94bf2975cbce1c",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748434349388788054.json",
+    "group_id": "1748434349388788054",
+    "temperature": 1.6,
+    "file_sha256": "bbc324a1cffb3af9d018282de59e3d1ca93e8dce5bf3c59c5ecfd6013a06fc60",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748435746432498821.json",
+    "group_id": "1748435746432498821",
+    "temperature": 1.6,
+    "file_sha256": "08e38ea604775a4f7dc30c2e6724057625e1a6e01a266ee374f268e199efc569",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748435952201883956.json",
+    "group_id": "1748435952201883956",
+    "temperature": 1.6,
+    "file_sha256": "df03d0b2bcc5d7188ddc627a75c34a6406a3b551a82f909ae738b7ab0ab30fe7",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748437389409395131.json",
+    "group_id": "1748437389409395131",
+    "temperature": 1.6,
+    "file_sha256": "4be5480acacb643f47ab7710cb935462e97345d3ed35996f7ba486f5b3e1befc",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748437554909942331.json",
+    "group_id": "1748437554909942331",
+    "temperature": 1.6,
+    "file_sha256": "72bb6b38ac04cb48f17545fbf2036496e7e4881e2e612ddadc6b6b60bf722671",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748439014268624347.json",
+    "group_id": "1748439014268624347",
+    "temperature": 1.6,
+    "file_sha256": "0272e8fd4028b6a0d4e8ffc1f94ff807c003ae2bee79a2567f6cf609a596f695",
+    "prompts": 16,
+    "saved_det_true": 15,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748439206881101201.json",
+    "group_id": "1748439206881101201",
+    "temperature": 1.6,
+    "file_sha256": "937e04c45c04c0ff47c25cce418ae3643cd0655b95f4a3a72bf91af980c5ddc6",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748440692188471818.json",
+    "group_id": "1748440692188471818",
+    "temperature": 1.6,
+    "file_sha256": "98c326137c004250e187ca5f78e0efcdd2f4d70d990a35fa38d824f1aca070ae",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748440884962005968.json",
+    "group_id": "1748440884962005968",
+    "temperature": 1.6,
+    "file_sha256": "3535771870fb1ae23270482e2dab79da51dd2575409be7bc4b36145fdb01436e",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748442328415614357.json",
+    "group_id": "1748442328415614357",
+    "temperature": 1.6,
+    "file_sha256": "335a5abe03c6c550a58b6ebd9caf288a853b416dae44eed910a85d9fc5ef72a4",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748442501205279831.json",
+    "group_id": "1748442501205279831",
+    "temperature": 1.6,
+    "file_sha256": "16fd9564016263de42c0a160a507d9e8b9ce0b360ca206b9fad203bb97302bfb",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748443926482121744.json",
+    "group_id": "1748443926482121744",
+    "temperature": 1.6,
+    "file_sha256": "c030e391d445e2bd3ff3e65b9ce0c9102fb140d8407e5d4f7680b96d214b5ed3",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748444090698243456.json",
+    "group_id": "1748444090698243456",
+    "temperature": 1.6,
+    "file_sha256": "579aa8b33e25d520ab0e683c7126912e6122c18e8dd10d248f88ff5059f6b1e6",
+    "prompts": 16,
+    "saved_det_true": 15,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748445513493693185.json",
+    "group_id": "1748445513493693185",
+    "temperature": 1.6,
+    "file_sha256": "ed66c006f4aa38d0f64e7e39cedb74622fdae79df0a12ccade048adae66e168e",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748445686714121113.json",
+    "group_id": "1748445686714121113",
+    "temperature": 1.6,
+    "file_sha256": "3ca464fe3db51178ef8796f4670a9d4ec9f276ebcaf659345638492932f20ef1",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748447170409165145.json",
+    "group_id": "1748447170409165145",
+    "temperature": 1.6,
+    "file_sha256": "f9088ae2b5ccf2c92a54437727adca47c07b23c40eac53e8a59becbeaf31814b",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748447329578491047.json",
+    "group_id": "1748447329578491047",
+    "temperature": 1.6,
+    "file_sha256": "4e7f2ed2695c3080de8101f2f4cc2c35867a3fe03aa0443416ad2e83031ed50d",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748448817378851981.json",
+    "group_id": "1748448817378851981",
+    "temperature": 1.6,
+    "file_sha256": "2bd224d459d26baf1beae7a99c03547553930b2066ed39eb585956fd38d138be",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748448981478900035.json",
+    "group_id": "1748448981478900035",
+    "temperature": 1.6,
+    "file_sha256": "82ca7b9a2d65ef3e778ea26f6fd0ab1e459a635f9072ea9000e19f30dc90333d",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748450582120551126.json",
+    "group_id": "1748450582120551126",
+    "temperature": 1.6,
+    "file_sha256": "72d670c935b81647fe92e36de36cef2b06332aca5ee1c7559d1e814177e2357b",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748452177837256490.json",
+    "group_id": "1748452177837256490",
+    "temperature": 1.6,
+    "file_sha256": "3ab6c00682c30498cad4e7e3a132722a56b0739d75625e8ee39094d581d65fc9",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748453756993572159.json",
+    "group_id": "1748453756993572159",
+    "temperature": 1.6,
+    "file_sha256": "7f15731e09117cb207578cd8e913a31c6f176560cc321386c68db21544bc9f60",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748455384355873147.json",
+    "group_id": "1748455384355873147",
+    "temperature": 1.6,
+    "file_sha256": "74be9c1ca9bacf70a0954091ce3994e0e4a88cb25f73f80b8676f85d6961927a",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748458266396472147.json",
+    "group_id": "1748458266396472147",
+    "temperature": 1.6,
+    "file_sha256": "dd564bc28e4a518b3a399eaf0f74d212d6e79ae1360d19f94b0063f141fb9c36",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748458332014407988.json",
+    "group_id": "1748458332014407988",
+    "temperature": 1.6,
+    "file_sha256": "11b06039b82f3776dbf0840ba72f12a328ea7dc23417e27b93823468db6df3e3",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748459934182336964.json",
+    "group_id": "1748459934182336964",
+    "temperature": 1.6,
+    "file_sha256": "652ac0e2daa4196f92f00ad4da7115d3eb7895f46dd69537c7e663efc9f01760",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748459970939248892.json",
+    "group_id": "1748459970939248892",
+    "temperature": 1.6,
+    "file_sha256": "9a1a0691211f9560f52a911a34e4128d0af4c5ddd2694e306fd13682329e81b7",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748461579771973114.json",
+    "group_id": "1748461579771973114",
+    "temperature": 1.6,
+    "file_sha256": "27ea3006aa8950d10db431f2eab7afd4def2c36b8dcd26d369c55bd767dd8225",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748461588837124766.json",
+    "group_id": "1748461588837124766",
+    "temperature": 1.6,
+    "file_sha256": "157af2127d9714fea74831f9c39f08953479f3dbb4bdab8b7f20c57c10fce271",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748463167439057775.json",
+    "group_id": "1748463167439057775",
+    "temperature": 1.6,
+    "file_sha256": "d132bf9575da88039ec54e87d905ac7317c4d784a9faa68496aa759bbfd94e65",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748463174703470055.json",
+    "group_id": "1748463174703470055",
+    "temperature": 1.6,
+    "file_sha256": "6a7037259c7c603ea20e492081af403c30f49b5ec60f12d8bf544cda86abb226",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748464773856147553.json",
+    "group_id": "1748464773856147553",
+    "temperature": 1.6,
+    "file_sha256": "e925c6636fa1a43bcf446150326cd0c45ce498f2b052918643b2995809db55c5",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748464811805489123.json",
+    "group_id": "1748464811805489123",
+    "temperature": 1.6,
+    "file_sha256": "9125d43255c19b8ce2e1cd9d63c63c2648fabb418bfffe4a78077e08b53e5394",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748466365283036379.json",
+    "group_id": "1748466365283036379",
+    "temperature": 1.6,
+    "file_sha256": "4d985be36648b658bc6755635df03b498bcbff630349c143c3b4a597f3c7ebcf",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748466429191342809.json",
+    "group_id": "1748466429191342809",
+    "temperature": 1.6,
+    "file_sha256": "62e265e44af221bab622a2655da3272c3b733510c0ecfa93e7e3ec89a630def6",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748467981059402983.json",
+    "group_id": "1748467981059402983",
+    "temperature": 1.6,
+    "file_sha256": "78a9ff742134b293872ebf5e5a4e0e9b57e7880023d3f0341b08c1e02e1bb34d",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748468009104512998.json",
+    "group_id": "1748468009104512998",
+    "temperature": 1.6,
+    "file_sha256": "f46167cdb47f3f875d36309cdb7ea15356f6b2ece7c396f9f80ce55ba635526f",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748469569961955869.json",
+    "group_id": "1748469569961955869",
+    "temperature": 1.6,
+    "file_sha256": "241c13b323d0b8530962416bf454440f1d4f37d2964a954aa6f7fc46bbf61b6c",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748469593478376548.json",
+    "group_id": "1748469593478376548",
+    "temperature": 1.6,
+    "file_sha256": "b4794aaa14eebf6c40841be6b67d9cce082dbd635549a5264baa3615e0c284b7",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748471169797993444.json",
+    "group_id": "1748471169797993444",
+    "temperature": 1.6,
+    "file_sha256": "05e57bea6a97e68b4de0a6ffaea0237e6f714bbf1c9ba0eaabf9bf20b531b86d",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748471207070244793.json",
+    "group_id": "1748471207070244793",
+    "temperature": 1.6,
+    "file_sha256": "07ce5da71b8a4fce9e939eb0de7ab60663a1a02fbf45d8f28bf961fe73e798f7",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748472781782182356.json",
+    "group_id": "1748472781782182356",
+    "temperature": 1.6,
+    "file_sha256": "676059a32e33934884921bab9241dd011a8b941d68b7e480365ae43845be0249",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748472795866674037.json",
+    "group_id": "1748472795866674037",
+    "temperature": 1.6,
+    "file_sha256": "9059cb96f38de52d9de79491473ea4e15e9785375bb85d020614b2a017ad3d52",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748474387563141347.json",
+    "group_id": "1748474387563141347",
+    "temperature": 1.6,
+    "file_sha256": "a0bfa2dee15f6ec6ff47fa5b5063c0500dc8668e6d45b6f1fdc88c3a90ae206b",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748474402281768001.json",
+    "group_id": "1748474402281768001",
+    "temperature": 1.6,
+    "file_sha256": "e0d8d2678183bf0817482c0063d775b8a661c3c7d80784e402a94e8dcc4a0da9",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.6/1748476029113523060.json",
+    "group_id": "1748476029113523060",
+    "temperature": 1.6,
+    "file_sha256": "9c0f75efaaa85f569a75a955d3e6695f1539f0dae9cb1ebd2969ce72b8b6d65d",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748402215940443270.json",
+    "group_id": "1748402215940443270",
+    "temperature": 1.8,
+    "file_sha256": "648b1a6234fe77796108161e99715ea72cb36772b91132845385b9bb9fcbaa70",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748402246034650432.json",
+    "group_id": "1748402246034650432",
+    "temperature": 1.8,
+    "file_sha256": "66611f9fccc3f5b1a5b1dcce8e059c6ae411aa8075e69b14dbaf85228c2dc944",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748421013944251855.json",
+    "group_id": "1748421013944251855",
+    "temperature": 1.8,
+    "file_sha256": "9914f2b45a87fc7f27da5dc6c4ae3da7e96306ae7ee97eaf4a2efd4053147e58",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748421052737147431.json",
+    "group_id": "1748421052737147431",
+    "temperature": 1.8,
+    "file_sha256": "b49845c96a567f2d82d48abf07f6a4b30bc9520995fa82b9bd5dc7b69293106c",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748421125967511010.json",
+    "group_id": "1748421125967511010",
+    "temperature": 1.8,
+    "file_sha256": "c55ab932d2f8b47b47692cc0b0c93d8ee47c82906cfd6b7002ebccbcdbe52d22",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748422606982492104.json",
+    "group_id": "1748422606982492104",
+    "temperature": 1.8,
+    "file_sha256": "c1abe9dbfbab3894996a35b205bd34dfb0726962c0659c7e12e530d0a532b20f",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748422689449494983.json",
+    "group_id": "1748422689449494983",
+    "temperature": 1.8,
+    "file_sha256": "e7f2abd34be72b37666c2ee7369dfae226cd63a528427238f5311efd9b3c5ad0",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748422726423658719.json",
+    "group_id": "1748422726423658719",
+    "temperature": 1.8,
+    "file_sha256": "accf9eb53f9642ae2b35af2c7329e7a2d2cf7276acf486b8e849fc2b46486583",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748424242627363241.json",
+    "group_id": "1748424242627363241",
+    "temperature": 1.8,
+    "file_sha256": "95110d2b4329fdab34863e07116b32b1cd1e29303351846892ce9e711a2ddc47",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748424307150642201.json",
+    "group_id": "1748424307150642201",
+    "temperature": 1.8,
+    "file_sha256": "53551b8d104370673122e402f59699e1f9ed6713690b0d56470da9967f49ada4",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748425124728600776.json",
+    "group_id": "1748425124728600776",
+    "temperature": 1.8,
+    "file_sha256": "893537778c2dbe9a41442cff7e19b0e12fae92b7cd176b7b7d32ab4a84fac930",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748425861368282439.json",
+    "group_id": "1748425861368282439",
+    "temperature": 1.8,
+    "file_sha256": "c2af3c52a542ee7ca93ba724048e29f95f5322bf03c112cff333edaf998f01fc",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748425980891551569.json",
+    "group_id": "1748425980891551569",
+    "temperature": 1.8,
+    "file_sha256": "511697a40e91c73440c811b9a3ccedf382799ceab14f0bfab1d4702cc3349383",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748427464535410616.json",
+    "group_id": "1748427464535410616",
+    "temperature": 1.8,
+    "file_sha256": "af3866f948a547fe119a8153c8802d3656610d02a6dea02441dc9e8a9bd9b063",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748427584484112514.json",
+    "group_id": "1748427584484112514",
+    "temperature": 1.8,
+    "file_sha256": "8ec188235011b93b7c47536d19e14bfd870d4badf413d8f085641a2a0fc031a7",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748428386124245064.json",
+    "group_id": "1748428386124245064",
+    "temperature": 1.8,
+    "file_sha256": "a6267422340a1dabea4380c9ec12a2d7324392e7186c1574aeceea09dfbc503d",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748429066795571773.json",
+    "group_id": "1748429066795571773",
+    "temperature": 1.8,
+    "file_sha256": "e3521b058407b4cd51eaecfb6cab037744e36d3a69cb76b4afde64edd1473434",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748429313763954433.json",
+    "group_id": "1748429313763954433",
+    "temperature": 1.8,
+    "file_sha256": "a591137bcd067749bdf716a18bcf730b5a2c95759fd8fa13500539664e3013b3",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748430062433471688.json",
+    "group_id": "1748430062433471688",
+    "temperature": 1.8,
+    "file_sha256": "ac47a2a28ad218aaa3ba1735f14d6df119ecba248807b4e3cf9f778f37480b50",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748430698702738776.json",
+    "group_id": "1748430698702738776",
+    "temperature": 1.8,
+    "file_sha256": "057c73286fa36f3e8be050d3ad0065f85ba788b2fab96da369e247d753ddfc85",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748430920583194248.json",
+    "group_id": "1748430920583194248",
+    "temperature": 1.8,
+    "file_sha256": "dc1b1293cdced3076256b1b97c7edad16dfad13de84d75542eaed9b329e3b817",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748431718978874974.json",
+    "group_id": "1748431718978874974",
+    "temperature": 1.8,
+    "file_sha256": "11a968d38fab443713ef404596c97a8942375dd1f9db261288ca2b0c14fde100",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748432290508390776.json",
+    "group_id": "1748432290508390776",
+    "temperature": 1.8,
+    "file_sha256": "fd5bb8647a4520065c4b041471e8e7f0e942f484a6894efe6f29a66f97528f2b",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748432601447907947.json",
+    "group_id": "1748432601447907947",
+    "temperature": 1.8,
+    "file_sha256": "a7f6af072e0617a62449509f1f5f91f96d64a2cd06b600b210bd7b08b12fd8e6",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748433614946067600.json",
+    "group_id": "1748433614946067600",
+    "temperature": 1.8,
+    "file_sha256": "c5c049d0b92ebb12a9f83b02b4d7fbcd72fbe33289d17ac5b58ae4a838f1a593",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748433891151389984.json",
+    "group_id": "1748433891151389984",
+    "temperature": 1.8,
+    "file_sha256": "495c7b67315e6a38972926ad355802a2c3463df68ca654c23d0199b3800118b8",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748434243916492141.json",
+    "group_id": "1748434243916492141",
+    "temperature": 1.8,
+    "file_sha256": "fdd6ff2da2022b4d2107f4fddd9189cf6c4ac17177a5ace18017169518427602",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748435851876969390.json",
+    "group_id": "1748435851876969390",
+    "temperature": 1.8,
+    "file_sha256": "a3a197df803ed0fc77c030d01c7397fa252b9509fcfc40352523f86c61ea3117",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748436587265691580.json",
+    "group_id": "1748436587265691580",
+    "temperature": 1.8,
+    "file_sha256": "a3060ad480ebdd693922fb0a250b65d64aa351fe5afeb6387201c65692cbb1b4",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748437468557555850.json",
+    "group_id": "1748437468557555850",
+    "temperature": 1.8,
+    "file_sha256": "6ac91c9603795e19033b1fd91d9a084e2c56678b91d576193b7b8caaad088fed",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748438220398912444.json",
+    "group_id": "1748438220398912444",
+    "temperature": 1.8,
+    "file_sha256": "a9a8a0a875e8a231af6382580bd8c0ddb94b8651c339f26d85c7dbb1141b2bc4",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748439105853893216.json",
+    "group_id": "1748439105853893216",
+    "temperature": 1.8,
+    "file_sha256": "a4b63348d795f32da5afe560f2a5b21cb3141ea52ecf64e4ef9309fc37d75b62",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748439809010662448.json",
+    "group_id": "1748439809010662448",
+    "temperature": 1.8,
+    "file_sha256": "e6fce78b3a96f0c4b060c59839b3fe24a3ebb497a472edd388176df66b34df34",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748440793819935380.json",
+    "group_id": "1748440793819935380",
+    "temperature": 1.8,
+    "file_sha256": "2d6238bf81862e7fb657ee366d6217c702f7a6926d5dd8719fa224b66d1233f3",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748441420784866310.json",
+    "group_id": "1748441420784866310",
+    "temperature": 1.8,
+    "file_sha256": "23e69b7aa12462e046faef8e1f71b59c0a17102656bb20d18570325761cd786d",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748442387915686185.json",
+    "group_id": "1748442387915686185",
+    "temperature": 1.8,
+    "file_sha256": "0ea49c64b294ea233cd77ae90638be000f8d57faa15bee40d5f568e7dbe816f2",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748443025026716885.json",
+    "group_id": "1748443025026716885",
+    "temperature": 1.8,
+    "file_sha256": "c8e238e620c6bfdf7de8e983e47f06d2fffb59713190761f628cb5d005604c12",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748443997617439487.json",
+    "group_id": "1748443997617439487",
+    "temperature": 1.8,
+    "file_sha256": "ec686ed576d81a4eaaacbfe7fcfc132f16262b6efe2a6ca7ef87290fbba3380d",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748444651413949035.json",
+    "group_id": "1748444651413949035",
+    "temperature": 1.8,
+    "file_sha256": "a82f78b25cf406f67020a3e2c6a5cb09b8bd7090f3b7fc3306559177a4cf7631",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748445622130559595.json",
+    "group_id": "1748445622130559595",
+    "temperature": 1.8,
+    "file_sha256": "ab7d878a457c838a11c94f4c517198574df3ab9a0e26b968eab2cf940a54d43f",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748446244915720097.json",
+    "group_id": "1748446244915720097",
+    "temperature": 1.8,
+    "file_sha256": "83fd50b096815b37417e5b7b07286b5e9ad808394a897832a703262afbd5adfb",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748447345658326874.json",
+    "group_id": "1748447345658326874",
+    "temperature": 1.8,
+    "file_sha256": "7ad3ddfd2f0ab8c90433f82893390565f20026bb73728ef40f04191bf6e234cf",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748447882148665123.json",
+    "group_id": "1748447882148665123",
+    "temperature": 1.8,
+    "file_sha256": "c4aad83e93110ba77aecf2713ecf7f4c87b8cde017e19274f6b22a516777a375",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748448936723690089.json",
+    "group_id": "1748448936723690089",
+    "temperature": 1.8,
+    "file_sha256": "09f61fc2b708b355c4a0235a9d3e8c8ab20d0c29d16f05a3831662fc09715de4",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748449512703276921.json",
+    "group_id": "1748449512703276921",
+    "temperature": 1.8,
+    "file_sha256": "85b20516d5ddbffde085f69ac75a83f7bc65b3025e05474ebecd21245fc46943",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748450527724236529.json",
+    "group_id": "1748450527724236529",
+    "temperature": 1.8,
+    "file_sha256": "7a41570817d0b5f71faccebfd350b4e1d2694166e7ec788cab8d10cb27c29449",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748451140212887542.json",
+    "group_id": "1748451140212887542",
+    "temperature": 1.8,
+    "file_sha256": "eefd9f1c4daf96dfbd756ea7c6eb1016d19db465ddcb4f2b8b2630183e681caf",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748452112569343907.json",
+    "group_id": "1748452112569343907",
+    "temperature": 1.8,
+    "file_sha256": "471288210eea81fe240d4e2f5ce41d24f4be6e357f1cd5587f94268839c6fe52",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748452756280818755.json",
+    "group_id": "1748452756280818755",
+    "temperature": 1.8,
+    "file_sha256": "515aeb8874832bcaced470188dfb307b2f884493e3b7ae0d7eaf2f72333e5fd8",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748453715793709730.json",
+    "group_id": "1748453715793709730",
+    "temperature": 1.8,
+    "file_sha256": "64d01213ec54e4ba2738351dffcbfe6d8d831c52589cee05f495058bfb77ca9f",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748454378759819185.json",
+    "group_id": "1748454378759819185",
+    "temperature": 1.8,
+    "file_sha256": "237fc37887e8bfdc65bfdcbe9c54dd7c674c746c4381d46a19ca3b5dbb81cff2",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748455311552812914.json",
+    "group_id": "1748455311552812914",
+    "temperature": 1.8,
+    "file_sha256": "d115ffeed9731725f3f515d2305ce211505e781c4cc3f147079f0d9062959775",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748455963247856540.json",
+    "group_id": "1748455963247856540",
+    "temperature": 1.8,
+    "file_sha256": "3d71600f02d8aaeee6a77d862810bad5ed25104a58b3a23fc0c2d0bc128ec383",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748458198202128423.json",
+    "group_id": "1748458198202128423",
+    "temperature": 1.8,
+    "file_sha256": "25000ab0ad47658764385a0a1f55656158e6d187349e0180c7b345f79afa37b7",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748459801853585810.json",
+    "group_id": "1748459801853585810",
+    "temperature": 1.8,
+    "file_sha256": "bb714dcfcccf611d9ac04809c2a174d23711912377ed50677bb29ff2b7e3f94a",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748461452048519849.json",
+    "group_id": "1748461452048519849",
+    "temperature": 1.8,
+    "file_sha256": "fef2cf6784835bc305644f519bae365870bb86ca895e828a94972898814f8c41",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748463033719015432.json",
+    "group_id": "1748463033719015432",
+    "temperature": 1.8,
+    "file_sha256": "1eca2bc27b2bdd4a5e6df749aafcb71588502f4e0ad7301b1c2f30a321edbff0",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748464668680161977.json",
+    "group_id": "1748464668680161977",
+    "temperature": 1.8,
+    "file_sha256": "4f33ad615d6b4a0392b0ee3c49824156193c0c819f191be31c8c1a90ed443e0e",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748466286193026462.json",
+    "group_id": "1748466286193026462",
+    "temperature": 1.8,
+    "file_sha256": "9bb48af2355cb930c134eff94c30aa36f50993c9c04efb79bc82a9893f4ea88f",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748467893098401552.json",
+    "group_id": "1748467893098401552",
+    "temperature": 1.8,
+    "file_sha256": "f46a16be233d00ac26679d9bf37ee0f8ebd9956042be258081f5748bb9f0383a",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748469539448950733.json",
+    "group_id": "1748469539448950733",
+    "temperature": 1.8,
+    "file_sha256": "51312d856c6c83f5818b530a13f7e611b91a82f4b7d6b661304789476409aa18",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748471115438039490.json",
+    "group_id": "1748471115438039490",
+    "temperature": 1.8,
+    "file_sha256": "0c1f035ce78cdd42428de7cac3c39a657afdb8843086e5bf2c2c8f70403ddc53",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748472713573811403.json",
+    "group_id": "1748472713573811403",
+    "temperature": 1.8,
+    "file_sha256": "062c0f173377441296b454441abf76e330acc23ca45a2d718b17269e3ec07b1c",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  },
+  {
+    "file": "gen_result/temperature_1.8/1748474345468701986.json",
+    "group_id": "1748474345468701986",
+    "temperature": 1.8,
+    "file_sha256": "bbed74a5bdfa13bdbedb76563fb1a8a875a1b5d905c94f44f6e5bfa2f196f954",
+    "prompts": 16,
+    "saved_det_true": 16,
+    "missing_primary_fields": [
+      "secret_key",
+      "one_time_pad",
+      "origin_sentence_tokens",
+      "watermark_sentence_tokens"
+    ],
+    "missing_oracle_fields": [
+      "prompt_tokens"
+    ]
+  }
+]

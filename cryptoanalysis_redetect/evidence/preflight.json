@@ -1,0 +1,384 @@
+{
+  "status": "blocked_missing_source_data",
+  "artifact_repo": "https://github.com/1234wangtr/PRC_estimator",
+  "artifact_commit": "8593e86aeb50b5f82d6c88e390b12a30f581dbaa",
+  "archive_path": "llm/data/Deepseek_t_3_temp_all.zip",
+  "archive_sha256": "f8ac4b3a45a533f0ea31d579d4125b3f36d19e791ad2d4192d6db927a6f40f91",
+  "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+  "model_revision": "916b56a44061fd5cd7d6a8fb632557ed4f724f60",
+  "parameters": {
+    "completion_tokens": 1024,
+    "vocab_size": 152064,
+    "bits_per_token": 18,
+    "n": 18432,
+    "r": 17510,
+    "t": 3,
+    "eta": 0.1
+  },
+  "max_groups_per_temp": 8,
+  "available_groups": 320,
+  "selected_groups": 40,
+  "selected_watermarked_completions": 640,
+  "selected_null_completions": 640,
+  "primary_missing_in_selected_groups": 40,
+  "primary_missing_in_all_groups": 320,
+  "hard_reproduction_passed": false,
+  "hard_reproduction_status": "not_attempted_required_source_fields_absent",
+  "keys_verified": false,
+  "thresholds_frozen": false,
+  "lm_calls": 0,
+  "detector_scoring_calls": 0,
+  "generated_texts": 0,
+  "modal_runs_launched": 0,
+  "gpu_seconds": 0,
+  "compute_cost_usd": 0,
+  "stop_reason": "Cannot independently reproduce hard detection or recover exact completion token IDs from decoded strings without saved keys, OTPs, and token IDs.",
+  "saved_flag_summary": [
+    {
+      "temperature": 1.0,
+      "scope": "all_available",
+      "groups": 64,
+      "N": 1024,
+      "stored_detected": 0,
+      "stored_detection_rate": 0.0,
+      "source": "saved det flags; NOT independently reproduced"
+    },
+    {
+      "temperature": 1.0,
+      "scope": "selected_diagnostic",
+      "groups": 8,
+      "N": 128,
+      "stored_detected": 0,
+      "stored_detection_rate": 0.0,
+      "source": "saved det flags; NOT independently reproduced"
+    },
+    {
+      "temperature": 1.2,
+      "scope": "all_available",
+      "groups": 64,
+      "N": 1024,
+      "stored_detected": 0,
+      "stored_detection_rate": 0.0,
+      "source": "saved det flags; NOT independently reproduced"
+    },
+    {
+      "temperature": 1.2,
+      "scope": "selected_diagnostic",
+      "groups": 8,
+      "N": 128,
+      "stored_detected": 0,
+      "stored_detection_rate": 0.0,
+      "source": "saved det flags; NOT independently reproduced"
+    },
+    {
+      "temperature": 1.4,
+      "scope": "all_available",
+      "groups": 64,
+      "N": 1024,
+      "stored_detected": 609,
+      "stored_detection_rate": 0.5947265625,
+      "source": "saved det flags; NOT independently reproduced"
+    },
+    {
+      "temperature": 1.4,
+      "scope": "selected_diagnostic",
+      "groups": 8,
+      "N": 128,
+      "stored_detected": 82,
+      "stored_detection_rate": 0.640625,
+      "source": "saved det flags; NOT independently reproduced"
+    },
+    {
+      "temperature": 1.6,
+      "scope": "all_available",
+      "groups": 64,
+      "N": 1024,
+      "stored_detected": 1021,
+      "stored_detection_rate": 0.9970703125,
+      "source": "saved det flags; NOT independently reproduced"
+    },
+    {
+      "temperature": 1.6,
+      "scope": "selected_diagnostic",
+      "groups": 8,
+      "N": 128,
+      "stored_detected": 127,
+      "stored_detection_rate": 0.9921875,
+      "source": "saved det flags; NOT independently reproduced"
+    },
+    {
+      "temperature": 1.8,
+      "scope": "all_available",
+      "groups": 64,
+      "N": 1024,
+      "stored_detected": 1024,
+      "stored_detection_rate": 1.0,
+      "source": "saved det flags; NOT independently reproduced"
+    },
+    {
+      "temperature": 1.8,
+      "scope": "selected_diagnostic",
+      "groups": 8,
+      "N": 128,
+      "stored_detected": 128,
+      "stored_detection_rate": 1.0,
+      "source": "saved det flags; NOT independently reproduced"
+    }
+  ],
+  "companion": {
+    "archive_sha256": "b7dccb5577dfe0c8d90596feb907fb3a47995ac689afea4b1b16b2f234530c3b",
+    "groups": [
+      {
+        "file": "0001.json",
+        "fields": [
+          "inv_msg",
+          "msg",
+          "one_time_pad",
+          "origin_sentence",
+          "origin_sentence_tokens",
+          "prompt",
+          "prompt_tokens",
+          "public_key",
+          "secret_key",
+          "watermark_sentence",
+          "watermark_sentence_tokens"
+        ],
+        "exact_sweep_watermark_text_group_match": null,
+        "secret_key_rows": 17510,
+        "otp_coordinates": 18432,
+        "watermark_token_lengths": [
+          1024
+        ],
+        "null_token_lengths": [
+          1024
+        ]
+      },
+      {
+        "file": "0002.json",
+        "fields": [
+          "inv_msg",
+          "msg",
+          "one_time_pad",
+          "origin_sentence",
+          "origin_sentence_tokens",
+          "prompt",
+          "prompt_tokens",
+          "public_key",
+          "secret_key",
+          "watermark_sentence",
+          "watermark_sentence_tokens"
+        ],
+        "exact_sweep_watermark_text_group_match": null,
+        "secret_key_rows": 17510,
+        "otp_coordinates": 18432,
+        "watermark_token_lengths": [
+          1024
+        ],
+        "null_token_lengths": [
+          1024
+        ]
+      },
+      {
+        "file": "0003.json",
+        "fields": [
+          "inv_msg",
+          "msg",
+          "one_time_pad",
+          "origin_sentence",
+          "origin_sentence_tokens",
+          "prompt",
+          "prompt_tokens",
+          "public_key",
+          "secret_key",
+          "watermark_sentence",
+          "watermark_sentence_tokens"
+        ],
+        "exact_sweep_watermark_text_group_match": null,
+        "secret_key_rows": 17510,
+        "otp_coordinates": 18432,
+        "watermark_token_lengths": [
+          1024
+        ],
+        "null_token_lengths": [
+          1024
+        ]
+      },
+      {
+        "file": "0004.json",
+        "fields": [
+          "inv_msg",
+          "msg",
+          "one_time_pad",
+          "origin_sentence",
+          "origin_sentence_tokens",
+          "prompt",
+          "prompt_tokens",
+          "public_key",
+          "secret_key",
+          "watermark_sentence",
+          "watermark_sentence_tokens"
+        ],
+        "exact_sweep_watermark_text_group_match": null,
+        "secret_key_rows": 17510,
+        "otp_coordinates": 18432,
+        "watermark_token_lengths": [
+          1024
+        ],
+        "null_token_lengths": [
+          1024
+        ]
+      },
+      {
+        "file": "0005.json",
+        "fields": [
+          "inv_msg",
+          "msg",
+          "one_time_pad",
+          "origin_sentence",
+          "origin_sentence_tokens",
+          "prompt",
+          "prompt_tokens",
+          "public_key",
+          "secret_key",
+          "watermark_sentence",
+          "watermark_sentence_tokens"
+        ],
+        "exact_sweep_watermark_text_group_match": null,
+        "secret_key_rows": 17510,
+        "otp_coordinates": 18432,
+        "watermark_token_lengths": [
+          1024
+        ],
+        "null_token_lengths": [
+          1024
+        ]
+      },
+      {
+        "file": "0006.json",
+        "fields": [
+          "inv_msg",
+          "msg",
+          "one_time_pad",
+          "origin_sentence",
+          "origin_sentence_tokens",
+          "prompt",
+          "prompt_tokens",
+          "public_key",
+          "secret_key",
+          "watermark_sentence",
+          "watermark_sentence_tokens"
+        ],
+        "exact_sweep_watermark_text_group_match": null,
+        "secret_key_rows": 17510,
+        "otp_coordinates": 18432,
+        "watermark_token_lengths": [
+          1024
+        ],
+        "null_token_lengths": [
+          1024
+        ]
+      },
+      {
+        "file": "0007.json",
+        "fields": [
+          "inv_msg",
+          "msg",
+          "one_time_pad",
+          "origin_sentence",
+          "origin_sentence_tokens",
+          "prompt",
+          "prompt_tokens",
+          "public_key",
+          "secret_key",
+          "watermark_sentence",
+          "watermark_sentence_tokens"
+        ],
+        "exact_sweep_watermark_text_group_match": null,
+        "secret_key_rows": 17510,
+        "otp_coordinates": 18432,
+        "watermark_token_lengths": [
+          1024
+        ],
+        "null_token_lengths": [
+          1024
+        ]
+      },
+      {
+        "file": "0008.json",
+        "fields": [
+          "inv_msg",
+          "msg",
+          "one_time_pad",
+          "origin_sentence",
+          "origin_sentence_tokens",
+          "prompt",
+          "prompt_tokens",
+          "public_key",
+          "secret_key",
+          "watermark_sentence",
+          "watermark_sentence_tokens"
+        ],
+        "exact_sweep_watermark_text_group_match": null,
+        "secret_key_rows": 17510,
+        "otp_coordinates": 18432,
+        "watermark_token_lengths": [
+          1024
+        ],
+        "null_token_lengths": [
+          1024
+        ]
+      },
+      {
+        "file": "0009.json",
+        "fields": [
+          "inv_msg",
+          "msg",
+          "one_time_pad",
+          "origin_sentence",
+          "origin_sentence_tokens",
+          "prompt",
+          "prompt_tokens",
+          "public_key",
+          "secret_key",
+          "watermark_sentence",
+          "watermark_sentence_tokens"
+        ],
+        "exact_sweep_watermark_text_group_match": null,
+        "secret_key_rows": 17510,
+        "otp_coordinates": 18432,
+        "watermark_token_lengths": [
+          1024
+        ],
+        "null_token_lengths": [
+          1024
+        ]
+      },
+      {
+        "file": "0010.json",
+        "fields": [
+          "inv_msg",
+          "msg",
+          "one_time_pad",
+          "origin_sentence",
+          "origin_sentence_tokens",
+          "prompt",
+          "prompt_tokens",
+          "public_key",
+          "secret_key",
+          "watermark_sentence",
+          "watermark_sentence_tokens"
+        ],
+        "exact_sweep_watermark_text_group_match": null,
+        "secret_key_rows": 17510,
+        "otp_coordinates": 18432,
+        "watermark_token_lengths": [
+          1024
+        ],
+        "null_token_lengths": [
+          1024
+        ]
+      }
+    ],
+    "note": "Companion is T=1.8 only; exact text matching is necessary, not sufficient for key provenance."
+  }
+}

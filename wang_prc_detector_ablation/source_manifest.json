@@ -1,0 +1,9 @@
+{
+  "artifact_commit": "8593e86aeb50b5f82d6c88e390b12a30f581dbaa",
+  "files": {
+    "main.py": "055f9814f557c4e0e03a2efa77d6c406554d7cb1e12b16516f0cc7f831c9fa53",
+    "llm_prc_api.py": "82b2cbdd196f9bf9ff070cafc7f8fe592ad6b092471cb1c55956f3efd0c3df51",
+    "LICENSE": "b171e708c7e74794e6971db508cb9daa7f05c7d79f07e207766f9d7b434765a1"
+  },
+  "complete_archive_sha256": "b7dccb5577dfe0c8d90596feb907fb3a47995ac689afea4b1b16b2f234530c3b"
+}
