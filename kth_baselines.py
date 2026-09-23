@@ -2,7 +2,7 @@
 
 Runs the authors' own EXP, EXP-edit and KGW-2.0 code (cloned at a pinned commit)
 on Qwen3-0.6B-Base with the 500 prompts of the fixed PRC n=400 run, and scores
-every scheme after the identical corruptions used for PRC (attacks.apply_attack
+every scheme after the identical substitutions used for PRC (attacks.apply_attack
 seeds each candidate by source and prompt index, so the wm and null texts of a
 given prompt receive the same edit positions and replacement tokens as in the
 PRC sweep).
@@ -13,9 +13,7 @@ delta=2.0 with previous-token (simple_1) seeding, and p-values from the
 empirical distribution of test statistics on human C4 continuations
 (null=True). Deviations, all applied equally to PRC:
   * m=400 tokens (paper: 35/70) to match the PRC block length;
-  * attacks act on tokens with no decode/re-encode;
-  * deleted texts are scored at their shortened length against a null
-    reference computed at that same length (the paper pads to m);
+  * substitutions act on tokens with no decode/re-encode;
   * the KGW green-list RNG runs on CPU at generation and detection.
 
 Stages (each a separate local entrypoint call):
@@ -46,7 +44,7 @@ KEY_SEED = 1            # paper's --seed for the per-prompt key draw
 NULL_SEED = 2           # seeds the random keys of the human null reference
 ATTACK_VOCAB = 151665   # identical to the PRC sweep (Qwen3-Base tokenizer)
 RATES = (0.05, 0.1, 0.15, 0.2, 0.25, 0.3)
-KINDS = ("substitution", "insertion", "deletion")
+KINDS = ("substitution",)
 SCHEMES = ("exp", "exp_edit", "kgw2")
 KGW_GAMMA, KGW_DELTA = 0.25, 2.0
 CHUNK = 25
@@ -290,8 +288,7 @@ def _work_items(schemes, attacks, null_docs):
     nulls = {r["prompt_idx"]: r for r in case["records"] if r["source"] == "null"}
     if sorted(nulls) != list(range(NUM_PROMPTS)):
         raise ValueError("expected one PRC null per prompt")
-    # Every length a deleted text can have, so smoke and full runs share cached references.
-    lengths = sorted({M} | {M - int(r * M) for r in RATES})
+    lengths = [M]  # substitution keeps every text at M tokens
     items = []
     for scheme in schemes:
         for start in range(PROMPT_OFFSET_NULL, PROMPT_OFFSET_NULL + null_docs, 100):
@@ -324,7 +321,7 @@ def run(stage: str = "smoke", schemes: str = ",".join(SCHEMES)):
         for path in generate_chunk.starmap([(s, 0) for s in chosen]):
             print("generated", path)
         items = [{**i, "verify": True} if i["kind"] == "eval" else i
-                 for i in _work_items(chosen, [("deletion", 0.3)], null_docs=100)
+                 for i in _work_items(chosen, [("substitution", 0.3)], null_docs=100)
                  if i["kind"] == "null_reference" or i["gen_chunk"] == 0]
         for path in score_chunk.map(items):
             print("scored", path)
