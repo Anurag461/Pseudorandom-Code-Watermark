@@ -1,0 +1,234 @@
+{
+  "design": {
+    "backend": "qwen-static-bf16",
+    "bits": 18,
+    "bootstrap": 2000,
+    "calibration_groups": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "eta": 0.1,
+    "evaluation_groups": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "fpr": 0.001,
+    "generation_batch": 80,
+    "groups": 10,
+    "master_seed": 251217310,
+    "model": {
+      "cache_directory": "models/Qwen3-8B-Base",
+      "dtype": "bfloat16",
+      "id": "Qwen/Qwen3-8B-Base",
+      "index_sha256": "cd39d5e44c5aadfd1954b598883aea1c4a98822a2f7723d214ef2278b7fec2e4",
+      "revision": "49e3418fbbbca6ecbdf9608b4d22e5a407081db4",
+      "size": "8B",
+      "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "weight_files": {
+        "model-00001-of-00005.safetensors": "9983f1b9ef2f60e7c3730d9bc11ada914e6ec630639b5b020a89bd158cd0446b",
+        "model-00002-of-00005.safetensors": "9aa12339835bf7a093d3d0b0a0d2d77f8538301cfc7f8e7ec7a585858ebf7a1f",
+        "model-00003-of-00005.safetensors": "c7dd5a191c8da555def0714550375b3c0117751add408fcdda0c2a79ac0186bc",
+        "model-00004-of-00005.safetensors": "ad8b708792105133e03fe19e2d56c89c709f677f01285f8b3ede8947d59fd9fe",
+        "model-00005-of-00005.safetensors": "fbf24915d47ea030bb68ab0b9488f4515a907185baa6dc26837c9c3f2326a550"
+      }
+    },
+    "n": 18432,
+    "null_keys_per_split": 256,
+    "primary_context": "completion-only-first-token-abstain",
+    "probability_arithmetic": "fp32-log-softmax-fp64-positive-mass-tree",
+    "prompts": [
+      "Write a long creative story of 10000 words about the sea.",
+      "Write a long poem about the future of AI.",
+      "Write a Python script to solve the Hanoi Tower problem.",
+      "How to teach my child to cook a perfect steak?",
+      "What is the meaning of life, the universe and everything?",
+      "Rewrite the following sentence: Four score and seven years ago our fathers brought forth on this continent a new nation, conceived in liberty and dedicated to the proposition that all men are created equal.",
+      "What is the capital of France?",
+      "Can you tell me a joke?",
+      "Is there any food recommendation around San Francisco?",
+      "What is the best way to learn history?",
+      "How to make a perfect cup of coffee?",
+      "Can you sing a song for me?",
+      "How to replace a tire on a car?",
+      "Why does a fried chicken cross the street?",
+      "Is there any life on Mars?",
+      "My name of John Doe, I am a software engineer, please write a self-introduction for me."
+    ],
+    "r": 17510,
+    "replay_batch": 80,
+    "schema": 1,
+    "source": {
+      "artifact_commit": "8593e86aeb50b5f82d6c88e390b12a30f581dbaa",
+      "complete_archive_sha256": "b7dccb5577dfe0c8d90596feb907fb3a47995ac689afea4b1b16b2f234530c3b",
+      "files": {
+        "LICENSE": "b171e708c7e74794e6971db508cb9daa7f05c7d79f07e207766f9d7b434765a1",
+        "llm_prc_api.py": "82b2cbdd196f9bf9ff070cafc7f8fe592ad6b092471cb1c55956f3efd0c3df51",
+        "main.py": "055f9814f557c4e0e03a2efa77d6c406554d7cb1e12b16516f0cc7f831c9fa53"
+      }
+    },
+    "t": 3,
+    "temperatures": [
+      1.0,
+      1.2,
+      1.4,
+      1.6,
+      1.8
+    ],
+    "tokens": 1024,
+    "vocab": 151936
+  },
+  "fingerprint": "35f5566b766f8be3aea1cef9",
+  "implementation": {
+    "detectors.py": "f728bd15d4524ac3a4aa4b323d441bf3e5732275ed2eaf09ebebf9efbe0035b5",
+    "prc.py": "20a731e18640903d82ff0d7bb5a53f87d6206e0d8b3987654c065a816c4fb6bc",
+    "qwen.py": "0334edc2cd4049a365fadf8591bc4108a2c709797fe153542a59ce626ef5a5ef",
+    "wang_prc_detector_ablation/__init__.py": "3a841844e3c4f45194285948c5361aa2999be0f62995b4c3c1db1e9dcdb560a5",
+    "wang_prc_detector_ablation/analysis.py": "9e5aad197530695d80604b8e06d0afe14345c975086fbb57ce75ceba20654870",
+    "wang_prc_detector_ablation/cloud.py": "24f6e752198798ad2db738869a5d14b7f4bb3306e40263c1997a0da069c70983",
+    "wang_prc_detector_ablation/config.py": "21a7543a3bbb0035e0719079c6bfac8f23ecc17ddd5172386d967e7cc65c9150",
+    "wang_prc_detector_ablation/hierarchy.py": "0a397fc1292d5c6cd06ec7ff0622fa7d90d5a972ef1009ca2f040ca32204d638",
+    "wang_prc_detector_ablation/launch.py": "42807b81f66e5786c4dee484c3ffc025c7eaaf6ef711dee576a4488dfef60ebd",
+    "wang_prc_detector_ablation/lm.py": "46873a50f7db9e6f7d40ce00890a41277702e037df17de5c86b9ed5b6ae2e3fe",
+    "wang_prc_detector_ablation/prepare.py": "c9c29057d504c1e67e8a0bcf6ea85c696688fd1e5b643f2ca0916ae329ec14ca",
+    "wang_prc_detector_ablation/storage.py": "842757147a014e1d2aa18d5dc0f2c826f4e50a50bd7e5ae409e36ed25082c66f",
+    "wang_prc_detector_ablation/wang.py": "8cafb1c8a9d0761475e881935ed2c1557cf00e5ee26d0ac098837f22ae38f37b"
+  },
+  "inventory": [
+    {
+      "group": 0,
+      "id": "wm_g00_p00_t1.0",
+      "prompt": 0,
+      "seed": 10687668410264079022,
+      "source": "wm",
+      "split": "watermarked",
+      "temperature": 1.0,
+      "tokens": 64
+    },
+    {
+      "group": 0,
+      "id": "wm_g00_p01_t1.0",
+      "prompt": 1,
+      "seed": 16779629686119897346,
+      "source": "wm",
+      "split": "watermarked",
+      "temperature": 1.0,
+      "tokens": 64
+    },
+    {
+      "group": 0,
+      "id": "null_g00_p00_t1.0",
+      "prompt": 0,
+      "seed": 18440844657272530287,
+      "source": "null",
+      "split": "calibration",
+      "temperature": 1.0,
+      "tokens": 64
+    },
+    {
+      "group": 0,
+      "id": "null_g00_p01_t1.0",
+      "prompt": 1,
+      "seed": 17462974394974630958,
+      "source": "null",
+      "split": "calibration",
+      "temperature": 1.0,
+      "tokens": 64
+    },
+    {
+      "group": 0,
+      "id": "wm_g00_p00_t1.8",
+      "prompt": 0,
+      "seed": 17711652172646269109,
+      "source": "wm",
+      "split": "watermarked",
+      "temperature": 1.8,
+      "tokens": 64
+    },
+    {
+      "group": 0,
+      "id": "wm_g00_p01_t1.8",
+      "prompt": 1,
+      "seed": 14393309455926973511,
+      "source": "wm",
+      "split": "watermarked",
+      "temperature": 1.8,
+      "tokens": 64
+    },
+    {
+      "group": 0,
+      "id": "null_g00_p00_t1.8",
+      "prompt": 0,
+      "seed": 13377364842077254876,
+      "source": "null",
+      "split": "calibration",
+      "temperature": 1.8,
+      "tokens": 64
+    },
+    {
+      "group": 0,
+      "id": "null_g00_p01_t1.8",
+      "prompt": 1,
+      "seed": 18258147461632623993,
+      "source": "null",
+      "split": "calibration",
+      "temperature": 1.8,
+      "tokens": 64
+    }
+  ],
+  "keys": [
+    "wm_000"
+  ],
+  "provenance": {
+    "fingerprint": "35f5566b766f8be3aea1cef9",
+    "git_commit": "3eaf5af3ad449e9aa14349545481b46707fe5586",
+    "quote": {
+      "automatic_next_stage": false,
+      "budget_after_estimate_if_35_available": [
+        33.5,
+        34.5
+      ],
+      "caveat": "Timeout envelope excludes image builds, container startup/teardown and storage; estimate includes a planning allowance. Not a provider-enforced dollar cap.",
+      "estimated_usd": [
+        0.5,
+        1.5
+      ],
+      "fingerprint": "35f5566b766f8be3aea1cef9",
+      "git_commit": "3eaf5af3ad449e9aa14349545481b46707fe5586",
+      "metered_function_timeout_envelope_usd": 1.2150839999999998,
+      "profile": "new-prc-watermark",
+      "rates_per_second": {
+        "GiB": 2.22e-06,
+        "H100": 0.001097,
+        "core": 1.31e-05
+      },
+      "remaining_budget_last_stated": 35,
+      "remaining_budget_unreconciled": true,
+      "retries": 0,
+      "root": "wang_prc_detector_ablation/qwen3_8b_base/35f5566b766f8be3aea1cef9",
+      "sanity_skip_rule": "Skip (not pass) initial package if concrete quote exceeds $5",
+      "specification": {
+        "cpu": 4,
+        "cpu_seconds": 600,
+        "estimate": [
+          0.5,
+          1.5
+        ],
+        "gpu_batch": 2,
+        "gpu_seconds": 900,
+        "gpu_workers": 1,
+        "memory_GiB": 16,
+        "workload": "Complete T=1.8 source check (10x16); one full key; 4 WM + 4 null x64 tokens; 504 prompt-free replay positions; bounded prefix checks"
+      },
+      "stage": "sanity",
+      "volume": "prc-data"
+    },
+    "run_id": "wang-sanity-20260923-first-attempt"
+  },
+  "smoke": true
+}

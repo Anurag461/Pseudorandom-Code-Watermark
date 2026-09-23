@@ -16,6 +16,9 @@ from .storage import write_json
 # Base rates verified 2026-09-23. Refresh from modal.com/pricing before approval.
 RATES = dict(H100=0.001097, core=0.0000131, GiB=0.00000222)
 STAGES = {
+    'numerical-diagnostic': dict(cpu=4, memory_GiB=64, cpu_seconds=0, gpu_workers=1,
+                   gpu_seconds=420, gpu_batch=1, estimate=[0.25, 0.75],
+                   workload='Reuse the saved failing T=1.0 null prefix; static/concat/uncached at lengths 1,4,8,16 in BF16 and FP32; 122 teacher-forced positions, no generation, no source recheck'),
     'sanity': dict(cpu=4, memory_GiB=16, cpu_seconds=600, gpu_workers=1,
                    gpu_seconds=900, gpu_batch=2, estimate=[0.50, 1.50],
                    workload='Complete T=1.8 source check (10x16); one full key; 4 WM + 4 null x64 tokens; 504 prompt-free replay positions; bounded prefix checks'),

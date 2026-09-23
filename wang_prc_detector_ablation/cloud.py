@@ -114,11 +114,25 @@ def score_cpu(provenance, approval, oracle=False):
     return record('score', approval, result, time.monotonic()-start, 8*.0000131+16*.00000222)
 
 
+@app.function(image=image, gpu='H100', cpu=4, memory=65536,
+              volumes={'/data': data, '/cache': hf}, timeout=420, retries=0,
+              include_source=False, single_use_containers=True, max_containers=1)
+def numerical_gpu(provenance, approval):
+    from .numerical_diagnostic import run
+    data.reload()
+    start = time.monotonic()
+    result = run('/cache', root() / 'numerical_diagnostic.json', provenance)
+    return record('gpu_numerical_diagnostic', approval, result, time.monotonic()-start,
+                  .001097+4*.0000131+64*.00000222)
+
+
 def dispatch(stage, quote, approval, oracle):
     from .config import TEMPERATURES
     provenance = dict(git_commit=quote['git_commit'], fingerprint=quote['fingerprint'],
                       run_id=approval['run_id'], quote=quote)
     with app.run():
+        if stage == 'numerical-diagnostic':
+            return numerical_gpu.remote(provenance, approval)
         if stage == 'sanity':
             a = sanity_cpu.remote(provenance, approval)
             b = sanity_gpu.remote(provenance, approval)

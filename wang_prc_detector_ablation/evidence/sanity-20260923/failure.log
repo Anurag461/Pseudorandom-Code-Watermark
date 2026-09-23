@@ -1,0 +1,30 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/private/tmp/prc-cryptoanalysis-redetection/wang_prc_detector_ablation/launch.py", line 116, in <module>
+    main()
+  File "/private/tmp/prc-cryptoanalysis-redetection/wang_prc_detector_ablation/launch.py", line 109, in main
+    result = dispatch(args.stage, q, approval, args.oracle_prompt_context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/prc-cryptoanalysis-redetection/wang_prc_detector_ablation/cloud.py", line 124, in dispatch
+    b = sanity_gpu.remote(provenance, approval)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/modal/_object.py", line 45, in wrapped
+    return await method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/modal/_functions.py", line 1765, in remote
+    return await self._call_function(args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/modal/_functions.py", line 1703, in _call_function
+    return await invocation.run_function()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/modal/_functions.py", line 494, in run_function
+    return await _process_result(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/modal/_utils/function_utils.py", line 548, in _process_result
+    raise exc_with_hints(exc)
+  File "<ta-01M38486172J57G23B0VJ5TXVR>:/workspace/wang_prc_detector_ablation/cloud.py", line 81, in sanity_gpu
+  File "<ta-01M38486172J57G23B0VJ5TXVR>:/workspace/wang_prc_detector_ablation/cloud.py", line 81, in <listcomp>
+  File "<ta-01M38486172J57G23B0VJ5TXVR>:/workspace/wang_prc_detector_ablation/lm.py", line 227, in run_temperature
+  File "<ta-01M38486172J57G23B0VJ5TXVR>:/workspace/wang_prc_detector_ablation/lm.py", line 254, in check_prefixes
+ValueError: Cached/uncached prefix drift: {'prefix': 4, 'max_logit_error': 0.25, 'total_variation': 0.022011584395163986}

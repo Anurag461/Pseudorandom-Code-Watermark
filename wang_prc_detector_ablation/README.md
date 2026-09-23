@@ -1,6 +1,9 @@
 # Wang-channel detector ablation on Qwen3-8B-Base
 
-**Setup implemented; no paid compute launched.** This is a controlled detector
+**Initial sanity attempted: source check passed; GPU numerical check failed.**
+See [the attempt report](evidence/sanity-20260923/README.md) for the 159/160 source
+result, 111-second GPU runtime, saved traces and separately gated next diagnostic.
+The full experiment has not launched. This is a controlled detector
 comparison on fresh Wang-channel generations from the cached Base model. It is
 not a reproduction of DeepSeek Figure 5. The earlier saved-sweep preflight and
 its missing-key findings are preserved in `../cryptoanalysis_redetect/`.
@@ -8,7 +11,8 @@ its missing-key findings are preserved in `../cryptoanalysis_redetect/`.
 The user approved code setup with “go ahead and set up.” Each paid run still
 requires a separate workload/cost quote and explicit approval under the repository
 `AGENTS.md`. A setup approval, a quote file, or the $5 sanity ceiling is not paid
-execution approval. No approval file with `approved: true` is supplied here.
+execution approval. The archived first-attempt approval is spent; no additional
+paid run is authorized.
 
 ## Frozen experiment
 
@@ -87,8 +91,8 @@ compare tiny keys/encoding against the vendored original, test direct-sum versus
 fast sampling under identical variates, bit ordering, OTP/permutation conventions,
 tail masses, abstention, no-evidence handling, inclusive ties, deterministic stream
 separation, corrupted caches, prompt-free input capture with canned logits,
-cluster resampling and tied AUC. Full-size checkpoint, GPU numeric, artifact-score
-and report validation remain unrun pending paid approval.
+cluster resampling and tied AUC. The source and checkpoint checks have since passed in the first approved attempt;
+its GPU prefix check failed. Production and full report validation remain unrun.
 
 ## Exact staged run commands
 
@@ -175,7 +179,9 @@ Review costs and approvals between stages; stop if the remaining budget does not
 The last user-stated remaining budget is $35. `billing_review.json` records the
 read-only refresh: $130.36659562 gross usage across other apps since September 22,
 latest returned hour September 23 12:00 UTC. It is not a remaining balance and
-may omit later charges. This experiment has spent **$0**. If $35 is still available,
+may omit later charges. This snapshot predates the first sanity attempt; its recorded CPU/GPU runtime
+estimate is now **$0.1439**, with final billing pending. For the original quote,
+if $35 is still available,
 the proposed sanity package leaves $33.50–$34.50; do not infer current credit balance
 from this usage report.
 

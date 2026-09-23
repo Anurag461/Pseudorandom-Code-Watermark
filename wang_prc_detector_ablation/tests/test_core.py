@@ -217,3 +217,24 @@ def test_approval_gate_without_importing_modal():
         validate_approval({**approval,'approved':False},'score',q)
     with pytest.raises(ValueError):
         validate_approval({**approval,'fingerprint':'changed'},'score',q)
+
+
+def test_bounded_precision_diagnostic_reuses_identical_prefixes():
+    from wang_prc_detector_ablation.numerical_diagnostic import collect, distance, PREFIXES
+    observed = []
+    class CannedPrefix:
+        def __call__(self, ids, cache=None):
+            if cache is not None:
+                cache.extend(ids[0].tolist())
+                context = cache
+            else:
+                context = ids[0].tolist()
+            observed.append(context.copy())
+            return torch.full((1, ids.shape[1], 3), float(sum(context)))
+    tokens = torch.arange(16)[None]
+    collected = collect(CannedPrefix(), tokens, lambda name: [])
+    assert len(observed) == 36  # Two 16-step caches plus four full prefixes.
+    for length in PREFIXES:
+        for mode in ('static', 'concat', 'uncached'):
+            assert collected[mode][length][0,0] == sum(range(length))
+        assert distance(collected['static'][length], collected['uncached'][length])['logits_equal']

@@ -1,0 +1,24 @@
+{
+  "stage": "sanity",
+  "fingerprint": "35f5566b766f8be3aea1cef9",
+  "git_commit": "3eaf5af3ad449e9aa14349545481b46707fe5586",
+  "profile": "new-prc-watermark",
+  "approved": true,
+  "user_approval_text": "go ahead",
+  "approval_context": "User approved the specifically quoted CPU + H100 sanity package at estimated $0.50\u2013$1.50. A prelaunch packaging-only correction was committed and pushed; workload, hardware and estimate are unchanged.",
+  "run_id": "wang-sanity-20260923-first-attempt",
+  "approved_at_utc": "2026-09-23T21:53:19.548574+00:00",
+  "quote_sha256": "86c9516263ca63c92240351f1a4e116a4ae57a89c8402f07df212f1be2ef83ff",
+  "max_estimated_usd": 1.5,
+  "billing_review": {
+    "checked_at_utc": "2026-09-23T21:53:19.547476+00:00",
+    "gross_usage_since_2026_09_22": "130.36659562",
+    "latest_returned_interval": "2026-09-23T12:00:00",
+    "remaining_budget_last_stated": 35,
+    "remaining_balance_known": false,
+    "this_experiment_pre_run_cost": 0
+  },
+  "oracle_prompt_context": false,
+  "retries_authorized": false,
+  "full_experiment_authorized": false
+}

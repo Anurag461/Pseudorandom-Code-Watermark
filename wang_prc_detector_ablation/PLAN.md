@@ -11,8 +11,9 @@ questions separately:
    to the same nominal FPR, supported by threshold-independent ROC/AUC?
 
 **Code setup approved** by “go ahead and set up.” The pipeline, small synthetic
-checks, documentation and staged approval gate are implemented. No paid run has
-launched. See README.md for exact commands, validation status and the next quote.
+checks, documentation and staged approval gate are implemented. The first paid
+sanity attempt passed the CPU source check but failed the BF16 prefix tolerance.
+See evidence/sanity-20260923/README.md for results and the next proposed diagnostic.
 Paid compute still requires separate approval for each run.
 
 [CURRENT_REQUEST.md](CURRENT_REQUEST.md) is authoritative for the latest model,
@@ -337,8 +338,8 @@ Deliver:
 | Approval / gate | Current status |
 | --- | --- |
 | Plan and code setup | Approved; implemented and locally checked |
-| Paid CPU preparation / sanity source check | Not requested or approved |
-| Paid GPU sanity | Not requested or approved; skip if quoted package exceeds $5 |
+| Paid CPU preparation / sanity source check | Short sanity source check approved and passed; full preparation not approved |
+| Paid GPU sanity | First attempt approved; stopped at prefix TV 0.0220 > 0.02; no retry authorized |
 | Paid production | Not requested or approved |
 | Paid CPU score/report | Not requested or approved |
 
