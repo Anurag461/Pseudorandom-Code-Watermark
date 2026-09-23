@@ -460,8 +460,8 @@ def perplexity(scheme, name):
     model = AutoModelForCausalLM.from_pretrained(PPL_MODEL, torch_dtype=torch.bfloat16).cuda().eval()
     values = []
     with torch.no_grad():
-        for b in range(0, len(tokens), 25):
-            ids = torch.cat([prompts[b:b + 25], tokens[b:b + 25]], 1).cuda()
+        for b in range(0, len(tokens), 5):  # full-vocabulary fp32 logits: ~1.2 GB per 5 texts
+            ids = torch.cat([prompts[b:b + 5], tokens[b:b + 5]], 1).cuda()
             logits = model(ids).logits[:, PROMPT_TOKENS - 1:-1].float()
             nll = torch.nn.functional.cross_entropy(logits.transpose(1, 2), ids[:, PROMPT_TOKENS:], reduction="none")
             values += nll.mean(1).exp().cpu().tolist()
@@ -511,6 +511,19 @@ def launch_attack(schemes="prc,kgw2,exp,synthid", variants="ctx1,pos", n_query=1
 
 
 ATTACK_CSV = "outputs/attacks/stealing_spoof_results.csv"
+
+
+@app.local_entrypoint()
+def run_perplexity(schemes: str = "prc,kgw2,exp,synthid"):
+    """Perplexity for every text set that does not have it yet."""
+    import torch
+    names = []
+    for scheme in schemes.split(","):
+        for entry in results.listdir(f"{OUT}/spoof/{scheme}"):
+            names.append((scheme, Path(entry.path).stem))
+        names += [(scheme, "calib"), (scheme, "query500")]
+    for (scheme, name), out in zip(names, perplexity.starmap(names, return_exceptions=True)):
+        print(scheme, name, "FAILED " + repr(out)[:200] if isinstance(out, Exception) else "ok")
 
 
 @app.local_entrypoint()
