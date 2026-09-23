@@ -238,3 +238,27 @@ def test_bounded_precision_diagnostic_reuses_identical_prefixes():
         for mode in ('static', 'concat', 'uncached'):
             assert collected[mode][length][0,0] == sum(range(length))
         assert distance(collected['static'][length], collected['uncached'][length])['logits_equal']
+
+
+def test_experiment_requires_approval_for_every_included_stage():
+    from wang_prc_detector_ablation.launch import validate_approval, quote
+    q = quote('experiment')
+    approval = dict(**{k:q[k] for k in ('stage','fingerprint','git_commit','profile')},
+        approved=True, user_approval_text='Approve this full experiment package', run_id='one',
+        billing_review='reviewed', max_estimated_usd=25, quote_sha256=config.digest_json(q),
+        validation_policy=q['validation']['policy'], included_sequence=q['included_sequence'])
+    validate_approval(approval, 'experiment', q)
+    for change in ({'included_sequence':['production x5']}, {'validation_policy':'passed'},
+                   {'oracle_prompt_context':True}):
+        with pytest.raises(ValueError):
+            validate_approval({**approval, **change}, 'experiment', q)
+
+
+def test_completed_controls_cannot_cover_changed_scientific_code(monkeypatch):
+    from wang_prc_detector_ablation import validation
+    assert validation.evidence()['precision'] == 'BF16 generation/replay unchanged'
+    hashes = config.implementation_hashes()
+    hashes['qwen.py'] = 'changed'
+    monkeypatch.setattr(validation, 'implementation_hashes', lambda: hashes)
+    with pytest.raises(ValueError, match='Validated implementation changed: qwen.py'):
+        validation.evidence()

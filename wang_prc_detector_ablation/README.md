@@ -6,6 +6,10 @@ result, 111-second GPU runtime, saved traces and separately gated next diagnosti
 A separately approved [numerical diagnostic](evidence/numerical-20260923/README.md)
 then passed exact cache and FP32-reference controls. The original BF16 guard
 remains failed; its tolerance and the production precision have not changed.
+**Next: the complete ten-key experiment, without another short smoke test.**
+The prepared [run package](NEXT_RUN.md) includes preparation, five H100 workers
+and scoring/reporting for $12–$25, pending approval. It uses the completed
+source/cache/FP32 controls and preserves the BF16 discrepancy in the report.
 The full experiment has not launched. This is a controlled detector
 comparison on fresh Wang-channel generations from the cached Base model. It is
 not a reproduction of DeepSeek Figure 5. The earlier saved-sweep preflight and
@@ -97,7 +101,14 @@ separation, corrupted caches, prompt-free input capture with canned logits,
 cluster resampling and tied AUC. The source and checkpoint checks have since passed in the first approved attempt;
 its GPU prefix check failed. Production and full report validation remain unrun.
 
-## Exact staged run commands
+## Exact run commands
+
+The next run is the single explicitly quoted `experiment` package in
+[NEXT_RUN.md](NEXT_RUN.md). Its approval must enumerate preparation, all five GPU
+workers, and scoring; this avoids pauses between already approved component runs.
+The individual-stage commands below remain available for separately requested work.
+
+## Individual-stage commands
 
 The entry point checks approval **before importing Modal or starting a build**.
 It requires this branch, committed code pushed to `origin/cryptoanalysis-redetection`,

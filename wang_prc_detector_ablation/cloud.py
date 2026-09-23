@@ -90,7 +90,11 @@ def sanity_gpu(provenance, approval):
 def production_gpu(temperature, provenance, approval):
     from .lm import run_temperature
     data.reload()
-    if approval['sanity_status'] == 'passed':
+    if approval['stage'] == 'experiment':
+        from .validation import evidence
+        if evidence() != provenance['quote']['validation']:
+            raise ValueError('Completed source/numerical evidence changed')
+    elif approval['sanity_status'] == 'passed':
         if json.loads((root(True) / 'status.json').read_text())['status'] != 'passed':
             raise ValueError('Missing paid sanity pass')
     elif approval['sanity_status'] == 'skipped_cost_over_5':
@@ -131,6 +135,8 @@ def dispatch(stage, quote, approval, oracle):
     provenance = dict(git_commit=quote['git_commit'], fingerprint=quote['fingerprint'],
                       run_id=approval['run_id'], quote=quote)
     with app.run():
+        if stage == 'experiment':
+            prepared = prepare_cpu.remote(provenance, approval)
         if stage == 'numerical-diagnostic':
             return numerical_gpu.remote(provenance, approval)
         if stage == 'sanity':
@@ -145,9 +151,13 @@ def dispatch(stage, quote, approval, oracle):
         try:
             for t in TEMPERATURES:
                 calls.append(production_gpu.spawn(t, provenance, approval))
-            return [call.get() for call in calls]
+            results = [call.get() for call in calls]
         except BaseException:
             # An error does not authorize siblings to continue unchecked or retry.
             for call in calls:
                 call.cancel(terminate_containers=True)
             raise
+        if stage == 'experiment':
+            scored = score_cpu.remote(provenance, approval, False)
+            return dict(preparation=prepared, production=results, scoring=scored)
+        return results

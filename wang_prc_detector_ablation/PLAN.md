@@ -16,7 +16,11 @@ sanity attempt passed the CPU source check but failed the BF16 prefix tolerance.
 See evidence/sanity-20260923/README.md for that attempt. The separately approved
 saved-token numerical diagnostic subsequently passed its cache/FP32 controls; see
 evidence/numerical-20260923/README.md. The original 2% BF16 guard remains failed,
-and the remaining short smoke and production are not authorized.
+and is preserved as a numerical diagnostic. Following the user's request to prioritize
+results, the prepared next package goes directly to the ten-key experiment using
+the completed source/cache/FP32 controls; no additional short smoke is proposed.
+See [NEXT_RUN.md](NEXT_RUN.md) for the exact package, cost and limitations.
+Production is not yet authorized.
 Paid compute still requires separate approval for each run.
 
 [CURRENT_REQUEST.md](CURRENT_REQUEST.md) is authoritative for the latest model,
