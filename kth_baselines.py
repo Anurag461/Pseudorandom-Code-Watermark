@@ -60,7 +60,7 @@ EOS = 151643  # Qwen3-Base <|endoftext|>
 KGW_GAMMA, KGW_DELTA = 0.25, 2.0
 CHUNK = 25
 
-image = (
+base_image = (
     modal.Image.debian_slim(python_version="3.11")
     .apt_install("git", "build-essential")
     .pip_install("torch==2.4.0", "transformers==4.51.3", "tokenizers==0.21.1", "safetensors==0.4.5",
@@ -71,9 +71,8 @@ image = (
                   "cd /kth && python -c 'import watermarking.gumbel.score'")
     .env({"PYTHONPATH": "/kth", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1",
           "TOKENIZERS_PARALLELISM": "false", "OMP_NUM_THREADS": "1"})
-    .add_local_file("prompts_10k.jsonl", "/root/prompts_10k.jsonl")
-    .add_local_python_source("attacks")
 )
+image = base_image.add_local_file("prompts_10k.jsonl", "/root/prompts_10k.jsonl").add_local_python_source("attacks")
 app = modal.App("prc-kth-baselines", image=image)
 hf_cache = modal.Volume.from_name("prc-hf-cache", create_if_missing=False)
 archive = modal.Volume.from_name("prc-research-archive", create_if_missing=False)
