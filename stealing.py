@@ -546,3 +546,54 @@ def summarize_attack(schemes: str = "prc,kgw2,exp,synthid"):
     for r in rows:
         print(f"{r['scheme']:8s} {r['set']:22s} detected {r['detected@1e-3']:>16s}  "
               f"quality-ok {r['detected & ppl-ok']:>16s}  ppl {r['median ppl']}")
+
+
+@app.function(image=spoof_image, cpu=4, memory=32768, timeout=7200,
+              volumes={"/cache": hf_cache, "/results": results, "/archive": archive})
+def signal_recovery(scheme, variant, n_query):
+    """E2: how much of the secret the stolen table recovers (boost-weighted, vs chance)."""
+    import numpy as np
+    import torch
+    results.reload()
+    table = stolen_table(scheme, variant, n_query)
+    entries = [(ctx, int(t), float(b)) for ctx, (idx, boost) in table.items() for t, b in zip(idx, boost)]
+    out = {"scheme": scheme, "variant": variant, "n_query": n_query, "contexts": len(table),
+           "boosted_pairs": len(entries)}
+    if scheme == "kgw2" and variant == "ctx1":
+        from transformers import AutoTokenizer
+        from watermarking.kirchenbauer.watermark_processor import WatermarkBase
+        wm = WatermarkBase(vocab=list(AutoTokenizer.from_pretrained(MODEL_DIR).get_vocab().values()),
+                           gamma=0.25, seeding_scheme="simple_1")
+        wm.rng = torch.Generator()
+        green = {}
+        hits, weights = [], []
+        for ctx, token, boost in entries:
+            if ctx not in green:
+                green[ctx] = set(wm._get_greenlist_ids(torch.tensor([ctx])).tolist())
+            hits.append(token in green[ctx])
+            weights.append(boost)
+        out |= {"measure": "fraction of boosted pairs that are green", "chance": 0.25,
+                "value": float(np.mean(hits)), "boost_weighted": float(np.average(hits, weights=weights))}
+    elif scheme == "exp" and variant == "pos":
+        from watermarking.gumbel.key import gumbel_key_func
+        generator = torch.Generator()
+        generator.manual_seed(EXP_KEY_SEED)
+        xi, _ = gumbel_key_func(generator, KEY_LENGTH, 151936)
+        vals = np.array([float(xi[ctx, token]) for ctx, token, _ in entries])
+        w = np.array([b for _, _, b in entries])
+        out |= {"measure": "mean key value xi[position, token] of boosted pairs", "chance": 0.5,
+                "value": float(vals.mean()), "boost_weighted": float(np.average(vals, weights=w))}
+    elif scheme == "prc":
+        from modal_run import _redetect_load
+        partition = _redetect_load(Path("/archive") / PRC_ARTIFACT["path"])["partition"][1].numpy()
+        vals = np.array([partition[token] for _, token, _ in entries], dtype=float)
+        out |= {"measure": "fraction of boosted tokens in partition 1 (codeword is fresh per text)",
+                "chance": float(partition.mean()), "value": float(vals.mean())}
+    return out
+
+
+@app.local_entrypoint()
+def recovery(n_query: int = 10_000):
+    cases = [("kgw2", "ctx1"), ("exp", "pos"), ("prc", "ctx1"), ("prc", "pos")]
+    for result in signal_recovery.starmap([(s, v, n_query) for s, v in cases]):
+        print(json.dumps(result))
