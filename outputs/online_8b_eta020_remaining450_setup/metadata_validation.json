@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "checked_utc": "2026-09-21T07:33:09.238451+00:00",
+  "tests": 4,
+  "scope": "AST and pure Python scope/aggregation checks only; no native imports, model execution, or experiment scoring.",
+  "plan_sha256": "01b94a51b12b1d2f82bd68520e45caa212968a95b768ad4dfff1099abd8dc423",
+  "runtime_source_hashes_match": true,
+  "local_controller_sha256": "b9ca180aeff17112879c97fb2fa12592322d3d5a03166a987d681889caf6a0a5",
+  "approval_files_present": [],
+  "paid_compute_launched": false
+}

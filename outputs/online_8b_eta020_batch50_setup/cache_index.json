@@ -1,0 +1,187 @@
+{
+  "run_id": "online_8b_eta020_T14336_N50_v1",
+  "protocol": "completion_only_raw_abstain_v1",
+  "N": 50,
+  "null_N": 0,
+  "prompt_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49
+  ],
+  "T": 14336,
+  "eta": 0.2,
+  "detector": "Qwen3-8B-Base",
+  "root": "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a",
+  "volume_aliases": {
+    "data": "prc-data",
+    "results": "prc-completion-only",
+    "hf": "prc-hf-cache"
+  },
+  "local_cache_root": "outputs/online_8b_eta020_batch50_setup/cache",
+  "artifact_sha256": "96b5460d525c69a7ad6552eec32b9fa73510095c9bbc082645b0633c168269c6",
+  "partition_sha256": "503d1cf93958f0d765606ed3e25aa87a1a777cd08d8f44436b0c6ae9716aa184",
+  "files": [
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/prepared.json",
+      "sha256": "79efbd26a96dc4639d38bd91142519641dff1ca172c260ad0c958b6728d27b02",
+      "bytes": 28657
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a/manifest.json",
+      "sha256": "3be40b3a2510b12cc88f48f14b8ef046181143ab5a07e5220a06b4e6ddedb250",
+      "bytes": 26711
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a/artifact.pt",
+      "sha256": "96b5460d525c69a7ad6552eec32b9fa73510095c9bbc082645b0633c168269c6",
+      "bytes": 609441
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a/batches/000000/inputs.pt",
+      "sha256": "b97788e3f6a38fa2693a39add897e72d44b169be0e2fba4e7cc5ee081a98b092",
+      "bytes": 6343506
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/prepare/request.json",
+      "sha256": "0407eb3bcae0866b14265799e86765345e24b68eaf5e0a42b4cbb9160e049929",
+      "bytes": 25363
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/prepare/response.json",
+      "sha256": "29308b595b6b5737dae228759d4dd4035c8554b5387049c638251acc522b2f38",
+      "bytes": 30912
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/prepare/worker.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/prepare/timing.json",
+      "sha256": "a71b3534062cbb610d0d73d69347d6ae6efb35c87603e503d9046e3f28b10f5c",
+      "bytes": 94
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a/batches/000000/trace.pt",
+      "sha256": "fbce4378a69cc1e4cbb569812c9444c233665632e4ddfb31822df25591d3c507",
+      "bytes": 2868690
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/replay/request.json",
+      "sha256": "808c7c7808a079789fc7dccc20060fcbf002213a4d4d1b2349330912e4d67ab4",
+      "bytes": 55307
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/replay/response.json",
+      "sha256": "f99f6da2b5ca4eb673b3df68a0a81d36a41bfb35fd1c7b716e6b721a69b47f65",
+      "bytes": 442
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/replay/worker.log",
+      "sha256": "52bc799df8e7332518addacc9a312afd2471270446ca6375aef2b610f4d7a8ca",
+      "bytes": 455
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/replay/timing.json",
+      "sha256": "997d6423ece17bbfd0c96d54da37a2ade9184463c409caf1aef681cf54447051",
+      "bytes": 90
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a/full.json",
+      "sha256": "602cfb592c607b2a4f0c3b124e0785aee8dba0e2db4f56c36da9f339fbb24c1b",
+      "bytes": 35043
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a/summary.json",
+      "sha256": "1ccb812190a47a88b52d02b9231870fc59c7887ab58ec4004f2ca73815137820",
+      "bytes": 843
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/score/request.json",
+      "sha256": "808c7c7808a079789fc7dccc20060fcbf002213a4d4d1b2349330912e4d67ab4",
+      "bytes": 55307
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/score/response.json",
+      "sha256": "f62b95c0adb47786d3e021547ef1f168ec69f03da6571ae7104f8565a7eda1b7",
+      "bytes": 888
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/score/worker.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_N50_v1/attempts/score/timing.json",
+      "sha256": "a7a2a05869fa7cb730eedb1128527edb5c1ece85a053d932b220433ebc9fba96",
+      "bytes": 86
+    }
+  ],
+  "reuse": "Full raw traces permit future prefix scoring or inclusion of these 50 records in a larger cohort without repeating their GPU replay."
+}

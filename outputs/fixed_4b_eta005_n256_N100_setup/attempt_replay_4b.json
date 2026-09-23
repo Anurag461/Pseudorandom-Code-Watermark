@@ -1,0 +1,10 @@
+{
+  "stage": "replay_4b",
+  "approval_reference": "User approved all 12 named n512/n256 stage runs and USD 2.25 proposal: yes go ahead; approval.json",
+  "resources": [
+    "H100",
+    65536,
+    240
+  ],
+  "plan_sha256": "08ea3f46df66ee7f75f9f4372bd9e7ab508383c91716d7a9ccd8312f342f89ab"
+}

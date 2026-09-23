@@ -1,0 +1,49 @@
+{
+  "read_only": true,
+  "checked_utc": "2026-09-21T06:47:44.312235+00:00",
+  "app_ids": [
+    "ap-DWrkldj8cT5pjFB89Rztyo",
+    "ap-v7LQIRvg8oL5KHj2byGEyQ"
+  ],
+  "reported_task_cost_usd": "6.56296289",
+  "task_rows": [
+    {
+      "object_id": "ap-DWrkldj8cT5pjFB89Rztyo",
+      "description": "prc-online-8b-eta020-batch50",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 05:00:00+00:00",
+      "cost": "2.45171818",
+      "cost_by_resource": {
+        "H200": "2.12371223",
+        "Memory": "0.23950235",
+        "CPU": "0.08850360"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-DWrkldj8cT5pjFB89Rztyo",
+      "description": "prc-online-8b-eta020-batch50",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 06:00:00+00:00",
+      "cost": "4.10560556",
+      "cost_by_resource": {
+        "H200": "3.55633238",
+        "Memory": "0.40106656",
+        "CPU": "0.14820663"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-v7LQIRvg8oL5KHj2byGEyQ",
+      "description": "prc-online-8b-eta020-batch50",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 05:00:00+00:00",
+      "cost": "0.00563915",
+      "cost_by_resource": {
+        "Memory": "0.00227557",
+        "CPU": "0.00336358"
+      },
+      "tags": {}
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "status": "verified_local_only",
+  "path": "outputs/online_0p6b_redetect_setup/.archive/completed-2ece9069a616ba6c329c2edf.tar.gz",
+  "sha256": "5e2e7966f86195c7b232259d0edac69694233f211363d156e8f8d6691075b23f",
+  "bytes": 38328,
+  "files": [
+    {
+      "path": "outputs/online_0p6b_redetect_setup/results_summary.json",
+      "sha256": "af586c0d9670f30b25a694ea219aabe249290b4e5673513b80dd678094a1f0d3"
+    },
+    {
+      "path": "outputs/online_0p6b_redetect_setup/RESULTS.md",
+      "sha256": "bdd2c9799978b22dfd427ccf706c2e5117f0cbd5d61e0c1363a5ff6659db7d86"
+    },
+    {
+      "path": "outputs/online_0p6b_redetect_setup/n3104_consistency.json",
+      "sha256": "c86a80fafc199ba1a5dcb68a062c359dbd7282c1fc837eadcc6b021c630394a6"
+    },
+    {
+      "path": "verify_online_n3104.py",
+      "sha256": "fe33caf028a60d08aaa2b46984f1f3bd725d3bd79df99653273113c71eac2fdd"
+    },
+    {
+      "path": "outputs/redetection/summary.json",
+      "sha256": "3f247c5a44e1b9a11271afb62c658c980efb02b1eac8d0eaa8f18daa9f3b037e"
+    },
+    {
+      "path": "outputs/redetection/cache_index.json",
+      "sha256": "0960c4403d3d14d31373298f9d4e921e453e063a3aa757dab0371b97e4a06906"
+    },
+    {
+      "path": "outputs/redetection/redetection_results_summary.csv",
+      "sha256": "1b9081070de0e5a1748e1f2c7ba5c81e566339bb0cd767353bfdd61115db58ad"
+    },
+    {
+      "path": "outputs/online_0p6b_redetect_setup/setup_archive.json",
+      "sha256": "843b4392e95d0e080983d8fd9ee139209078a664783b9feea9b4ab4ee854c0a6"
+    },
+    {
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta005_n512/cache_verification.json",
+      "sha256": "28361eeb0d42e1e8e98f8789968a108edbcbb9883223a70da5269eb425c42e36"
+    },
+    {
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta010_n1024/cache_verification.json",
+      "sha256": "7e166bcb0e3ab4bb06e954f852ff13cd6be5ec847cb157bdb36e9f3979d6efb4"
+    },
+    {
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta015_n2048/cache_verification.json",
+      "sha256": "c04a5e95a51a1c345f983bbb1e5e6e5a7fc3e659610176b689f15fbabad612b3"
+    },
+    {
+      "path": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta020_n4096/cache_verification.json",
+      "sha256": "5f4edafb9589603d4998d9034edec06434e17d0cc59b50be4b15cfc880ae65de"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+✓ Initialized. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-G6nmkMaMQHrc6vDX7eMNhF
+✓ Created objects.
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/fixed_4b_comparison.py
+├── 🔨 Created mount PythonPackage:modal_run, PythonPackage:prc, 
+│   PythonPackage:online_prc, PythonPackage:qwen, PythonPackage:constants, 
+│   PythonPackage:detectors, PythonPackage:watermark_expt, 
+│   PythonPackage:proxy_8b_analysis, PythonPackage:benchmarks
+├── 🔨 Created mount prompts.jsonl
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/tests
+└── 🔨 Created function paid_stage.
+{
+  "files": [
+    {
+      "volume": "data",
+      "path": "fixed_4b_eta005_n256_N100_v1/artifacts.pt",
+      "sha256": "b40c50d356642e1f76f89963a702b66775ae6f88066fad4a62bce10f1dede5ba",
+      "bytes": 704119
+    },
+    {
+      "volume": "results",
+      "path": "fixed_4b_eta005_n256_N100_v1/setup.json",
+      "sha256": "08ea3f46df66ee7f75f9f4372bd9e7ab508383c91716d7a9ccd8312f342f89ab",
+      "bytes": 12592
+    }
+  ]
+}
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-G6nmkMaMQHrc6vDX7eMNhF

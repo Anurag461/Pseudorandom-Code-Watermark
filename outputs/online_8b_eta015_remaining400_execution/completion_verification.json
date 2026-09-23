@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "kind": "local JSON/file metadata only",
+  "new_generation_records": 400,
+  "reused_generation_records": 100,
+  "native_new_trace_batches": 4,
+  "small_new_trace_batches": 8,
+  "cached_pilot_scores_unchanged": true,
+  "original_csv_rows_preserved": 429,
+  "appended_csv_rows": 2,
+  "files_in_cache_index": 615
+}

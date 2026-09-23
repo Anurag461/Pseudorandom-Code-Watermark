@@ -1,0 +1,82 @@
+{
+  "downloaded_files_verified": 78,
+  "null_records": 500,
+  "shared_trace_shards": 10,
+  "csv_rows_verified": 173,
+  "watermarked_counts_unchanged": true,
+  "summary": {
+    "eta015": {
+      "points": 94,
+      "longest_T": 6144,
+      "longest_counts": {
+        "map": {
+          "wm": {
+            "detected": 465,
+            "count": 500
+          },
+          "null": {
+            "detected": 0,
+            "count": 500
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 436,
+            "count": 500
+          },
+          "null": {
+            "detected": 0,
+            "count": 500
+          }
+        }
+      },
+      "null_detection_count_range": {
+        "map": [
+          0,
+          1
+        ],
+        "entropy": [
+          0,
+          0
+        ]
+      }
+    },
+    "eta020": {
+      "points": 79,
+      "longest_T": 13088,
+      "longest_counts": {
+        "map": {
+          "wm": {
+            "detected": 451,
+            "count": 500
+          },
+          "null": {
+            "detected": 1,
+            "count": 500
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 430,
+            "count": 500
+          },
+          "null": {
+            "detected": 0,
+            "count": 500
+          }
+        }
+      },
+      "null_detection_count_range": {
+        "map": [
+          0,
+          1
+        ],
+        "entropy": [
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "verification": "local file hashes and saved metadata only; no model execution or scoring"
+}

@@ -1,0 +1,15 @@
+{
+  "replay": {
+    "root": "completion_only_raw_abstain_v1/integrated/ba61a52bdf2b3ae02c8256bd/batches/000200",
+    "cached": false,
+    "seconds": 4423.666637204
+  },
+  "files": [
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/ba61a52bdf2b3ae02c8256bd/batches/000200/trace.pt",
+      "sha256": "836c1af95c7a8e2f52c3394764e34481a46a6a9609db1e801b711082af390304",
+      "bytes": 2868690
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "worker_id": 3,
+  "batches": [
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/0263dfa535b7b6b4a3ee39a2/batches/000150",
+      "cached": false,
+      "seconds": 1825.0339150969999,
+      "trace_metadata": {
+        "seconds": 1825.0339150969999,
+        "peak_allocated_bytes": 89433866240,
+        "peak_reserved_bytes": 89638567936,
+        "total_memory_bytes": 150110011392,
+        "memory_limit_fraction": 0.85,
+        "full_validation": false
+      }
+    }
+  ],
+  "files": [
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/0263dfa535b7b6b4a3ee39a2/batches/000150/trace.pt",
+      "sha256": "a80fbca6077201b550a6366274f8fdac8e6e2b68b7933efe3c31189bc9c695d1",
+      "bytes": 2868690
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_to_0p6b_N500_v1/attempts/replay/03/request.json",
+      "sha256": "cb2cd9740e4f715ecca8d7e3152f0d02554f835808c90e3553f32493790221ba",
+      "bytes": 517945
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_to_0p6b_N500_v1/attempts/replay/03/response.json",
+      "sha256": "79d9bb2118a942cd5398ed73d5f15b362266de9e1eb18fa04088f1df9c31d675",
+      "bytes": 762
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_to_0p6b_N500_v1/attempts/replay/03/worker.log",
+      "sha256": "6a57262a069e76e77e2272eabac2c7d452c9a60d6e4dc066323921905f5b960c",
+      "bytes": 522
+    },
+    {
+      "volume": "results",
+      "path": "online_8b_eta020_T14336_to_0p6b_N500_v1/attempts/replay/03/timing.json",
+      "sha256": "f3873f07ba0fbaee034aceb9ee95712075b697367f29de693207252746ac1c9d",
+      "bytes": 109
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "app_id": "ap-FJFpAHhr285oC0EyRszlna",
+  "gpu": "H200",
+  "parallel_workers": 4,
+  "prompt_groups": [
+    [
+      100,
+      199
+    ],
+    [
+      200,
+      299
+    ],
+    [
+      300,
+      399
+    ],
+    [
+      400,
+      499
+    ]
+  ],
+  "source_length": 4096,
+  "final_length": 6144,
+  "eta": 0.15,
+  "null_count": 0,
+  "first100_reused": true
+}

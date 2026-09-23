@@ -6,7 +6,9 @@ from detectors import (
     GENERATION_TRACE_SCHEMA_VERSION,
     build_prc_generation_record,
 )
-from modal_run import validate_generation_record
+from modal_run import (
+    fixed_validate_generation_record as validate_generation_record,
+)
 
 
 def _partition():

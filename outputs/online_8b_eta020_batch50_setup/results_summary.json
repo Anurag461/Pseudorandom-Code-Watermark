@@ -1,0 +1,121 @@
+{
+  "completed": true,
+  "branch": "redetection",
+  "N": 50,
+  "null_N": 0,
+  "eta": 0.2,
+  "T": 14336,
+  "generation_model": "Qwen3-8B-Base",
+  "detector_model": "Qwen3-8B-Base",
+  "counts": {
+    "14336": {
+      "map": {
+        "wm": {
+          "detected": 48,
+          "count": 50
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 47,
+          "count": 50
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    }
+  },
+  "target_fpr": 0.001,
+  "empirical_fpr_evaluated": false,
+  "new_generations": 0,
+  "gpu_replays": 1,
+  "gpu_batch_size": 50,
+  "maximum_simultaneous_gpus": 1,
+  "paid_retries": 0,
+  "additional_reference_passes": 0,
+  "approved_allowance_usd": "9.50",
+  "actual_cost_usd": "6.62260577",
+  "allowance_remaining_usd": "2.87739423",
+  "actual_cost_including_prior_eta015_expansion_and_prefixes_usd": "35.30871981",
+  "billing_confirmed_unchanged": true,
+  "all_workers_stopped": true,
+  "stages": {
+    "prepare": {
+      "app_id": "ap-v7LQIRvg8oL5KHj2byGEyQ",
+      "actual_cost_usd": "0.00563915",
+      "timing": {
+        "stage": "prepare",
+        "wall_seconds": 52.903069804999994,
+        "work_timeout_seconds": 300
+      },
+      "commit": "145f5961c9144619f1d0e1bde805a8b77e066cc8"
+    },
+    "replay": {
+      "app_id": "ap-DWrkldj8cT5pjFB89Rztyo",
+      "actual_cost_usd": "6.61555999",
+      "timing": {
+        "stage": "replay",
+        "wall_seconds": 4538.159101438,
+        "work_timeout_seconds": 6000
+      },
+      "commit": "f4dacdc9d0d4c3e7e89d08c80b9be2ce06aab38b"
+    },
+    "score": {
+      "app_id": "ap-yFRGPjM544kiYkAq9t0Jc3",
+      "actual_cost_usd": "0.00140663",
+      "timing": {
+        "stage": "score",
+        "wall_seconds": 13.274656014,
+        "work_timeout_seconds": 180
+      },
+      "commit": "f75e418ce0501b24a118d98738b18dbbc2caf09e"
+    }
+  },
+  "gpu_trace_metadata": {
+    "full_validation": false,
+    "peak_allocated_bytes": 134051737088,
+    "peak_reserved_bytes": 134081413120,
+    "total_memory_bytes": 150110011392,
+    "memory_limit_fraction": 0.95,
+    "seconds": 4430.899981652
+  },
+  "peak_allocated_fraction": 0.8930232956810247,
+  "csv": {
+    "passed": true,
+    "original_rows_preserved": 617,
+    "rows_added": 1,
+    "N": 50,
+    "null_N": 0,
+    "added_row": {
+      "eta": "0.2",
+      "T": "14336",
+      "n": "14336",
+      "r value": "14193",
+      "r setting": "causal round(0.99L), startup-clamped",
+      "PRC Construction": "online_causal_prc_v1",
+      "t": "3",
+      "Target FPR": "0.001",
+      "Entropy Model": "Qwen3-8B-Base",
+      "Generation Model": "Qwen3-8B-Base",
+      "Old Posterior TPR": "unavailable",
+      "Posterior TPR": "48/50 (96.0%)",
+      "Old Entropy Aware TPR": "unavailable",
+      "Entropy Aware TPR": "47/50 (94.0%)",
+      "Naive TPR": "skipped",
+      "Posterior FPR": "skipped",
+      "Entropy FPR": "skipped",
+      "Naive FPR": "skipped",
+      "Entropy Trace Source": "completion_only_raw_abstain_v1",
+      "Notes": "BF16; coordinate 1=0; FPR policy=one_shot; batch=50; GPU=H200; commit=12120a811e758d5f1205f9805fc1854269413b9a; run=completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a; report=full.json; N=50; null N=0; empirical FPR not evaluated; working-tree execution; source hashes in manifest"
+    }
+  },
+  "resolved_local_git_issue": "local_commit_recovery.json; no paid retry",
+  "extra_source_archives_uploaded": false,
+  "pushed": false
+}

@@ -1,0 +1,15 @@
+{
+  "check": "raw saved token-storage bytes; no unpickling, model execution or scoring",
+  "prompt_idx": 0,
+  "eta010_cached_null_bank": "T4096",
+  "requested_null_bank": "T13088",
+  "prefix_length": 3072,
+  "eta010_prefix_sha256": "ba2c92a3259f07d6869147913fa56732a7cd8aabdbced3ba7dc81f9f524cf5ba",
+  "requested_prefix_sha256": "a9e7d9854fe584d9d5b9d2246fc3823b5a9019a17403ac46a4f249be512a7a3e",
+  "prefix_matches": false,
+  "first_mismatching_coordinate_1based": 5,
+  "conclusion": "The eta=.10 cached detector trace cannot be extended onto this T13088 bank; even prompt0 has a different prefix.",
+  "kv_cache_saved": false,
+  "kv_evidence": "modal_run._recover_redetection_batch serializes probabilities, identity, hashes and telemetry only; no KV tensors.",
+  "compatible_shorter_trace_length": 1024
+}

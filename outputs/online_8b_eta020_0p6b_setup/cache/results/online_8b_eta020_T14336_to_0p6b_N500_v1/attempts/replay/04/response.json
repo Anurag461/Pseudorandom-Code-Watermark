@@ -1,0 +1,26 @@
+{
+  "worker_id": 4,
+  "batches": [
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/0263dfa535b7b6b4a3ee39a2/batches/000200",
+      "cached": false,
+      "seconds": 1852.5501206659999,
+      "trace_metadata": {
+        "seconds": 1852.5501206659999,
+        "peak_allocated_bytes": 89433866240,
+        "peak_reserved_bytes": 89638567936,
+        "total_memory_bytes": 150110011392,
+        "memory_limit_fraction": 0.85,
+        "full_validation": false
+      }
+    }
+  ],
+  "files": [
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/0263dfa535b7b6b4a3ee39a2/batches/000200/trace.pt",
+      "sha256": "6afcb0861f51b5df125f4d77427a64ca1dbb8399556950198ebc900b177d21d6",
+      "bytes": 2868690
+    }
+  ]
+}

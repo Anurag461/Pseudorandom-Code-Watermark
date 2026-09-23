@@ -1,0 +1,21 @@
+✓ Initialized. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-dJaYTsUXcXcTaduCYrki8A
+✓ Created objects.
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/online_8b_to_0p6b_parallel.py
+├── 🔨 Created mount PythonPackage:online_8b_to_0p6b_parallel, 
+│   PythonPackage:online_8b_to_0p6b, PythonPackage:fixed_4b_comparison, 
+│   PythonPackage:online_prc_redetection
+├── 🔨 Created mount PythonPackage:modal_run, PythonPackage:prc, 
+│   PythonPackage:online_prc, PythonPackage:qwen, PythonPackage:constants, 
+│   PythonPackage:detectors, PythonPackage:watermark_expt, 
+│   PythonPackage:proxy_8b_analysis, PythonPackage:benchmarks
+├── 🔨 Created mount prompts.jsonl
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/tests
+└── 🔨 Created function replay_one.
+{"saved_batch": 0, "seconds": 671.3961144470001}
+{"saved_batch": 1, "seconds": 672.8379227849999}
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-dJaYTsUXcXcTaduCYrki8A

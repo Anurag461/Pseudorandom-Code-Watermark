@@ -1,0 +1,40 @@
+{
+  "counts": {
+    "14336": {
+      "map": {
+        "wm": {
+          "detected": 48,
+          "count": 50
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 47,
+          "count": 50
+        },
+        "null": {
+          "detected": 0,
+          "count": 0
+        }
+      }
+    }
+  },
+  "files": [
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a/full.json",
+      "sha256": "602cfb592c607b2a4f0c3b124e0785aee8dba0e2db4f56c36da9f339fbb24c1b",
+      "bytes": 35043
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/2b5c9fe9995098df6db69e1a/summary.json",
+      "sha256": "1ccb812190a47a88b52d02b9231870fc59c7887ab58ec4004f2ca73815137820",
+      "bytes": 843
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "N": 100,
+  "n": 256,
+  "T": 256,
+  "completed_stages": [
+    "prepare",
+    "generate",
+    "freeze",
+    "replay_4b",
+    "replay_0p6b",
+    "score"
+  ],
+  "stage_app_ids": {
+    "prepare": "ap-G6nmkMaMQHrc6vDX7eMNhF",
+    "generate": "ap-xQ1TnpsxSkXQl5DDSfUphc",
+    "freeze": "ap-5pKLX3JdRZgFQIiJgY8Pl1",
+    "replay_4b": "ap-VKfiCfN2T0NCDDLRJZqfIf",
+    "replay_0p6b": "ap-wkyBVYgDELalf4cQwsQ5jW",
+    "score": "ap-4qGwMifO2i2GHzwPaermKa"
+  },
+  "timing_seconds": {
+    "prepare": 35.448685543,
+    "generate": 71.21700742499999,
+    "freeze": 12.080155264,
+    "replay_4b": 53.741646895,
+    "replay_0p6b": 37.724677977999995,
+    "score": 12.502776383
+  },
+  "pending_stages": [],
+  "status": "complete",
+  "results": {
+    "4B": {
+      "256": {
+        "map": {
+          "wm": {
+            "detected": 46,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 27,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        }
+      }
+    },
+    "0.6B": {
+      "256": {
+        "map": {
+          "wm": {
+            "detected": 35,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 25,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        }
+      }
+    }
+  },
+  "immutable_setup_note": "Reviewed setup.json is frozen. Approval and execution are recorded separately.",
+  "cost_by_stage_usd": {
+    "score": "0.00140668",
+    "replay_0p6b": "0.03443380",
+    "replay_4b": "0.07881648",
+    "prepare": "0.00370068",
+    "freeze": "0.00229093",
+    "generate": "0.10393370"
+  },
+  "actual_cost_usd": "0.22458227",
+  "all_apps_stopped": true
+}

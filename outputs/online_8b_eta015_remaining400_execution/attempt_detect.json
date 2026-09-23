@@ -1,0 +1,17 @@
+{
+  "plan_sha256": "cb2c03b3b52dc84c1c67e5ee542fc5ffcf7258f33eeb241890231156b724fb10",
+  "stage": "detect",
+  "approval_reference": "user-3511-full-run-20260920",
+  "tasks": [
+    "8B_0",
+    "8B_1",
+    "8B_2",
+    "8B_3",
+    "0.6B_0",
+    "0.6B_2",
+    "0.6B_4",
+    "0.6B_5",
+    "0.6B_6",
+    "0.6B_7"
+  ]
+}

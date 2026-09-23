@@ -1,0 +1,22 @@
+{
+  "read_only": true,
+  "checked_utc": "2026-09-21T05:02:58.704972+00:00",
+  "app_ids": [
+    "ap-oFpOlH32BLaeMeiZZZfe8t"
+  ],
+  "reported_prefix_cost_usd": "0.00295401",
+  "task_rows": [
+    {
+      "object_id": "ap-oFpOlH32BLaeMeiZZZfe8t",
+      "description": "prc-online-8b-eta015-prefixes",
+      "environment_name": "main",
+      "interval_start": "2026-09-21 05:00:00+00:00",
+      "cost": "0.00295401",
+      "cost_by_resource": {
+        "Memory": "0.00074667",
+        "CPU": "0.00220734"
+      },
+      "tags": {}
+    }
+  ]
+}

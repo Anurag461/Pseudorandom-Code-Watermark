@@ -1,0 +1,259 @@
+{
+  "status": "awaiting_explicit_approval",
+  "created_utc": "2026-09-20T22:50:16.641895+00:00",
+  "branch": "redetection",
+  "head": "d6f618937d82fb46813e4d38eb015879fe3f8fca",
+  "cohorts": {
+    "512": {
+      "setup": "outputs/fixed_4b_eta005_n512_N100_setup/setup.json",
+      "setup_sha256": "dc82860e78b63470a7afa28a50a1c680fd3194d3cea45cd3b0b1b00acb84cac8",
+      "artifact": {
+        "volume": "archive",
+        "path": "objects/sha256/9e/9e8bee38ce5a3c3791441db80d54432300f8c9c394f6499b02d07fbe189a68c0",
+        "sha256": "9e8bee38ce5a3c3791441db80d54432300f8c9c394f6499b02d07fbe189a68c0",
+        "bytes": 722167
+      },
+      "partition_sha256": "503d1cf93958f0d765606ed3e25aa87a1a777cd08d8f44436b0c6ae9716aa184",
+      "key_partition_semantic_sha256": "294734a4a44cbd167b9cf07a26eabc5e11c71b2ed02630d5e7d19a103cc266a9",
+      "stages": [
+        {
+          "id": "prepare",
+          "workload": "Verify/copy the archived fixed n=T=512 key and partition, validate 100 original prompt IDs, and verify cached pinned checkpoints. No downloads or new keys.",
+          "hardware": "4 physical CPU cores, 16 GiB RAM",
+          "batch": null,
+          "estimated_minutes": [
+            0.25,
+            1
+          ],
+          "estimated_usd": [
+            0.002,
+            0.006
+          ],
+          "conservative_allowance_usd": 0.025,
+          "proposed_work_timeout_seconds": 120
+        },
+        {
+          "id": "generate",
+          "workload": "100 watermarked 4B completions, 512 tokens each, one codeword per completion; save all generation records and RNG/codeword evidence.",
+          "hardware": "1 H100 80GB, 4 physical CPU cores, 64 GiB host RAM",
+          "batch": 100,
+          "batches": 1,
+          "estimated_minutes": [
+            1.5,
+            3
+          ],
+          "estimated_usd": [
+            0.12,
+            0.24
+          ],
+          "conservative_allowance_usd": 0.4,
+          "proposed_work_timeout_seconds": 240
+        },
+        {
+          "id": "freeze",
+          "workload": "Convert the saved primary generation batch into existing per-candidate records, then freeze identical token hashes/key/partition references into two completion-only manifests. Generation-time features remain provenance only.",
+          "hardware": "4 physical CPU cores, 16 GiB RAM",
+          "batch": 100,
+          "estimated_minutes": [
+            0.25,
+            0.75
+          ],
+          "estimated_usd": [
+            0.002,
+            0.004
+          ],
+          "conservative_allowance_usd": 0.025,
+          "proposed_work_timeout_seconds": 120
+        },
+        {
+          "id": "replay_4b",
+          "workload": "One raw-completion 4B replay; 100 x 511 recovered partition probabilities; no independent reference replay.",
+          "hardware": "1 H100 80GB, 4 physical CPU cores, 64 GiB host RAM",
+          "batch": 100,
+          "batches": 1,
+          "estimated_minutes": [
+            1.25,
+            2.5
+          ],
+          "estimated_usd": [
+            0.1,
+            0.2
+          ],
+          "conservative_allowance_usd": 0.4,
+          "proposed_work_timeout_seconds": 240
+        },
+        {
+          "id": "replay_0p6b",
+          "workload": "One raw-completion 0.6B replay of exactly the same tokens; 100 x 511 recovered partition probabilities.",
+          "hardware": "1 A100 80GB, 4 physical CPU cores, 16 GiB host RAM",
+          "batch": 100,
+          "batches": 1,
+          "estimated_minutes": [
+            0.75,
+            1.5
+          ],
+          "estimated_usd": [
+            0.04,
+            0.07
+          ],
+          "conservative_allowance_usd": 0.2,
+          "proposed_work_timeout_seconds": 180
+        },
+        {
+          "id": "score",
+          "workload": "Existing _score_redetection on cloud CPU, 100 candidates x 2 detectors x MAP/entropy = 400 decisions; save full and summary reports, timing, hashes and CSV.",
+          "hardware": "4 physical CPU cores, 8 GiB RAM",
+          "batch": 100,
+          "estimated_minutes": [
+            0.17,
+            0.75
+          ],
+          "estimated_usd": [
+            0.001,
+            0.004
+          ],
+          "conservative_allowance_usd": 0.025,
+          "proposed_work_timeout_seconds": 120
+        }
+      ]
+    },
+    "256": {
+      "setup": "outputs/fixed_4b_eta005_n256_N100_setup/setup.json",
+      "setup_sha256": "08ea3f46df66ee7f75f9f4372bd9e7ab508383c91716d7a9ccd8312f342f89ab",
+      "artifact": {
+        "volume": "archive",
+        "path": "objects/sha256/b4/b40c50d356642e1f76f89963a702b66775ae6f88066fad4a62bce10f1dede5ba",
+        "sha256": "b40c50d356642e1f76f89963a702b66775ae6f88066fad4a62bce10f1dede5ba",
+        "bytes": 704119
+      },
+      "partition_sha256": "503d1cf93958f0d765606ed3e25aa87a1a777cd08d8f44436b0c6ae9716aa184",
+      "key_partition_semantic_sha256": "b2e3fade5e37ad2147ba60c6a883b40d66741e60643fb70aad1adebbf6469753",
+      "stages": [
+        {
+          "id": "prepare",
+          "workload": "Verify/copy the archived fixed n=T=256 key and partition, validate 100 original prompt IDs, and verify cached pinned checkpoints. No downloads or new keys.",
+          "hardware": "4 physical CPU cores, 16 GiB RAM",
+          "batch": null,
+          "estimated_minutes": [
+            0.25,
+            1
+          ],
+          "estimated_usd": [
+            0.002,
+            0.006
+          ],
+          "conservative_allowance_usd": 0.025,
+          "proposed_work_timeout_seconds": 120
+        },
+        {
+          "id": "generate",
+          "workload": "100 watermarked 4B completions, 256 tokens each, one codeword per completion; save all generation records and RNG/codeword evidence.",
+          "hardware": "1 H100 80GB, 4 physical CPU cores, 64 GiB host RAM",
+          "batch": 100,
+          "batches": 1,
+          "estimated_minutes": [
+            1,
+            2.5
+          ],
+          "estimated_usd": [
+            0.08,
+            0.2
+          ],
+          "conservative_allowance_usd": 0.4,
+          "proposed_work_timeout_seconds": 240
+        },
+        {
+          "id": "freeze",
+          "workload": "Convert the saved primary generation batch into existing per-candidate records, then freeze identical token hashes/key/partition references into two completion-only manifests. Generation-time features remain provenance only.",
+          "hardware": "4 physical CPU cores, 16 GiB RAM",
+          "batch": 100,
+          "estimated_minutes": [
+            0.25,
+            0.75
+          ],
+          "estimated_usd": [
+            0.002,
+            0.004
+          ],
+          "conservative_allowance_usd": 0.025,
+          "proposed_work_timeout_seconds": 120
+        },
+        {
+          "id": "replay_4b",
+          "workload": "One raw-completion 4B replay; 100 x 255 recovered partition probabilities; no independent reference replay.",
+          "hardware": "1 H100 80GB, 4 physical CPU cores, 64 GiB host RAM",
+          "batch": 100,
+          "batches": 1,
+          "estimated_minutes": [
+            1,
+            2
+          ],
+          "estimated_usd": [
+            0.08,
+            0.16
+          ],
+          "conservative_allowance_usd": 0.4,
+          "proposed_work_timeout_seconds": 240
+        },
+        {
+          "id": "replay_0p6b",
+          "workload": "One raw-completion 0.6B replay of exactly the same tokens; 100 x 255 recovered partition probabilities.",
+          "hardware": "1 A100 80GB, 4 physical CPU cores, 16 GiB host RAM",
+          "batch": 100,
+          "batches": 1,
+          "estimated_minutes": [
+            0.5,
+            1.25
+          ],
+          "estimated_usd": [
+            0.025,
+            0.06
+          ],
+          "conservative_allowance_usd": 0.2,
+          "proposed_work_timeout_seconds": 180
+        },
+        {
+          "id": "score",
+          "workload": "Existing _score_redetection on cloud CPU, 100 candidates x 2 detectors x MAP/entropy = 400 decisions; save full and summary reports, timing, hashes and CSV.",
+          "hardware": "4 physical CPU cores, 8 GiB RAM",
+          "batch": 100,
+          "estimated_minutes": [
+            0.17,
+            0.75
+          ],
+          "estimated_usd": [
+            0.001,
+            0.004
+          ],
+          "conservative_allowance_usd": 0.025,
+          "proposed_work_timeout_seconds": 120
+        }
+      ]
+    }
+  },
+  "N_per_length": 100,
+  "total_new_generations": 200,
+  "total_generated_tokens": 76800,
+  "total_recovered_probabilities": 153200,
+  "total_detector_weight_decisions": 800,
+  "null_count": 0,
+  "null_cost_usd": 0,
+  "max_concurrent_workers": 1,
+  "paid_jobs": 12,
+  "cost_allowances_sum_usd": "2.15",
+  "startup_reserve_usd": "0.10",
+  "conservative_total_usd": "2.25",
+  "remaining_budget_estimate_usd": "6.09748620",
+  "remaining_after_conservative_total_usd": "3.84748620",
+  "approval_received": false,
+  "paid_compute_launched": false,
+  "cost_basis": "Measured successful n1024 stages; no new benchmarking. Identical hardware, CPU/RAM and batch100; shorter token loops with model-load overhead retained.",
+  "expected_cost_usd": [
+    "0.455",
+    "0.958"
+  ],
+  "expected_elapsed_minutes": [
+    12,
+    25
+  ]
+}

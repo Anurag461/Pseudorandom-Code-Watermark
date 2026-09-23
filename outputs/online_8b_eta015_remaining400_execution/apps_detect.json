@@ -1,0 +1,42 @@
+[
+  {
+    "app_id": "ap-WybnYBYxYV2XBVFExnvljv",
+    "description": "prc-online-8b-eta015-remaining400",
+    "state": "ephemeral (detached)",
+    "tasks": "10",
+    "created_at": "2026-09-20 20:37:28-07:00",
+    "stopped_at": null
+  },
+  {
+    "app_id": "ap-e7VjXL1zxVOg3uTmfHhiyv",
+    "description": "prc-online-8b-eta015-remaining400",
+    "state": "stopped",
+    "tasks": "0",
+    "created_at": "2026-09-20 20:27:34-07:00",
+    "stopped_at": "2026-09-20 20:37:24-07:00"
+  },
+  {
+    "app_id": "ap-FJFpAHhr285oC0EyRszlna",
+    "description": "prc-online-8b-eta015-remaining400",
+    "state": "stopped",
+    "tasks": "0",
+    "created_at": "2026-09-20 19:43:22-07:00",
+    "stopped_at": "2026-09-20 20:27:27-07:00"
+  },
+  {
+    "app_id": "ap-74oPtw92UaCPwKJQzaIGEo",
+    "description": "prc-online-8b-eta015-remaining400",
+    "state": "stopped",
+    "tasks": "0",
+    "created_at": "2026-09-20 19:32:26-07:00",
+    "stopped_at": "2026-09-20 19:36:11-07:00"
+  },
+  {
+    "app_id": "ap-jKSj0iAhFtHqpsvyenejqY",
+    "description": "prc-online-8b-eta015-remaining400",
+    "state": "stopped",
+    "tasks": "0",
+    "created_at": "2026-09-20 19:23:21-07:00",
+    "stopped_at": "2026-09-20 19:24:27-07:00"
+  }
+]

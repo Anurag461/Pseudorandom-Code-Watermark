@@ -1,0 +1,9 @@
+{
+  "explicit_user_approval": true,
+  "approval_reference": "user-go-ahead-eta020-prefixes-20260921",
+  "authorized_spend_usd": 0.1,
+  "plan_sha256": "e3800643ac12dad9a85ce894b4335061ba37306307c3d3e5552afa5e1d432f1f",
+  "user_message": "you can do ahead and do this",
+  "approved_workload": "One cloud CPU worker, 4 cores/8 GiB, native N500 prefix MAP+entropy scoring from14320 in steps16 through first MAP<90%; no GPU/replay, generation, nulls or retry.",
+  "recorded_utc": "2026-09-21T09:40:50.781610+00:00"
+}

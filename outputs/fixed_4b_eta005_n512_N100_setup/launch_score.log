@@ -1,0 +1,94 @@
+✓ Initialized. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-rLf6eBhfN55c4nEaLKl5VW
+✓ Created objects.
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/fixed_4b_comparison.py
+├── 🔨 Created mount PythonPackage:modal_run, PythonPackage:prc, 
+│   PythonPackage:online_prc, PythonPackage:qwen, PythonPackage:constants, 
+│   PythonPackage:detectors, PythonPackage:watermark_expt, 
+│   PythonPackage:proxy_8b_analysis, PythonPackage:benchmarks
+├── 🔨 Created mount prompts.jsonl
+├── 🔨 Created mount /Users/christineli/Desktop/research+projects/prc 
+│   watermarking/Pseudorandom-Code-Watermark/tests
+└── 🔨 Created function paid_stage.
+{
+  "counts": {
+    "4B": {
+      "512": {
+        "map": {
+          "wm": {
+            "detected": 83,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 67,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        }
+      }
+    },
+    "0.6B": {
+      "512": {
+        "map": {
+          "wm": {
+            "detected": 78,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        },
+        "entropy": {
+          "wm": {
+            "detected": 64,
+            "count": 100
+          },
+          "null": {
+            "detected": 0,
+            "count": 0
+          }
+        }
+      }
+    }
+  },
+  "files": [
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/a3c934e1089670647e496098/full.json",
+      "sha256": "1e6c1b590992798323bfa090b601979fea7ffad1628f78e20deee05e8615b85c",
+      "bytes": 97223
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/a3c934e1089670647e496098/summary.json",
+      "sha256": "03268e85b222fac6ddb09fcb3a6eda2a6bd91aee941bef2ccf7d533a20ff33d6",
+      "bytes": 750
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/b733f82ef1c17f357dac28fe/full.json",
+      "sha256": "92c92bff8240977bb93414960a3b8b17757b0d1483439136dc4607d5d6c55fce",
+      "bytes": 97202
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/b733f82ef1c17f357dac28fe/summary.json",
+      "sha256": "e60fb9c7b450f975a2cf2cc65c0b6b54ff17597c752a7a514e8063d31a7eac1d",
+      "bytes": 750
+    }
+  ]
+}
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/new-prc-watermark/main/ap-rLf6eBhfN55c4nEaLKl5VW

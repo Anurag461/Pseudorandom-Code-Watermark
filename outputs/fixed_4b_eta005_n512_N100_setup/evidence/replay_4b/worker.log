@@ -1,0 +1,6 @@
+Returning existing local_dir `/cache/models/Qwen3-4B-Base` as remote repo cannot be accessed in `snapshot_download` (Cannot reach https://huggingface.co/api/models/Qwen/Qwen3-4B-Base/revision/906bfd4b4dc7f14ee4320094d8b41684abff8539: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.).
+huggingface_hub version: 0.30.2
+tokenizers version: 0.21.1
+torch version: 2.4.0
+Model uses weight tying.
+/cache/models/Qwen3-4B-Base/tokenizer.json

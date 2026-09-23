@@ -1,0 +1,56 @@
+[
+  {
+    "volume": "results",
+    "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/manifest.json",
+    "sha256": "8fcb7b5be9be7f8935c0c3505f0ad6c3668b9df98a12287008e5c5763a3d6d43",
+    "bytes": 238543
+  },
+  {
+    "volume": "results",
+    "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/prepared.json",
+    "sha256": "b0cbbc4e0bea41592310503080c29f0002e563bc9ef83b800d2623616c05fe42",
+    "bytes": 252245
+  },
+  {
+    "volume": "results",
+    "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/artifact.pt",
+    "sha256": "5fde5dc5fd150095feac33fb460a9cbbcc054fe27a9531b26db3d6a9698046ff",
+    "bytes": 609441
+  },
+  {
+    "volume": "results",
+    "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000000/inputs.pt",
+    "sha256": "f7732b2edc95509ffc1b606d366d18ccc1be94e22852c6fd1df6549328d36ee3",
+    "bytes": 3066706
+  },
+  {
+    "volume": "results",
+    "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000100/inputs.pt",
+    "sha256": "2420e864d04900a470384adb645748d404fb2a8a304b5c396710ba76a438b606",
+    "bytes": 3066706
+  },
+  {
+    "volume": "results",
+    "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000200/inputs.pt",
+    "sha256": "3f2b4be53bd0a27f46eff1f1cb77a802f00bfb220249f15f0a9aae144d812bd9",
+    "bytes": 3066706
+  },
+  {
+    "volume": "results",
+    "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000300/inputs.pt",
+    "sha256": "379266bb3a10c735e5d98ebe56c58fe74b1dfe29484cd2066275f69849962e62",
+    "bytes": 3066706
+  },
+  {
+    "volume": "results",
+    "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000400/inputs.pt",
+    "sha256": "1b9e4c9f3ebea7a6433dd349fb4fa2b1ca694d7fcb4751ba3b852bafbd30adff",
+    "bytes": 3066706
+  },
+  {
+    "volume": "data",
+    "path": "online_causal_prc_v1/qwen3_8b_base/n3072_T3072_t3_eta0.10_rr99of100_sampler-poscdf-v1_kvcache-static-v1/artifacts.pt",
+    "sha256": "ed45d7a1c238749d3e535d0e61cb48e9ccc8ef3e6fdf6e2bd86536ccf47bd578",
+    "bytes": 687415
+  }
+]

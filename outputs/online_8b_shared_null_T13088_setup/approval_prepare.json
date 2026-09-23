@@ -1,0 +1,13 @@
+{
+  "stage": "prepare",
+  "plan_sha256": "cc7d699355532e340a93e36483053900b194933f6367068eeb61ffd608be4286",
+  "approval_reference": "user-20260922-go-ahead-native8b-shared-null-total65",
+  "explicit_user_approval": true,
+  "user_instruction": "go ahead",
+  "authorization_evidence": "authorization.json",
+  "authorized_total_budget_usd": 65,
+  "authorized_spend_usd": 0.15,
+  "confirmed_available_budget_usd": 65.0,
+  "budget_basis": "user-approved allocation; account credit balance is not exposed",
+  "recorded_utc": "2026-09-22T19:20:30.727944+00:00"
+}

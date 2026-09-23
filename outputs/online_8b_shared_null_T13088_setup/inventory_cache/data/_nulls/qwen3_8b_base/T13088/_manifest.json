@@ -1,0 +1,18 @@
+{
+  "T": 13088,
+  "cache_kind": "unwatermarked_generation",
+  "forced_length": true,
+  "generation_model": "Qwen3-8B-Base",
+  "generation_model_size": "8B",
+  "generation_model_variant": "base",
+  "generation_rng_policy": "torch_multinomial_global_v1",
+  "generation_sampler_version": "torch_multinomial_global_v1",
+  "generation_trace_schema_version": 1,
+  "kv_cache_implementation": "static",
+  "kv_cache_version": "static-v1",
+  "partition_sha256": "503d1cf93958f0d765606ed3e25aa87a1a777cd08d8f44436b0c6ae9716aa184",
+  "prompt_corpus_sha256": "7f0b4642b87fdb80988b414cccfc48351358d4a108fc6bc1b3763112cf4765c2",
+  "prompt_count": 500,
+  "schema_version": 1,
+  "stopping_policy": "forced_length_v1"
+}

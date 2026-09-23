@@ -1,0 +1,24 @@
+{
+  "recorded_at_utc": "2026-09-20T20:46:44.872505+00:00",
+  "stage": "generate",
+  "user_message": "go ahead",
+  "approved_workload": {
+    "id": "generate",
+    "workload": "100 watermarked 4B completions, 1024 tokens each, one codeword per completion; save all generation records and RNG/codeword evidence.",
+    "hardware": "1 H100 80GB, 4 physical CPU cores, 64 GiB host RAM",
+    "batch": 100,
+    "batches": 1,
+    "estimated_minutes": [
+      3,
+      6
+    ],
+    "estimated_usd": [
+      0.24,
+      0.47
+    ],
+    "conservative_allowance_usd": 0.9,
+    "proposed_work_timeout_seconds": 600
+  },
+  "scope": "One generation batch of 100 watermarked completions; no nulls, retries, detector replay, scoring or reference checks.",
+  "budget_before_stage_usd": "6.49065494"
+}

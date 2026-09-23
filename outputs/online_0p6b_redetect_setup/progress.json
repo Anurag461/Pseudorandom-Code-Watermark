@@ -1,0 +1,34 @@
+{
+  "csv_rows": 178,
+  "new_online_points_completed": 154,
+  "csv_sort_verified": true,
+  "families": [
+    {
+      "id": "online_0p6b_eta005_n512",
+      "preflight": "passed",
+      "status": "completed_verified",
+      "root": "completion_only_raw_abstain_v1/integrated/5ed80c3468e45f456dcb3a72"
+    },
+    {
+      "id": "online_0p6b_eta010_n1024",
+      "preflight": "passed",
+      "status": "completed_verified",
+      "root": "completion_only_raw_abstain_v1/integrated/f4dec6f7f6d747d166e633bb"
+    },
+    {
+      "id": "online_0p6b_eta015_n2048",
+      "preflight": "passed",
+      "status": "completed_verified",
+      "root": "completion_only_raw_abstain_v1/integrated/d699e18bca296a5064fc7875"
+    },
+    {
+      "id": "online_0p6b_eta020_n4096",
+      "preflight": "passed",
+      "status": "completed_verified",
+      "root": "completion_only_raw_abstain_v1/integrated/9bef8259fa1a4bf1ceb817fd"
+    }
+  ],
+  "status": "completed_verified",
+  "csv_rows_at_main_campaign_completion": 177,
+  "verified_reruns_completed": 1
+}

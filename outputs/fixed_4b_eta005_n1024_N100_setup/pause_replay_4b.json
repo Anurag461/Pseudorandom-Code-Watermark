@@ -1,0 +1,16 @@
+{
+  "paused_at_utc": "2026-09-20T21:06:42.326784+00:00",
+  "user_request": "can you pause. im losing wifi",
+  "stage": "replay_4b",
+  "app_id": "ap-lmiikeifcvSPibtJYVpRCG",
+  "stop_command_succeeded": true,
+  "restart_authorized": false,
+  "billing_pending": true,
+  "replay_completion_unconfirmed": false,
+  "previous_completed_stages": [
+    "prepare",
+    "generate",
+    "freeze"
+  ],
+  "next_action_on_resume": "Read-only inventory of saved trace and billing. No retry or new paid run without a fresh estimate and explicit approval."
+}

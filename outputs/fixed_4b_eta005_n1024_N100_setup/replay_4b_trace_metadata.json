@@ -1,0 +1,11 @@
+{
+  "inspection": "Non-executing pickle opcode metadata only; no tensor deserialization or scoring.",
+  "trace_file": "outputs/fixed_4b_eta005_n1024_N100_setup/cache/results/completion_only_raw_abstain_v1/integrated/ca29c3c412c2ea56a5b60c7b/batches/000000/trace.pt",
+  "metadata": {
+    "probabilities_sha256": "df57552be2e6781cf00723b76e6e7f5c818ac783a0377dfd3ec32d6fde229071",
+    "full_validation": false,
+    "peak_allocated_bytes": 24936391680,
+    "peak_reserved_bytes": 25010634752,
+    "seconds": 60.191096683
+  }
+}

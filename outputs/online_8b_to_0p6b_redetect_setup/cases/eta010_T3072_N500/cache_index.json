@@ -1,0 +1,105 @@
+{
+  "eta": 0.1,
+  "N": 500,
+  "T": 3072,
+  "source_manifest": "../../online_8b_eta010_n3072_source_manifest.json",
+  "local_prefix": "cache/",
+  "files": [
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/manifest.json",
+      "sha256": "8fcb7b5be9be7f8935c0c3505f0ad6c3668b9df98a12287008e5c5763a3d6d43",
+      "bytes": 238543
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/prepared.json",
+      "sha256": "b0cbbc4e0bea41592310503080c29f0002e563bc9ef83b800d2623616c05fe42",
+      "bytes": 252245
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/artifact.pt",
+      "sha256": "5fde5dc5fd150095feac33fb460a9cbbcc054fe27a9531b26db3d6a9698046ff",
+      "bytes": 609441
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000000/inputs.pt",
+      "sha256": "f7732b2edc95509ffc1b606d366d18ccc1be94e22852c6fd1df6549328d36ee3",
+      "bytes": 3066706
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000100/inputs.pt",
+      "sha256": "2420e864d04900a470384adb645748d404fb2a8a304b5c396710ba76a438b606",
+      "bytes": 3066706
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000200/inputs.pt",
+      "sha256": "3f2b4be53bd0a27f46eff1f1cb77a802f00bfb220249f15f0a9aae144d812bd9",
+      "bytes": 3066706
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000300/inputs.pt",
+      "sha256": "379266bb3a10c735e5d98ebe56c58fe74b1dfe29484cd2066275f69849962e62",
+      "bytes": 3066706
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000400/inputs.pt",
+      "sha256": "1b9e4c9f3ebea7a6433dd349fb4fa2b1ca694d7fcb4751ba3b852bafbd30adff",
+      "bytes": 3066706
+    },
+    {
+      "volume": "data",
+      "path": "online_causal_prc_v1/qwen3_8b_base/n3072_T3072_t3_eta0.10_rr99of100_sampler-poscdf-v1_kvcache-static-v1/artifacts.pt",
+      "sha256": "ed45d7a1c238749d3e535d0e61cb48e9ccc8ef3e6fdf6e2bd86536ccf47bd578",
+      "bytes": 687415
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000000/trace.pt",
+      "sha256": "7918db216373492f3ca6cf8fc7b56779071e01f0b9c1f16db930006d1bcb9e67",
+      "bytes": 1230034
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000100/trace.pt",
+      "sha256": "faaa4b73e79a2e21a9950d345f2e0f440b26cfb76c6a8b1b800a48438d993c27",
+      "bytes": 1230034
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000200/trace.pt",
+      "sha256": "17137dbeff0d19fc350c41dec0516a34d493774536a8d024040ff58d9f619049",
+      "bytes": 1230034
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000300/trace.pt",
+      "sha256": "e7996ca4b35038b4a078f66cd569e8c92d8214c35cacf122185d3d40160dc6d9",
+      "bytes": 1230034
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/batches/000400/trace.pt",
+      "sha256": "fb400bcf67ca75bd63065ce57dd5248f52b01e6942d3cb2a3f97f33a8ed60111",
+      "bytes": 1230034
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/full.json",
+      "sha256": "f8a1de8200fbd48852f86cd1aa7b344fd5cd6a30a6e90c284178b57c3f666adb",
+      "bytes": 22912442
+    },
+    {
+      "volume": "results",
+      "path": "completion_only_raw_abstain_v1/integrated/d0c81c12575b6ebdba351628/summary.json",
+      "sha256": "d3272eff4e7ff109ef704263923e83d1c21c416422556f43329797d1c3aa3b7c",
+      "bytes": 35649
+    }
+  ]
+}

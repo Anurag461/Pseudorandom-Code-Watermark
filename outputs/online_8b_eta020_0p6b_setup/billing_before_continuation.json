@@ -1,0 +1,36 @@
+{
+  "checked_utc": "2026-09-22T16:55:36.999365+00:00",
+  "app_ids": [
+    "ap-b0I01cFZ6lW1jrRxm5yS4L",
+    "ap-poIcgSdRMuxm5Ym4VxLsrI"
+  ],
+  "reported_task_cost_usd": "2.56467834",
+  "task_rows": [
+    {
+      "object_id": "ap-b0I01cFZ6lW1jrRxm5yS4L",
+      "description": "prc-online-8b-eta020-to-0p6b",
+      "environment_name": "main",
+      "interval_start": "2026-09-22 16:00:00+00:00",
+      "cost": "0.01656486",
+      "cost_by_resource": {
+        "Memory": "0.00668443",
+        "CPU": "0.00988042"
+      },
+      "tags": {}
+    },
+    {
+      "object_id": "ap-poIcgSdRMuxm5Ym4VxLsrI",
+      "description": "prc-online-8b-eta020-to-0p6b",
+      "environment_name": "main",
+      "interval_start": "2026-09-22 16:00:00+00:00",
+      "cost": "2.54811348",
+      "cost_by_resource": {
+        "H200": "2.38170864",
+        "CPU": "0.09925535",
+        "Memory": "0.06714949"
+      },
+      "tags": {}
+    }
+  ],
+  "billing_may_lag": true
+}

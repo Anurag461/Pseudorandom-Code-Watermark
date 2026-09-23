@@ -1,0 +1,10 @@
+{
+  "stage": "replay_0p6b",
+  "approval_reference": "User: yes go ahead, in reply to the A100 batch100 0.6B primary detector proposal with $0.40 allowance. See approval_replay_0p6b.json.",
+  "resources": [
+    "A100-80GB",
+    16384,
+    360
+  ],
+  "plan_sha256": "b0f9968a0231e905c9d9feef2d76918a2cb364da15268ab4858d225547cca5f4"
+}
