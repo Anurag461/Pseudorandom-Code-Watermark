@@ -43,7 +43,7 @@ def record(stage, approval, result, seconds, rate):
 
 
 @app.function(image=image, cpu=4, memory=16384, volumes={'/data': data}, timeout=600, retries=0,
-              single_use_containers=True, max_containers=1)
+              include_source=False, single_use_containers=True, max_containers=1)
 def sanity_cpu(provenance, approval):
     from urllib.request import urlretrieve
     from .prepare import prepare, source_check
@@ -58,7 +58,7 @@ def sanity_cpu(provenance, approval):
 
 
 @app.function(image=image, cpu=4, memory=16384, volumes={'/data': data}, timeout=900, retries=0,
-              single_use_containers=True, max_containers=1)
+              include_source=False, single_use_containers=True, max_containers=1)
 def prepare_cpu(provenance, approval):
     from .prepare import prepare
     start = time.monotonic()
@@ -69,7 +69,7 @@ def prepare_cpu(provenance, approval):
 
 @app.function(image=image, gpu='H100', cpu=4, memory=65536,
               volumes={'/data': data, '/cache': hf}, timeout=900, retries=0,
-              single_use_containers=True, max_containers=1)
+              include_source=False, single_use_containers=True, max_containers=1)
 def sanity_gpu(provenance, approval):
     from .lm import run_temperature, load_model
     from .storage import write_json
@@ -86,7 +86,7 @@ def sanity_gpu(provenance, approval):
 
 @app.function(image=image, gpu='H100', cpu=4, memory=65536,
               volumes={'/data': data, '/cache': hf}, timeout=3600, retries=0,
-              single_use_containers=True, max_containers=5)
+              include_source=False, single_use_containers=True, max_containers=5)
 def production_gpu(temperature, provenance, approval):
     from .lm import run_temperature
     data.reload()
@@ -105,7 +105,7 @@ def production_gpu(temperature, provenance, approval):
 
 
 @app.function(image=image, cpu=8, memory=16384, volumes={'/data': data}, timeout=3600, retries=0,
-              single_use_containers=True, max_containers=1)
+              include_source=False, single_use_containers=True, max_containers=1)
 def score_cpu(provenance, approval, oracle=False):
     from .analysis import run
     data.reload()
