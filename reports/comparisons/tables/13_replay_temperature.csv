@@ -1,0 +1,13 @@
+Study,Response source,Tokens,Window,Positions,Support / zero-token events,Endpoint contradictions
+temperature,prc,1024,all,102300,0,8
+temperature,prc,1024,early,6300,0,0
+temperature,prc,1024,later,96000,0,8
+temperature,prc,400,all,39900,0,3
+temperature,prc,400,early,6300,0,0
+temperature,prc,400,later,33600,0,3
+temperature,null,1024,all,102300,0,8
+temperature,null,1024,early,6300,0,0
+temperature,null,1024,later,96000,0,8
+temperature,null,400,all,39900,0,4
+temperature,null,400,early,6300,0,0
+temperature,null,400,later,33600,0,4

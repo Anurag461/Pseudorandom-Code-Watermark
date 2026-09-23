@@ -1,0 +1,15 @@
+{
+  "absolute_interval_checks": 18,
+  "contrast_interval_checks": 32,
+  "generation_artifacts_hash_verified": 6,
+  "independent_bootstrap_method": "multinomial count-weight matrix times paired prompt differences",
+  "independently_reconstructed_weighted_normal_scores": 4200,
+  "new_full_responses": 200,
+  "null_count_cells_recounted": 12,
+  "passed": true,
+  "prompt_metrics_sha256": "2c7f11529b09f6ca5f811401ac04f056e86272bb0510f42681f22ca067c8c09a",
+  "prompt_records": 500,
+  "score_records_sha256": "91f1e872e7b9c194dc75c96540773e471179d9e2f4bb968bcb204d60d77653ee",
+  "summary_sha256": "81e516f0dfd229f412167175ce39b6b91338440ae25ee0d4c2903e47f713307f",
+  "targeted_control_tests_passed": 11
+}

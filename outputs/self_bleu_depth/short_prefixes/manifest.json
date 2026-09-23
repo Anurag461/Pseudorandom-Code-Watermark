@@ -1,0 +1,129 @@
+{
+  "bootstrap": {
+    "ci": "2.5th and 97.5th percentiles of means resampled jointly by prompt",
+    "draws_sha256": "5ab115a4b5c632f81fd04e9cf02b5d4f67cf68dd60cf622759f99a04fb767c77",
+    "estimator": "Mean of paired prompt-level detection fractions or their direct depth differences",
+    "prompts": 50,
+    "resamples": 2000,
+    "responses_per_prompt": 2,
+    "seed": 20260918,
+    "unit": "paired prompt cluster"
+  },
+  "cohorts": {
+    "historical_null": 500,
+    "pilot_null": 100,
+    "watermarked_per_depth": 100
+  },
+  "depths": [
+    2,
+    10,
+    30
+  ],
+  "detector": "unchanged weighted-normal test with official context-repetition mask; explicit per-depth keys",
+  "generation_attempts": 0,
+  "generation_manifest_id": "c1edcaca75fed307c01a40c85d51399678159b52aa6857099ac83bb233ddffd4",
+  "id": "d0e1804e35eb33c0463320e720a797dfbd0581c403838a349a5820eaddfcf083",
+  "incremental_modal_cost_usd": 0,
+  "lengths": [
+    64,
+    128,
+    256
+  ],
+  "model_inference_calls": 0,
+  "nominal_threshold": 0.001,
+  "protocol": "completion_only_raw_abstain_v1",
+  "repeat_fallback": true,
+  "setting_keys": {
+    "10": {
+      "depth": 10,
+      "key_bank_domain": "prc-self-bleu/synthid-key-bank/v1/",
+      "keys": [
+        654,
+        400,
+        836,
+        123,
+        340,
+        443,
+        597,
+        160,
+        57,
+        29
+      ],
+      "method": "synthid_text",
+      "ngram_len": 4
+    },
+    "2": {
+      "depth": 2,
+      "key_bank_domain": "prc-self-bleu/synthid-key-bank/v1/",
+      "keys": [
+        654,
+        400
+      ],
+      "method": "synthid_text",
+      "ngram_len": 4
+    },
+    "30": {
+      "depth": 30,
+      "key_bank_domain": "prc-self-bleu/synthid-key-bank/v1/",
+      "keys": [
+        654,
+        400,
+        836,
+        123,
+        340,
+        443,
+        597,
+        160,
+        57,
+        29,
+        1797523356,
+        1066118674,
+        1933763658,
+        1353561683,
+        255769926,
+        661709076,
+        1006725126,
+        697518354,
+        291226930,
+        1194440902,
+        224259241,
+        1165317641,
+        975934733,
+        1040663236,
+        1311611910,
+        429853569,
+        930244707,
+        307988183,
+        1659195517,
+        357740339
+      ],
+      "method": "synthid_text",
+      "ngram_len": 4
+    }
+  },
+  "sources": {
+    "baseline_comparison/official.py": "714a1e5330cf62b8d8cfeac386fc4cc47605dd739ed01fc80daa402c75eae2c6",
+    "baseline_comparison/scoring.py": "7a302c7ee84680ae25f6351c7bf704d471efa9f105c5bcf25851c3a7de3e31ba",
+    "outputs/comparison_redetect/textseal_setup/direct_prefix/completion_inputs.jsonl": "bef35ceb4c15916818244da8f4cff340c44330c3ebe33dac161d998b1b7f19e2",
+    "outputs/self_bleu_depth/depth2_30_v1/generation_report.json": "88ec71b118f9cc2daee184f8e0e902c77630351f8a7cc0a4b759a75795f676e1",
+    "outputs/self_bleu_depth/depth2_30_v1/manifest.json": "dc424d0b23635c1b35255c6dcd0360272b4924039208a3e41d62f5a0302b1d2f",
+    "outputs/self_bleu_depth/depth2_30_v1/raw/batches/depth2_r0.json": "5c393a8ba0beb53565fb9c0b7fb0bd329f88751330fe24df54d3c6bc583ddf78",
+    "outputs/self_bleu_depth/depth2_30_v1/raw/batches/depth2_r1.json": "2e958f41fbd1c218d03c68f967ce1d1b8a9a10ac57efafcb636b027f4de0cf74",
+    "outputs/self_bleu_depth/depth2_30_v1/raw/batches/depth30_r0.json": "30df8400f77d58503b5cdc06d35601199de3d761fb25fc1be03c2f86b8126d60",
+    "outputs/self_bleu_depth/depth2_30_v1/raw/batches/depth30_r1.json": "0d5204513346e7148166fe76c1d4e097a49ea25a013a86c1ed12115456418692",
+    "outputs/self_bleu_depth/depth2_30_v1/summary.json": "81e516f0dfd229f412167175ce39b6b91338440ae25ee0d4c2903e47f713307f",
+    "outputs/self_bleu_depth/depth2_30_v1/verification.json": "08aebe1d9eb2cf98c1322d2953f619dcaf60acd211e08d142cd9dde6eb4f06a4",
+    "outputs/self_bleu_depth/short_prefixes/analyze.py": "17642ad500b5e132e49a2fb5c9a4cb7381907f2a6fbb796ee0fcd310a0ad3f93",
+    "outputs/self_bleu_pilot/stage_a_v2/inputs.json": "ed17f608fb11fa777600da41b7b98f892ca4e64b421ac509663a017d982e5f73",
+    "outputs/self_bleu_pilot/stage_a_v2/token_detection.json": "2ccc25b737010b8d7c86e9554142a959ee08f55fcc092a67d2fb6e9286923f94",
+    "self_bleu/config.py": "1f9634da3a475a829bc73aabe303248c07323896da3701127e54dff110b759c4",
+    "self_bleu/depth.py": "a5f5aace07250e04cf1b9656ec2ffd63b37e2eef2e700b622750f34dd90814e2",
+    "self_bleu/pilot.py": "cb1e26d55a595b28f1fb6aa54ab648d1f75d45c3abf447669b8cbfa767d7d350"
+  },
+  "upstream_sha256": {
+    "synthid_text.hashing_function": "6900000b03d6275347396d495d1118c64a16537a64c05fdec0868b623d1a34ab",
+    "synthid_text.logits_processing": "88bd1c20e2fea72356980548fc4cfa82c2ca1a2059ecb2deb1e3efa38be76294",
+    "textseal.watermarking.core": "83d48939b09a8d14c65a6cffb36d3af98d5d3ee3c90fbf80402e8c4e2265db63",
+    "textseal.watermarking.generator": "0357499f290d43a6649728a6ebd0df64b30d6c0230634ac7d041ddd737d6f285"
+  }
+}

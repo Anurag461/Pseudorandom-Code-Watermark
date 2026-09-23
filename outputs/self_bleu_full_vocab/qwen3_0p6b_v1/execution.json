@@ -1,0 +1,20 @@
+{
+  "apps": {
+    "batch": "ap-bRA9HBUxJMJ6jNESXQdahi",
+    "textseal": "ap-WjYLzGXguE7iAfCGks30hh",
+    "validate": "ap-OwOMvlAtupUUK5nbieX26P",
+    "validate_textseal": "ap-u3gbS4Uezxj3TpkPiFuYjT"
+  },
+  "local_checks": "44 tests passed: test_self_bleu_full_vocab.py, test_self_bleu_topk.py, test_self_bleu_controls.py",
+  "manifest_id": "fa4123aed0f407016d955b92adbe2b141d15a48ebf6ac0ffed9a26c4a3949c84",
+  "pre_worker_deployment_failure": {
+    "app": "ap-6QfhW8sz0niMnrM0u4krma",
+    "commit": "801b9eb",
+    "generated_responses": 0,
+    "reason": "Modal rejected an env image layer after live source mounts; corrected by setting the model-size environment at worker startup.",
+    "worker_started": false
+  },
+  "profile": "new-prc-watermark",
+  "result_volume": "prc-completion-only",
+  "source_commit": "b5560f5"
+}

@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "original_rows_preserved": 12,
+  "original_cells_preserved": 348,
+  "added_rows": 12,
+  "total_rows": 24,
+  "methods": [
+    "online_prc",
+    "textseal",
+    "synthid_text",
+    "gumbel_max"
+  ],
+  "lengths": [
+    128,
+    256,
+    400,
+    512,
+    768,
+    1024
+  ],
+  "nominal_fpr": 0.001,
+  "shared_null_source": "_nulls/qwen3_8b_base/T13088",
+  "before_csv_sha256": "56d221d55901ee5ddb396fbdf4c8f8addc375ca02961a20409232c542b9c1cf7",
+  "csv_sha256": "ac59bc46d8ebc733dad711a647d994676f4363c8358b64d67222b340c1a313e9",
+  "summary_sha256": "14ab02cd5103ed9374abf4ab7317c2679f71f8b2a2d17fe063ca6aac33453791",
+  "csv_roundtrip_exact": true,
+  "detector_calls": 0,
+  "model_forwards": 0,
+  "remote_calls": 0,
+  "independent_csv_readback": true,
+  "all_prior_provenance_fields_preserved": true,
+  "all_cached_summary_rates_exact": true
+}

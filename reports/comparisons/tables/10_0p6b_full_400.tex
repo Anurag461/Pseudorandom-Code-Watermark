@@ -1,0 +1,22 @@
+% Generated from hash-pinned saved results. Requires booktabs, graphicx and array.
+\begin{table*}[t]
+\centering
+\caption{0.6B / full vocabulary / T=1 at 400 tokens}
+\label{tab:10_0p6b_full_400}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{>{\raggedright\arraybackslash}p{\dimexpr0.181159\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.239130\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.144928\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.144928\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.144928\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.144928\textwidth-2\tabcolsep\relax}}
+\toprule
+Setting & Self-BLEU [95\% CI] & Detected /100 & TPR (\%) [95\% CI] & Repeat-4 (\%) & Distinct-3 (\%) \\
+\midrule
+Ordinary & 0.01509 [0.01305, 0.01749] & -- & -- & 0.94 & 97.98 \\
+PRC eta=.05 & 0.01336 [0.01186, 0.01498] & 79 & 79.0 [70.0, 88.0] & 1.43 & 97.35 \\
+SynthID d=2 & 0.01456 [0.01246, 0.01692] & 100 & 100.0 [100.0, 100.0] & 1.01 & 97.98 \\
+SynthID d=10 & 0.01665 [0.01388, 0.01994] & 100 & 100.0 [100.0, 100.0] & 1.92 & 96.86 \\
+TextSeal a=.1 (on) & 0.04689 [0.03963, 0.05446] & 100 & 100.0 [100.0, 100.0] & 1.79 & 96.73 \\
+Gumbel-Max (on) & 0.43261 [0.37023, 0.49801] & 100 & 100.0 [100.0, 100.0] & 1.24 & 97.18 \\
+\bottomrule
+\end{tabular}}
+\par\smallskip
+\begin{minipage}{\textwidth}\footnotesize Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95\% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses.\end{minipage}
+\end{table*}

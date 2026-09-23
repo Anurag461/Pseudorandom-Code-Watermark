@@ -1,0 +1,185 @@
+{
+  "bleu_signature": "nrefs:1|case:mixed|eff:yes|tok:13a|smooth:exp|version:2.4.3",
+  "bootstrap_draws_sha256": "5ab115a4b5c632f81fd04e9cf02b5d4f67cf68dd60cf622759f99a04fb767c77",
+  "limitations": [
+    "50 paired prompt clusters; nominal thresholds, not matched empirical FPR.",
+    "All-success bootstrap intervals do not prove perfect detection.",
+    "Within-method generation-policy contrasts; method-native detector masks and context initialization retained."
+  ],
+  "manifest_id": "8e762224a9f7d2207e7088a2f41a0a1a93de8012fa4e9b9d83df13a961e7d158",
+  "planning_charge_usd": 6.2446712048132635,
+  "results": [
+    {
+      "arm": "synthid_off",
+      "detected": 100,
+      "length": 400,
+      "new_minus_original": {
+        "self_bleu_difference": {
+          "ci95": [
+            -0.001995197957673187,
+            0.006492608797123818
+          ],
+          "mean": 0.0020150276217468506
+        },
+        "tpr_difference": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0
+        }
+      },
+      "self_bleu": {
+        "ci95": [
+          0.01939956009641262,
+          0.02945197443896117
+        ],
+        "mean": 0.023882916194089
+      },
+      "tpr": {
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "mean": 1.0
+      }
+    },
+    {
+      "arm": "synthid_off",
+      "detected": 100,
+      "length": 1024,
+      "new_minus_original": {
+        "self_bleu_difference": {
+          "ci95": [
+            -0.004207786090065804,
+            0.0030947401640502013
+          ],
+          "mean": -0.0006741827182835109
+        },
+        "tpr_difference": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "mean": 0.0
+        }
+      },
+      "self_bleu": {
+        "ci95": [
+          0.01775449830382432,
+          0.025339233483363595
+        ],
+        "mean": 0.02138454329823416
+      },
+      "tpr": {
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "mean": 1.0
+      }
+    }
+  ],
+  "stage": "synthid",
+  "synthid_trajectory": {
+    "checks_passed": {
+      "first_repeat_positions_agree": 100,
+      "modified_fallback_trace_is_off": 100,
+      "modified_repeat_trace_matches_reconstruction": 100,
+      "no_divergence_before_first_repeat": 100,
+      "no_repeat_reference_stays_identical": 100,
+      "repeat_history_agrees_through_divergence": 100
+    },
+    "failed_pairs": [],
+    "modified_trace_provenance": "Full recorded generation traces independently checked against token-based reconstruction.",
+    "native_prefix_traces_verified": 100,
+    "original_trace_provenance": "Reconstructed from saved tokens with upstream generation-context hashing, zero-context warmup and zero-filled history; cross-checked against native GPU prefix traces.",
+    "passed": true,
+    "position_convention": "zero-based generated-token positions; null if event never occurs",
+    "response_pairs": 100,
+    "summaries": [
+      {
+        "first_token_divergence_median_among_diverged": 131.0,
+        "fraction_pairs_with_divergence": 0.91,
+        "length": 400,
+        "modified": {
+          "fallback_count_max": 0,
+          "fallback_count_mean": 0.0,
+          "fallback_count_median": 0.0,
+          "fallback_count_total": 0,
+          "first_repeat_position_median_among_affected": 110.5,
+          "fraction_responses_with_fallback": 0.0,
+          "fraction_responses_with_repeat": 0.98,
+          "repeat_count_max": 271,
+          "repeat_count_mean": 20.59,
+          "repeat_count_median": 10.0,
+          "repeat_count_total": 2059,
+          "responses": 100,
+          "responses_with_fallback": 0,
+          "responses_with_repeat": 98
+        },
+        "original": {
+          "fallback_count_max": 53,
+          "fallback_count_mean": 9.34,
+          "fallback_count_median": 6.5,
+          "fallback_count_total": 934,
+          "first_repeat_position_median_among_affected": 110.5,
+          "fraction_responses_with_fallback": 0.98,
+          "fraction_responses_with_repeat": 0.98,
+          "repeat_count_max": 53,
+          "repeat_count_mean": 9.34,
+          "repeat_count_median": 6.5,
+          "repeat_count_total": 934,
+          "responses": 100,
+          "responses_with_fallback": 98,
+          "responses_with_repeat": 98
+        },
+        "pairs_with_divergence": 91
+      },
+      {
+        "first_token_divergence_median_among_diverged": 134.5,
+        "fraction_pairs_with_divergence": 1.0,
+        "length": 1024,
+        "modified": {
+          "fallback_count_max": 0,
+          "fallback_count_mean": 0.0,
+          "fallback_count_median": 0.0,
+          "fallback_count_total": 0,
+          "first_repeat_position_median_among_affected": 111.5,
+          "fraction_responses_with_fallback": 0.0,
+          "fraction_responses_with_repeat": 1.0,
+          "repeat_count_max": 895,
+          "repeat_count_mean": 114.21,
+          "repeat_count_median": 47.0,
+          "repeat_count_total": 11421,
+          "responses": 100,
+          "responses_with_fallback": 0,
+          "responses_with_repeat": 100
+        },
+        "original": {
+          "fallback_count_max": 315,
+          "fallback_count_mean": 45.53,
+          "fallback_count_median": 31.5,
+          "fallback_count_total": 4553,
+          "first_repeat_position_median_among_affected": 111.5,
+          "fraction_responses_with_fallback": 1.0,
+          "fraction_responses_with_repeat": 1.0,
+          "repeat_count_max": 315,
+          "repeat_count_mean": 45.53,
+          "repeat_count_median": 31.5,
+          "repeat_count_total": 4553,
+          "responses": 100,
+          "responses_with_fallback": 100,
+          "responses_with_repeat": 100
+        },
+        "pairs_with_divergence": 100
+      }
+    ]
+  },
+  "verified_files": {
+    "raw/synthid/batches/synthid_off_r0.json": "7bbacb69b44a2b82757cec9eee15e16ec844060af3fd3a91e14d9b828eb799d7",
+    "raw/synthid/batches/synthid_off_r1.json": "f995f6be135d5bf22011789c1be1d7575eba5f925d22f8ce626a7356786adc50",
+    "raw/synthid/controls/synthid_off_r0.json": "bb653dad38ccfe9d47bf5cc6dc43962bbd3497de2e27a77098d13f8264aadb10",
+    "raw/synthid/controls/synthid_off_r1.json": "8171f354de6d7227a176d3c9eb13cbf1bc97a2166a352d3128a0adfb46164843"
+  }
+}

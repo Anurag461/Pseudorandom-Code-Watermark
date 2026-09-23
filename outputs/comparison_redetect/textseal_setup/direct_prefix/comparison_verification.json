@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "original_prc_rows": 6,
+  "all_original_prc_cells_unchanged": true,
+  "textseal_rows": 6,
+  "target_fpr": 0.001,
+  "score_field": "p_value_weighted",
+  "before_csv_sha256": "91a99d897c659b8a5a3b1e90fbd6c1c0a0cfc47be836fb5e6c674b159c6dbefa",
+  "csv_sha256": "56d221d55901ee5ddb396fbdf4c8f8addc375ca02961a20409232c542b9c1cf7",
+  "before_provenance_sha256": "357a0734da5f2712cc5bde3f02ec972e82ced1f4a81540bf5638aa04def0e668",
+  "full_summary_sha256": "496d4e43ee31ed70f1168adcf504cf824b0d33f1d6629e5709fa704d171556b1",
+  "csv_roundtrip_values_exact": true,
+  "independent_python_csv_readback": true,
+  "independent_decision_aggregation_matches": true,
+  "all_prior_prc_provenance_fields_preserved": true
+}

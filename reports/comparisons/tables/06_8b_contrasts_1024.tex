@@ -1,0 +1,23 @@
+% Generated from hash-pinned saved results. Requires booktabs, graphicx and array.
+\begin{table*}[t]
+\centering
+\caption{Direct paired PRC-minus-baseline differences at 1,024 tokens}
+\label{tab:06_8b_contrasts_1024}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{>{\raggedright\arraybackslash}p{\dimexpr0.333333\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.333333\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.333333\textwidth-2\tabcolsep\relax}}
+\toprule
+Baseline & Self-BLEU difference [95\% CI] & Detection difference (pp) [95\% CI] \\
+\midrule
+SynthID d=2 & -0.00097 [-0.00459, +0.00265] & -3.0 [-7.0, +0.0] \\
+SynthID d=10 & -0.00316 [-0.00731, +0.00102] & -3.0 [-7.0, +0.0] \\
+SynthID d=30 & -0.01000 [-0.01546, -0.00506] & -3.0 [-7.0, +0.0] \\
+TextSeal a=.1 (off) & -0.01880 [-0.02560, -0.01205] & -3.0 [-7.0, +0.0] \\
+Gumbel-Max (off) & -0.98110 [-0.98419, -0.97773] & -3.0 [-7.0, +0.0] \\
+TextSeal a=.1 (on) & -0.02837 [-0.03531, -0.02201] & -3.0 [-7.0, +0.0] \\
+Gumbel-Max (on) & -0.18829 [-0.21248, -0.16445] & -3.0 [-7.0, +0.0] \\
+\bottomrule
+\end{tabular}}
+\par\smallskip
+\begin{minipage}{\textwidth}\footnotesize Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95\% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. Negative Self-BLEU favors PRC; positive detection difference favors PRC. Fallback labels identify separately generated arms.\end{minipage}
+\end{table*}

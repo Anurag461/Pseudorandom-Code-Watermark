@@ -1,0 +1,15 @@
+{
+  "bytes": 40391846,
+  "extraction_root": "repository root; member paths are relative and use outputs/ only",
+  "local_path": "outputs/self_bleu_pilot/stage_a_v2/raw/reproduction_archive.tar.gz",
+  "manifest_id": "6b4f7376b0bc9f0001e7378064c95166f5b85015a0560983e175b399d10d55b4",
+  "member_count": 230,
+  "member_index_sha256": "b7dd44cd1c28e162332403126f2aafea33c0923489725d1adf74d5630d39c0ba",
+  "note": "GPU replay files also remain individually archived under this manifest. Contains saved completions and raw evidence; excluded from Git.",
+  "remote_path": "self_bleu_pilot/6b4f7376b0bc9f0001e7378064c95166f5b85015a0560983e175b399d10d55b4/analysis/analysis.tar.gz",
+  "remote_readback_verified": true,
+  "remote_uploaded": true,
+  "sha256": "8a3309ac803448ad725e1ec5b8084aa65a26c4fd94b35307942f46fd06a2951b",
+  "upload_status": "Explicitly authorized by user; uploaded and full remote readback SHA-256 verified.",
+  "volume": "prc-completion-only"
+}

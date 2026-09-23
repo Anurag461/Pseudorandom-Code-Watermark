@@ -1,11 +1,23 @@
 # PRC watermark — reproduction guide
 
+**Comparison campaign closed:** [full report and highlighted takeaways](reports/comparisons/REPORT.md) · [paper figures/tables](reports/comparisons/README.md) · [completed experiment index](self_bleu/README.md).
+The final report separates corrected 500-prompt results from paired diversity studies and includes unfavorable sensitivity results. No further comparison runs are pending.
+
 **Prompt-free paper redetection** now runs through the existing Modal app:
 
 `modal_run.py` contains the combined PRC Modal implementation for both fixed and
 online constructions. Use `::generate_fixed` or `::generate_online` for generation and
 `::redetect --manifest ...` for prompt-free detection. The manifest's
 `construction` field selects the original key and scoring rules.
+
+The shared baseline code is in `baseline_comparison/comparison_runner.py`
+(formerly `smoke_runner.py`). The [TextSeal comparison redetection plan](textseal_prompt_free_redetection_plan.md)
+documents the TextSeal entropy correction, PRC cache reuse, upstream-code
+requirements, and estimated costs. The [completion-only TextSeal setup](baseline_comparison/README.md)
+calls the pinned upstream detector directly; the source preflight is complete.
+The completed replay and shared-null alignment are documented there. The
+[detectability versus diversity study](self_bleu/README.md) now has its own
+package, [plan](self_bleu/plan.md), and [repeat-handling runbook](self_bleu/repeat_handling_ablation.md).
 
 The first cleanup commit, `cf57b46`, retired prompted detection before this
 structural move. Old implementations remain in Git history at `61b1739`;

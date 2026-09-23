@@ -1,0 +1,434 @@
+[
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "prc",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "prc",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "prc",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "prc",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "textseal",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "textseal",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "textseal",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "textseal",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 1,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "synthid_depth10",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "synthid_depth10",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "synthid_depth10",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "synthid_depth10",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "gumbel",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 2,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "gumbel",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "gumbel",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "gumbel",
+    "source": "outputs/self_bleu_repeat/paired_comparison/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "synthid_depth2",
+    "source": "outputs/self_bleu_depth/depth2_30_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "synthid_depth2",
+    "source": "outputs/self_bleu_depth/depth2_30_v1/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "synthid_depth2",
+    "source": "outputs/self_bleu_depth/depth2_30_v1/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "synthid_depth2",
+    "source": "outputs/self_bleu_depth/depth2_30_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "synthid_depth30",
+    "source": "outputs/self_bleu_depth/depth2_30_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 100,
+    "setting": "synthid_depth30",
+    "source": "outputs/self_bleu_depth/depth2_30_v1/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "synthid_depth30",
+    "source": "outputs/self_bleu_depth/depth2_30_v1/summary.json"
+  },
+  {
+    "cohort": "historical",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_full",
+    "responses": 500,
+    "setting": "synthid_depth30",
+    "source": "outputs/self_bleu_depth/depth2_30_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_topk",
+    "responses": 100,
+    "setting": "prc",
+    "source": "outputs/self_bleu_topk/matched_v2/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_topk",
+    "responses": 100,
+    "setting": "prc",
+    "source": "outputs/self_bleu_topk/matched_v2/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_topk",
+    "responses": 100,
+    "setting": "synthid_depth2",
+    "source": "outputs/self_bleu_topk/matched_v2/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_topk",
+    "responses": 100,
+    "setting": "synthid_depth2",
+    "source": "outputs/self_bleu_topk/matched_v2/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_topk",
+    "responses": 100,
+    "setting": "synthid_depth10",
+    "source": "outputs/self_bleu_topk/matched_v2/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 1,
+    "length": 400,
+    "regime": "8b_topk",
+    "responses": 100,
+    "setting": "synthid_depth10",
+    "source": "outputs/self_bleu_topk/matched_v2/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_topk",
+    "responses": 100,
+    "setting": "synthid_depth30",
+    "source": "outputs/self_bleu_topk/matched_v2/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_topk",
+    "responses": 100,
+    "setting": "synthid_depth30",
+    "source": "outputs/self_bleu_topk/matched_v2/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "0p6b_full",
+    "responses": 100,
+    "setting": "prc",
+    "source": "outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "0p6b_full",
+    "responses": 100,
+    "setting": "prc",
+    "source": "outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "0p6b_full",
+    "responses": 100,
+    "setting": "synthid_depth2",
+    "source": "outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "0p6b_full",
+    "responses": 100,
+    "setting": "synthid_depth2",
+    "source": "outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "0p6b_full",
+    "responses": 100,
+    "setting": "synthid_depth10",
+    "source": "outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "0p6b_full",
+    "responses": 100,
+    "setting": "synthid_depth10",
+    "source": "outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "0p6b_full",
+    "responses": 100,
+    "setting": "textseal_on",
+    "source": "outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "0p6b_full",
+    "responses": 100,
+    "setting": "textseal_on",
+    "source": "outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "0p6b_full",
+    "responses": 100,
+    "setting": "gumbel_on",
+    "source": "outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "0p6b_full",
+    "responses": 100,
+    "setting": "gumbel_on",
+    "source": "outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_t07",
+    "responses": 100,
+    "setting": "prc",
+    "source": "outputs/self_bleu_temperature/t07_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_t07",
+    "responses": 100,
+    "setting": "prc",
+    "source": "outputs/self_bleu_temperature/t07_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_t07",
+    "responses": 100,
+    "setting": "synthid_depth2",
+    "source": "outputs/self_bleu_temperature/t07_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_t07",
+    "responses": 100,
+    "setting": "synthid_depth2",
+    "source": "outputs/self_bleu_temperature/t07_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 1024,
+    "regime": "8b_t07",
+    "responses": 100,
+    "setting": "synthid_depth10",
+    "source": "outputs/self_bleu_temperature/t07_v1/summary.json"
+  },
+  {
+    "cohort": "pilot",
+    "detected": 0,
+    "length": 400,
+    "regime": "8b_t07",
+    "responses": 100,
+    "setting": "synthid_depth10",
+    "source": "outputs/self_bleu_temperature/t07_v1/summary.json"
+  }
+]

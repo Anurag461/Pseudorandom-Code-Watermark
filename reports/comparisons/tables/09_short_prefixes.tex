@@ -1,0 +1,25 @@
+% Generated from hash-pinned saved results. Requires booktabs, graphicx and array.
+\begin{table*}[t]
+\centering
+\caption{Saved SynthID generations scored at short prefixes}
+\label{tab:09_short_prefixes}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{>{\raggedright\arraybackslash}p{\dimexpr0.200000\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.160000\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.160000\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.160000\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.160000\textwidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.160000\textwidth-2\tabcolsep\relax}}
+\toprule
+Depth & Tokens & Detected /100 & TPR (\%) [95\% CI] & Pilot FP /100 & Historical FP /500 \\
+\midrule
+2 & 64 & 45 & 45.0 [35.0, 55.0] & 0 & 1 \\
+2 & 128 & 82 & 82.0 [75.0, 89.0] & 0 & 1 \\
+2 & 256 & 100 & 100.0 [100.0, 100.0] & 1 & 1 \\
+10 & 64 & 100 & 100.0 [100.0, 100.0] & 0 & 0 \\
+10 & 128 & 100 & 100.0 [100.0, 100.0] & 0 & 1 \\
+10 & 256 & 100 & 100.0 [100.0, 100.0] & 0 & 1 \\
+30 & 64 & 100 & 100.0 [100.0, 100.0] & 0 & 1 \\
+30 & 128 & 100 & 100.0 [100.0, 100.0] & 0 & 0 \\
+30 & 256 & 100 & 100.0 [100.0, 100.0] & 0 & 0 \\
+\bottomrule
+\end{tabular}}
+\par\smallskip
+\begin{minipage}{\textwidth}\footnotesize Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95\% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. Official context mask and exact per-depth keys. Historical nulls were rescored for each depth, so these counts need not equal the legacy 500-prompt tuple-mask counts.\end{minipage}
+\end{table*}

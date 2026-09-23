@@ -1,0 +1,35 @@
+{
+  "files": {
+    "fixture_0.json": "8577271558ce270ec6aaf2a933899aadbd6225e9c961856c4f233118b6c198b0",
+    "fixture_1.json": "5fb901edbbb8ae3af7021354b27503c440f7f376540d4ce80990e9bea66c10d2"
+  },
+  "manifest_id": "fa4123aed0f407016d955b92adbe2b141d15a48ebf6ac0ffed9a26c4a3949c84",
+  "passed": true,
+  "resource_estimate_usd": 0.014800444898594639,
+  "runtime": {
+    "attention": "eager",
+    "bf16_reduced_precision_reduction": false,
+    "capability": [
+      9,
+      0
+    ],
+    "cuda": "12.1",
+    "cudnn": 90100,
+    "dtype": "bfloat16",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "python": "3.11.12",
+    "tf32": false,
+    "use_cache": false,
+    "versions": {
+      "huggingface-hub": "0.30.2",
+      "numpy": "1.26.0",
+      "safetensors": "0.4.5",
+      "scipy": "1.14.1",
+      "tokenizers": "0.21.1",
+      "torch": "2.4.0",
+      "transformers": "4.51.3"
+    }
+  },
+  "seconds": 11.460065118,
+  "stage": "validate_textseal"
+}

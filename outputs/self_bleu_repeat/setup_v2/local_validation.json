@@ -1,0 +1,99 @@
+{
+  "cli_help_checks": {
+    "local": [
+      "validation",
+      "pilot",
+      "repeat"
+    ],
+    "modal_no_dispatch": [
+      "validation",
+      "pilot",
+      "repeat"
+    ]
+  },
+  "experimental_fields_unchanged": true,
+  "gpu_dispatched": false,
+  "gpu_validation_status": "pending first staged run",
+  "limitations": [
+    "CPU checks and saved-data reanalysis; target H100 forced-repeat and native-prefix checks remain mandatory before new generation."
+  ],
+  "local_tests_passed": 80,
+  "manifest_fields_changed": [
+    "code_sha256",
+    "id",
+    "source_commit",
+    "supersedes"
+  ],
+  "manifest_id": "3558ccff02a852479c851b85054210760929cb847741836b2ec4808037a39bb2",
+  "new_modal_spend_usd": 0,
+  "passed": true,
+  "pilot_reanalysis": {
+    "all_numerical_and_input_fields_exact": true,
+    "changed_fields": [
+      "analysis_code_sha256",
+      "metric_and_evidence_code_sha256"
+    ],
+    "endpoints": 10,
+    "original_summary_sha256": "842558fe4fa101642c3b497097ec4dcd881e46bf7b545f2c0ff5a2ba7ca63631",
+    "paired_contrasts": 6,
+    "recomputed_summary_sha256": "44e7b2cf4d4b73a1d7584edd33fac6137df66eef5b7f63848b1955d7071ef104"
+  },
+  "repeat_analysis_wiring": {
+    "all_contrasts_zero_tolerance": 1e-14,
+    "fixture": "Copies of all three original-policy arms; no new generation",
+    "paired_endpoints": 6,
+    "passed": true,
+    "script_sha256": "a626afe8c0474dfb562b023ac5cafcefedbf4774122ff6e8f7fb7ba1b362ca97"
+  },
+  "source_identity": {
+    "archived_manifest_file_counts": {
+      "outputs/self_bleu_pilot/stage_a_v2/manifest.json": 20,
+      "outputs/self_bleu_repeat/setup_v1/manifest.json": 27,
+      "outputs/self_bleu_validation/step3-v4/manifest.json": 32
+    },
+    "current_manifest_source_files_checked": 24,
+    "generation_code_unchanged": {
+      "baseline_comparison/comparison_runner.py": [
+        "generate_method"
+      ],
+      "baseline_comparison/self_bleu_config.py": "entire file byte-identical",
+      "baseline_comparison/self_bleu_generation.py": "entire file byte-identical",
+      "baseline_comparison/self_bleu_repeat.py": [
+        "RepeatSetting",
+        "SamplerRepeatPolicy",
+        "SynthIDRepeatPolicy",
+        "arm_setting",
+        "check_sampler_policy",
+        "check_synthid_policy",
+        "fallback_seed",
+        "generate_repeat_batch",
+        "install_policy"
+      ]
+    },
+    "legacy_commit": "7bde5c6d54dee444db3b69d96bfce6b09c79ba4c",
+    "reference_files_checked": 10,
+    "upstream_files_checked": 4
+  },
+  "superseded_manifest_id": "ff6487280ea4179ec1bf69f28e82e9a36775dca1167d8110348e00bd2c3ee4fe",
+  "synthid_scoring_regression": {
+    "actual_key_depth_metadata_checked": true,
+    "alternate_keys_at_same_depth_checked": true,
+    "depths": [
+      2,
+      10,
+      20,
+      30
+    ],
+    "full_and_prefix_official_evidence": true,
+    "missing_keys_rejected": true,
+    "nulls_use_same_keys": true
+  },
+  "test_suites": [
+    "tests/test_self_bleu_controls.py",
+    "tests/test_self_bleu_validation.py",
+    "tests/test_self_bleu_pilot.py",
+    "tests/test_self_bleu_repeat.py",
+    "tests/test_textseal_completion.py",
+    "tests/test_baseline_comparison.py"
+  ]
+}

@@ -1,0 +1,12 @@
+Experiment,Evaluation cohort,Work performed,Status
+Historical controlled baseline / proxy campaign,500 prompts per setting,Saved generation and historical detection,Completed; prompted native/proxy scores superseded for paper detection
+Completion-only baseline redetection,500 per watermark + 500 shared nulls,PRC prefix rescoring; shared-null replay; TextSeal direct-prefix replay; SynthID/Gumbel saved-score audit,Completed; 24 method/length cells
+Two-response implementation validation,50 prompts; seeds 12345/67890,"600 saved full-length slots, 200 short slots; same-seed controls and repairs",Completed; only five settings enter Stage A
+Stage A native-policy pilot,5 settings x 100 = 500 slots,Reuse validation outputs; completion-only scoring,Completed; no extra generation
+Repeat-handling intervention,3 modified settings x 100 = 300,SynthID d=10 OFF; TextSeal/Gumbel ON,Completed; native controls reused
+Paired Self-BLEU / matched repetition,Saved Stage A + repeat outputs,Paired analysis only,Completed; zero GPU cost
+SynthID depths 2 and 30,2 settings x 100 = 200,New responses; d=10/PRC/ordinary reused,Completed; depth 20 cancelled
+SynthID 64/128/256-token scoring,Saved d=2/10/30 and nulls,Detection-only CPU analysis; no new text,"Completed; 6,300 prefix scores"
+"8B top-100, T=1",5 settings x 100 = 500,"Ordinary, PRC, SynthID d=2/10/30",Completed; matched ordinary controls
+"0.6B full vocabulary, T=1",6 settings x 100 = 600,"Ordinary, PRC, SynthID d=2/10, TextSeal, Gumbel",Completed; all contextual fallbacks ON
+"8B full vocabulary, T=.7",4 settings x 100 = 400,"Ordinary, PRC, SynthID d=2/10",Completed; temperature-faithful precision; stopped

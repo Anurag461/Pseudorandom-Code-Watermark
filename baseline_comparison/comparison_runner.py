@@ -1,4 +1,4 @@
-"""Remote-only Qwen3-8B five-prompt smoke implementation."""
+"""Shared Qwen3-8B comparison generation, scoring, and diagnostic runners."""
 
 from __future__ import annotations
 
@@ -37,7 +37,6 @@ from .config import (
     SMOKE_PROMPT_INDICES,
     SYNTHID_COMMIT,
     SYNTHID_CONTEXT_HISTORY_SIZE,
-    SYNTHID_DEPTH,
     SYNTHID_KEYS,
     SYNTHID_REPOSITORY,
     TEMPERATURE,
@@ -50,12 +49,11 @@ from .config import (
     TOP_P,
 )
 from .official import (
+    _synthid_keys,
     gumbel_generator,
     official_gumbel_scores,
     official_synthid_g_values,
-    official_textseal_fused_scores,
     synthid_processor,
-    textseal_config,
     textseal_generator,
 )
 from .schema import PromptLevelResult
@@ -65,7 +63,6 @@ from .scoring import (
     prc_hoeffding_test,
     quality_metrics,
     synthid_normal_test,
-    textseal_gamma_test,
 )
 
 
@@ -243,35 +240,51 @@ def generate_method(
     *,
     method: str,
     seed: int,
+    textseal_alpha: float = TEXTSEAL_ALPHA,
+    synthid_keys: Sequence[int] = SYNTHID_KEYS,
+    max_new_tokens: int = MAX_NEW_TOKENS,
+    device: str = "cuda",
 ) -> tuple[list[dict], dict]:
-    """Generate a forced 1,024-token batch using the pinned official sampler."""
+    """Generate a forced-length batch; historical calls retain their defaults.
+
+    Alpha and keys configure the pinned samplers without changing their
+    algorithms. The null arm samples the ordinary full-vocabulary distribution.
+    CPU/short-length overrides support local control tests, not GPU validation.
+    """
     from qwen import StaticKVCache
 
-    if method not in {"textseal", "synthid_text", "gumbel_max"}:
+    if method not in {"textseal", "synthid_text", "gumbel_max", "null"}:
         raise ValueError(f"unsupported generated method {method}")
     if not prompts or any(len(prompt) != 50 for prompt in prompts):
         raise ValueError("the smoke requires nonempty, exactly 50-token prompts")
-    device = torch.device("cuda")
+    if type(max_new_tokens) is not int or max_new_tokens <= 0:
+        raise ValueError("max_new_tokens must be a positive integer")
+    if type(seed) is not int or not 0 <= seed < 2**63:
+        raise ValueError("seed must be a nonnegative 63-bit integer")
+    device = torch.device(device)
+    model.eval()
     batch_size = len(prompts)
     torch.manual_seed(int(seed))
-    torch.cuda.manual_seed_all(int(seed))
-    torch.cuda.synchronize()
+    if device.type == "cuda":
+        torch.cuda.manual_seed_all(int(seed))
+        torch.cuda.synchronize()
     started = time.perf_counter()
 
     all_tokens = torch.empty(
-        (batch_size, 50 + MAX_NEW_TOKENS), dtype=torch.long, device=device
+        (batch_size, 50 + max_new_tokens), dtype=torch.long, device=device
     )
     all_tokens[:, :50] = torch.tensor(prompts, dtype=torch.long, device=device)
-    generated = torch.empty((batch_size, MAX_NEW_TOKENS), dtype=torch.long)
-    logprobs = torch.empty((batch_size, MAX_NEW_TOKENS), dtype=torch.float32)
-    entropies = torch.empty((batch_size, MAX_NEW_TOKENS), dtype=torch.float32)
-    cache = StaticKVCache(max_length=50 + MAX_NEW_TOKENS)
+    generated = torch.empty((batch_size, max_new_tokens), dtype=torch.long)
+    logprobs = torch.empty((batch_size, max_new_tokens), dtype=torch.float32)
+    entropies = torch.empty((batch_size, max_new_tokens), dtype=torch.float32)
+    cache = StaticKVCache(max_length=50 + max_new_tokens)
     print(
         f"[smoke] {method} seed={seed} prefill start batch={batch_size}",
         flush=True,
     )
     logits = model(all_tokens[:, :50], cache=cache)[:, -1]
-    torch.cuda.synchronize()
+    if device.type == "cuda":
+        torch.cuda.synchronize()
     print(f"[smoke] {method} seed={seed} prefill complete", flush=True)
 
     sampler = None
@@ -280,17 +293,17 @@ def generate_method(
     synthid_reference_max_abs_difference = 0.0
     synthid_reference_indices_equal = True
     if method == "textseal":
-        sampler = textseal_generator()
+        sampler = textseal_generator(alpha=textseal_alpha)
     elif method == "gumbel_max":
         sampler = gumbel_generator()
-    else:
-        processor = synthid_processor(device)
+    elif method == "synthid_text":
+        processor = synthid_processor(device, keys=synthid_keys)
         # One independent official processor follows prompt 0 for every smoke
         # step. This checks the adapter's exact generation-time score update on
         # real model logits while adding only 1/5 of a second full-batch pass.
-        reference_processor = synthid_processor(device)
+        reference_processor = synthid_processor(device, keys=synthid_keys)
 
-    for position in range(MAX_NEW_TOKENS):
+    for position in range(max_new_tokens):
         base_log_probs = torch.log_softmax(logits.float(), dim=-1)
         base_probs = torch.exp(base_log_probs)
         base_entropy = -(base_probs * base_log_probs).sum(dim=-1)
@@ -300,6 +313,8 @@ def generate_method(
             next_token = sampler.sample_next(
                 logits, context, temperature=float(TEMPERATURE), top_p=float(TOP_P)
             )
+        elif method == "null":
+            next_token = torch.multinomial(torch.softmax(logits.float(), dim=-1), 1).reshape(-1)
         else:
             updated, indices, _ = processor.watermarked_call(
                 all_tokens[:, : 50 + position], logits
@@ -325,10 +340,11 @@ def generate_method(
         logprobs[:, position] = selected_logprob.detach().cpu()
         entropies[:, position] = base_entropy.detach().cpu()
         all_tokens[:, 50 + position] = next_token
-        if position + 1 < MAX_NEW_TOKENS:
+        if position + 1 < max_new_tokens:
             logits = model(next_token[:, None], cache=cache)[:, -1]
 
-    torch.cuda.synchronize()
+    if device.type == "cuda":
+        torch.cuda.synchronize()
     elapsed = time.perf_counter() - started
     outputs = []
     for row in range(batch_size):
@@ -344,10 +360,10 @@ def generate_method(
         "seed": int(seed),
         "batch_size": batch_size,
         "generated_sequences": batch_size,
-        "generated_tokens": batch_size * MAX_NEW_TOKENS,
+        "generated_tokens": batch_size * max_new_tokens,
         "method_seconds": elapsed,
         "seconds_per_prompt": elapsed / batch_size,
-        "tokens_per_second": batch_size * MAX_NEW_TOKENS / elapsed,
+        "tokens_per_second": batch_size * max_new_tokens / elapsed,
         "synthid_official_smoke_reference": {
             "prompt_index": 0 if method == "synthid_text" else None,
             "indices_equal": synthid_reference_indices_equal if method == "synthid_text" else None,
@@ -672,7 +688,9 @@ def _load_cached_sequences(prompt_rows: Sequence[dict]) -> tuple[list[dict], lis
     return _load_cached_sequences_for_indices(prompt_rows, SMOKE_PROMPT_INDICES)
 
 
-def _method_configuration(method: str) -> tuple[dict, int | None, str, str, str]:
+def _method_configuration(
+    method: str, *, synthid_keys: Sequence[int] | None = None,
+) -> tuple[dict, int | None, str, str, str]:
     if method == "textseal":
         return (
             {
@@ -688,10 +706,13 @@ def _method_configuration(method: str) -> tuple[dict, int | None, str, str, str]
             TEXTSEAL_COMMIT,
         )
     if method == "synthid_text":
+        if synthid_keys is None:
+            raise ValueError("SynthID scoring requires explicit keys from the generation setting")
+        keys = _synthid_keys(synthid_keys)
         return (
             {
-                "depth": SYNTHID_DEPTH,
-                "keys": list(SYNTHID_KEYS),
+                "depth": len(keys),
+                "keys": list(keys),
                 "ngram_len": CONTEXT_LENGTH + 1,
                 "context_length": CONTEXT_LENGTH,
                 "context_history_size": SYNTHID_CONTEXT_HISTORY_SIZE,
@@ -701,8 +722,8 @@ def _method_configuration(method: str) -> tuple[dict, int | None, str, str, str]
                 "deduplication": "unique (context_3, token), released TextSeal v2 position convention",
                 "generation_repeated_context_mask": "Google official context-only mask enabled",
             },
-            SYNTHID_KEYS[0],
-            "Google official 10-key domain; all keys recorded in method configuration",
+            keys[0],
+            f"Google official {len(keys)}-key domain; all keys recorded in method configuration",
             SYNTHID_REPOSITORY,
             SYNTHID_COMMIT,
         )
@@ -756,8 +777,9 @@ def _result(
     provenance: dict,
     runtime_seconds: float,
     diversity_fields: dict | None = None,
+    synthid_keys: Sequence[int] | None = None,
 ) -> dict:
-    config, key_seed, key_domain, repo, commit = _method_configuration(method)
+    config, key_seed, key_domain, repo, commit = _method_configuration(method, synthid_keys=synthid_keys)
     tokens = list(map(int, token_ids))
     quality = quality_metrics(tokens, base_logprobs)
     result = PromptLevelResult(
@@ -819,9 +841,20 @@ def _score_baseline_sequence(
     provenance: dict,
     runtime_seconds: float,
     diversity_fields: dict | None = None,
+    synthid_keys: Sequence[int] | None = None,
 ) -> tuple[list[dict], dict]:
-    from textseal.watermarking.detector import TextSealDetector
-
+    if method == "textseal":
+        raise ValueError(
+            "Cached prompt-conditioned TextSeal detection is retired. "
+            "Use baseline_comparison.textseal_completion.TextSealCompletionDetector "
+            "with raw completion IDs and a fresh detector model."
+        )
+    if method not in ("synthid_text", "gumbel_max"):
+        raise ValueError(f"unsupported token detector: {method}")
+    if method == "synthid_text":
+        if synthid_keys is None:
+            raise ValueError("SynthID scoring requires explicit keys from the generation setting")
+        synthid_keys = _synthid_keys(synthid_keys)
     tokens = list(map(int, sequence["token_ids"][:MAX_NEW_TOKENS]))
     logprobs = list(map(float, sequence["base_token_logprobs"][:MAX_NEW_TOKENS]))
     entropies = list(map(float, sequence["base_entropies"][:MAX_NEW_TOKENS]))
@@ -835,78 +868,28 @@ def _score_baseline_sequence(
             "seed": seed,
             "token_hash": token_hash,
             "provenance": provenance,
+            **({"synthid_keys": list(synthid_keys)} if method == "synthid_text" else {}),
         }
     )
     results = []
     exact_prefix_checks = []
-    textseal_reference_deltas = []
     synthid_g_hashes = []
     full_positions = deduplicated_positions(tokens, CONTEXT_LENGTH)
-    if method == "textseal":
-        full_evidence = official_textseal_fused_scores(tokens, full_positions)
-    elif method == "gumbel_max":
+    if method == "gumbel_max":
         full_evidence = official_gumbel_scores(tokens, full_positions)
     else:
-        full_evidence = official_synthid_g_values(tokens, full_positions)
+        full_evidence = official_synthid_g_values(tokens, full_positions, keys=synthid_keys)
 
     for prefix in PREFIX_LENGTHS:
         prefix_tokens = tokens[:prefix]
         positions = deduplicated_positions(prefix_tokens, CONTEXT_LENGTH)
-        if method == "textseal":
-            direct = official_textseal_fused_scores(prefix_tokens, positions)
-            selected = full_evidence[: len(positions)]
-            exact_delta = float(np.max(np.abs(direct - selected))) if len(direct) else 0.0
-            selected_entropies = [entropies[position] for position in positions]
-            test = textseal_gamma_test(
-                direct, selected_entropies, alpha=TEXTSEAL_ALPHA, nominal_fpr=NOMINAL_FPR
-            )
-            # Shift generation-step entropies into the official teacher-forced
-            # convention: detector entropy index p-1 predicts target p.
-            official_entropies = entropies[1:prefix]
-            official = TextSealDetector(
-                None, textseal_config(), scoring_method="v2"
-            )._score_text(prefix_tokens, official_entropies, scoring_method="v2")
-            official_weighted_p = float(official["p_value_weighted"])
-            reference_delta = abs(official_weighted_p - test["p_value"])
-            # The pinned detector accumulates its scalar float32 PRF tensors
-            # through NumPy, whereas the common scorer casts those identical
-            # PRF values to float64 before the weighted reduction.  Validate
-            # numerical parity and, separately, exact decision parity; this is
-            # not a change to either statistic or calibration formula.
-            if not math.isclose(
-                official_weighted_p,
-                test["p_value"],
-                rel_tol=2e-6,
-                abs_tol=2e-7,
-            ):
-                raise AssertionError(
-                    f"TextSeal official p mismatch on {sample_type} prompt {prompt_index} "
-                    f"T={prefix}: {reference_delta}"
-                )
-            if bool(official_weighted_p < NOMINAL_FPR) != bool(test["decision"]):
-                raise AssertionError(
-                    f"TextSeal official/common decisions differ on {sample_type} "
-                    f"prompt {prompt_index} T={prefix}"
-                )
-            textseal_reference_deltas.append(reference_delta)
-            test["intermediate"].update(
-                {
-                    "official_p_value_weighted": float(official["p_value_weighted"]),
-                    "official_p_value_unweighted": float(official["p_value_unweighted"]),
-                    "official_min_p_value": float(official["p_value"]),
-                    "official_hardcoded_decision_at_0.01": bool(official["detected"]),
-                    "official_common_abs_p_delta": reference_delta,
-                    "official_common_p_tolerance": {"relative": 2e-6, "absolute": 2e-7},
-                    "primary_decision_rule": "weighted p < 0.001",
-                }
-            )
-        elif method == "gumbel_max":
+        if method == "gumbel_max":
             direct = official_gumbel_scores(prefix_tokens, positions)
             selected = full_evidence[: len(positions)]
             exact_delta = float(np.max(np.abs(direct - selected))) if len(direct) else 0.0
             test = gumbel_gamma_test(direct, nominal_fpr=NOMINAL_FPR)
         else:
-            direct = official_synthid_g_values(prefix_tokens, positions)
+            direct = official_synthid_g_values(prefix_tokens, positions, keys=synthid_keys)
             selected = full_evidence[: len(positions)]
             exact_delta = float(np.max(np.abs(direct - selected))) if direct.size else 0.0
             if not np.array_equal(direct, selected):
@@ -945,6 +928,7 @@ def _score_baseline_sequence(
                 provenance=provenance,
                 runtime_seconds=runtime_seconds,
                 diversity_fields=diversity_fields,
+                synthid_keys=synthid_keys,
             )
         )
     return results, {
@@ -954,9 +938,7 @@ def _score_baseline_sequence(
         "seed": seed,
         "token_hash": token_hash,
         "exact_prefix_checks": exact_prefix_checks,
-        "max_textseal_official_p_difference": (
-            max(textseal_reference_deltas) if textseal_reference_deltas else None
-        ),
+        "max_textseal_official_p_difference": None,
         "synthid_g_value_hashes": synthid_g_hashes,
     }
 
@@ -1127,6 +1109,7 @@ def _score_generated_payload(
                 diversity["seed_effect_interpretable"] = False
             scored, checked = _score_baseline_sequence(
                 method=method,
+                synthid_keys=SYNTHID_KEYS,
                 sequence=sequence,
                 prompt_row=prompt_rows[prompt_index],
                 prompt_index=prompt_index,
@@ -1163,6 +1146,7 @@ def _score_generated_payload(
             }
             scored, checked = _score_baseline_sequence(
                 method=method,
+                synthid_keys=SYNTHID_KEYS,
                 sequence=sequence,
                 prompt_row=prompt_rows[prompt_index],
                 prompt_index=prompt_index,
@@ -1191,6 +1175,7 @@ def _score_generated_payload(
         secondary_sequence = generated[(method, SECONDARY_SEED)][0]
         secondary_scored, secondary_checked = _score_baseline_sequence(
             method=method,
+            synthid_keys=SYNTHID_KEYS,
             sequence=secondary_sequence,
             prompt_row=prompt_rows[0],
             prompt_index=0,
@@ -1667,6 +1652,7 @@ def score_full_shard(data_volume, request: dict) -> dict:
             sequence = outputs[row]
             scored, checked = _score_baseline_sequence(
                 method=method,
+                synthid_keys=SYNTHID_KEYS,
                 sequence=sequence,
                 prompt_row=prompt_rows[prompt_index],
                 prompt_index=prompt_index,
@@ -1701,6 +1687,7 @@ def score_full_shard(data_volume, request: dict) -> dict:
             }
             scored, checked = _score_baseline_sequence(
                 method=method,
+                synthid_keys=SYNTHID_KEYS,
                 sequence=sequence,
                 prompt_row=prompt_rows[prompt_index],
                 prompt_index=prompt_index,
@@ -1771,238 +1758,9 @@ def score_full_shard(data_volume, request: dict) -> dict:
 
 
 def score_textseal_proxy_entropy_shard(data_volume, request: dict) -> dict:
-    """Rescore TextSeal with 0.6B entropy weights; preserve native-8B quality."""
-    from textseal.watermarking.detector import TextSealDetector
-    from detectors import semantic_sha256, tensor_sha256
-    from proxy_8b_analysis import (
-        BASELINE_RUN_ID,
-        NULL_TRACE_T,
-        PRC_AUDITS,
-        shared_null_proxy_trace_path,
-        textseal_proxy_trace_path,
-        validate_textseal_proxy_trace,
+    """Retired: historical proxy traces included the generation prompt."""
+    raise ValueError(
+        "Cached prompt-conditioned TextSeal detection is retired. "
+        "Use baseline_comparison.textseal_completion.TextSealCompletionDetector "
+        "with raw completion IDs and a fresh detector model."
     )
-
-    run_id, shard_index, prompt_indices = _validated_full_request(request)
-    if run_id != BASELINE_RUN_ID:
-        raise ValueError("TextSeal proxy scoring received an unexpected run ID")
-    preload_official_runtimes()
-    data_volume.reload()
-    _numpy_pickle_compat()
-
-    raw_path = (
-        Path("/data/controlled_baseline_full")
-        / run_id
-        / "generated"
-        / f"shard_{shard_index:02d}.pt"
-    )
-    native_path = (
-        Path("/data/controlled_baseline_full")
-        / run_id
-        / "scored"
-        / f"shard_{shard_index:02d}.jsonl"
-    )
-    if not raw_path.is_file() or not native_path.is_file():
-        raise FileNotFoundError("TextSeal proxy scoring requires raw and native scored shards")
-    raw = torch.load(raw_path, weights_only=False, map_location="cpu")
-    if [int(index) for index in raw.get("prompt_indices", [])] != prompt_indices:
-        raise ValueError("TextSeal proxy raw shard prompt order differs")
-    outputs = raw.get("sequences", {}).get("textseal")
-    if outputs is None or len(outputs) != len(prompt_indices):
-        raise ValueError("TextSeal proxy raw output coverage differs")
-
-    prompt_rows = [
-        json.loads(line) for line in Path(PROMPTS_PATH).read_text().splitlines() if line
-    ]
-    _, null_records, artifact = _load_cached_sequences_for_indices(
-        prompt_rows, prompt_indices
-    )
-    partition_hash = tensor_sha256(artifact["partition"])
-    native_rows = {}
-    with native_path.open() as handle:
-        for line in handle:
-            row = json.loads(line)
-            if row.get("method") == "textseal":
-                key = (
-                    str(row["sample_type"]),
-                    int(row["prompt_index"]),
-                    int(row["prefix_length"]),
-                )
-                if key in native_rows:
-                    raise ValueError(f"duplicate native TextSeal row {key}")
-                native_rows[key] = row
-
-    records = []
-    validations = []
-    for local_row, prompt_index in enumerate(prompt_indices):
-        prompt_tensor = torch.as_tensor(
-            artifact["prompt_ids_list"][prompt_index], dtype=torch.long
-        ).contiguous()
-        prompt_hash = tensor_sha256(prompt_tensor)
-        for sample_type in ("watermarked", "null"):
-            if sample_type == "watermarked":
-                tokens = list(map(int, outputs[local_row]["token_ids"][:1024]))
-                trace_path = Path(textseal_proxy_trace_path(prompt_index))
-                identity = {
-                    "prompt_index": prompt_index,
-                    "prompt_sha256": prompt_hash,
-                    "tokens_sha256": tensor_sha256(torch.as_tensor(
-                        tokens, dtype=torch.long
-                    )),
-                }
-                trace_payload = torch.load(
-                    trace_path, weights_only=False, map_location="cpu"
-                )
-                entropies = validate_textseal_proxy_trace(
-                    trace_payload, **identity
-                )
-            else:
-                tokens_tensor = torch.as_tensor(
-                    null_records[local_row]["tokens"], dtype=torch.long
-                )[:NULL_TRACE_T].contiguous()
-                if tokens_tensor.numel() != NULL_TRACE_T:
-                    raise ValueError(f"null prompt {prompt_index} is shorter than T={NULL_TRACE_T}")
-                tokens = list(map(int, tokens_tensor[:1024]))
-                trace_path = Path(shared_null_proxy_trace_path(prompt_index))
-                trace_payload = torch.load(
-                    trace_path, weights_only=False, map_location="cpu"
-                )
-                expected = {
-                    "source": "null",
-                    "prompt_idx": prompt_index,
-                    "trace_T": NULL_TRACE_T,
-                    "generation_model_size": "8B",
-                    "entropy_model_size": "0.6B",
-                    "partition_sha256": partition_hash,
-                    "prompt_sha256": prompt_hash,
-                    "tokens_sha256": tensor_sha256(tokens_tensor),
-                }
-                for field, value in expected.items():
-                    if trace_payload.get(field) != value:
-                        raise ValueError(
-                            f"null proxy trace {field}={trace_payload.get(field)!r}; "
-                            f"expected {value!r}"
-                        )
-                entropies = np.asarray(
-                    trace_payload.get("full_entropy_trace"), dtype=np.float64
-                ).reshape(-1)
-                if entropies.size != NULL_TRACE_T:
-                    raise ValueError("null proxy trace length differs")
-                if trace_payload.get("full_entropy_trace_sha256") != semantic_sha256(
-                    entropies
-                ):
-                    raise ValueError("null proxy entropy hash differs")
-                entropies = entropies[:1024]
-
-            if len(tokens) != 1024 or len(entropies) != 1024:
-                raise ValueError("TextSeal proxy scoring requires exact T=1024 traces")
-            reference_deltas = []
-            for prefix in PREFIX_LENGTHS:
-                positions = deduplicated_positions(tokens[:prefix], CONTEXT_LENGTH)
-                evidence = official_textseal_fused_scores(tokens[:prefix], positions)
-                test = textseal_gamma_test(
-                    evidence,
-                    [float(entropies[position]) for position in positions],
-                    alpha=TEXTSEAL_ALPHA,
-                    nominal_fpr=NOMINAL_FPR,
-                )
-                official = TextSealDetector(
-                    None, textseal_config(), scoring_method="v2"
-                )._score_text(
-                    tokens[:prefix],
-                    list(map(float, entropies[1:prefix])),
-                    scoring_method="v2",
-                )
-                reference_delta = abs(
-                    float(official["p_value_weighted"]) - float(test["p_value"])
-                )
-                if not math.isclose(
-                    float(official["p_value_weighted"]),
-                    float(test["p_value"]),
-                    rel_tol=2e-6,
-                    abs_tol=2e-7,
-                ):
-                    raise AssertionError(
-                        f"proxy TextSeal official p mismatch for {sample_type} "
-                        f"prompt {prompt_index} T={prefix}"
-                    )
-                reference_deltas.append(reference_delta)
-                key = (sample_type, prompt_index, prefix)
-                if key not in native_rows:
-                    raise ValueError(f"missing native TextSeal row {key}")
-                row = dict(native_rows[key])
-                row["statistic"] = float(test["statistic"])
-                row["p_value"] = float(test["p_value"])
-                row["threshold"] = float(test["threshold"])
-                row["decision"] = bool(test["decision"])
-                row["intermediate_values"] = {
-                    **dict(test["intermediate"]),
-                    "official_p_value_weighted": float(
-                        official["p_value_weighted"]
-                    ),
-                    "official_common_abs_p_delta": reference_delta,
-                    "native_8b_p_value": float(native_rows[key]["p_value"]),
-                    "entropy_weight_model": "Qwen3-0.6B-Base",
-                }
-                row["method_configuration"] = {
-                    **dict(row["method_configuration"]),
-                    "proxy_detector_sensitivity": True,
-                    "entropy_weight_model": "Qwen3-0.6B-Base",
-                    "quality_likelihood_model": "Qwen3-8B-Base (unchanged)",
-                }
-                row["cache_or_generation_provenance"] = {
-                    **dict(row["cache_or_generation_provenance"]),
-                    "proxy_mode": "cache_only_teacher_forcing_no_generation",
-                    "proxy_entropy_trace": str(trace_path),
-                    "proxy_model": "Qwen3-0.6B-Base",
-                    "generation_attempts": 0,
-                }
-                row["artifact_fingerprint"] = _semantic_fingerprint({
-                    "native_artifact_fingerprint": row["artifact_fingerprint"],
-                    "proxy_entropy_trace_sha256": trace_payload[
-                        "full_entropy_trace_sha256"
-                    ],
-                    "proxy_model": "Qwen3-0.6B-Base",
-                })
-                records.append(row)
-            validations.append({
-                "prompt_index": prompt_index,
-                "sample_type": sample_type,
-                "trace_path": str(trace_path),
-                "max_official_common_p_delta": max(reference_deltas),
-                "prefixes": list(PREFIX_LENGTHS),
-                "generation_attempts": 0,
-            })
-
-    expected_count = len(prompt_indices) * 2 * len(PREFIX_LENGTHS)
-    if len(records) != expected_count:
-        raise AssertionError(f"TextSeal proxy scorer produced {len(records)} rows")
-    output_root = (
-        Path("/data/controlled_baseline_full") / run_id / "proxy_scored" / "textseal"
-    )
-    output_root.mkdir(parents=True, exist_ok=True)
-    jsonl_path = output_root / f"shard_{shard_index:02d}.jsonl"
-    validation_path = output_root / f"shard_{shard_index:02d}_validation.json"
-    with jsonl_path.open("w") as handle:
-        for row in records:
-            handle.write(json.dumps(row, sort_keys=True, allow_nan=False) + "\n")
-    validation_path.write_text(json.dumps({
-        "passed": True,
-        "run_id": run_id,
-        "shard_index": shard_index,
-        "prompt_indices": prompt_indices,
-        "record_count": len(records),
-        "generation_attempts": 0,
-        "proxy_model": "Qwen3-0.6B-Base",
-        "native_quality_fields_preserved": True,
-        "validations": validations,
-    }, indent=2, sort_keys=True, allow_nan=False) + "\n")
-    data_volume.commit()
-    return {
-        "passed": True,
-        "run_id": run_id,
-        "shard_index": shard_index,
-        "record_count": len(records),
-        "jsonl_path": str(jsonl_path),
-        "validation_path": str(validation_path),
-    }

@@ -1,0 +1,240 @@
+{
+  "passed": true,
+  "plan_sha256": "099777e556dbf6a4dfdc391c55d2851c9f69737bf6205fa2fd20f93f623cf3f2",
+  "source": "_nulls/qwen3_8b_base/T13088",
+  "completion_only_inputs_verified": true,
+  "shared_null_tokens_exact": 500,
+  "wm_scores_exact": 6000,
+  "all_tpr_csv_fields_unchanged": true,
+  "null_batches": [
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/433db57896e26ee35997f7cf/batches/000500",
+      "count": 125,
+      "length": 1024,
+      "seconds": 152.000763279,
+      "full_validation": true,
+      "peak_allocated_bytes": 37477811712,
+      "input_sha256": "2d11a7fe59a4673ca02ff9d9f82ffe3645c949ef9f2da389d079b3cd2480b9af",
+      "probabilities_sha256": "cdf68e3d4569254857ccaa259dd3cdf9f5e9a1ee2b9f15751eca42ce22ed1d31",
+      "trace_sha256": "e577f9c77063a1ccf2246cf95c9aa2625320eb5bd3987edafa60b2a950a03d80"
+    },
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/433db57896e26ee35997f7cf/batches/000625",
+      "count": 125,
+      "length": 1024,
+      "seconds": 74.118229888,
+      "full_validation": false,
+      "peak_allocated_bytes": 37477811712,
+      "input_sha256": "4177fc03f0d1a4cfca272f473263e03c979e14ceebf0e8cdf5beb2a1ca59d95d",
+      "probabilities_sha256": "a06c556245244d341ec5a54156126eaeefa8da847e94dd7045713397929f3457",
+      "trace_sha256": "03833ed476a9775442a2779cfbadc458e9bd4a17d9060cbffc61d2ffe9e2166e"
+    },
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/433db57896e26ee35997f7cf/batches/000750",
+      "count": 125,
+      "length": 1024,
+      "seconds": 74.28548416199999,
+      "full_validation": false,
+      "peak_allocated_bytes": 37477811712,
+      "input_sha256": "ff15c37c4616f10dbba08123e05a80f5cbff255b62a95ad34f00c12dfd78e3c4",
+      "probabilities_sha256": "d4ce493e4335a001654a29cd001451f39748d20c1461d49b7649f05f78d5b547",
+      "trace_sha256": "6f071f435911130db5e7738c79faf2acfe1302eda5ecc55037b5e13d6b4f8573"
+    },
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/433db57896e26ee35997f7cf/batches/000875",
+      "count": 125,
+      "length": 1024,
+      "seconds": 74.230260483,
+      "full_validation": false,
+      "peak_allocated_bytes": 37477811712,
+      "input_sha256": "318ba30dcbaf234c4c87787924bc1db20c86600c82bdf2eadb761baf9fb17538",
+      "probabilities_sha256": "cd9a2c4c3d2ed85b658889f2bef1ed5d74114ad011812c1f30b92fd345505f95",
+      "trace_sha256": "1730b02e86b0821c3449cb90b207bd8a9a2ef3477e465525fb7682ae46f98442"
+    }
+  ],
+  "counts": {
+    "128": {
+      "map": {
+        "wm": {
+          "detected": 46,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 35,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      }
+    },
+    "256": {
+      "map": {
+        "wm": {
+          "detected": 151,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 103,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      }
+    },
+    "400": {
+      "map": {
+        "wm": {
+          "detected": 274,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 208,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      }
+    },
+    "512": {
+      "map": {
+        "wm": {
+          "detected": 345,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 259,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      }
+    },
+    "768": {
+      "map": {
+        "wm": {
+          "detected": 436,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 379,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      }
+    },
+    "1024": {
+      "map": {
+        "wm": {
+          "detected": 466,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "entropy": {
+        "wm": {
+          "detected": 422,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "n": 128,
+      "posterior_fpr": "0/500 (0.0%)",
+      "entropy_fpr": "0/500 (0.0%)",
+      "posterior_tpr": "46/500 (9.2%)",
+      "entropy_tpr": "35/500 (7.0%)"
+    },
+    {
+      "n": 256,
+      "posterior_fpr": "0/500 (0.0%)",
+      "entropy_fpr": "0/500 (0.0%)",
+      "posterior_tpr": "151/500 (30.2%)",
+      "entropy_tpr": "103/500 (20.6%)"
+    },
+    {
+      "n": 400,
+      "posterior_fpr": "0/500 (0.0%)",
+      "entropy_fpr": "0/500 (0.0%)",
+      "posterior_tpr": "274/500 (54.8%)",
+      "entropy_tpr": "208/500 (41.6%)"
+    },
+    {
+      "n": 512,
+      "posterior_fpr": "0/500 (0.0%)",
+      "entropy_fpr": "0/500 (0.0%)",
+      "posterior_tpr": "345/500 (69.0%)",
+      "entropy_tpr": "259/500 (51.8%)"
+    },
+    {
+      "n": 768,
+      "posterior_fpr": "0/500 (0.0%)",
+      "entropy_fpr": "0/500 (0.0%)",
+      "posterior_tpr": "436/500 (87.2%)",
+      "entropy_tpr": "379/500 (75.8%)"
+    },
+    {
+      "n": 1024,
+      "posterior_fpr": "0/500 (0.0%)",
+      "entropy_fpr": "0/500 (0.0%)",
+      "posterior_tpr": "466/500 (93.2%)",
+      "entropy_tpr": "422/500 (84.4%)"
+    }
+  ],
+  "replay_seconds_including_validation": 374.634737812,
+  "replay_resource_estimate_usd_excluding_startup": 0.4838332711894418,
+  "csv_sha256": "91a99d897c659b8a5a3b1e90fbd6c1c0a0cfc47be836fb5e6c674b159c6dbefa",
+  "provenance_sha256": "357a0734da5f2712cc5bde3f02ec972e82ced1f4a81540bf5638aa04def0e668",
+  "full_sha256": "357685e074f6a696cb7919fbf0aca69eceb053fcbd8740d690826eacd116317f",
+  "null_model_probabilities": 511500,
+  "watermarked_inference_completions": 0
+}

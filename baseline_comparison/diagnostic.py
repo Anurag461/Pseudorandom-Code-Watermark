@@ -216,7 +216,7 @@ def analyze_sequence(
 def _load_inputs(data_volume, raw_path: str) -> tuple[list[dict], list[dict]]:
     import torch
 
-    from .smoke_runner import _load_cached_sequences, _numpy_pickle_compat
+    from .comparison_runner import _load_cached_sequences, _numpy_pickle_compat
 
     data_volume.reload()
     path = Path(raw_path)
@@ -606,7 +606,7 @@ def run_generation_diagnostic(data_volume, raw_path: str = DEFAULT_RAW_SMOKE_PAT
     import time
     import torch
 
-    from .smoke_runner import (
+    from .comparison_runner import (
         _integration_fingerprint,
         _model_revision,
         _numpy_pickle_compat,
@@ -880,7 +880,7 @@ def run_hf_logits_parity() -> dict:
     from transformers import AutoModelForCausalLM
 
     from qwen import StaticKVCache
-    from .smoke_runner import _model_revision, load_qwen3_8b
+    from .comparison_runner import _model_revision, load_qwen3_8b
 
     model_root = "/cache/models/Qwen3-8B-Base"
     prompt_rows = [

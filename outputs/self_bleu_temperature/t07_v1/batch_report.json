@@ -1,0 +1,136 @@
+{
+  "batches": [
+    {
+      "anomalies": {
+        "prc_draw_bucket_mismatches": 0
+      },
+      "path": "batches/null_r0.json",
+      "response_index": 0,
+      "seconds": 46.854037924,
+      "setting": "null",
+      "smoke_prefix_exact": true
+    },
+    {
+      "anomalies": {
+        "prc_draw_bucket_mismatches": 0
+      },
+      "path": "batches/null_r1.json",
+      "response_index": 1,
+      "seconds": 46.58489148400001,
+      "setting": "null",
+      "smoke_prefix_exact": true
+    },
+    {
+      "anomalies": {
+        "prc_draw_bucket_mismatches": 0
+      },
+      "path": "batches/prc_r0.json",
+      "response_index": 0,
+      "seconds": 49.13409824799999,
+      "setting": "prc",
+      "smoke_prefix_exact": true
+    },
+    {
+      "anomalies": {
+        "prc_draw_bucket_mismatches": 0
+      },
+      "path": "batches/prc_r1.json",
+      "response_index": 1,
+      "seconds": 49.601671796999995,
+      "setting": "prc",
+      "smoke_prefix_exact": true
+    },
+    {
+      "anomalies": {
+        "prc_draw_bucket_mismatches": 0
+      },
+      "path": "batches/synthid_depth2_r0.json",
+      "response_index": 0,
+      "seconds": 55.217984049999984,
+      "setting": "synthid_depth2",
+      "smoke_prefix_exact": true
+    },
+    {
+      "anomalies": {
+        "prc_draw_bucket_mismatches": 0
+      },
+      "path": "batches/synthid_depth2_r1.json",
+      "response_index": 1,
+      "seconds": 54.382903795999994,
+      "setting": "synthid_depth2",
+      "smoke_prefix_exact": true
+    },
+    {
+      "anomalies": {
+        "prc_draw_bucket_mismatches": 0
+      },
+      "path": "batches/synthid_depth10_r0.json",
+      "response_index": 0,
+      "seconds": 73.38378064400001,
+      "setting": "synthid_depth10",
+      "smoke_prefix_exact": true
+    },
+    {
+      "anomalies": {
+        "prc_draw_bucket_mismatches": 0
+      },
+      "path": "batches/synthid_depth10_r1.json",
+      "response_index": 1,
+      "seconds": 73.113735792,
+      "setting": "synthid_depth10",
+      "smoke_prefix_exact": true
+    }
+  ],
+  "evaluation_responses": 400,
+  "execution": {
+    "bf16_reduced_precision_reduction": true,
+    "cuda": "12.1",
+    "dtype": "bfloat16",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "model_revision": "49e3418fbbbca6ecbdf9608b4d22e5a407081db4",
+    "tf32": false,
+    "versions": {
+      "accelerate": "0.34.2",
+      "blobfile": "3.0.0",
+      "fsspec": "2024.9.0",
+      "galois": "0.4.2",
+      "huggingface-hub": "0.24.7",
+      "immutabledict": "4.2.0",
+      "msgspec": "0.18.6",
+      "numba": "0.59.1",
+      "numpy": "1.26.0",
+      "omegaconf": "2.3.0",
+      "orjson": "3.10.7",
+      "pytest": "8.3.3",
+      "rouge-score": "0.1.2",
+      "sacrebleu": "2.4.3",
+      "safetensors": "0.4.5",
+      "scipy": "1.14.1",
+      "sentence-transformers": "3.0.1",
+      "sentencepiece": "0.2.0",
+      "tiktoken": "0.7.0",
+      "tokenizers": "0.19.1",
+      "torch": "2.4.0",
+      "transformers": "4.43.3"
+    }
+  },
+  "files": {
+    "batches/null_r0.json": "bbf1d87986110acf696e87d12bb7402e0de0d0ca8a5d96e0637175f10f058972",
+    "batches/null_r1.json": "5cfc3b1d1f312ae11eb2851282a4dc20fda312281b7bba749387f67abb042722",
+    "batches/prc_r0.json": "cb43cb3c1f41155f8d9809605fe4444de28d5de1c8a30cc9736dea47e1843981",
+    "batches/prc_r1.json": "57d436d7da3b6cf8a4f4c3d1779600f089b1c98c7848a65e1f1a52f2b82ddfdb",
+    "batches/synthid_depth10_r0.json": "08d8566f7bfa2e2f5319718b44257401a2f670b225d9c03b00b3259a4a80f1e3",
+    "batches/synthid_depth10_r1.json": "71d016809d4a5982dc54a6e235dd14786c1acabe5bf8e0560748ef01071861bf",
+    "batches/synthid_depth2_r0.json": "344689e04c41a6ae9de2880701f4d6397144d6b26f2f832090f80b2799036d4a",
+    "batches/synthid_depth2_r1.json": "d70252aa7db8f9a6ccc101353b977be42f1f5e3c90d6f02f563f2d92ac010153",
+    "replay/null_r0.json": "8994f2386ed704de9651c9d3823fa1cb7c55f64816c1e15c8b53f9ec6594f4dc",
+    "replay/null_r1.json": "d21c1e97527989c20f30d8fb8be2a1b8eda2b0890300aa32d463f6f0d375e664",
+    "replay/prc_r0.json": "6336feedd5633aa2a58e1f61d005c8ab389dfc51eb8ef3155d49f2796c698ecf",
+    "replay/prc_r1.json": "f09af31b3abcc8a228cea727cb30d168f0b4a6a421076eab3361bf528655ae52"
+  },
+  "manifest_id": "ab3b8bc1adac0e68c341e5278ca81f9297798d69a0b0501386868cd4ad8b5988",
+  "passed": true,
+  "resource_estimate_usd": 0.8646340887874593,
+  "seconds": 669.490885486,
+  "stage": "batch"
+}

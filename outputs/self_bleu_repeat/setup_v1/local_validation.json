@@ -1,0 +1,26 @@
+{
+  "analysis_wiring_check": {
+    "all_differences_zero_tolerance": 1e-14,
+    "fixture": "Copies of all three original-policy reference arms; no experimental generation",
+    "paired_endpoints": 6,
+    "passed": true,
+    "script_sha256": "31ff43db4d66560f1e4a3d1be3841afa67b245c960dab88e4d26d8a30d056258"
+  },
+  "frozen_code_files_checked": 27,
+  "gpu_dispatched": false,
+  "gpu_validation_status": "pending first staged run",
+  "local_tests_passed": 38,
+  "manifest_id": "ff6487280ea4179ec1bf69f28e82e9a36775dca1167d8110348e00bd2c3ee4fe",
+  "modal_cli_help_loaded": true,
+  "new_repeat_tests": 14,
+  "passed": true,
+  "reference_files_checked": 10,
+  "test_suites": [
+    "tests/test_self_bleu_repeat.py",
+    "tests/test_self_bleu_controls.py",
+    "tests/test_self_bleu_validation.py",
+    "tests/test_self_bleu_pilot.py"
+  ],
+  "textseal_cpu_note": "Upstream CPU PRF uses a one-row fixture; batched CUDA helper checked in future H100 preflight.",
+  "upstream_source_files_checked": 4
+}

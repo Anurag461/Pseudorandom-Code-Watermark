@@ -1,0 +1,405 @@
+{
+  "execution": {
+    "attention": "eager",
+    "bf16_reduced_precision_reduction": false,
+    "capability": [
+      9,
+      0
+    ],
+    "cuda": "12.1",
+    "cudnn": 90100,
+    "dtype": "bfloat16",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "python": "3.11.12",
+    "tf32": false,
+    "use_cache": false,
+    "versions": {
+      "huggingface-hub": "0.30.2",
+      "numpy": "1.26.0",
+      "safetensors": "0.4.5",
+      "scipy": "1.14.1",
+      "tokenizers": "0.21.1",
+      "torch": "2.4.0",
+      "transformers": "4.51.3"
+    }
+  },
+  "files": {
+    "textseal_replay/1f5b2b5658a1faf26d75ae0d27a3a8958aa5735a3162462c38a079675eb6e1a6/p0000/r1.json": "417376957d8152e945b571f49adf6703a137b5a4792a0ab897820c0dbc176623",
+    "textseal_replay/383eb7e42b7f5b4d2a3f616647bab6cf14d154e4e75902268263e80e62dd20b7/p0000/r1.json": "361e23502490fe12184b7bbf8ad05dd839b7957a2c22919d306ba8a8cf453cf0",
+    "textseal_replay/6db72340de63d16a44ecb1675a76be5008d7f6abe151afd9dd9cb3d1dd153d41/p0000/r0.json": "f52f9b21228c9f5a42967181f07d7b9c229c21e4ceb82cc524a2a653e389f3b5",
+    "textseal_replay/8d0142131e4c1933e92afa8d02cbd2d596aa247772787c7871d5e42e283eb93d/p0000/r0.json": "a3638704361c1b86ae1ead134fb40f67c934272bcf64c195e02e309622e0a2a8",
+    "textseal_replay/c6c1d912bb4d90135499b091ced36fa9e2ad21224bcad195711c8fae4ae03d01/p0000/r1.json": "0d5ebed0f8df81c1ce84c4822f5682b3c1aecfaef93a59578b59798a8a77cf54",
+    "textseal_replay/d1a52a98e6fbf7f0c090661e8f77391435d1c57359eaa1bcbf000520acca3079/p0000/r0.json": "1ba586f2d75eaa1ac1f0b3d129b092004c0baaa8641dc6506d0203559c910f8e",
+    "textseal_replay/efb6b287882cd5ffe58b706ec9b7c32a733b89098d47b63f808d9a811ee1c6d1/p0000/r0.json": "9f24d00bb4151b7ad763c3af107d3768effdba89574092af1d67e08e4d788211"
+  },
+  "manifest_id": "743658bc40e7f52c910d9538266bbd0ff461bba949e2a842cc8af36fa32507d8",
+  "measured_resource_usd": 0.08184872293178692,
+  "passed": true,
+  "records": [
+    {
+      "alpha": 0.1,
+      "forward_lengths": [
+        128,
+        128,
+        256,
+        256,
+        400,
+        400,
+        512,
+        512,
+        768,
+        768,
+        1024,
+        1024
+      ],
+      "method": "textseal",
+      "raw_completion_inputs": true,
+      "response_id": "6db72340de63d16a44ecb1675a76be5008d7f6abe151afd9dd9cb3d1dd153d41/p0000/r0",
+      "validation": {
+        "passed": true,
+        "performed": true,
+        "prefixes": {
+          "1024": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "128": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "256": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "400": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "512": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "768": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          }
+        },
+        "reference": "upstream public detect on identical raw IDs at each length"
+      }
+    },
+    {
+      "alpha": 0.1,
+      "forward_lengths": [
+        128,
+        128,
+        256,
+        256,
+        400,
+        400,
+        512,
+        512,
+        768,
+        768,
+        1024,
+        1024
+      ],
+      "method": "textseal",
+      "raw_completion_inputs": true,
+      "response_id": "c6c1d912bb4d90135499b091ced36fa9e2ad21224bcad195711c8fae4ae03d01/p0000/r1",
+      "validation": {
+        "passed": true,
+        "performed": true,
+        "prefixes": {
+          "1024": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "128": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "256": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "400": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "512": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "768": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          }
+        },
+        "reference": "upstream public detect on identical raw IDs at each length"
+      }
+    },
+    {
+      "alpha": 0.1,
+      "forward_lengths": [
+        128,
+        128,
+        256,
+        256,
+        400,
+        400,
+        512,
+        512,
+        768,
+        768,
+        1024,
+        1024
+      ],
+      "method": "null",
+      "raw_completion_inputs": true,
+      "response_id": "efb6b287882cd5ffe58b706ec9b7c32a733b89098d47b63f808d9a811ee1c6d1/p0000/r0",
+      "validation": {
+        "passed": true,
+        "performed": true,
+        "prefixes": {
+          "1024": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "128": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "256": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "400": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "512": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "768": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          }
+        },
+        "reference": "upstream public detect on identical raw IDs at each length"
+      }
+    },
+    {
+      "alpha": 0.1,
+      "forward_lengths": [
+        128,
+        128,
+        256,
+        256,
+        400,
+        400,
+        512,
+        512,
+        768,
+        768,
+        1024,
+        1024
+      ],
+      "method": "null",
+      "raw_completion_inputs": true,
+      "response_id": "1f5b2b5658a1faf26d75ae0d27a3a8958aa5735a3162462c38a079675eb6e1a6/p0000/r1",
+      "validation": {
+        "passed": true,
+        "performed": true,
+        "prefixes": {
+          "1024": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "128": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "256": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "400": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "512": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "768": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          }
+        },
+        "reference": "upstream public detect on identical raw IDs at each length"
+      }
+    },
+    {
+      "alpha": 0,
+      "forward_lengths": [
+        128,
+        128,
+        256,
+        256,
+        400,
+        400,
+        512,
+        512,
+        768,
+        768,
+        1024,
+        1024
+      ],
+      "method": "textseal",
+      "raw_completion_inputs": true,
+      "response_id": "8d0142131e4c1933e92afa8d02cbd2d596aa247772787c7871d5e42e283eb93d/p0000/r0",
+      "validation": {
+        "passed": true,
+        "performed": true,
+        "prefixes": {
+          "1024": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "128": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "256": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "400": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "512": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "768": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          }
+        },
+        "reference": "upstream public detect on identical raw IDs at each length"
+      }
+    },
+    {
+      "alpha": 0,
+      "forward_lengths": [
+        128,
+        128,
+        256,
+        256,
+        400,
+        400,
+        512,
+        512,
+        768,
+        768,
+        1024,
+        1024
+      ],
+      "method": "textseal",
+      "raw_completion_inputs": true,
+      "response_id": "383eb7e42b7f5b4d2a3f616647bab6cf14d154e4e75902268263e80e62dd20b7/p0000/r1",
+      "validation": {
+        "passed": true,
+        "performed": true,
+        "prefixes": {
+          "1024": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "128": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "256": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "400": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "512": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          },
+          "768": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          }
+        },
+        "reference": "upstream public detect on identical raw IDs at each length"
+      }
+    },
+    {
+      "alpha": 0.5,
+      "forward_lengths": [
+        128,
+        128
+      ],
+      "method": "textseal",
+      "raw_completion_inputs": true,
+      "response_id": "d1a52a98e6fbf7f0c090661e8f77391435d1c57359eaa1bcbf000520acca3079/p0000/r0",
+      "validation": {
+        "passed": true,
+        "performed": true,
+        "prefixes": {
+          "128": {
+            "decision_equal": true,
+            "entropy_exact": true,
+            "upstream_result_exact": true
+          }
+        },
+        "reference": "upstream public detect on identical raw IDs at each length"
+      }
+    }
+  ],
+  "seconds": 63.375912079
+}

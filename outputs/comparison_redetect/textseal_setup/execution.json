@@ -1,0 +1,24 @@
+{
+  "status": "pilot_failed_full_paused",
+  "authorized_scope": "Historical reuse pilot only: the original full request was paused and this pilot failed. The replacement direct-prefix pilot and subsequently approved full run are complete; see direct_prefix/full_execution.json.",
+  "manifest_sha256": "0b409b197985987c7ac5b14202dd2a9ec922c457525cc50a5c1edceb13dcc07a",
+  "attempts": [
+    {
+      "app_id": "ap-0Ua04rMTkk61klFXx8lMVu",
+      "stage": "pilot",
+      "status": "stopped_after_import_failure",
+      "error": "Script launch copied entrypoint to /root; adjacent requirements file was not present. No model load or replay started."
+    },
+    {
+      "app_id": "ap-Nr3B7vcQ9nNql70RW78ML8",
+      "stage": "pilot",
+      "status": "failed_exact_prefix_check",
+      "launch": "modal run --detach -m baseline_comparison.textseal_modal",
+      "completed_records": 1,
+      "failed_prefix": 128,
+      "entropy_max_abs_difference": 0.21875,
+      "decision_equal": true
+    }
+  ],
+  "full_replay_launched": false
+}

@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "status": "prepared_awaiting_launch_approval",
+  "protocol": "completion_only_raw_abstain_v1",
+  "null_source": "_nulls/qwen3_8b_base/T13088",
+  "model": {
+    "id": "Qwen/Qwen3-8B-Base",
+    "size": "8B",
+    "dtype": "bfloat16",
+    "revision": "49e3418fbbbca6ecbdf9608b4d22e5a407081db4",
+    "cache_directory": "models/Qwen3-8B-Base",
+    "weight_files": {
+      "model-00004-of-00005.safetensors": "ad8b708792105133e03fe19e2d56c89c709f677f01285f8b3ede8947d59fd9fe",
+      "model-00003-of-00005.safetensors": "c7dd5a191c8da555def0714550375b3c0117751add408fcdda0c2a79ac0186bc",
+      "model-00005-of-00005.safetensors": "fbf24915d47ea030bb68ab0b9488f4515a907185baa6dc26837c9c3f2326a550",
+      "model-00002-of-00005.safetensors": "9aa12339835bf7a093d3d0b0a0d2d77f8538301cfc7f8e7ec7a585858ebf7a1f",
+      "model-00001-of-00005.safetensors": "9983f1b9ef2f60e7c3730d9bc11ada914e6ec630639b5b020a89bd158cd0446b"
+    },
+    "index_sha256": "cd39d5e44c5aadfd1954b598883aea1c4a98822a2f7723d214ef2278b7fec2e4",
+    "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+  },
+  "lengths": [
+    128,
+    256,
+    400,
+    512,
+    768,
+    1024
+  ],
+  "new_null_completions": 500,
+  "reused_watermarked_completions": 500,
+  "new_probabilities": 511500,
+  "reused_batches": [
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/d79b1fb3223ea92105ebb171/batches/000000",
+      "trace_sha256": "849151b96788bf3e685e117d6cc61b8c0d5d02a20c59e8e4ae83669d06ea7a92"
+    },
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/d79b1fb3223ea92105ebb171/batches/000125",
+      "trace_sha256": "a663901014c6849d959a77334e1e5504db2658f4009917fa1b96c6d931e46e5b"
+    },
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/d79b1fb3223ea92105ebb171/batches/000250",
+      "trace_sha256": "3f7e732b8398565ab87549539bb67aaaeaeb055422445f73f131d045ce10a468"
+    },
+    {
+      "root": "completion_only_raw_abstain_v1/integrated/d79b1fb3223ea92105ebb171/batches/000375",
+      "trace_sha256": "9dfd918911d751ce25d22d40c02c774590d9bb24d201645d227b9ea11ee24a1c"
+    }
+  ],
+  "replay_batches": [
+    "completion_only_raw_abstain_v1/integrated/433db57896e26ee35997f7cf/batches/000500",
+    "completion_only_raw_abstain_v1/integrated/433db57896e26ee35997f7cf/batches/000625",
+    "completion_only_raw_abstain_v1/integrated/433db57896e26ee35997f7cf/batches/000750",
+    "completion_only_raw_abstain_v1/integrated/433db57896e26ee35997f7cf/batches/000875"
+  ],
+  "code_sha256": {
+    "qwen.py": "0334edc2cd4049a365fadf8591bc4108a2c709797fe153542a59ce626ef5a5ef",
+    "detectors.py": "f728bd15d4524ac3a4aa4b323d441bf3e5732275ed2eaf09ebebf9efbe0035b5",
+    "prc.py": "20a731e18640903d82ff0d7bb5a53f87d6206e0d8b3987654c065a816c4fb6bc",
+    "online_prc.py": "babe6a7ff1fb2397bf2b3cd76448d82c34ae879c6d1214e386e1285d036ba4cb",
+    "modal_run.py": "dc4232f7861a534570f7428875c5448ea3d21b3be01b3ee925566ba3f6d9cfd6",
+    "watermark_expt.py": "4cb5bf16f64deadab6ebf7e49a4f5ac0f4af86a059c3737eea0ac110c811d510",
+    "constants.py": "872a1b18fd84d9737c5e1e9cabae2dbb16e55e538edb7264efed8e51efa3839b",
+    "baseline_comparison/prc_shared_nulls.py": "21faa702abea7b1e044cfa3cfd6a6e6401356340277f339b6e2efeac8fec3a4b",
+    "baseline_comparison/config.py": "1dcc0977da6704512eb0c002864a6e63cc4ecf1ed3f4da5dfd3ad7dcf2a366e5",
+    "baseline_comparison/comparison_runner.py": "82e30cb5716a2ce8b96b3678f100546ccaf8436b5dbef8f87243e5f6c7ee967e",
+    "baseline_comparison/prc_prefix_comparison.py": "0ba49c6737fb090d0478b50cdccad62709c7be1d399084e2d90a82f095d9123d",
+    "baseline_comparison/textseal_preflight.py": "286ec8e94ca1bed75bbc7f77fca37690bf1e29cc10b2a7c761e98eb4afa1984b"
+  },
+  "local_files_sha256": {
+    "prepared.json": "185ff60d64da55c413b247298764ddb46152bc01ab48de27bef19b4e0112694d",
+    "cohort_audit.json": "b6316634eee454095f64d0027085c5ce0d13a75d8826e30c1c51be7dd28d15c2",
+    "before.csv": "19c80e83ccfe09d11b7fe0e408ac4cbc6f5acbaf96b8a05e5826f3580def872e",
+    "before.provenance.json": "8ba478a99bf0e8bb0e45b15024412c22dca7f19a885976afe5d3a59353991b85",
+    "before.full.json": "6bebb629076d5e8aeb3477f7900f53aa31aa6bf38fc680c254082705224aa4c9"
+  },
+  "source_preflight_sha256": "ca759baf594205a257683ea6eed95c62ae8f00b202b207804149b3c7446559bd",
+  "clean_inputs_sha256": "8d9372a0dbf41888de52503456467528898bfb577a9ffb7dfc1cf6d214e58663",
+  "checks": {
+    "wm_all_6000_scores_exact": true,
+    "original_comparison_tokens_exact": true
+  },
+  "runtime": {
+    "gpu": "H100",
+    "cpu": 4,
+    "memory_mib": 65536,
+    "max_containers": 1,
+    "retries": 0,
+    "scaledown_seconds": 2,
+    "batch_timeout_seconds": 300
+  },
+  "cost": {
+    "estimated_usd": [
+      1,
+      2
+    ],
+    "resource_usd_per_second": 0.00129148,
+    "checked_date": "2026-09-17",
+    "pricing_source": "https://modal.com/pricing",
+    "planning_ceiling_usd": 3
+  },
+  "remote_compute_jobs": 0,
+  "generation_calls": 0,
+  "validation": "First null batch: exact independent token-step replay plus batch-order/prefix check; stop on failure."
+}
