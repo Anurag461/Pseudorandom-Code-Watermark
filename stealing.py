@@ -85,7 +85,7 @@ def _chunk_path(scheme, split, start):
     return Path(f"/results/{OUT}/generations/{scheme}/{split}_{start:05d}.pt")
 
 
-@app.function(image=hf_image, gpu="A10G", memory=32768, timeout=5400, max_containers=10,
+@app.function(image=hf_image, gpu="A10G", memory=32768, timeout=5400, max_containers=20,
               retries=modal.Retries(max_retries=2), volumes={"/cache": hf_cache, "/results": results})
 def generate_hf(scheme, split, start):
     """KGW-2.0, EXP, SynthID-Text or unwatermarked completions for one chunk of prompts."""
@@ -129,7 +129,7 @@ def generate_hf(scheme, split, start):
     return str(path)
 
 
-@app.function(image=prc_image, gpu="A10G", memory=32768, timeout=5400, max_containers=10,
+@app.function(image=prc_image, gpu="A10G", memory=32768, timeout=5400, max_containers=20,
               retries=modal.Retries(max_retries=2),
               volumes={"/cache": hf_cache, "/results": results, "/archive": archive})
 def generate_prc(split, start):
