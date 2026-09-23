@@ -550,7 +550,7 @@ def summarize_attack(schemes: str = "prc,kgw2,exp,synthid"):
 
 @app.function(image=spoof_image, cpu=4, memory=32768, timeout=7200,
               volumes={"/cache": hf_cache, "/results": results, "/archive": archive})
-def signal_recovery(scheme, variant, n_query):
+def signal_recovery(scheme, variant, n_query, prc_partition=None):
     """E2: how much of the secret the stolen table recovers (boost-weighted, vs chance)."""
     import numpy as np
     import torch
@@ -584,16 +584,24 @@ def signal_recovery(scheme, variant, n_query):
         out |= {"measure": "mean key value xi[position, token] of boosted pairs", "chance": 0.5,
                 "value": float(vals.mean()), "boost_weighted": float(np.average(vals, weights=w))}
     elif scheme == "prc":
-        from modal_run import _redetect_load
-        partition = _redetect_load(Path("/archive") / PRC_ARTIFACT["path"])["partition"][1].numpy()
+        partition = np.array(prc_partition)
         vals = np.array([partition[token] for _, token, _ in entries], dtype=float)
         out |= {"measure": "fraction of boosted tokens in partition 1 (codeword is fresh per text)",
                 "chance": float(partition.mean()), "value": float(vals.mean())}
     return out
 
 
+@app.function(image=prc_image, cpu=2, memory=8192, timeout=600, volumes={"/archive": archive})
+def prc_partition_bits():
+    from modal_run import _redetect_load
+    return _redetect_load(Path("/archive") / PRC_ARTIFACT["path"])["partition"][1].int().tolist()
+
+
 @app.local_entrypoint()
 def recovery(n_query: int = 10_000):
+    bits = prc_partition_bits.remote()
     cases = [("kgw2", "ctx1"), ("exp", "pos"), ("prc", "ctx1"), ("prc", "pos")]
-    for result in signal_recovery.starmap([(s, v, n_query) for s, v in cases]):
-        print(json.dumps(result))
+    out = signal_recovery.starmap([(s, v, n_query, bits if s == "prc" else None) for s, v in cases],
+                                  return_exceptions=True)
+    for result in out:
+        print(json.dumps(result) if isinstance(result, dict) else f"FAILED {result!r}")
