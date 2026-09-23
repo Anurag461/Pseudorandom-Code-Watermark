@@ -1,0 +1,29 @@
+scheme,attack,rate,scored length,wm count,null count,null reference,median wm p,TPR@1e-3,FPR@1e-3,TPR@1e-2,FPR@1e-2,p-value,notes
+exp,none,0.0,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),4/500 (0.8%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+kgw2,none,0.0,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),4/500 (0.8%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+prc_map,none,0.0,[400],500,500,none (proven FPR),5.04e-07,430/500 (86.0%),0/500 (0.0%),461/500 (92.2%),0/500 (0.0%),Hoeffding bound exp(-S^2/2V),fixed PRC n=400 eta=0.05; run=b889c15bff4a8c7c8a756b83
+synthid,none,0.0,[400],500,500,4483,0,500/500 (100.0%),3/500 (0.6%),500/500 (100.0%),9/500 (1.8%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+exp,substitution,0.05,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),11/500 (2.2%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+kgw2,substitution,0.05,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),4/500 (0.8%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+prc_map,substitution,0.05,[400],500,500,none (proven FPR),8.92e-05,323/500 (64.6%),0/500 (0.0%),395/500 (79.0%),0/500 (0.0%),Hoeffding bound exp(-S^2/2V),fixed PRC n=400 eta=0.05; run=083fbcc6ae08b8bcfbdd9f57
+synthid,substitution,0.05,[400],500,500,4483,0,500/500 (100.0%),1/500 (0.2%),500/500 (100.0%),12/500 (2.4%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+exp,substitution,0.1,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),8/500 (1.6%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+kgw2,substitution,0.1,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),4/500 (0.8%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+prc_map,substitution,0.1,[400],500,500,none (proven FPR),0.00386,208/500 (41.6%),0/500 (0.0%),302/500 (60.4%),0/500 (0.0%),Hoeffding bound exp(-S^2/2V),fixed PRC n=400 eta=0.05; run=34c1b5d9af4f10fa625429f6
+synthid,substitution,0.1,[400],500,500,4483,0,499/500 (99.8%),1/500 (0.2%),499/500 (99.8%),10/500 (2.0%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+exp,substitution,0.15,[400],500,500,4483,0,500/500 (100.0%),1/500 (0.2%),500/500 (100.0%),5/500 (1.0%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+kgw2,substitution,0.15,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),3/500 (0.6%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+prc_map,substitution,0.15,[400],500,500,none (proven FPR),0.026,118/500 (23.6%),0/500 (0.0%),203/500 (40.6%),1/500 (0.2%),Hoeffding bound exp(-S^2/2V),fixed PRC n=400 eta=0.05; run=573a37528412b542d3866e4e
+synthid,substitution,0.15,[400],500,500,4483,0,499/500 (99.8%),3/500 (0.6%),499/500 (99.8%),8/500 (1.6%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+exp,substitution,0.2,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),5/500 (1.0%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+kgw2,substitution,0.2,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),1/500 (0.2%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+prc_map,substitution,0.2,[400],500,500,none (proven FPR),0.092,66/500 (13.2%),0/500 (0.0%),123/500 (24.6%),0/500 (0.0%),Hoeffding bound exp(-S^2/2V),fixed PRC n=400 eta=0.05; run=16616eb17aee4f9f0af56f20
+synthid,substitution,0.2,[400],500,500,4483,0,496/500 (99.2%),6/500 (1.2%),499/500 (99.8%),15/500 (3.0%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+exp,substitution,0.25,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),3/500 (0.6%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+kgw2,substitution,0.25,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),2/500 (0.4%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+prc_map,substitution,0.25,[400],500,500,none (proven FPR),0.19,30/500 (6.0%),0/500 (0.0%),72/500 (14.4%),1/500 (0.2%),Hoeffding bound exp(-S^2/2V),fixed PRC n=400 eta=0.05; run=791648c8de17d6202b414043
+synthid,substitution,0.25,[400],500,500,4483,0,491/500 (98.2%),4/500 (0.8%),496/500 (99.2%),15/500 (3.0%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+exp,substitution,0.3,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),5/500 (1.0%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+kgw2,substitution,0.3,[400],500,500,4483,0,500/500 (100.0%),0/500 (0.0%),500/500 (100.0%),2/500 (0.4%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
+prc_map,substitution,0.3,[400],500,500,none (proven FPR),0.347,13/500 (2.6%),0/500 (0.0%),39/500 (7.8%),0/500 (0.0%),Hoeffding bound exp(-S^2/2V),fixed PRC n=400 eta=0.05; run=8e6d2dffbe0082b15852dbd7
+synthid,substitution,0.3,[400],500,500,4483,0,446/500 (89.2%),2/500 (0.4%),491/500 (98.2%),8/500 (1.6%),empirical vs human C4 (paper),KTH commit 80d4ec8; Qwen3-0.6B-Base fp32; n=256
