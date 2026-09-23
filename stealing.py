@@ -55,6 +55,9 @@ def _save(path, value):
 @app.function(image=hf_image, cpu=4, memory=16384, timeout=7200, volumes={"/cache": hf_cache, "/results": results})
 def build_prompts():
     """30k query + 5k calibration prompts from C4 RealNewsLike train, disjoint documents."""
+    import os
+    # The shared image is offline for model loading; this step alone streams C4 from the Hub.
+    os.environ["HF_HUB_OFFLINE"] = os.environ["HF_DATASETS_OFFLINE"] = "0"
     import torch
     from datasets import load_dataset
     from transformers import AutoTokenizer
