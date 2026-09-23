@@ -285,7 +285,9 @@ def _load_prc_null(ref):
     return tokens
 
 
-@app.function(cpu=2, memory=8192, timeout=7200, max_containers=50,
+# Retries: a few containers segfault intermittently (Python SystemError in structseq); items are
+# cached and idempotent, so a retried item recomputes the same statistics.
+@app.function(cpu=2, memory=8192, timeout=7200, max_containers=50, retries=modal.Retries(max_retries=3),
               volumes={"/cache": hf_cache, "/results": results, "/archive": archive})
 def score_chunk(item):
     """One work item: null reference texts, or clean/attacked wm+null texts for a prompt range."""
@@ -382,7 +384,10 @@ def run(stage: str = "smoke", schemes: str = ",".join(SCHEMES)):
         null_docs = len(Path("prompts_10k.jsonl").read_text().splitlines()) - PROMPT_OFFSET_NULL
         items = _work_items(chosen, attacks, null_docs)
         done = 0
-        for path in score_chunk.map(items):
+        for path in score_chunk.map(items, return_exceptions=True):
+            if isinstance(path, Exception):
+                print("FAILED item:", repr(path), flush=True)
+                continue
             done += 1
             if done % 50 == 0:
                 print(f"scored {done}/{len(items)}", flush=True)
