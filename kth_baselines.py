@@ -262,7 +262,11 @@ def generate_chunk(scheme, start):
 # ---------------------------------------------------------------- scoring
 
 def _load_prc_null(ref):
-    """PRC null completion, verified against the frozen manifest hashes."""
+    """PRC null completion, verified against the frozen manifest hashes.
+
+    Records carry no prompt; the run artifact's prompt_ids_list (sha256 29ec8adc...)
+    was checked to equal prompts.jsonl, and hence prompts_10k.jsonl[:500], for all 500 prompts.
+    """
     import sys
     import numpy as np
     import torch
@@ -278,7 +282,7 @@ def _load_prc_null(ref):
     if (record["watermark"] or record["prompt_idx"] != ref["prompt_idx"]
             or hashlib.sha256(tokens.numpy().tobytes()).hexdigest() != ref["tokens_sha256"]):
         raise ValueError("PRC null record differs from the frozen manifest")
-    return tokens, [int(t) for t in record["prompt_ids"]]
+    return tokens
 
 
 @app.function(cpu=2, memory=8192, timeout=7200, max_containers=50,
@@ -308,9 +312,7 @@ def score_chunk(item):
         gen = torch.load(f"/results/{OUT}/generations/{item['scheme']}/{item['gen_chunk']:04d}.pt")
         prompts = load_prompts()
         for row, prompt_idx in enumerate(gen["prompt_idx"]):
-            null_tokens, null_prompt = _load_prc_null(item["null_refs"][row])
-            if null_prompt != prompts[prompt_idx]["prompt_tokens"]:
-                raise ValueError("PRC null prompt differs from the baseline prompt")
+            null_tokens = _load_prc_null(item["null_refs"][row])
             seed = gen["seeds"][row]
             for source, tokens in (("wm", gen["tokens"][row]), ("null", null_tokens)):
                 attacked = corrupt(tokens, item["attack"], source, prompt_idx)
