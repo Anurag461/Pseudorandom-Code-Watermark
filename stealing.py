@@ -234,18 +234,28 @@ def _query_tokens(scheme, n_query):
 
 
 def pair_counts(tokens, prompts, variant, period):
-    """{context: {token: count}} with context = previous token or position (h=1)."""
+    """{context: {token: count}}; context = previous token (ctx1), the ordered previous h tokens
+    as a tuple (ctx2..ctx4, e.g. SynthID hashes 4), or the position modulo `period` (pos)."""
     import numpy as np
     tok = tokens.numpy()
-    if variant == "ctx1":
-        prev = np.concatenate([prompts[:, -1:].numpy(), tok[:, :-1]], axis=1)
-    else:
-        prev = np.broadcast_to(np.arange(tok.shape[1]) % period, tok.shape)
-    keys = prev.astype(np.int64) * 1_000_000 + tok
-    uniq, counts = np.unique(keys.ravel(), return_counts=True)
+    if variant == "pos" or variant == "ctx1":
+        if variant == "ctx1":
+            prev = np.concatenate([prompts[:, -1:].numpy(), tok[:, :-1]], axis=1)
+        else:
+            prev = np.broadcast_to(np.arange(tok.shape[1]) % period, tok.shape)
+        keys = prev.astype(np.int64) * 1_000_000 + tok
+        uniq, counts = np.unique(keys.ravel(), return_counts=True)
+        table = {}
+        for key, count in zip(uniq.tolist(), counts.tolist()):
+            table.setdefault(key // 1_000_000, {})[key % 1_000_000] = count
+        return table
+    h = int(variant.removeprefix("ctx"))
+    full = np.concatenate([prompts[:, -h:].numpy(), tok], axis=1)
+    windows = np.lib.stride_tricks.sliding_window_view(full, h + 1, axis=1).reshape(-1, h + 1)
+    uniq, counts = np.unique(windows, axis=0, return_counts=True)
     table = {}
-    for key, count in zip(uniq.tolist(), counts.tolist()):
-        table.setdefault(key // 1_000_000, {})[key % 1_000_000] = count
+    for row, count in zip(uniq.tolist(), counts.tolist()):
+        table.setdefault(tuple(row[:h]), {})[row[h]] = count
     return table
 
 
@@ -289,7 +299,12 @@ def _stolen_processor(table, variant, period, alpha):
         def __call__(self, input_ids, scores):
             position = input_ids.shape[1] - PROMPT_TOKENS
             for row in range(input_ids.shape[0]):
-                ctx = int(input_ids[row, -1]) if variant == "ctx1" else position % period
+                if variant == "pos":
+                    ctx = position % period
+                elif variant == "ctx1":
+                    ctx = int(input_ids[row, -1])
+                else:
+                    ctx = tuple(input_ids[row, -int(variant[3:]):].tolist())
                 if ctx in table:
                     idx, boost = table[ctx]
                     scores[row, idx.to(scores.device)] += alpha * boost.to(scores.device)
@@ -513,7 +528,11 @@ def summarize_attack(schemes: str = "prc,kgw2,exp,synthid"):
             scores.setdefault(payload["name"], []).append((payload["start"], values))
         scores = {k: [v for _, chunk in sorted(parts) for v in chunk] for k, parts in scores.items()}
         ppl = {}
-        for entry in results.listdir(f"{OUT}/ppl/{scheme}"):
+        try:
+            ppl_files = results.listdir(f"{OUT}/ppl/{scheme}")
+        except modal.exception.NotFoundError:  # perplexity not computed yet
+            ppl_files = []
+        for entry in ppl_files:
             payload = read(entry.path)
             ppl[payload["name"]] = np.array(payload["ppl"])
         if scheme == "prc":
