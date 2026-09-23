@@ -1,20 +1,27 @@
-"""Kuditipudi et al. (2023) and KGW baselines under the same token attacks as PRC.
+"""Kuditipudi et al. (2023) EXP, KGW-2.0 and SynthID-Text baselines under the same substitutions as PRC.
 
-Runs the authors' own EXP, EXP-edit and KGW-2.0 code (cloned at a pinned commit)
-on Qwen3-0.6B-Base with the 500 prompts of the fixed PRC n=400 run, and scores
+Runs EXP and KGW-2.0 from the Kuditipudi et al. code (cloned at a pinned commit)
+and SynthID-Text from Hugging Face transformers on Qwen3-0.6B-Base with the 500 prompts of the fixed PRC n=400 run, and scores
 every scheme after the identical substitutions used for PRC (attacks.apply_attack
 seeds each candidate by source and prompt index, so the wm and null texts of a
 given prompt receive the same edit positions and replacement tokens as in the
 PRC sweep).
 
 Settings follow the paper's c4-experiment.py: key length n=256, no random
-offset, block size k = text length, EXP-edit gamma=0.0, KGW gamma=0.25,
-delta=2.0 with previous-token (simple_1) seeding, and p-values from the
-empirical distribution of test statistics on human C4 continuations
-(null=True). Deviations, all applied equally to PRC:
+offset, block size k = text length, KGW gamma=0.25, delta=2.0 with
+previous-token (simple_1) seeding, and p-values from the empirical
+distribution of test statistics on human C4 continuations (null=True).
+SynthID-Text uses the MarkLLM/DITTO configuration (ngram_len=5, 30 keys,
+table size 2^16, seed 0, context history 1024), tournament sampling over the
+full vocabulary, and the mean g-value score over unmasked positions (the
+paper's "mean" detector), with the same empirical p-values.
+Deviations, all applied equally to PRC:
   * m=400 tokens (paper: 35/70) to match the PRC block length;
   * substitutions act on tokens with no decode/re-encode;
-  * the KGW green-list RNG runs on CPU at generation and detection.
+  * the KGW green-list RNG and the SynthID sampling table are built on CPU
+    at generation and detection;
+  * SynthID detection sees only the completion, so its first ngram_len-1
+    tokens are unscored (as PRC is prompt-free).
 
 Stages (each a separate local entrypoint call):
   generate  -> watermarked completions per scheme (GPU)
@@ -45,7 +52,11 @@ NULL_SEED = 2           # seeds the random keys of the human null reference
 ATTACK_VOCAB = 151665   # identical to the PRC sweep (Qwen3-Base tokenizer)
 RATES = (0.05, 0.1, 0.15, 0.2, 0.25, 0.3)
 KINDS = ("substitution",)
-SCHEMES = ("exp", "exp_edit", "kgw2")
+SCHEMES = ("exp", "kgw2", "synthid")
+SYNTHID = dict(ngram_len=5, keys=[654, 400, 836, 123, 340, 443, 597, 160, 57, 29, 590, 639, 13, 715, 468,
+                                  990, 966, 226, 324, 585, 118, 504, 421, 521, 129, 669, 732, 225, 90, 960],
+               sampling_table_size=65536, sampling_table_seed=0, context_history_size=1024)
+EOS = 151643  # Qwen3-Base <|endoftext|>
 KGW_GAMMA, KGW_DELTA = 0.25, 2.0
 CHUNK = 25
 
@@ -107,13 +118,44 @@ def save_json(path, value):
     tmp.replace(path)
 
 
+def synthid_processor(device):
+    """SynthID-Text processor whose sampling table is drawn on CPU, then moved to `device`.
+
+    The table comes from a device-specific torch.Generator, so building it on CPU
+    for both generation and detection keeps the two identical.
+    """
+    from transformers.generation.logits_process import SynthIDTextWatermarkLogitsProcessor
+    processor = SynthIDTextWatermarkLogitsProcessor(**SYNTHID, device=torch_device("cpu"))
+    processor.keys = processor.keys.to(device)
+    processor.sampling_table = processor.sampling_table.to(device)
+    processor.device = device
+    return processor
+
+
+def torch_device(name):
+    import torch
+    return torch.device(name)
+
+
+def synthid_mean_score(processor, tokens):
+    """Mean g-value over positions that are neither repeated contexts nor after EOS."""
+    ids = tokens.unsqueeze(0)
+    g = processor.compute_g_values(ids).float()                    # [1, T-(ngram_len-1), depth]
+    mask = processor.compute_context_repetition_mask(ids)          # [1, T-(ngram_len-1)]
+    mask = mask * processor.compute_eos_token_mask(ids, EOS)[:, processor.ngram_len - 1:]
+    count = mask.sum() * g.shape[-1]
+    return float((g * mask[..., None]).sum() / count) if count else 0.5
+
+
 class Scorer:
     """The paper's test statistic for one scheme; lower means more watermarked."""
 
     def __init__(self, scheme, vocab_size, tokenizer=None):
         import torch
         self.scheme, self.vocab_size = scheme, vocab_size
-        if scheme == "kgw2":
+        if scheme == "synthid":
+            self.processor = synthid_processor(torch.device("cpu"))
+        elif scheme == "kgw2":
             from watermarking.kirchenbauer.watermark_processor import WatermarkDetector
             self.detector = WatermarkDetector(
                 vocab=list(tokenizer.get_vocab().values()), gamma=KGW_GAMMA, seeding_scheme="simple_1",
@@ -122,8 +164,8 @@ class Scorer:
         else:
             from watermarking.detection import adjacency, phi
             from watermarking.gumbel.key import gumbel_key_func
-            from watermarking.gumbel.score import gumbel_edit_score, gumbel_score
-            self.dist = (lambda x, y: gumbel_edit_score(x, y, gamma=0.0)) if scheme == "exp_edit" else gumbel_score
+            from watermarking.gumbel.score import gumbel_score
+            self.dist = gumbel_score
             self.key_func, self.adjacency = gumbel_key_func, adjacency
             self.phi = lambda tokens, generator, null: phi(
                 tokens=tokens, n=KEY_LENGTH, k=len(tokens), generator=generator, key_func=gumbel_key_func,
@@ -148,6 +190,8 @@ class Scorer:
         import torch
         if self.scheme == "kgw2":
             return -float(self.detector._score_sequence(tokens)["z_score"])
+        if self.scheme == "synthid":
+            return -synthid_mean_score(self.processor, tokens)
         generator = torch.Generator()
         generator.manual_seed(int(seed))
         if null or reference:
@@ -190,12 +234,14 @@ def generate_chunk(scheme, start):
     prompt_ids = torch.tensor([prompts[i]["prompt_tokens"] for i in idx])
     seeds = key_seeds()[idx]
     torch.manual_seed(1000 + start)
-    if scheme == "kgw2":
+    if scheme in ("kgw2", "synthid"):
+        # A fresh processor per call: SynthID keeps per-batch context state.
+        processor = (_cpu_kgw_processor(list(tokenizer.get_vocab().values())) if scheme == "kgw2"
+                     else synthid_processor(torch.device("cuda")))
         out = model.generate(prompt_ids.cuda(), attention_mask=torch.ones_like(prompt_ids).cuda(),
-                             do_sample=True, max_new_tokens=M, min_new_tokens=M, top_k=0,
-                             pad_token_id=tokenizer.eos_token_id,
-                             logits_processor=LogitsProcessorList(
-                                 [_cpu_kgw_processor(list(tokenizer.get_vocab().values()))])).cpu()
+                             do_sample=True, max_new_tokens=M, min_new_tokens=M, top_k=0, top_p=1.0,
+                             temperature=1.0, pad_token_id=tokenizer.eos_token_id,
+                             logits_processor=LogitsProcessorList([processor])).cpu()
     else:
         from watermarking.generation import generate
         from watermarking.gumbel.key import gumbel_key_func
