@@ -63,3 +63,10 @@ MODAL_PROFILE=new-prc-watermark python -m wang_prc_detector_ablation.launch laun
 ```
 
 No approval file authorizing this diagnostic has been created.
+
+## Follow-up
+
+The subsequently approved saved-token numerical diagnostic passed both cache and
+FP32 controls; see [its report](../numerical-20260923/README.md). This original
+smoke attempt remains failed under its unchanged BF16 guard. Billing has now
+posted at $0.14605021; see billing_reconciliation.json. No production run launched.

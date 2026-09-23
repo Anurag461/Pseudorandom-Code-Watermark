@@ -13,7 +13,10 @@ questions separately:
 **Code setup approved** by “go ahead and set up.” The pipeline, small synthetic
 checks, documentation and staged approval gate are implemented. The first paid
 sanity attempt passed the CPU source check but failed the BF16 prefix tolerance.
-See evidence/sanity-20260923/README.md for results and the next proposed diagnostic.
+See evidence/sanity-20260923/README.md for that attempt. The separately approved
+saved-token numerical diagnostic subsequently passed its cache/FP32 controls; see
+evidence/numerical-20260923/README.md. The original 2% BF16 guard remains failed,
+and the remaining short smoke and production are not authorized.
 Paid compute still requires separate approval for each run.
 
 [CURRENT_REQUEST.md](CURRENT_REQUEST.md) is authoritative for the latest model,

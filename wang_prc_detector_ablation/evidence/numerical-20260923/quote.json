@@ -1,0 +1,41 @@
+{
+  "stage": "numerical-diagnostic",
+  "specification": {
+    "cpu": 4,
+    "memory_GiB": 64,
+    "cpu_seconds": 0,
+    "gpu_workers": 1,
+    "gpu_seconds": 420,
+    "gpu_batch": 1,
+    "estimate": [
+      0.25,
+      0.75
+    ],
+    "workload": "Reuse the saved failing T=1.0 null prefix; static/concat/uncached at lengths 1,4,8,16 in BF16 and FP32; 122 teacher-forced positions, no generation, no source recheck"
+  },
+  "rates_per_second": {
+    "H100": 0.001097,
+    "core": 1.31e-05,
+    "GiB": 2.22e-06
+  },
+  "estimated_usd": [
+    0.25,
+    0.75
+  ],
+  "metered_function_timeout_envelope_usd": 0.5424216000000001,
+  "caveat": "Timeout envelope excludes image builds, container startup/teardown and storage; estimate includes a planning allowance. Not a provider-enforced dollar cap.",
+  "remaining_budget_last_stated": 35,
+  "remaining_budget_unreconciled": true,
+  "budget_after_estimate_if_35_available": [
+    34.25,
+    34.75
+  ],
+  "fingerprint": "5b200e69d9dd37fc54b7ccba",
+  "git_commit": "eaaccdb3a37d151fbe864dde8d6af4dd939d88ed",
+  "volume": "prc-data",
+  "root": "wang_prc_detector_ablation/qwen3_8b_base/5b200e69d9dd37fc54b7ccba",
+  "profile": "new-prc-watermark",
+  "retries": 0,
+  "automatic_next_stage": false,
+  "sanity_skip_rule": "Skip (not pass) initial package if concrete quote exceeds $5"
+}

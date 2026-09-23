@@ -3,6 +3,9 @@
 **Initial sanity attempted: source check passed; GPU numerical check failed.**
 See [the attempt report](evidence/sanity-20260923/README.md) for the 159/160 source
 result, 111-second GPU runtime, saved traces and separately gated next diagnostic.
+A separately approved [numerical diagnostic](evidence/numerical-20260923/README.md)
+then passed exact cache and FP32-reference controls. The original BF16 guard
+remains failed; its tolerance and the production precision have not changed.
 The full experiment has not launched. This is a controlled detector
 comparison on fresh Wang-channel generations from the cached Base model. It is
 not a reproduction of DeepSeek Figure 5. The earlier saved-sweep preflight and
