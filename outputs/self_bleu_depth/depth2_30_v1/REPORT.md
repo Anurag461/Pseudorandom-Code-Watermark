@@ -21,6 +21,12 @@ Each entry contains the mean and its 95% prompt-bootstrap interval. Detection is
 | 1,024 | SynthID depth 10 | 100/100 | 100.0 [100.0, 100.0] | 0.02206 [0.01909, 0.02518] |
 | 1,024 | SynthID depth 30 | 100/100 | 100.0 [100.0, 100.0] | 0.02890 [0.02412, 0.03392] |
 
+## Within-response repetition at 1,024 tokens
+
+The same 100 saved SynthID depth-30 responses have **2.30% repeated token 4-grams** and **Distinct-3 = 0.9589**. These are arithmetic means across two responses for each of 50 prompts, with repeat fallback on. Repeated 4-grams counts occurrences after the first, divided by all contiguous four-token sequences; Distinct-3 divides the number of distinct contiguous three-token sequences by all such sequences.
+
+These two point estimates were added on 25 September 2026. No new responses, detector scores, bootstrap intervals, or paired contrasts were computed. [Full-precision results, response-level counts, and source hashes](repetition_1024.json) · [Calculation script](calculate_repetition_1024.py).
+
 ## Direct paired PRC-minus-SynthID contrasts
 
 Negative Self-BLEU differences favor PRC. Positive TPR differences favor PRC; TPR differences below are percentage points. Intervals directly resample the per-prompt differences.

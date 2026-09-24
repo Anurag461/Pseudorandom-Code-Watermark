@@ -13,7 +13,7 @@ Ordinary & 0.01928 [0.01649, 0.02229] & -- & 2.92 & 95.14 \\
 PRC eta=.05 & 0.01890 [0.01581, 0.02227] & 97 & 2.38 & 95.61 \\
 SynthID d=2 & 0.01987 [0.01592, 0.02418] & 100 & 3.28 & 94.62 \\
 SynthID d=10 & 0.02206 [0.01909, 0.02518] & 100 & 2.42 & 95.54 \\
-SynthID d=30 & 0.02890 [0.02412, 0.03392] & 100 & NR & NR \\
+SynthID d=30 & 0.02890 [0.02412, 0.03392] & 100 & 2.30 & 95.89 \\
 TextSeal a=.1 (off) & 0.03770 [0.03157, 0.04440] & 100 & 32.17 & 66.03 \\
 TextSeal a=.1 (on) & 0.04727 [0.04082, 0.05421] & 100 & 2.74 & 94.64 \\
 Gumbel-Max (off) & 1.00000 [1.00000, 1.00000] & 100 & 51.73 & 47.20 \\
@@ -21,5 +21,5 @@ Gumbel-Max (on) & 0.20718 [0.18343, 0.23097] & 100 & 2.81 & 94.56 \\
 \bottomrule
 \end{tabular}}
 \par\smallskip
-\begin{minipage}{\textwidth}\footnotesize Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95\% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. NR: metric not reported for depth 30 in the saved summaries; no value is imputed. Native SynthID fallback is ON.\end{minipage}
+\begin{minipage}{\textwidth}\footnotesize Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95\% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. Depth-30 repetition metrics are point estimates from the same 100 saved responses; no new intervals were calculated. Native SynthID fallback is ON.\end{minipage}
 \end{table*}

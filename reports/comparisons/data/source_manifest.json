@@ -1,12 +1,5 @@
 {
-  "asset_generation_builder_sha256": "cc2c2c1d51709b463ceb5ebd05cc57c93fa672f45efa37ce4a9a21741edbb643",
-  "builder_sha256": "a5fb5ed47beb8086b16076d8d0ecd05af208f0616067a5bc6caa52748ffebaed",
-  "editorial_revision": {
-    "date": "2026-09-21",
-    "numerical_assets_rebuilt": false,
-    "report_sha256": "ee30da3fc9678c7ef236dde5d0791f48431f089474840f14141f69ed7c2a1f9d",
-    "summary_maintained_separately": true
-  },
+  "builder_sha256": "9aa227e0914b82a0847e7e68c55ea959e3f7d75a2ec7b6911ba5cf41a898e273",
   "figures": [
     {
       "caption": "Historical 500-response-per-setting comparison after completion-only correction. Left: each cutoff is a separate one-shot detection test; coincident baseline curves are retained. Right: 1,024-token repetition under the native mixed policies, with TextSeal/Gumbel fallback OFF. These repetition gaps are not the matched-policy result.",
@@ -41,12 +34,29 @@
       "name": "07_common_histories"
     }
   ],
-  "source_commit": "69c7ea2c9510fb8bf9f46f1cd17b6921322b18a6",
+  "prior_editorial_revision": {
+    "date": "2026-09-21",
+    "numerical_assets_rebuilt": false,
+    "report_sha256": "ee30da3fc9678c7ef236dde5d0791f48431f089474840f14141f69ed7c2a1f9d",
+    "summary_maintained_separately": true
+  },
+  "repetition_update": {
+    "confidence_intervals": "Not calculated; blank CSV limits and null JSON ci95",
+    "date": "2026-09-25",
+    "figure_files_reused": true,
+    "length": 1024,
+    "metrics_added": 2,
+    "report_sha256": "0173c4ef0525a4c8e74161de5efb30ddfaeddd4c606ffd1e7285bce57dd96725",
+    "setting": "synthid_depth30"
+  },
+  "source_commit": "26bd30c82c682a76dccf06a89315587c09d7175b",
   "source_files": {
     "baseline_comparison/README.md": "3730113b0158e7078764abb00ebd4779e3b9873f7cc3b83f4afaab15b456726d",
     "outputs/comparison_redetect/baseline_comparisons.csv": "ac59bc46d8ebc733dad711a647d994676f4363c8358b64d67222b340c1a313e9",
     "outputs/comparison_redetect/repetition_audit.json": "4d9fde4da2af3d11f24ad4031dfb6642430d27729eb8c228670fa80e09dcc337",
-    "outputs/self_bleu_depth/depth2_30_v1/summary.json": "81e516f0dfd229f412167175ce39b6b91338440ae25ee0d4c2903e47f713307f",
+    "outputs/self_bleu_depth/depth2_30_v1/calculate_repetition_1024.py": "31d24eeaf3a9e5ed49b0f6594d73a9b7e8510d5124b33c127bf3c4c2aef5254d",
+    "outputs/self_bleu_depth/depth2_30_v1/repetition_1024.json": "8bd50e41ca62c1ce4b27f95140c736b64932b7c0c0ef639e1281e1af57171f02",
+    "outputs/self_bleu_depth/depth2_30_v1/summary.json": "ed1f931dce741f09fea1295d2b01c8fd9d1528b26232a331fa686e7bed13c689",
     "outputs/self_bleu_depth/short_prefixes/summary.json": "00b2d49a2337083d75592ad722d83d63c58de7274a94e422a0719035219adca9",
     "outputs/self_bleu_full_vocab/qwen3_0p6b_v1/summary.json": "adf4fe748e7de92bf7f10d564edbc0a85485d7e65ea8d0f14b521b0099c3e71d",
     "outputs/self_bleu_pilot/stage_a_v2/REPORT.md": "3844541916044300bd7baead0ec177e0a56105fbe8aa4179549eb23abb635131",

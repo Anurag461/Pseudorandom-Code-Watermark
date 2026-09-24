@@ -31,6 +31,8 @@ REPORT.md is maintained separately. The asset builder preserves it and regenerat
 
 ## Table catalogue
 
+- [Repeat fallback on/off at 1,024 tokens](tables/repeat_fallback_1024.pdf): revised paper table, including depth-30 repetition metrics; [LaTeX](tables/repeat_fallback_1024.tex).
+
 - [01_experiment_ledger](tables/01_experiment_ledger.tex): Completed experiments and their non-overlapping roles
 - [02_protocols](tables/02_protocols.tex): Numerical and policy differences that must accompany cross-study comparisons
 - [03_large_detection](tables/03_large_detection.tex): Completion-only detection and shared-null counts (500 responses per cell)

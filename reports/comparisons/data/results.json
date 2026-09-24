@@ -788,6 +788,14 @@
     "detected": 100,
     "length": 1024,
     "metrics": {
+      "distinct_3": {
+        "ci95": null,
+        "mean": 0.9589041095890412
+      },
+      "repeated_4gram_fraction": {
+        "ci95": null,
+        "mean": 0.023046033300685612
+      },
       "self_bleu": {
         "ci95": [
           0.024117780328355532,

@@ -483,6 +483,22 @@
     }
   ],
   "prompt_metrics_sha256": "2c7f11529b09f6ca5f811401ac04f056e86272bb0510f42681f22ca067c8c09a",
+  "repetition_update": {
+    "cloud_cost_usd": 0,
+    "date": "2026-09-25",
+    "definitions": {
+      "aggregation": "Arithmetic mean across the same 100 saved responses",
+      "distinct_3": "unique contiguous token 3-grams / 1022",
+      "repeated_4gram_fraction": "1 - unique contiguous token 4-grams / 1021"
+    },
+    "new_detector_scoring": 0,
+    "new_generation": 0,
+    "prompts": 50,
+    "responses": 100,
+    "scope": "SynthID depth 30, full vocabulary, temperature 1, repeat fallback on, 1024 tokens",
+    "source": "repetition_1024.json",
+    "uncertainty": "Point estimates only; no new bootstrap or paired contrasts calculated. Null ci95 means unavailable."
+  },
   "results": [
     {
       "detected": 55,
@@ -681,6 +697,14 @@
       "detected": 100,
       "length": 1024,
       "metrics": {
+        "distinct_3": {
+          "ci95": null,
+          "mean": 0.9589041095890412
+        },
+        "repeated_4gram_fraction": {
+          "ci95": null,
+          "mean": 0.023046033300685612
+        },
         "self_bleu": {
           "ci95": [
             0.024117780328355532,
@@ -703,6 +727,7 @@
   ],
   "score_records_sha256": "91f1e872e7b9c194dc75c96540773e471179d9e2f4bb968bcb204d60d77653ee",
   "sources": {
+    "calculate_repetition_1024.py": "31d24eeaf3a9e5ed49b0f6594d73a9b7e8510d5124b33c127bf3c4c2aef5254d",
     "generation_report.json": "88ec71b118f9cc2daee184f8e0e902c77630351f8a7cc0a4b759a75795f676e1",
     "manifest.json": "dc424d0b23635c1b35255c6dcd0360272b4924039208a3e41d62f5a0302b1d2f",
     "outputs/comparison_redetect/baseline_comparisons.csv": "ac59bc46d8ebc733dad711a647d994676f4363c8358b64d67222b340c1a313e9",
@@ -733,6 +758,7 @@
     "outputs/self_bleu_validation/raw/743658bc40e7f52c910d9538266bbd0ff461bba949e2a842cc8af36fa32507d8/batches/a06a7f2a8567f20357f02424aaf8c879892f416062cb8633226fe2528b4d2147.json": "ad092dcbe891d82f3e9d98d29119608872a1d32180eaedc9b3d4952dd66a3aad",
     "outputs/self_bleu_validation/raw/743658bc40e7f52c910d9538266bbd0ff461bba949e2a842cc8af36fa32507d8/batches/fa54eeee83032df8e70ddf99dfa33fd84ce5c3591cf5e6074168454f9680f1d9.json": "d4a75b0f58d5ec5da517d1f93175b4c4590438b1786213116192bddb85080912",
     "outputs/self_bleu_validation/step3-v4/generation_report.json": "38fdd822354dd9da40d43925b69599fbfabfd8d8440cdf2eb8be4ac6538ef8bb",
+    "repetition_1024.json": "8bd50e41ca62c1ce4b27f95140c736b64932b7c0c0ef639e1281e1af57171f02",
     "self_bleu/pilot.py": "cb1e26d55a595b28f1fb6aa54ab648d1f75d45c3abf447669b8cbfa767d7d350"
   },
   "verification": {

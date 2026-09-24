@@ -1,0 +1,1031 @@
+{
+  "definitions": {
+    "aggregation": "Arithmetic mean across the same 100 saved responses",
+    "distinct_3": "unique contiguous token 3-grams / 1022",
+    "repeated_4gram_fraction": "1 - unique contiguous token 4-grams / 1021"
+  },
+  "means": {
+    "distinct_3": 0.9589041095890412,
+    "repeated_4gram_fraction": 0.023046033300685612
+  },
+  "prompts": 50,
+  "response_metrics": [
+    {
+      "completion_sha256": "fab6de1b71515cce4bbea30c5bab675e08cc49e893cbf075de2ea3073187709f",
+      "distinct_3": 0.9608610567514677,
+      "prompt_index": 0,
+      "repeated_4gram_fraction": 0.021547502448579836,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0000/r0",
+      "response_index": 0,
+      "unique_3grams": 982,
+      "unique_4grams": 999
+    },
+    {
+      "completion_sha256": "aed5ad08730e23a7b7e07b59d1393ecd3628b1432dbbcef37aa9e001d1f2b3b8",
+      "distinct_3": 0.8140900195694716,
+      "prompt_index": 1,
+      "repeated_4gram_fraction": 0.14299706170421156,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0001/r0",
+      "response_index": 0,
+      "unique_3grams": 832,
+      "unique_4grams": 875
+    },
+    {
+      "completion_sha256": "1ae6d026a3e7f88b503895738188a15be4bac13d4f803cd8abb96c537e4aeaa6",
+      "distinct_3": 0.9726027397260274,
+      "prompt_index": 2,
+      "repeated_4gram_fraction": 0.007835455435847183,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0002/r0",
+      "response_index": 0,
+      "unique_3grams": 994,
+      "unique_4grams": 1013
+    },
+    {
+      "completion_sha256": "d64c8739e751e1925cbec90c3eaa84451a0964b2ef439aa2803259fcec245558",
+      "distinct_3": 0.9784735812133072,
+      "prompt_index": 3,
+      "repeated_4gram_fraction": 0.008814887365328095,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0003/r0",
+      "response_index": 0,
+      "unique_3grams": 1000,
+      "unique_4grams": 1012
+    },
+    {
+      "completion_sha256": "3341c8e5a0fc4994c1aaba900eab39c3b102dd1b70c41e2d5a1c2660056f0285",
+      "distinct_3": 0.9902152641878669,
+      "prompt_index": 4,
+      "repeated_4gram_fraction": 0.0019588638589618235,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0004/r0",
+      "response_index": 0,
+      "unique_3grams": 1012,
+      "unique_4grams": 1019
+    },
+    {
+      "completion_sha256": "cfc2a814ce4a94c09af2635ca250f681f5921f0c2d732ad7033b9b8b4e43a7b4",
+      "distinct_3": 0.9726027397260274,
+      "prompt_index": 5,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0005/r0",
+      "response_index": 0,
+      "unique_3grams": 994,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "b13b55d57d9fbd6caa6eeec9fa394ac4cb98696c7984a4b6b548c4b988e428b9",
+      "distinct_3": 0.9814090019569471,
+      "prompt_index": 6,
+      "repeated_4gram_fraction": 0.004897159647404559,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0006/r0",
+      "response_index": 0,
+      "unique_3grams": 1003,
+      "unique_4grams": 1016
+    },
+    {
+      "completion_sha256": "189570ee05627a8775dcfd953bc1574da67a8324666313eada31ad4945e2f91e",
+      "distinct_3": 0.9833659491193738,
+      "prompt_index": 7,
+      "repeated_4gram_fraction": 0.006856023506366271,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0007/r0",
+      "response_index": 0,
+      "unique_3grams": 1005,
+      "unique_4grams": 1014
+    },
+    {
+      "completion_sha256": "90db4245f6edfc55fca8ac10d34fcbc1d039cf8618c7e8c8b41e31f1a81e07bd",
+      "distinct_3": 0.9412915851272016,
+      "prompt_index": 8,
+      "repeated_4gram_fraction": 0.028403525954946107,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0008/r0",
+      "response_index": 0,
+      "unique_3grams": 962,
+      "unique_4grams": 992
+    },
+    {
+      "completion_sha256": "82e0bf8102f2121ae865a8e76a5b526467f469d16043e34d12c9558892a8808d",
+      "distinct_3": 0.9863013698630136,
+      "prompt_index": 9,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0009/r0",
+      "response_index": 0,
+      "unique_3grams": 1008,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "4fd0c98e729a703528d932af21b573b118fb2e67be7c6a18b1fcb954360e860a",
+      "distinct_3": 0.9814090019569471,
+      "prompt_index": 10,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0010/r0",
+      "response_index": 0,
+      "unique_3grams": 1003,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "17fbda00605b2354f61d9ba5ba977feecb3f6ddf738fc651acf60ef1c6bb8e70",
+      "distinct_3": 0.9843444227005871,
+      "prompt_index": 11,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0011/r0",
+      "response_index": 0,
+      "unique_3grams": 1006,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "6cbc0ee67b7de924bf1401554f105239cbbc5736d164ff4256a13b6484c07926",
+      "distinct_3": 0.9921722113502935,
+      "prompt_index": 12,
+      "repeated_4gram_fraction": 0.0009794319294809117,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0012/r0",
+      "response_index": 0,
+      "unique_3grams": 1014,
+      "unique_4grams": 1020
+    },
+    {
+      "completion_sha256": "3f5b8a3026ab4c2f8c9c5dd4f537dd2543128347d12e8f464e8d46abc7207091",
+      "distinct_3": 0.9774951076320939,
+      "prompt_index": 13,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0013/r0",
+      "response_index": 0,
+      "unique_3grams": 999,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "bfa21db2523172e5d718d70de84a0a5d9bea136606b73673c7ebcea9ce536bba",
+      "distinct_3": 0.9843444227005871,
+      "prompt_index": 14,
+      "repeated_4gram_fraction": 0.005876591576885359,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0014/r0",
+      "response_index": 0,
+      "unique_3grams": 1006,
+      "unique_4grams": 1015
+    },
+    {
+      "completion_sha256": "58f424f4f2d716746640d84803c74f2ccbb03f7e726e004625aefbc7afe2e778",
+      "distinct_3": 0.9510763209393346,
+      "prompt_index": 15,
+      "repeated_4gram_fraction": 0.026444662095984284,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0015/r0",
+      "response_index": 0,
+      "unique_3grams": 972,
+      "unique_4grams": 994
+    },
+    {
+      "completion_sha256": "c7247fde94ae1210c85f16d585c63c4082ba1310bf599057f2d8bb6a366624b3",
+      "distinct_3": 0.9882583170254403,
+      "prompt_index": 16,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0016/r0",
+      "response_index": 0,
+      "unique_3grams": 1010,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "ae0a003237afbaf4c76211bb652c1bc658d19211e553f5b5ceca7da08e7aaed9",
+      "distinct_3": 0.9921722113502935,
+      "prompt_index": 17,
+      "repeated_4gram_fraction": 0.0,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0017/r0",
+      "response_index": 0,
+      "unique_3grams": 1014,
+      "unique_4grams": 1021
+    },
+    {
+      "completion_sha256": "ec2c35cf05fb55dbb95e8fda2a8a9921e2104d21ef8e0c7a204b2b4a446d2c1e",
+      "distinct_3": 0.9833659491193738,
+      "prompt_index": 18,
+      "repeated_4gram_fraction": 0.008814887365328095,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0018/r0",
+      "response_index": 0,
+      "unique_3grams": 1005,
+      "unique_4grams": 1012
+    },
+    {
+      "completion_sha256": "e9e57d06956cc5afc32f558cb8b2c82c6f24805400d498f46323178766e0de5b",
+      "distinct_3": 0.9902152641878669,
+      "prompt_index": 19,
+      "repeated_4gram_fraction": 0.002938295788442735,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0019/r0",
+      "response_index": 0,
+      "unique_3grams": 1012,
+      "unique_4grams": 1018
+    },
+    {
+      "completion_sha256": "3d95246673ff5065fab31aac68a4cdb627a442870e31c986cc5070176a4ee87a",
+      "distinct_3": 0.9549902152641878,
+      "prompt_index": 20,
+      "repeated_4gram_fraction": 0.022526934378060748,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0020/r0",
+      "response_index": 0,
+      "unique_3grams": 976,
+      "unique_4grams": 998
+    },
+    {
+      "completion_sha256": "8d9c87fbee724c4481a96f987fbb900338ff09eb7d4627648f7fb4f1f4452f28",
+      "distinct_3": 0.9814090019569471,
+      "prompt_index": 21,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0021/r0",
+      "response_index": 0,
+      "unique_3grams": 1003,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "3658354392ce8d59d627828a593f5564757aa8432767837123ccbbb26252c938",
+      "distinct_3": 0.9823874755381604,
+      "prompt_index": 22,
+      "repeated_4gram_fraction": 0.006856023506366271,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0022/r0",
+      "response_index": 0,
+      "unique_3grams": 1004,
+      "unique_4grams": 1014
+    },
+    {
+      "completion_sha256": "dbfc72d50d83fb2aa04c7197d1e1590888a80046febd76c2217e678aae870232",
+      "distinct_3": 0.9246575342465754,
+      "prompt_index": 23,
+      "repeated_4gram_fraction": 0.057786483839373126,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0023/r0",
+      "response_index": 0,
+      "unique_3grams": 945,
+      "unique_4grams": 962
+    },
+    {
+      "completion_sha256": "74a1643128328a5106347f83d160c16e150571bdca3c7c4d8093fdc51daedc3f",
+      "distinct_3": 0.9843444227005871,
+      "prompt_index": 24,
+      "repeated_4gram_fraction": 0.004897159647404559,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0024/r0",
+      "response_index": 0,
+      "unique_3grams": 1006,
+      "unique_4grams": 1016
+    },
+    {
+      "completion_sha256": "6f9b1508bcda8279be5b1677b18f3ee55d62da0bf0242b9c5718d61b8562879d",
+      "distinct_3": 0.9882583170254403,
+      "prompt_index": 25,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0025/r0",
+      "response_index": 0,
+      "unique_3grams": 1010,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "2d1731af24c47a4242d2b4c807c25235c3c0a2361fc9bcf419114907078b13d5",
+      "distinct_3": 0.9755381604696673,
+      "prompt_index": 26,
+      "repeated_4gram_fraction": 0.006856023506366271,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0026/r0",
+      "response_index": 0,
+      "unique_3grams": 997,
+      "unique_4grams": 1014
+    },
+    {
+      "completion_sha256": "464fff97fc471c3be0facf4dc4e733b1660cccdca34cad7a397f72dbcb49e2f1",
+      "distinct_3": 0.9784735812133072,
+      "prompt_index": 27,
+      "repeated_4gram_fraction": 0.009794319294809006,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0027/r0",
+      "response_index": 0,
+      "unique_3grams": 1000,
+      "unique_4grams": 1011
+    },
+    {
+      "completion_sha256": "c96225efee36353fb497a4b414dbc9f8d6585613ca8fbdef4a12a2b5feb3819c",
+      "distinct_3": 0.9716242661448141,
+      "prompt_index": 28,
+      "repeated_4gram_fraction": 0.006856023506366271,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0028/r0",
+      "response_index": 0,
+      "unique_3grams": 993,
+      "unique_4grams": 1014
+    },
+    {
+      "completion_sha256": "9a31d6bd3d9d91726b811a036e3a014482893cd497587f6fe256078063d143b3",
+      "distinct_3": 0.9882583170254403,
+      "prompt_index": 29,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0029/r0",
+      "response_index": 0,
+      "unique_3grams": 1010,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "2bbfced29fcb5b3117d35f1b81b7a420b5b4a001bad5c1ef488aa02e0afe1119",
+      "distinct_3": 0.9941291585127201,
+      "prompt_index": 30,
+      "repeated_4gram_fraction": 0.0,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0030/r0",
+      "response_index": 0,
+      "unique_3grams": 1016,
+      "unique_4grams": 1021
+    },
+    {
+      "completion_sha256": "ad534549cee5d22f375a0a051876c24cdebf5ce0effaa008770c895f4fff3da2",
+      "distinct_3": 0.9960861056751468,
+      "prompt_index": 31,
+      "repeated_4gram_fraction": 0.0,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0031/r0",
+      "response_index": 0,
+      "unique_3grams": 1018,
+      "unique_4grams": 1021
+    },
+    {
+      "completion_sha256": "9edb1a5c29e70b333f34c1e3a6ca88931eabb49ce0daa172bbce5767d6c1340d",
+      "distinct_3": 0.9363992172211351,
+      "prompt_index": 32,
+      "repeated_4gram_fraction": 0.05288932419196868,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0032/r0",
+      "response_index": 0,
+      "unique_3grams": 957,
+      "unique_4grams": 967
+    },
+    {
+      "completion_sha256": "8410dcd4b534d48ea7ad9ae43d7ec6f59a6315a986214db0ae049a82e8fa0cc7",
+      "distinct_3": 0.7455968688845401,
+      "prompt_index": 33,
+      "repeated_4gram_fraction": 0.19686581782566115,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0033/r0",
+      "response_index": 0,
+      "unique_3grams": 762,
+      "unique_4grams": 820
+    },
+    {
+      "completion_sha256": "e72232c0cc2393536b2fa5ffe406ad9beaf7a1fdafb4f7aab5ea3f5ac180c28d",
+      "distinct_3": 0.9266144814090019,
+      "prompt_index": 34,
+      "repeated_4gram_fraction": 0.044074436826640584,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0034/r0",
+      "response_index": 0,
+      "unique_3grams": 947,
+      "unique_4grams": 976
+    },
+    {
+      "completion_sha256": "5c360240f2ba7f1377214074f4ea37aaae55f1cde95a4fb9fa3344a23c0a0906",
+      "distinct_3": 0.9295499021526419,
+      "prompt_index": 35,
+      "repeated_4gram_fraction": 0.03134182174338884,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0035/r0",
+      "response_index": 0,
+      "unique_3grams": 950,
+      "unique_4grams": 989
+    },
+    {
+      "completion_sha256": "c56f869c121619c8f9c0466377f5eed8044f274bde573abe35957fdd1d74336d",
+      "distinct_3": 0.9843444227005871,
+      "prompt_index": 36,
+      "repeated_4gram_fraction": 0.004897159647404559,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0036/r0",
+      "response_index": 0,
+      "unique_3grams": 1006,
+      "unique_4grams": 1016
+    },
+    {
+      "completion_sha256": "b3e89ce6ef46cc010122406c0c7d470c1c9ca282eb64362c92b0850eb9fe4e06",
+      "distinct_3": 0.8786692759295499,
+      "prompt_index": 37,
+      "repeated_4gram_fraction": 0.08031341821743387,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0037/r0",
+      "response_index": 0,
+      "unique_3grams": 898,
+      "unique_4grams": 939
+    },
+    {
+      "completion_sha256": "6f28855c7557866856e8af50d6f7b906404f4617a05d4689599c12740112fc49",
+      "distinct_3": 0.9843444227005871,
+      "prompt_index": 38,
+      "repeated_4gram_fraction": 0.005876591576885359,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0038/r0",
+      "response_index": 0,
+      "unique_3grams": 1006,
+      "unique_4grams": 1015
+    },
+    {
+      "completion_sha256": "efbf3bf67ab3aac93eb31332ff2f0c763eff3239807de6789b6137124ce85da1",
+      "distinct_3": 0.9706457925636007,
+      "prompt_index": 39,
+      "repeated_4gram_fraction": 0.010773751224289918,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0039/r0",
+      "response_index": 0,
+      "unique_3grams": 992,
+      "unique_4grams": 1010
+    },
+    {
+      "completion_sha256": "8361faa41e35f558c3a37e41f2d7ac01bb58add34d164dac6979783442bd53e4",
+      "distinct_3": 0.9227005870841487,
+      "prompt_index": 40,
+      "repeated_4gram_fraction": 0.044074436826640584,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0040/r0",
+      "response_index": 0,
+      "unique_3grams": 943,
+      "unique_4grams": 976
+    },
+    {
+      "completion_sha256": "3dafe3c95c755c45044e0f5544f694a42a7f5820d47aa75ee115e9004cf12125",
+      "distinct_3": 0.9784735812133072,
+      "prompt_index": 41,
+      "repeated_4gram_fraction": 0.014691478942213565,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0041/r0",
+      "response_index": 0,
+      "unique_3grams": 1000,
+      "unique_4grams": 1006
+    },
+    {
+      "completion_sha256": "1960eb970b9067f3246dd1e3ca14e6d3e035061a6bc8e75c9f55a81e347d9d36",
+      "distinct_3": 0.9902152641878669,
+      "prompt_index": 42,
+      "repeated_4gram_fraction": 0.0009794319294809117,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0042/r0",
+      "response_index": 0,
+      "unique_3grams": 1012,
+      "unique_4grams": 1020
+    },
+    {
+      "completion_sha256": "09e9b02d88009edfee105ccf438ceff0d28182dc413651fb2c547f358f39e122",
+      "distinct_3": 0.9794520547945206,
+      "prompt_index": 43,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0043/r0",
+      "response_index": 0,
+      "unique_3grams": 1001,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "031300bea33da18cec0b76435f1e47c830deea62edbaaaecfaf8efe925f6aeba",
+      "distinct_3": 0.9667318982387475,
+      "prompt_index": 44,
+      "repeated_4gram_fraction": 0.013712047012732653,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0044/r0",
+      "response_index": 0,
+      "unique_3grams": 988,
+      "unique_4grams": 1007
+    },
+    {
+      "completion_sha256": "3ab6d69d9e04abf1f2ed37bbe64fe1b054132fdb66004ca9eff293e941989fcd",
+      "distinct_3": 0.8659491193737769,
+      "prompt_index": 45,
+      "repeated_4gram_fraction": 0.08325171400587661,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0045/r0",
+      "response_index": 0,
+      "unique_3grams": 885,
+      "unique_4grams": 936
+    },
+    {
+      "completion_sha256": "0f8f85883b91258f71255f0b0936f20e1dd9a7f678dc6027f911970d74017ef9",
+      "distinct_3": 0.9843444227005871,
+      "prompt_index": 46,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0046/r0",
+      "response_index": 0,
+      "unique_3grams": 1006,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "ecc3abaffd249787ba2e8402d37c78752d76b60e69f0927b781efe1eab1779aa",
+      "distinct_3": 0.9363992172211351,
+      "prompt_index": 47,
+      "repeated_4gram_fraction": 0.044074436826640584,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0047/r0",
+      "response_index": 0,
+      "unique_3grams": 957,
+      "unique_4grams": 976
+    },
+    {
+      "completion_sha256": "f6d9650216a9928cd0f0e0b7214ad9b587914f2edd0056c0f87795cccc82e03e",
+      "distinct_3": 0.9823874755381604,
+      "prompt_index": 48,
+      "repeated_4gram_fraction": 0.005876591576885359,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0048/r0",
+      "response_index": 0,
+      "unique_3grams": 1004,
+      "unique_4grams": 1015
+    },
+    {
+      "completion_sha256": "d63a5f56b5b1a40d2f9b028f575bcffe071f3739ea4258831f6f26c6d6899138",
+      "distinct_3": 0.9784735812133072,
+      "prompt_index": 49,
+      "repeated_4gram_fraction": 0.006856023506366271,
+      "response_id": "c0d724ecb26b2a8b374dc74c51fad0abb251948e7687bfc16032960fc8e57096/p0049/r0",
+      "response_index": 0,
+      "unique_3grams": 1000,
+      "unique_4grams": 1014
+    },
+    {
+      "completion_sha256": "47d83dc40687da1862e843d6da3e3e796178e6e4dabdf170a45213964d347c5f",
+      "distinct_3": 0.9217221135029354,
+      "prompt_index": 0,
+      "repeated_4gram_fraction": 0.055827619980411414,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0000/r1",
+      "response_index": 1,
+      "unique_3grams": 942,
+      "unique_4grams": 964
+    },
+    {
+      "completion_sha256": "ec65702e2917eb73115166f54f99623ddec20c7ffab1ee59f86b8ce7433683e3",
+      "distinct_3": 0.9774951076320939,
+      "prompt_index": 1,
+      "repeated_4gram_fraction": 0.005876591576885359,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0001/r1",
+      "response_index": 1,
+      "unique_3grams": 999,
+      "unique_4grams": 1015
+    },
+    {
+      "completion_sha256": "935f8e1c9b69382569723967727e77af766ecbd6a09154f8864ff885ab74222e",
+      "distinct_3": 0.9774951076320939,
+      "prompt_index": 2,
+      "repeated_4gram_fraction": 0.004897159647404559,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0002/r1",
+      "response_index": 1,
+      "unique_3grams": 999,
+      "unique_4grams": 1016
+    },
+    {
+      "completion_sha256": "52a3dee11ded533ac227e0bd195f3f7a8f9ecf62b4aca36d8a85508e52df224b",
+      "distinct_3": 0.9667318982387475,
+      "prompt_index": 3,
+      "repeated_4gram_fraction": 0.005876591576885359,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0003/r1",
+      "response_index": 1,
+      "unique_3grams": 988,
+      "unique_4grams": 1015
+    },
+    {
+      "completion_sha256": "7e3d3ff8cd02d92be846d6315e0441ccaf6fe1d0d57fa19108c47643555faaac",
+      "distinct_3": 0.9833659491193738,
+      "prompt_index": 4,
+      "repeated_4gram_fraction": 0.004897159647404559,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0004/r1",
+      "response_index": 1,
+      "unique_3grams": 1005,
+      "unique_4grams": 1016
+    },
+    {
+      "completion_sha256": "5b68647a6c59c1e6e6032bd851a225cbc62777a3f8d127fd4c3c63427fdb4f8a",
+      "distinct_3": 0.9569471624266145,
+      "prompt_index": 5,
+      "repeated_4gram_fraction": 0.021547502448579836,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0005/r1",
+      "response_index": 1,
+      "unique_3grams": 978,
+      "unique_4grams": 999
+    },
+    {
+      "completion_sha256": "4d83bc8dc40dee1c96995dd4d1c5faf475025e7c6d1772b95d519b59d20a5005",
+      "distinct_3": 0.9569471624266145,
+      "prompt_index": 6,
+      "repeated_4gram_fraction": 0.027424094025465195,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0006/r1",
+      "response_index": 1,
+      "unique_3grams": 978,
+      "unique_4grams": 993
+    },
+    {
+      "completion_sha256": "b245869895b3efc02f0af850ff0b35f7bc9698f1e84e76c02ea4b33cf155f6f7",
+      "distinct_3": 0.9735812133072407,
+      "prompt_index": 7,
+      "repeated_4gram_fraction": 0.01175318315377083,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0007/r1",
+      "response_index": 1,
+      "unique_3grams": 995,
+      "unique_4grams": 1009
+    },
+    {
+      "completion_sha256": "6144a0decb6e9f3cb3e6812107667e5833f8b20cfbed18acdf767a2c8054b9f2",
+      "distinct_3": 0.9755381604696673,
+      "prompt_index": 8,
+      "repeated_4gram_fraction": 0.010773751224289918,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0008/r1",
+      "response_index": 1,
+      "unique_3grams": 997,
+      "unique_4grams": 1010
+    },
+    {
+      "completion_sha256": "acc4bea6c5ca3a4628fa1dd10e53e76df8129f225de146119b4eb95fbb76b72f",
+      "distinct_3": 0.9892367906066536,
+      "prompt_index": 9,
+      "repeated_4gram_fraction": 0.002938295788442735,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0009/r1",
+      "response_index": 1,
+      "unique_3grams": 1011,
+      "unique_4grams": 1018
+    },
+    {
+      "completion_sha256": "35036a5b2625b820599cf9430120dda2ba6827d95eb1ffa8fb2b42e7e70cc87b",
+      "distinct_3": 0.9706457925636007,
+      "prompt_index": 10,
+      "repeated_4gram_fraction": 0.005876591576885359,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0010/r1",
+      "response_index": 1,
+      "unique_3grams": 992,
+      "unique_4grams": 1015
+    },
+    {
+      "completion_sha256": "d0b79df9d2d2427a8b4ccaa188efebbe5147ae698b3e40965efbe961f7956999",
+      "distinct_3": 0.958904109589041,
+      "prompt_index": 11,
+      "repeated_4gram_fraction": 0.016650342801175277,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0011/r1",
+      "response_index": 1,
+      "unique_3grams": 980,
+      "unique_4grams": 1004
+    },
+    {
+      "completion_sha256": "148012399f9c955c1912f4121fc59c9711a86a444bda6642446f6ba1e64964b4",
+      "distinct_3": 0.952054794520548,
+      "prompt_index": 12,
+      "repeated_4gram_fraction": 0.021547502448579836,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0012/r1",
+      "response_index": 1,
+      "unique_3grams": 973,
+      "unique_4grams": 999
+    },
+    {
+      "completion_sha256": "6b311ced83e472a9211f0e77b73bdf40f10b03d6963209127e6af16fbd4524cb",
+      "distinct_3": 0.863013698630137,
+      "prompt_index": 13,
+      "repeated_4gram_fraction": 0.08521057786483843,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0013/r1",
+      "response_index": 1,
+      "unique_3grams": 882,
+      "unique_4grams": 934
+    },
+    {
+      "completion_sha256": "1ee25cc0837e8f1d201cd0f2dec7a3d2c48ff59a14cbdfe274a6598a37e2f24e",
+      "distinct_3": 0.9833659491193738,
+      "prompt_index": 14,
+      "repeated_4gram_fraction": 0.004897159647404559,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0014/r1",
+      "response_index": 1,
+      "unique_3grams": 1005,
+      "unique_4grams": 1016
+    },
+    {
+      "completion_sha256": "de6fe600032d701dbbc5218f3c32b13cf7ac459b233c677f225fa8ea641ed13d",
+      "distinct_3": 0.8953033268101761,
+      "prompt_index": 15,
+      "repeated_4gram_fraction": 0.0636630754162586,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0015/r1",
+      "response_index": 1,
+      "unique_3grams": 915,
+      "unique_4grams": 956
+    },
+    {
+      "completion_sha256": "e7529432fbb384fe321ce66265a2f360f97b9ead043cf7fbe1a6db2174ce48ad",
+      "distinct_3": 0.9823874755381604,
+      "prompt_index": 16,
+      "repeated_4gram_fraction": 0.005876591576885359,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0016/r1",
+      "response_index": 1,
+      "unique_3grams": 1004,
+      "unique_4grams": 1015
+    },
+    {
+      "completion_sha256": "64619f57fabe5a74158643d6b8cd329f460b62cdd8d07230d3d277ced0e529d3",
+      "distinct_3": 0.9941291585127201,
+      "prompt_index": 17,
+      "repeated_4gram_fraction": 0.0,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0017/r1",
+      "response_index": 1,
+      "unique_3grams": 1016,
+      "unique_4grams": 1021
+    },
+    {
+      "completion_sha256": "1abfe65aa78095d2e1083c70897f187f1a304ea3746121a1c2e377d3b3e062c9",
+      "distinct_3": 0.9794520547945206,
+      "prompt_index": 18,
+      "repeated_4gram_fraction": 0.008814887365328095,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0018/r1",
+      "response_index": 1,
+      "unique_3grams": 1001,
+      "unique_4grams": 1012
+    },
+    {
+      "completion_sha256": "b4d2920bf4ddeddefe5cb94e3cd1dfdc69b8ff4d95759e960c9cd8909c6972dc",
+      "distinct_3": 0.9863013698630136,
+      "prompt_index": 19,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0019/r1",
+      "response_index": 1,
+      "unique_3grams": 1008,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "83b2979d0327569bf4eea7b9f228ca9f479fe1c9c930b420a9573e296fc9b5f2",
+      "distinct_3": 0.974559686888454,
+      "prompt_index": 20,
+      "repeated_4gram_fraction": 0.014691478942213565,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0020/r1",
+      "response_index": 1,
+      "unique_3grams": 996,
+      "unique_4grams": 1006
+    },
+    {
+      "completion_sha256": "c5fb854a022d7d4990fba19f68ebca820bc2ff9e7221aef3172a19d0f9cdb39b",
+      "distinct_3": 0.8864970645792564,
+      "prompt_index": 21,
+      "repeated_4gram_fraction": 0.10675808031341827,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0021/r1",
+      "response_index": 1,
+      "unique_3grams": 906,
+      "unique_4grams": 912
+    },
+    {
+      "completion_sha256": "ae7209eb65d67494a7912bd9cefd90f99cd3752f3c4f78dfde9d9434bddd0167",
+      "distinct_3": 0.9784735812133072,
+      "prompt_index": 22,
+      "repeated_4gram_fraction": 0.01175318315377083,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0022/r1",
+      "response_index": 1,
+      "unique_3grams": 1000,
+      "unique_4grams": 1009
+    },
+    {
+      "completion_sha256": "5ad393257a8ef80e680e3ee98dbc49d56d8ba21f8fa55ac2e1605ea6cc3b53fb",
+      "distinct_3": 0.9823874755381604,
+      "prompt_index": 23,
+      "repeated_4gram_fraction": 0.0019588638589618235,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0023/r1",
+      "response_index": 1,
+      "unique_3grams": 1004,
+      "unique_4grams": 1019
+    },
+    {
+      "completion_sha256": "334d48e17d038a2b21a8e94fd63644d7b70d0edde31d8a371a07408f31558171",
+      "distinct_3": 0.9774951076320939,
+      "prompt_index": 24,
+      "repeated_4gram_fraction": 0.004897159647404559,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0024/r1",
+      "response_index": 1,
+      "unique_3grams": 999,
+      "unique_4grams": 1016
+    },
+    {
+      "completion_sha256": "d426f4f3609afcf072e468dc59feeb250c12066045263b2477a46aabaafba80e",
+      "distinct_3": 0.9863013698630136,
+      "prompt_index": 25,
+      "repeated_4gram_fraction": 0.004897159647404559,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0025/r1",
+      "response_index": 1,
+      "unique_3grams": 1008,
+      "unique_4grams": 1016
+    },
+    {
+      "completion_sha256": "f3717c0e459502bc2d7262e6189864383ba2b826790d4a785384a5c9f2b3604d",
+      "distinct_3": 0.9354207436399217,
+      "prompt_index": 26,
+      "repeated_4gram_fraction": 0.04309500489715967,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0026/r1",
+      "response_index": 1,
+      "unique_3grams": 956,
+      "unique_4grams": 977
+    },
+    {
+      "completion_sha256": "997027721ca33927f8f64d83201ec2c2afa4420d409820d2e6d9506d94a3acfb",
+      "distinct_3": 0.9559686888454012,
+      "prompt_index": 27,
+      "repeated_4gram_fraction": 0.0186092066601371,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0027/r1",
+      "response_index": 1,
+      "unique_3grams": 977,
+      "unique_4grams": 1002
+    },
+    {
+      "completion_sha256": "a10052b4d3490208ab9de8b6ea6cd617bfe46a0fe6bd387e8ac8605826a3fcc9",
+      "distinct_3": 0.9569471624266145,
+      "prompt_index": 28,
+      "repeated_4gram_fraction": 0.02350636630754166,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0028/r1",
+      "response_index": 1,
+      "unique_3grams": 978,
+      "unique_4grams": 997
+    },
+    {
+      "completion_sha256": "c05158c0db30222a909b67f5b5353d855688d0d3ce8d36dbc1de74334fb0c423",
+      "distinct_3": 0.9853228962818004,
+      "prompt_index": 29,
+      "repeated_4gram_fraction": 0.009794319294809006,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0029/r1",
+      "response_index": 1,
+      "unique_3grams": 1007,
+      "unique_4grams": 1011
+    },
+    {
+      "completion_sha256": "53663075be6cd660845c3d728e76d10c5e6e7265c2454fc4e6ec55e4f35c4aeb",
+      "distinct_3": 0.9843444227005871,
+      "prompt_index": 30,
+      "repeated_4gram_fraction": 0.004897159647404559,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0030/r1",
+      "response_index": 1,
+      "unique_3grams": 1006,
+      "unique_4grams": 1016
+    },
+    {
+      "completion_sha256": "b066b10d53c78c728d1c737db2da801cd565c22c2539c87ce723e3612bb5de76",
+      "distinct_3": 0.9686888454011742,
+      "prompt_index": 31,
+      "repeated_4gram_fraction": 0.015670910871694366,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0031/r1",
+      "response_index": 1,
+      "unique_3grams": 990,
+      "unique_4grams": 1005
+    },
+    {
+      "completion_sha256": "5ec288f01d20194f98b8a546ff64e10b540fc4c93d012329b80b5df2960d853a",
+      "distinct_3": 0.9892367906066536,
+      "prompt_index": 32,
+      "repeated_4gram_fraction": 0.0019588638589618235,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0032/r1",
+      "response_index": 1,
+      "unique_3grams": 1011,
+      "unique_4grams": 1019
+    },
+    {
+      "completion_sha256": "835ad034000255f59b294410210c0884ebe7366768fc2d8573db6290a5b6369d",
+      "distinct_3": 0.9667318982387475,
+      "prompt_index": 33,
+      "repeated_4gram_fraction": 0.013712047012732653,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0033/r1",
+      "response_index": 1,
+      "unique_3grams": 988,
+      "unique_4grams": 1007
+    },
+    {
+      "completion_sha256": "4d00d3608dc292becce8dbbeb87d23fca0a8a9b595c9861c3d49ff923436715d",
+      "distinct_3": 0.9373776908023483,
+      "prompt_index": 34,
+      "repeated_4gram_fraction": 0.03036238981390793,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0034/r1",
+      "response_index": 1,
+      "unique_3grams": 958,
+      "unique_4grams": 990
+    },
+    {
+      "completion_sha256": "d76f09c4241342b464660e25fab4e48c59c0029c267981b19a8aac6e9bc65d76",
+      "distinct_3": 0.9637964774951077,
+      "prompt_index": 35,
+      "repeated_4gram_fraction": 0.01175318315377083,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0035/r1",
+      "response_index": 1,
+      "unique_3grams": 985,
+      "unique_4grams": 1009
+    },
+    {
+      "completion_sha256": "867ba875e5d84c317feac1127ecc006f5c80a96337be9285d2d114385edd06e9",
+      "distinct_3": 0.949119373776908,
+      "prompt_index": 36,
+      "repeated_4gram_fraction": 0.032321253672869754,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0036/r1",
+      "response_index": 1,
+      "unique_3grams": 970,
+      "unique_4grams": 988
+    },
+    {
+      "completion_sha256": "cd4edb8afe5e084c83b6b864f1814661098f2739952c4f1c833382449ca935a2",
+      "distinct_3": 0.9256360078277887,
+      "prompt_index": 37,
+      "repeated_4gram_fraction": 0.04113614103819785,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0037/r1",
+      "response_index": 1,
+      "unique_3grams": 946,
+      "unique_4grams": 979
+    },
+    {
+      "completion_sha256": "342a812ea16ec635db1e2a1c19c780623e5174a70e5b7d2242b7bfe199e91cb0",
+      "distinct_3": 0.9902152641878669,
+      "prompt_index": 38,
+      "repeated_4gram_fraction": 0.002938295788442735,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0038/r1",
+      "response_index": 1,
+      "unique_3grams": 1012,
+      "unique_4grams": 1018
+    },
+    {
+      "completion_sha256": "f236946429ee9b4615e02f33f74b59d4192f85cb08c938a50a21f8cd6ebb9b4b",
+      "distinct_3": 0.9843444227005871,
+      "prompt_index": 39,
+      "repeated_4gram_fraction": 0.003917727717923647,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0039/r1",
+      "response_index": 1,
+      "unique_3grams": 1006,
+      "unique_4grams": 1017
+    },
+    {
+      "completion_sha256": "7a9ccdf4bee53c910872c43229a6499b5d094dd992f49e0879b48941be55fe7d",
+      "distinct_3": 0.8825831702544031,
+      "prompt_index": 40,
+      "repeated_4gram_fraction": 0.09500489715964744,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0040/r1",
+      "response_index": 1,
+      "unique_3grams": 902,
+      "unique_4grams": 924
+    },
+    {
+      "completion_sha256": "857726d066cf6684933f8194ef01def66698585ca37c8fbc304209231593091c",
+      "distinct_3": 0.9579256360078278,
+      "prompt_index": 41,
+      "repeated_4gram_fraction": 0.012732615083251742,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0041/r1",
+      "response_index": 1,
+      "unique_3grams": 979,
+      "unique_4grams": 1008
+    },
+    {
+      "completion_sha256": "2b2c4d8eb85005da521d224e7190a7e00f1b1251663d78614a3430d4d26a7498",
+      "distinct_3": 0.9863013698630136,
+      "prompt_index": 42,
+      "repeated_4gram_fraction": 0.005876591576885359,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0042/r1",
+      "response_index": 1,
+      "unique_3grams": 1008,
+      "unique_4grams": 1015
+    },
+    {
+      "completion_sha256": "88097f415dd6ccae0adba474eaa7d3ec78721e1f352e4f27912c181553fb3373",
+      "distinct_3": 0.9706457925636007,
+      "prompt_index": 43,
+      "repeated_4gram_fraction": 0.008814887365328095,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0043/r1",
+      "response_index": 1,
+      "unique_3grams": 992,
+      "unique_4grams": 1012
+    },
+    {
+      "completion_sha256": "9d7c21a6c4ce810f6a850a2ff32039913da280f2f7c5a8dcd93666adc421a962",
+      "distinct_3": 0.9735812133072407,
+      "prompt_index": 44,
+      "repeated_4gram_fraction": 0.008814887365328095,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0044/r1",
+      "response_index": 1,
+      "unique_3grams": 995,
+      "unique_4grams": 1012
+    },
+    {
+      "completion_sha256": "596a060e489d433288687a265ba4dcdeb98a69b239105c2444193d88f34f2b5d",
+      "distinct_3": 0.7671232876712328,
+      "prompt_index": 45,
+      "repeated_4gram_fraction": 0.21743388834476007,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0045/r1",
+      "response_index": 1,
+      "unique_3grams": 784,
+      "unique_4grams": 799
+    },
+    {
+      "completion_sha256": "9017a921d54b898e4b353f52f18c8fe4efb9662830fd7e65ed8b2e5bf5fb2c29",
+      "distinct_3": 0.8454011741682974,
+      "prompt_index": 46,
+      "repeated_4gram_fraction": 0.09108716944172379,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0046/r1",
+      "response_index": 1,
+      "unique_3grams": 864,
+      "unique_4grams": 928
+    },
+    {
+      "completion_sha256": "f94aef6bda837f9b9042cf507962969d2747f0df45d9f409c4c91195744fb219",
+      "distinct_3": 0.9686888454011742,
+      "prompt_index": 47,
+      "repeated_4gram_fraction": 0.012732615083251742,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0047/r1",
+      "response_index": 1,
+      "unique_3grams": 990,
+      "unique_4grams": 1008
+    },
+    {
+      "completion_sha256": "68077bf2d733381d70c4e6508c72c3c421e87e936b26ee628f5008bd7d5f4aea",
+      "distinct_3": 0.9814090019569471,
+      "prompt_index": 48,
+      "repeated_4gram_fraction": 0.007835455435847183,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0048/r1",
+      "response_index": 1,
+      "unique_3grams": 1003,
+      "unique_4grams": 1013
+    },
+    {
+      "completion_sha256": "3273b36aea13f8ebdcf590ff5cb98b8d1e0d46e0f52932be102f9ddf8f5161cf",
+      "distinct_3": 0.9657534246575342,
+      "prompt_index": 49,
+      "repeated_4gram_fraction": 0.009794319294809006,
+      "response_id": "7abb578bef0f8c66605a91dcacae055c9c173bf50f5915cef0023ad88aabe2c6/p0049/r1",
+      "response_index": 1,
+      "unique_3grams": 987,
+      "unique_4grams": 1011
+    }
+  ],
+  "responses": 100,
+  "setting": "synthid_depth30",
+  "sources": [
+    {
+      "path": "outputs/self_bleu_depth/depth2_30_v1/raw/batches/depth30_r0.json",
+      "sha256": "30df8400f77d58503b5cdc06d35601199de3d761fb25fc1be03c2f86b8126d60"
+    },
+    {
+      "path": "outputs/self_bleu_depth/depth2_30_v1/raw/batches/depth30_r1.json",
+      "sha256": "0d5204513346e7148166fe76c1d4e097a49ea25a013a86c1ed12115456418692"
+    }
+  ],
+  "table_cells": {
+    "distinct_3": "0.9589",
+    "repeated_4grams_percent": "2.30"
+  },
+  "tokens": 1024
+}
