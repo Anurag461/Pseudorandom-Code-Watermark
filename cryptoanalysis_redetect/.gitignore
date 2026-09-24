@@ -1,0 +1,7 @@
+__pycache__/
+data/
+cache/
+results/
+evidence/inventory.json
+evidence/selected_groups.json
+evidence/billing_*.json
