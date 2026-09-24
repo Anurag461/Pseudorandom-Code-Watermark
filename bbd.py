@@ -477,3 +477,97 @@ def launch_bbd(schemes=",".join(SCHEMES), reps="0"):
     call = modal.Function.from_name("prc-bbd", "orchestrate_bbd").spawn(schemes.split(","),
                                                                       [int(r) for r in reps.split(",")])
     print("spawned", call.object_id)
+
+
+# ================================================================ analysis (local)
+
+BBD_CSV = "outputs/attacks/bbd_results.csv"
+
+
+def rg_statistic(L):
+    """Released code's statistic on a (prefix x digit) logit matrix for the chosen fruit."""
+    import numpy as np
+    median = np.median(L, axis=1)
+    std = np.median(np.std(L, axis=0))
+    red = L.T - median < -1.96 * std
+    green = L.T - median > 1.96 * std
+    red_score, green_score = red.sum(axis=1), green.sum(axis=1)
+    return max(red_score.max(), green_score.max()) - max(red_score.min(), green_score.min())
+
+
+def rg_pvalue(counts, permutations=10_000, seed=0):
+    """counts: (prefix, digit, fruit). Add-one smoothing over 100 draws, logits, cell-permutation test."""
+    import numpy as np
+    counts = np.asarray(counts, dtype=float)
+    probs = (counts + 1) / (RG_VALID + counts.shape[-1])
+    logits = np.log(probs / (1 - probs))
+    chosen = int(np.argmax(logits.sum(axis=(0, 1))))
+    observed = rg_statistic(logits[:, :, chosen])
+    rng = np.random.default_rng(seed)
+    flat = logits.reshape(-1, logits.shape[-1])
+    null = np.array([rg_statistic(rng.permutation(flat).reshape(logits.shape)[:, :, chosen])
+                     for _ in range(permutations)])
+    return float(np.mean(null >= observed)), int(observed), float(probs.mean(axis=(0, 1)).max())
+
+
+def fs_pvalue(digests, trials=500, seed=0):
+    """Rarefaction curve averaged over shuffles vs the all-unique line (Mann-Whitney U, as released)."""
+    import numpy as np
+    from scipy import stats
+    rng = np.random.default_rng(seed)
+    ids = np.unique(digests, return_inverse=True)[1]
+    curve = np.zeros(len(ids))
+    for _ in range(trials):
+        seen, order = set(), rng.permutation(ids)
+        for i, x in enumerate(order):
+            seen.add(int(x))
+            curve[i] += len(seen)
+    curve /= trials
+    return float(stats.mannwhitneyu(curve, np.arange(len(curve))).pvalue), int(len(set(digests)))
+
+
+@app.local_entrypoint()
+def analyze():
+    """Download the counts from this workspace's prc-attacks volume and write BBD_CSV."""
+    import csv
+    import subprocess
+    import tempfile
+    local = Path(tempfile.mkdtemp())
+    subprocess.run(["modal", "volume", "get", "prc-attacks", OUT, str(local)], check=True, capture_output=True)
+    root = local / OUT
+    rows = []
+    for scheme_dir in sorted((root / "rg").glob("*")):
+        for rep_dir in sorted(scheme_dir.glob("rep*")):
+            if rep_dir.name == "rep99":  # smoke test
+                continue
+            per_h = {}
+            for h_dir in sorted(rep_dir.glob("H*")):
+                files = {json.loads(f.read_text())["prefix"]: json.loads(f.read_text()) for f in h_dir.glob("*.json")}
+                if set(files) != set(PREFIXES):
+                    print(f"incomplete {scheme_dir.name} {rep_dir.name} {h_dir.name}: {len(files)}/10 rows")
+                    continue
+                counts = [[files[p]["cells"][str(d)]["counts"] for d in range(1, 10)] for p in PREFIXES]
+                drawn = sum(c["drawn"] for f in files.values() for c in f["cells"].values())
+                p, stat, top = rg_pvalue(counts)
+                per_h[h_dir.name] = p
+                rows.append({"scheme": scheme_dir.name, "test": "red-green", "setting": h_dir.name,
+                             "rep": rep_dir.name, "p": p, "statistic": stat,
+                             "detail": f"top fruit share {top:.2f}; parse rate {90 * RG_VALID / drawn:.1%}"})
+            if len(per_h) == len(RG_HS):
+                rows.append({"scheme": scheme_dir.name, "test": "red-green", "setting": "Bonferroni H=4,5",
+                             "rep": rep_dir.name, "p": min(1.0, len(per_h) * min(per_h.values())),
+                             "statistic": "", "detail": ""})
+    for scheme_dir in sorted((root / "fs").glob("*")):
+        for f in sorted(scheme_dir.glob("rep*.json")):
+            data = json.loads(f.read_text())
+            p, unique = fs_pvalue(data["digests"])
+            rows.append({"scheme": scheme_dir.name, "test": "fixed-sampling", "setting": f"{FS_N} x {FS_MAX_NEW} tok",
+                         "rep": f.stem, "p": p, "statistic": unique, "detail": f"{unique}/{data['n']} unique"})
+    path = Path(BBD_CSV)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+    for r in rows:
+        print(f"{r['scheme']:8s} {r['test']:15s} {r['setting']:18s} {r['rep']:5s} p={r['p']:.3g}  {r['detail']}")
