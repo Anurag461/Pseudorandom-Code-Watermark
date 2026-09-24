@@ -114,103 +114,43 @@ cluster resampling and tied AUC. The source and checkpoint checks have since pas
 its GPU prefix check failed. The full experiment subsequently completed using the
 separately passed cache/FP32 controls; the generated figures were visually checked.
 
-## Exact run commands
+## Run commands and approvals
 
-The completed run used the explicitly quoted `experiment` package in
-[NEXT_RUN.md](NEXT_RUN.md). Its approval must enumerate preparation, all five GPU
-workers, and scoring; this avoids pauses between already approved component runs.
-The individual-stage commands below remain available for separately requested work.
+The completed experiment used one preparation call, five H100 workers (batch 80),
+and one CPU scoring call. Its exact command, source commit, cache location,
+measured runtime and cost estimate are in the
+[final report](evidence/experiment-20260924/README.md#execution-and-costs).
 
-## Individual-stage commands
-
-The entry point checks approval **before importing Modal or starting a build**.
-It requires this branch, committed code pushed to `origin/cryptoanalysis-redetection`,
-the frozen code fingerprint, an exact quote hash, recent billing review and an
-unused approval identity. A failed launch consumes that approval; retries require
-a new explicit approval. `cloud.py` is an implementation module, not a supported
-direct-launch entry point.
+For any new paid run, first refresh billing and obtain a workload/cost quote:
 
 ```bash
 export MODAL_PROFILE=new-prc-watermark
+modal billing report --start 2026-09-24 --resolution h --show-resources --json
+python -m wang_prc_detector_ablation.launch quote --stage experiment
 
-# Free/read-only: refresh billing and print the exact next-stage quote.
-modal billing report --start 2026-09-22 --resolution h --show-resources --json
-python -m wang_prc_detector_ablation.launch quote --stage sanity
-
-# Only after the user approves THIS quoted package and an approval record exists:
-python -m wang_prc_detector_ablation.launch launch --stage sanity \
-  --approval wang_prc_detector_ablation/approvals/sanity.json
-
-# Each subsequent command requires its OWN prior quote, budget review and approval.
-python -m wang_prc_detector_ablation.launch quote --stage prepare
-python -m wang_prc_detector_ablation.launch launch --stage prepare \
-  --approval wang_prc_detector_ablation/approvals/prepare.json
-python -m wang_prc_detector_ablation.launch quote --stage production
-python -m wang_prc_detector_ablation.launch launch --stage production \
-  --approval wang_prc_detector_ablation/approvals/production.json
-python -m wang_prc_detector_ablation.launch quote --stage score
-python -m wang_prc_detector_ablation.launch launch --stage score \
-  --approval wang_prc_detector_ablation/approvals/score.json
-
-# If explicitly included in the score-stage approval:
-python -m wang_prc_detector_ablation.launch launch --stage score \
-  --oracle-prompt-context --approval wang_prc_detector_ablation/approvals/score-oracle.json
+# Only after explicit approval of the quoted workload and current budget:
+python -m wang_prc_detector_ablation.launch launch --stage experiment \
+  --approval wang_prc_detector_ablation/approvals/new-experiment.json
 ```
 
-An approval record needs `approved`, the actual `user_approval_text`, unique
-`run_id`, `stage`, `fingerprint`, `git_commit`, `profile`, `quote_sha256` (the
-canonical `config.digest_json(quote)`), `max_estimated_usd`, `billing_review`, and
-`oracle_prompt_context`. Production also needs `sanity_status: "passed"` or
-`"skipped_cost_over_5"`; the latter requires the actual
-`skipped_sanity_quote_usd > 5`. Recording a skipped check never records a pass.
-Populate these only after the corresponding user instruction. Approval records
-are ignored by Git and copied into the run ledger.
+`launch.py` checks approval before importing Modal or starting a build. It requires
+committed code pushed to `origin/cryptoanalysis-redetection`, an exact quote hash,
+a recent billing review and an unused approval identity. A failed launch consumes
+that approval; retries and additional stages require new approval. The quote's
+$35 scenario is the historical budget assumption, not a current balance.
+Operational billing records are not inputs to the experiment's scientific results.
 
-The first sanity package uses a 4-core/16-GiB CPU worker to compare the original
-hard detector with the adapter on all ten complete DeepSeek T=1.8 files × 16
-outputs. It checks original printed violation counts, individual decisions and
-saved aggregate successes. The GPU portion uses **one H100, 4 CPU cores, 64 GiB
-host RAM**, loads the existing Base checkpoint once, and runs one full-size key,
-two prompts, T=1.0 and 1.8, batch 2: four WM + four null 64-token completions.
-That is 512 generated tokens, 504 completion-only replay positions, and two
-bounded prefix comparisons (cached positions 1–16 and uncached lengths 1,4,8,16).
-It verifies saved random variates/probabilities reproduce all branches and captures
-every replay input. BF16 prefix checks record logit error and probability total
-variation, requiring TV≤.02. These short sequences do not estimate detector TPR
-or establish batch-80 throughput.
+Approval records are local and ignored by Git. Required fields are `approved`,
+`user_approval_text`, unique `run_id`, `stage`, `fingerprint`, `git_commit`,
+`profile`, `quote_sha256`, `max_estimated_usd`, `billing_review`, and
+`oracle_prompt_context`. The `experiment` package also requires the disclosed
+`validation_policy` and complete `included_sequence` from the quote. Populate
+these only after approval of that exact workload. `cloud.py` is not a supported
+direct-launch entry point.
 
-Expected sanity wall time is **10–25 minutes including startup**, at **$0.50–$1.50**.
-CPU/GPU function timeouts are 600/900 seconds; their base-rate resource envelope
-is about $1.22, excluding image/startup/storage. The estimate reserves additional
-startup/build allowance but is not a provider-enforced dollar cap. **If the concrete
-sanity quote exceeds $5, skip it as requested.** No replacement benchmark or paid
-retry runs automatically. A failed correctness check stops scaling.
-
-Preparation creates the full key/codeword inventory on 4 CPU cores/16 GiB.
-Production uses up to five H100s, one per temperature, each 4 cores/64 GiB, batch
-80: two WM and two null generation batches, each followed by completion-only replay.
-Completed batches are committed to the volume. A worker stops after saving its
-current batch if its projected total exceeds 3300 seconds; a failure cancels
-the other calls. Hardware, counts and batch size are never silently changed.
-Score/report runs on 8 CPU cores/16 GiB, with cross-key scoring in 16-text chunks.
-All functions have zero retries and use single-use containers.
-
-Planning allowance remains **roughly $12–$25 and 1–2 hours of cloud execution**
-for the experiment, subject to the first real batches. The per-stage quotes are
-estimates, not additive hard spending guarantees. H100 with 4 cores/64 GiB is
-about $4.65/hour at [Modal's September 23 base rates](https://modal.com/pricing).
-No premium region or non-preemptible option is selected. Stored data is expected
-to be about 1–2 GiB; storage is separate ($0.09/GiB/month above the included tier).
-Review costs and approvals between stages; stop if the remaining budget does not fit.
-
-The last user-stated remaining budget is $35. `billing_review.json` records the
-read-only refresh: $130.36659562 gross usage across other apps since September 22,
-latest returned hour September 23 12:00 UTC. It is not a remaining balance and
-may omit later charges. This snapshot predates the first sanity attempt; its recorded CPU/GPU runtime
-estimate is now **$0.1439**, with final billing pending. For the original quote,
-if $35 is still available,
-the proposed sanity package leaves $33.50–$34.50; do not infer current credit balance
-from this usage report.
+The initial sanity package is skipped if its concrete quote exceeds $5; skipping
+does not record a pass. Numerical limitations of the completed run remain in the
+validation summaries. No additional paid work is scheduled.
 
 ## Outputs and reruns
 
@@ -258,4 +198,7 @@ Do not import `vendor/main.py`: it contains the original model-loading script.
 The adapter uses explicitly seeded random streams with the same distribution;
 it cannot reproduce unrecorded historical random draws. The short source check
 validates conventions on the complete T=1.8 archive, not the incomplete Figure 5
-sweep. See [PLAN.md](PLAN.md) and the authoritative [CURRENT_REQUEST.md](CURRENT_REQUEST.md).
+sweep. The implemented design is documented above and in the
+[final report](evidence/experiment-20260924/README.md). Superseded requests,
+planning documents and verbose operational records are omitted from the PR;
+historical copies remain in commit `a991c67`.

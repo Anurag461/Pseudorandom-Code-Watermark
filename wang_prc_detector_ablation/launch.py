@@ -69,12 +69,8 @@ def quote(stage):
         result['validation'] = evidence()
         result['included_sequence'] = ['prepare', 'production x5', 'score']
         result['automatic_next_stage'] = 'Only the seven calls explicitly included in this package'
-        billing = json.loads((HERE / 'evidence/experiment-20260924/billing_review.json').read_text())
-        remaining = 35 - billing['experiment_provider_cost_usd']
-        result.update(prior_experiment_spend_usd=billing['experiment_provider_cost_usd'],
-                      remaining_experiment_budget_usd=remaining,
-                      budget_after_estimate_usd=[remaining-spec['estimate'][1],remaining-spec['estimate'][0]],
-                      budget_scope='This experiment; unrelated concurrent projects billed separately')
+        # Historical billing is not a reusable budget. The quote above leaves the
+        # balance unreconciled; every new approval must include a fresh review.
     return result
 
 

@@ -3,3 +3,16 @@ __pycache__/
 local_runs/
 approvals/
 downloaded_results/
+billing_*.json
+evidence/**/billing_*.json
+evidence/**/approval.json
+evidence/**/quote.json
+evidence/**/launch.json
+evidence/**/*_ledger.json
+evidence/**/timing_*.json
+evidence/**/scoring_timing.json
+evidence/**/*container*.json
+evidence/**/download_manifest.json
+evidence/**/failure.log
+evidence/**/sanity-*-quote.json
+evidence/**/sanity-20260923.json

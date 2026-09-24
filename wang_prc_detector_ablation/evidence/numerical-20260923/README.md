@@ -28,7 +28,7 @@ proof of its detailed cause. See the official
 The experiment itself ran pinned PyTorch 2.4.0; the linked current documentation
 is background, not a claim that it ran under PyTorch 2.14.
 
-## Scope and cost
+## Scope
 
 The user approved this one diagnostic with “go ahead” after the $0.25–$0.75 quote.
 It ran from pushed commit `eaaccdb3a37d151fbe864dde8d6af4dd939d88ed` in app
@@ -40,27 +40,14 @@ One H100, four CPU cores, 64 GiB host RAM, batch 1; prefix lengths 1/4/8/16 from
 the FP32 reference. **No new text was generated.** The production model precision
 and detector definitions were not changed.
 
-GPU function time: **102.73 seconds**, or **0.02854 GPU-hours**. Runtime-based
-resource estimate: **$0.1327**, excluding unmeasured startup/build/teardown/storage.
-Provider billing for this diagnostic has not posted. The earlier sanity attempt
-has now posted at **$0.14605021** including its reported H100/CPU/memory charges.
-Known first-attempt cost plus this runtime estimate is approximately **$0.279**;
-this is a mixture of billed and estimated costs, not a final combined bill.
-See `billing_reconciliation.json` for the actual returned provider rows.
+## Interpretation for the completed experiment
 
-## What remains
+The original 2% BF16 smoke check remains failed, with its tolerance unchanged.
+The completed [full experiment](../experiment-20260924/README.md) kept BF16
+and used these static/concat and FP32 controls, while retaining cached/uncached
+drift as a limitation. The user approved proceeding without an additional short
+T=1.8 smoke. These controls do not establish batch-80 or long-context equivalence.
 
-The original 2% BF16 smoke check is **still recorded as failed**, with its
-tolerance unchanged. The remaining T=1.8 smoke and the full experiment have
-not run. This diagnostic does not automatically authorize or unblock production.
-
-Recommendation for review: keep the requested BF16 generation/replay stack,
-use direct static/concat equality and an FP32 reference as the cache-correctness
-controls, and retain BF16 cached/uncached drift as an explicit numerical diagnostic.
-This would be a documented change to validation policy, not a claim that the old
-2% check passed or that numerical differences cannot affect posterior scores.
-Complete the remaining short smoke before proposing production, with a new
-workload/cost quote and approval. No additional paid run is prepared as approved.
-
-Raw result and provenance: `numerical_diagnostic.json`, `run_ledger.json`,
-`approval.json`, `quote.json`. Compact metrics: `prefix_comparison.csv`, `report.json`.
+Scientific evidence: [numerical_diagnostic.json](numerical_diagnostic.json),
+[prefix_comparison.csv](prefix_comparison.csv), and [report.json](report.json).
+Historical quotes, approval records and billing ledgers are omitted from the PR.

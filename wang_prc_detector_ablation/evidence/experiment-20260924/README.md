@@ -164,7 +164,7 @@ paper's security attacks. Text quality and attack resistance were not evaluated.
 - [Mechanism diagnostics](mechanism_summary.csv)
 
 All 35 output files (114498926 bytes) were downloaded with size checks and SHA-256
-transfer records in `download_manifest.json`. The full 205600-row per-example
+transfer verification. The full 205600-row per-example
 CSV and cached null-score arrays are in the ignored local directory
 `wang_prc_detector_ablation/downloaded_results/5825fb18b52e035dfb352bae/`.
 The complete trace/key/codeword cache remains in the cloud location below.
@@ -173,7 +173,7 @@ The run took **41.28 minutes** end to end; CPU scoring took **27.15 minutes**.
 Runtime-derived cost is **about $4.48**, or **$4.77** including earlier checks.
 Approximately **$30.23** remains from the $35 experiment budget.
 Provider billing has not posted for this app; these are labeled estimates based
-on measured runtimes, not a final invoice. See `billing_reconciliation.json`.
+on measured runtimes, not a final invoice, as recorded at run completion.
 
 ## Experiment
 
@@ -232,8 +232,7 @@ Modal app: `ap-JL2Co4bAS6fq92w1TTRCyF`.
 Configuration: `5825fb18b52e035dfb352bae`.
 Cloud cache: `prc-data:wang_prc_detector_ablation/qwen3_8b_base/5825fb18b52e035dfb352bae`.
 
-See `approval.json`, `quote.json`, `launch.json`, per-temperature `timing_*.json`
-and `gpu_containers.json`. The seven approved calls were one 4-core/16-GiB CPU
+The seven approved calls were one 4-core/16-GiB CPU
 preparation, five H100 workers (4 cores/64 GiB host RAM each; batch 80), and one
 8-core/16-GiB CPU scoring/reporting call. No retry or additional compute run.
 
@@ -248,4 +247,7 @@ python -m wang_prc_detector_ablation.launch launch --stage experiment \
 Full paid-run quote: $12–$25. Preparation took 145.05 seconds. The five completed
 GPU allocations total 3284.82 seconds (54.75 GPU-minutes, 0.91245 GPU-hours),
 corresponding to approximately $4.242 including allocated CPU/RAM at quoted rates.
-Final CPU timings and the pending provider-billing reconciliation are attached. The run has stopped; no further work is scheduled.
+The run has stopped; no further work is scheduled. Verbose operational records
+and historical planning documents are omitted from the PR; the committed results,
+frozen thresholds, and validation evidence remain available. Historical records
+can be recovered from commit `a991c67` without rerunning the experiment.
