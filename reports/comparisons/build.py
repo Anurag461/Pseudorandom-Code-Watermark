@@ -293,7 +293,7 @@ def report(data,rows,contrasts,nulls):
  para('The original native view has SynthID fallback ON and TextSeal/Gumbel OFF. The matched-on view enables fallback for every contextual baseline; PRC is position based and unchanged, and ordinary sampling is unchanged. Native context initialization and RNG conventions are retained, so this matches the fallback rule, not every implementation detail. The same PRC, ordinary and native SynthID responses appear in both views and count only once.')
  for n in [1024,400]:
   selected=[lookup['8b_full',s,n] for s in ORDER if s!='synthid_off']
-  table(f'05_8b_full_{n}',f'Original 8B full-vocabulary paired comparison at {n:,} tokens, T=1',['Setting / fallback','Self-BLEU [95% CI]','Detected /100','Repeated 4-grams (%)','Distinct-3 (%)'],[[NAMES[r['setting']],fmt(r['metrics']['self_bleu']),r['detected'] if r['detected'] is not None else '--',f"{r['metrics']['repeated_4gram_fraction']['mean']*100:.2f}" if 'repeated_4gram_fraction' in r['metrics'] else 'NR',f"{r['metrics']['distinct_3']['mean']*100:.2f}" if 'distinct_3' in r['metrics'] else 'NR'] for r in selected],NOTE+' NR: metric not reported for depth 30 in the saved summaries; no value is imputed. Native SynthID fallback is ON.')
+  table(f'05_8b_full_{n}',f'Original 8B full-vocabulary paired comparison at {n:,} tokens, T=1',['Setting / fallback','Self-BLEU [95% CI]','Detected /100','Repeated 4-grams (%)','Distinct-3 (%)'],[[NAMES[r['setting']],fmt(r['metrics']['self_bleu']),r['detected'] if r['detected'] is not None else '--',f"{r['metrics']['repeated_4gram_fraction']['mean']*100:.2f}" if 'repeated_4gram_fraction' in r['metrics'] else 'NR',f"{r['metrics']['distinct_3']['mean']*100:.2f}" if 'distinct_3' in r['metrics'] else 'NR'] for r in selected],NOTE+(' Depth-30 repetition metrics are point estimates from the same 100 saved responses; no new intervals were calculated.' if n==1024 else ' NR: depth-30 repetition metrics are not reported at 400 tokens; no value is imputed.')+' Native SynthID fallback is ON.')
   cs=[r for r in contrasts if r['regime']=='8b_full' and r['left']=='prc' and r['length']==n and r['right']!='null']
   table(f'06_8b_contrasts_{n}',f'Direct paired PRC-minus-baseline differences at {n:,} tokens',['Baseline','Self-BLEU difference [95% CI]','Detection difference (pp) [95% CI]'],[[NAMES[r['right']],delta(r['metrics']['self_bleu']),delta(r['metrics']['tpr'],100,1)] for r in cs],NOTE+' Negative Self-BLEU favors PRC; positive detection difference favors PRC. Fallback labels identify separately generated arms.')
  fig('02_matched_policy_tradeoff','8B T=1 comparison with fallback ON for all contextual baselines, at 400 and 1,024 tokens. Points and error bars show means and marginal 95% prompt-bootstrap intervals. Ordinary Self-BLEU is a gray vertical mean/band because ordinary text has no watermarked TPR. The logarithmic Self-BLEU axis retains Gumbel without hiding the near-ordinary settings. This is a set of tested configurations, not a fitted frontier or equal-FPR comparison.')
@@ -399,7 +399,7 @@ def exports(rows,contrasts,nulls,checks):
  flattened=[]
  for r in rows:
   for metric,value in r['metrics'].items():
-   flattened.append({k:r[k] for k in ['regime','setting','length','prompts','responses','detected']}|dict(metric=metric,mean=value['mean'],ci95_low=value['ci95'][0],ci95_high=value['ci95'][1],source=';'.join(r['sources'])))
+   flattened.append({k:r[k] for k in ['regime','setting','length','prompts','responses','detected']}|dict(metric=metric,mean=value['mean'],ci95_low=(value.get('ci95') or [None,None])[0],ci95_high=(value.get('ci95') or [None,None])[1],source=';'.join(r['sources'])))
  with (OUT/'data/absolute_results.csv').open('w',newline='') as f:
   w=csv.DictWriter(f,fieldnames=list(flattened[0]),lineterminator="\n");w.writeheader();w.writerows(flattened)
  flat=[]
@@ -420,7 +420,7 @@ def write_documents():
  lines += [r'\end{document}'];(OUT/'paper_assets.tex').write_text('\n'.join(lines)+'\n')
  catalog=['# Paper assets and reproduction','', 'The campaign is closed. This package is generated offline from saved results.','', '- [Concise comparison report](REPORT.md): principal findings, essential tables and methodological limitations.','- [Detailed results PDF](comparison_report.pdf): the complete September 19 results and diagnostics, retained as supporting material.','- [LaTeX assembly](paper_assets.tex): figure/table fragments can also be included independently.','- `figures/`: vector PDF/SVG and 300-dpi PNG exports.','- `tables/`: matching LaTeX fragments and human-readable CSVs.','- `data/`: full-precision normalized values, all paired contrasts, source hashes and checks.','','REPORT.md is maintained separately. The asset builder preserves it and regenerates only the detailed supporting material.','','## Figure catalogue','']
  for i,r in enumerate(FIGURES,1):catalog += [f"{i}. **{r['name']}**: {r['caption']}",'']
- catalog += ['## Table catalogue','']
+ catalog += ['## Table catalogue','', '- [Repeat fallback on/off at 1,024 tokens](tables/repeat_fallback_1024.pdf): revised paper table, including depth-30 repetition metrics; [LaTeX](tables/repeat_fallback_1024.tex).','']
  for t in TABLES:catalog += [f"- [{t['name']}](tables/{t['name']}.tex): {t['caption']}"]
  catalog += ['', 'Use figures 01-03 and the 500-prompt/matched-policy tables for the central comparison; the remaining figures document interventions and sensitivity. Keep the cohort/mask/precision captions when moving assets into a manuscript. Figure numbering in this package is an asset identifier, not a proposed final manuscript numbering.','','## Offline build','', '```sh','MPLCONFIGDIR=/tmp/prc-comparison-matplotlib python reports/comparisons/build.py','python reports/comparisons/build.py --pdf','```','','First command: Python, NumPy and Matplotlib. Second: ReportLab. It reads only saved aggregate data; there are no Modal imports or dispatch calls. Rebuild from the repository root. Run the two commands in environments providing those dependencies. The numerical tables are not rounded until formatting; CSV data exports retain full precision.','','Every cited source is hashed in `data/source_manifest.json`. Repeated source cells and contrast means are checked. PDFs are rendered and visually inspected before delivery. Source reports remain untouched; historical prompted/proxy results are excluded from paper-ready numerical panels.','','The export archive contains this entire report package, without raw completions, keys or model traces. It is built after visual verification.']
  (OUT/'README.md').write_text('\n'.join(catalog)+'\n')
@@ -479,12 +479,12 @@ def render_pdf():
 
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--pdf',action='store_true');args=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--pdf',action='store_true');p.add_argument('--reuse-figures',action='store_true',help='Reuse existing figures when updating tables from saved aggregates');args=p.parse_args()
  if args.pdf:render_pdf();return
  for folder in ['data','figures','tables']:(OUT/folder).mkdir(parents=True,exist_ok=True)
  data={k:read(k) for k in FILES};save(OUT/'data/historical_detection.json',data['large']);save(OUT/'data/historical_repetition.json',data['large_repetition']);rows,contrasts,nulls,checks=normalize(data)
  verification=exports(rows,contrasts,nulls,checks)
- figures(data,rows,contrasts)
+ if not args.reuse_figures:figures(data,rows,contrasts)
  report(data,rows,contrasts,nulls)
  heading('Appendix: all saved direct paired contrasts')
  para('This appendix retains ordinary-control, depth-to-depth and PRC-to-baseline contrasts, including unfavorable and inconclusive results. A dash denotes an unavailable or inapplicable metric; no metric is imputed. Percentage-point units apply only to detection/repetition/distinct-3. All differences are left minus right. The complete full-precision records accompany the formatted tables.')

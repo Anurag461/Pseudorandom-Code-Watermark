@@ -412,7 +412,7 @@
       "Distinct-3 (%)"
     ],
     "name": "05_8b_full_1024",
-    "note": "Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. NR: metric not reported for depth 30 in the saved summaries; no value is imputed. Native SynthID fallback is ON.",
+    "note": "Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. Depth-30 repetition metrics are point estimates from the same 100 saved responses; no new intervals were calculated. Native SynthID fallback is ON.",
     "rows": [
       [
         "Ordinary",
@@ -446,8 +446,8 @@
         "SynthID d=30",
         "0.02890 [0.02412, 0.03392]",
         "100",
-        "NR",
-        "NR"
+        "2.30",
+        "95.89"
       ],
       [
         "TextSeal a=.1 (off)",
@@ -538,7 +538,7 @@
       "Distinct-3 (%)"
     ],
     "name": "05_8b_full_400",
-    "note": "Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. NR: metric not reported for depth 30 in the saved summaries; no value is imputed. Native SynthID fallback is ON.",
+    "note": "Self-BLEU is on a 0-1 scale. Intervals: 2,000 paired resamples of 50 prompts, retaining both seeds and all arms; marginal 95% percentile intervals. Detection uses nominal p<.001, without empirical FPR matching. Repetition is measured within responses; Self-BLEU is measured between responses. NR: depth-30 repetition metrics are not reported at 400 tokens; no value is imputed. Native SynthID fallback is ON.",
     "rows": [
       [
         "Ordinary",

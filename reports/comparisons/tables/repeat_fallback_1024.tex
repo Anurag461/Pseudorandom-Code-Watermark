@@ -1,0 +1,67 @@
+% Requires \usepackage{booktabs}
+\begin{table*}[t]
+\centering
+\small
+\caption{\textbf{Detection, repetition within responses, and diversity
+between responses.} Each method generates two 1,024-token responses
+for each of 50 prompts using Qwen3-8B-Base at temperature 1 with the
+full vocabulary. Self-BLEU measures average overlap in wording between
+the two responses to each prompt; lower values indicate greater
+between-response diversity. Repeated 4-grams is the percentage of
+contiguous four-token sequences that have already appeared earlier in
+the same response, counting every occurrence after the first.
+Distinct-3 is the number of distinct contiguous three-token sequences
+divided by the total number of three-token sequences in a response;
+higher values indicate less repetition. Both metrics include
+overlapping sequences and are averaged over the 100 responses.
+TPR is the percentage of watermarked responses detected. Each detector
+uses only the generated response and targets a false-positive rate of
+$0.1\%$. With repeat fallback on, SynthID, TextSeal, and Gumbel-Max
+use unwatermarked sampling at positions where the watermarking context
+repeats within a response. With it off, they continue applying the
+watermarking rule at those positions. Settings for the PRC watermark:
+online generation, $\eta=0.05$, check weight $t=3$,
+row rate $99/100$, and posterior-mean/Hoeffding detection.}
+\label{tab:matched-selfbleu-levels}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc@{}}
+\toprule
+Method
+& TPR (\%) $\uparrow$
+& Self-BLEU $\downarrow$
+& Repeated 4-grams (\%) $\downarrow$
+& Distinct-3 $\uparrow$ \\
+\midrule
+
+Unwatermarked
+& -- & 0.01928 & 2.92 & 0.9514 \\
+PRC (ours)
+& 97 & 0.01890 & 2.38 & 0.9561 \\
+
+\midrule
+\multicolumn{5}{l}{\textbf{Repeat fallback on}} \\
+SynthID depth 2
+& 100 & 0.01987 & 3.28 & 0.9462 \\
+SynthID depth 10
+& 100 & 0.02206 & 2.42 & 0.9554 \\
+SynthID depth 30
+& 100 & 0.02890 & 2.30 & 0.9589 \\
+TextSeal $\alpha=.1$
+& 100 & 0.04727 & 2.74 & 0.9464 \\
+Gumbel-Max
+& 100 & 0.20718 & 2.81 & 0.9456 \\
+
+\midrule
+\multicolumn{5}{l}{\textbf{Repeat fallback off}} \\
+SynthID depth 10
+& 100 & 0.02138 & 9.35 & 0.8880 \\
+TextSeal $\alpha=.1$
+& 100 & 0.03770 & 32.17 & 0.6603 \\
+Gumbel-Max
+& 100 & 1.00000 & 51.73 & 0.4720 \\
+
+\bottomrule
+\end{tabular*}
+\end{table*}

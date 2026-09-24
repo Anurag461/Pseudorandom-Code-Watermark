@@ -71,6 +71,8 @@ regime,setting,length,prompts,responses,detected,metric,mean,ci95_low,ci95_high,
 8b_full,synthid_depth2,1024,50,100,100,repeated_4gram_fraction,0.032761998041136144,0.02323139079333987,0.043869245837414306,outputs/self_bleu_depth/depth2_30_v1/summary.json;outputs/self_bleu_temperature/t07_v1/summary.json
 8b_full,synthid_depth30,400,50,100,100,self_bleu,0.033036372327073446,0.026883143452963512,0.040080372329309256,outputs/self_bleu_depth/depth2_30_v1/summary.json
 8b_full,synthid_depth30,400,50,100,100,tpr,1.0,1.0,1.0,outputs/self_bleu_depth/depth2_30_v1/summary.json
+8b_full,synthid_depth30,1024,50,100,100,distinct_3,0.9589041095890412,,,outputs/self_bleu_depth/depth2_30_v1/summary.json
+8b_full,synthid_depth30,1024,50,100,100,repeated_4gram_fraction,0.023046033300685612,,,outputs/self_bleu_depth/depth2_30_v1/summary.json
 8b_full,synthid_depth30,1024,50,100,100,self_bleu,0.02889849534759662,0.024117780328355532,0.03391950373840047,outputs/self_bleu_depth/depth2_30_v1/summary.json
 8b_full,synthid_depth30,1024,50,100,100,tpr,1.0,1.0,1.0,outputs/self_bleu_depth/depth2_30_v1/summary.json
 8b_t07,null,1024,50,100,,distinct_3,0.6560078277886496,0.6125432974559686,0.6969985322896282,outputs/self_bleu_temperature/t07_v1/summary.json
