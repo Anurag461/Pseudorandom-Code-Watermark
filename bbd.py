@@ -20,6 +20,7 @@ deployment), `seed_mode="prompt"` ties the seed to the prompt (a flawed one).
 """
 import hashlib
 import json
+import os
 from pathlib import Path
 
 import modal
@@ -48,6 +49,9 @@ hf_image = base_image.env({"HF_HUB_CACHE": "/cache"}).add_local_python_source(
     "attacks", "kth_baselines", "modal_run", "online_prc")
 prc_image = fixed_image.add_local_python_source("attacks", "kth_baselines")
 app = modal.App("prc-bbd")
+# BBD_GPU=cpu runs generation on CPU containers (small pilots while other jobs hold the GPU quota).
+DEVICE = os.environ.get("BBD_GPU", "A10G")
+RESOURCES = dict(cpu=8, memory=32768) if DEVICE == "cpu" else dict(gpu=DEVICE, memory=32768)
 hf_cache = modal.Volume.from_name("prc-hf-cache", create_if_missing=False)
 data_vol = modal.Volume.from_name("prc-data", create_if_missing=False)
 results = modal.Volume.from_name("prc-attacks", create_if_missing=True)
@@ -78,14 +82,15 @@ def cut(tokens):
     return tokens[:ends[0]] if ends else tokens
 
 
-@app.function(image=hf_image, gpu="A10G", memory=32768, timeout=3600, max_containers=10,
+@app.function(image=hf_image, **RESOURCES, timeout=3600, max_containers=10,
               retries=modal.Retries(max_retries=2), volumes={"/cache": hf_cache})
 def generate_hf(scheme, prompt_ids, n, max_new, batch=50, seed=0):
     """n completions of one prompt under an HF-side scheme: none, kgw2, synthid or exp (random offset)."""
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer, LogitsProcessorList
     tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL)
-    model = AutoModelForCausalLM.from_pretrained(CHAT_MODEL, torch_dtype=torch.float32).cuda().eval()
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model = AutoModelForCausalLM.from_pretrained(CHAT_MODEL, torch_dtype=torch.float32).to(device).eval()
     torch.manual_seed(seed)
     outputs = []
     for b in range(0, n, batch):
@@ -100,9 +105,9 @@ def generate_hf(scheme, prompt_ids, n, max_new, batch=50, seed=0):
                            gumbel_key_func, gumbel_sampling, random_offset=True)
         else:
             processors = {"none": [], "kgw2": [_cpu_kgw_processor(list(tokenizer.get_vocab().values()))],
-                          "synthid": [synthid_processor(torch.device("cuda"))]}[scheme]
+                          "synthid": [synthid_processor(torch.device(device))]}[scheme]
             # Explicit sampling settings: the chat model's generation_config defaults to top-k 20, T 0.6.
-            out = model.generate(ids.cuda(), attention_mask=torch.ones_like(ids).cuda(), do_sample=True,
+            out = model.generate(ids.to(device), attention_mask=torch.ones_like(ids).to(device), do_sample=True,
                                  max_new_tokens=max_new, top_k=0, top_p=1.0, temperature=1.0,
                                  eos_token_id=list(STOP), pad_token_id=EOS,
                                  logits_processor=LogitsProcessorList(processors)).cpu()
@@ -110,7 +115,7 @@ def generate_hf(scheme, prompt_ids, n, max_new, batch=50, seed=0):
     return outputs
 
 
-@app.function(image=prc_image, gpu="A10G", memory=32768, timeout=3600, max_containers=10,
+@app.function(image=prc_image, **RESOURCES, timeout=3600, max_containers=10,
               retries=modal.Retries(max_retries=2), volumes={"/cache": hf_cache, "/data": data_vol})
 def generate_prc(prompt_ids, n, max_new, seed_mode="fresh", first_document=0, batch=50):
     """n online-PRC completions of one prompt with the chat model and the eta=0.05 online key."""
