@@ -1,0 +1,245 @@
+{
+  "stage": "gpu_production_t1.8",
+  "approval": {
+    "approved": true,
+    "user_approval_text": "go ahead",
+    "run_id": "wang-full-experiment-20260924-first-attempt",
+    "approved_at_utc": "2026-09-24T00:11:06.945261+00:00",
+    "stage": "experiment",
+    "fingerprint": "5825fb18b52e035dfb352bae",
+    "git_commit": "3b15d2e81271f3b0194a89fd109d888c961dacb2",
+    "profile": "new-prc-watermark",
+    "quote_sha256": "a838ab1cde3ddd02d550552d65a5bfc87ef0b7fda9f03444ee704b4a990908b1",
+    "max_estimated_usd": 25,
+    "validation_policy": "source-and-cache-fp32-controls-v1",
+    "included_sequence": [
+      "prepare",
+      "production x5",
+      "score"
+    ],
+    "oracle_prompt_context": false,
+    "billing_review": {
+      "checked_at_utc": "2026-09-24T00:11:06.945363+00:00",
+      "provider_rows": [
+        {
+          "object_id": "ap-2eJCrKhO7F3RXNlvGpKq7S",
+          "description": "wang-prc-detector-ablation",
+          "environment": "main",
+          "interval_start": "2026-09-23T22:00:00",
+          "resource": "CPU",
+          "cost": "0.00563626"
+        },
+        {
+          "object_id": "ap-2eJCrKhO7F3RXNlvGpKq7S",
+          "description": "wang-prc-detector-ablation",
+          "environment": "main",
+          "interval_start": "2026-09-23T22:00:00",
+          "resource": "H100",
+          "cost": "0.11767024"
+        },
+        {
+          "object_id": "ap-2eJCrKhO7F3RXNlvGpKq7S",
+          "description": "wang-prc-detector-ablation",
+          "environment": "main",
+          "interval_start": "2026-09-23T22:00:00",
+          "resource": "Memory",
+          "cost": "0.01525245"
+        },
+        {
+          "object_id": "ap-B2uQZe8KiwVEuFJ9T2iCID",
+          "description": "wang-prc-detector-ablation",
+          "environment": "main",
+          "interval_start": "2026-09-23T21:00:00",
+          "resource": "H100",
+          "cost": "0.12069427"
+        },
+        {
+          "object_id": "ap-B2uQZe8KiwVEuFJ9T2iCID",
+          "description": "wang-prc-detector-ablation",
+          "environment": "main",
+          "interval_start": "2026-09-23T21:00:00",
+          "resource": "Memory",
+          "cost": "0.01600149"
+        },
+        {
+          "object_id": "ap-B2uQZe8KiwVEuFJ9T2iCID",
+          "description": "wang-prc-detector-ablation",
+          "environment": "main",
+          "interval_start": "2026-09-23T21:00:00",
+          "resource": "CPU",
+          "cost": "0.00935445"
+        }
+      ],
+      "total_experiment_spend_usd": 0.28460916,
+      "last_stated_budget_usd": 35,
+      "remaining_experiment_budget_usd": 34.71539084
+    },
+    "authorization_scope": "This preparation call, five H100 generation/replay calls, and final CPU scoring/reporting call. No retry, extra validation, oracle analysis, or additional experiment."
+  },
+  "result": {
+    "temperature": 1.8,
+    "reused": 0,
+    "generated": 320,
+    "load_seconds": 79.40249907799999,
+    "batches": [
+      {
+        "source": "wm",
+        "N": 80,
+        "generation_seconds": 102.023933098,
+        "total_seconds": 163.876505581,
+        "cuda_peak_bytes": 30514766848
+      },
+      {
+        "source": "wm",
+        "N": 80,
+        "generation_seconds": 100.431466282,
+        "total_seconds": 162.490323743,
+        "cuda_peak_bytes": 30514766848
+      },
+      {
+        "source": "null",
+        "N": 80,
+        "generation_seconds": 59.02042789200004,
+        "total_seconds": 121.11557240500002,
+        "cuda_peak_bytes": 30514766848
+      },
+      {
+        "source": "null",
+        "N": 80,
+        "generation_seconds": 59.02041438100002,
+        "total_seconds": 120.30550666199997,
+        "cuda_peak_bytes": 30514766848
+      }
+    ],
+    "seconds": 647.191395859,
+    "smoke": null,
+    "model": {
+      "files": {
+        "model-00004-of-00005.safetensors": "ad8b708792105133e03fe19e2d56c89c709f677f01285f8b3ede8947d59fd9fe",
+        "model-00003-of-00005.safetensors": "c7dd5a191c8da555def0714550375b3c0117751add408fcdda0c2a79ac0186bc",
+        "model-00005-of-00005.safetensors": "fbf24915d47ea030bb68ab0b9488f4515a907185baa6dc26837c9c3f2326a550",
+        "model-00002-of-00005.safetensors": "9aa12339835bf7a093d3d0b0a0d2d77f8538301cfc7f8e7ec7a585858ebf7a1f",
+        "model-00001-of-00005.safetensors": "9983f1b9ef2f60e7c3730d9bc11ada914e6ec630639b5b020a89bd158cd0446b",
+        "model.safetensors.index.json": "cd39d5e44c5aadfd1954b598883aea1c4a98822a2f7723d214ef2278b7fec2e4",
+        "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+      },
+      "revision": "49e3418fbbbca6ecbdf9608b4d22e5a407081db4",
+      "torch": "2.4.0+cu121",
+      "device": "NVIDIA H100 80GB HBM3"
+    },
+    "provenance": {
+      "git_commit": "3b15d2e81271f3b0194a89fd109d888c961dacb2",
+      "fingerprint": "5825fb18b52e035dfb352bae",
+      "run_id": "wang-full-experiment-20260924-first-attempt",
+      "quote": {
+        "stage": "experiment",
+        "specification": {
+          "cpu": 4,
+          "memory_GiB": 16,
+          "cpu_seconds": 900,
+          "gpu_workers": 5,
+          "gpu_seconds": 3600,
+          "gpu_batch": 80,
+          "estimate": [
+            12.0,
+            25.0
+          ],
+          "wall_time_hours": [
+            1,
+            2
+          ],
+          "included_calls": [
+            {
+              "stage": "prepare",
+              "workers": 1,
+              "cpu": 4,
+              "memory_GiB": 16,
+              "timeout_seconds": 900,
+              "estimate_usd": [
+                0.1,
+                0.4
+              ]
+            },
+            {
+              "stage": "production",
+              "workers": 5,
+              "gpu": "H100",
+              "cpu": 4,
+              "memory_GiB": 64,
+              "batch": 80,
+              "timeout_seconds": 3600,
+              "estimate_usd": [
+                9,
+                22
+              ]
+            },
+            {
+              "stage": "score",
+              "workers": 1,
+              "cpu": 8,
+              "memory_GiB": 16,
+              "timeout_seconds": 3600,
+              "estimate_usd": [
+                0.5,
+                2
+              ]
+            }
+          ],
+          "workload": "10 WM keys, 160 shared codewords, 512 independent null keys; 800 WM +800 null x1024 tokens across five temperatures, prompt-free replay, primary/matched-FPR tables, 2000 crossed bootstraps, ROC and figures; no extra smoke, oracle, retry or follow-up run"
+        },
+        "rates_per_second": {
+          "H100": 0.001097,
+          "core": 1.31e-05,
+          "GiB": 2.22e-06
+        },
+        "estimated_usd": [
+          12.0,
+          25.0
+        ],
+        "metered_function_timeout_envelope_usd": 23.83092,
+        "caveat": "Timeout envelope excludes image builds, container startup/teardown and storage; estimate includes a planning allowance. Not a provider-enforced dollar cap.",
+        "remaining_budget_last_stated": 35,
+        "remaining_budget_unreconciled": true,
+        "budget_after_estimate_if_35_available": [
+          10.0,
+          23.0
+        ],
+        "fingerprint": "5825fb18b52e035dfb352bae",
+        "git_commit": "3b15d2e81271f3b0194a89fd109d888c961dacb2",
+        "volume": "prc-data",
+        "root": "wang_prc_detector_ablation/qwen3_8b_base/5825fb18b52e035dfb352bae",
+        "profile": "new-prc-watermark",
+        "retries": 0,
+        "automatic_next_stage": "Only the seven calls explicitly included in this package",
+        "sanity_skip_rule": "Skip (not pass) initial package if concrete quote exceeds $5",
+        "validation": {
+          "policy": "source-and-cache-fp32-controls-v1",
+          "source_sha256": "f5cdea2256a7b6ea53b01f602f0459f1ecc2eebf2da41fb3dea680d2affa1756",
+          "numerical_sha256": "0134eab7dd936bc7d7389b9220fa1ada451b405bc19f4ee86b29d647ab9ab062",
+          "original_bf16_guard": "failed; retained in evidence, not rerun or marked passed",
+          "remaining_short_T1p8_smoke": "omitted to proceed to the requested results",
+          "precision": "BF16 generation/replay unchanged",
+          "limitation": "Controls cover one completion at prefixes 1,4,8,16; not batch-80 or long-context equivalence"
+        },
+        "included_sequence": [
+          "prepare",
+          "production x5",
+          "score"
+        ],
+        "prior_experiment_spend_usd": 0.28460916,
+        "remaining_experiment_budget_usd": 34.71539084,
+        "budget_after_estimate_usd": [
+          9.715390839999998,
+          22.715390839999998
+        ],
+        "budget_scope": "This experiment; unrelated concurrent projects billed separately"
+      }
+    }
+  },
+  "wall_seconds": 649.661896402,
+  "metered_runtime_estimate_usd": 0.839025345965255,
+  "provider_cost_usd": null,
+  "provider_cost_status": "awaiting billing reconciliation",
+  "billing_caveat": "Runtime estimate excludes startup/build/teardown/storage",
+  "gpu_hours": 0.18046163788944444
+}

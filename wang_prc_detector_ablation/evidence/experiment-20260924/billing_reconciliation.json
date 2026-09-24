@@ -1,0 +1,14 @@
+{
+  "checked_at_utc": "2026-09-24T00:57:10.490015+00:00",
+  "app_id": "ap-JL2Co4bAS6fq92w1TTRCyF",
+  "provider_rows": [],
+  "provider_cost_usd": null,
+  "provider_status": "pending, not zero",
+  "latest_returned_interval": "2026-09-23T22:00:00",
+  "function_runtime_estimate_usd": 4.454611530478396,
+  "allocation_runtime_estimate_usd": 4.484110560798087,
+  "prior_checks_provider_cost_usd": 0.28460916,
+  "total_including_prior_checks_estimate_usd": 4.768719720798087,
+  "remaining_of_35_estimate_usd": 30.23128027920191,
+  "limitations": "Allocation estimate includes observed GPU/CPU scorer lifetimes and preparation function time, excluding unposted startup/build/storage adjustments. No extra paid run was launched."
+}

@@ -1,5 +1,7 @@
 # Wang PRC detector ablation on Qwen3-8B-Base
 
+**Full experiment completed September 24.** See [the final report](evidence/experiment-20260924/README.md): matched-FPR MAP gains of +11.25 pp at T=1.0 and +8.75 pp at T=1.2; both detectors reach 100% at T=1.4. All 1600 traces are saved. Runtime-derived cost is about $4.50, with provider billing pending. Earlier setup/status text below is retained as execution history.
+
 **Approved setup plan — September 23, 2026; Base model restored, reasoning off.**
 
 Use the same Wang-style PRC-watermarked completions and true keys to answer two
@@ -10,18 +12,14 @@ questions separately:
 2. Does posterior scoring improve on the hard statistic when both are calibrated
    to the same nominal FPR, supported by threshold-independent ROC/AUC?
 
-**Code setup approved** by “go ahead and set up.” The pipeline, small synthetic
-checks, documentation and staged approval gate are implemented. The first paid
-sanity attempt passed the CPU source check but failed the BF16 prefix tolerance.
-See evidence/sanity-20260923/README.md for that attempt. The separately approved
-saved-token numerical diagnostic subsequently passed its cache/FP32 controls; see
-evidence/numerical-20260923/README.md. The original 2% BF16 guard remains failed,
-and is preserved as a numerical diagnostic. Following the user's request to prioritize
-results, the prepared next package goes directly to the ten-key experiment using
-the completed source/cache/FP32 controls; no additional short smoke is proposed.
-See [NEXT_RUN.md](NEXT_RUN.md) for the exact package, cost and limitations.
-Production is not yet authorized.
-Paid compute still requires separate approval for each run.
+**Execution complete.** The user approved the full seven-call package with “go ahead.”
+Preparation, all five temperature workers and final scoring completed successfully.
+All 1600 traces and the requested report artifacts are saved. See
+[evidence/experiment-20260924/README.md](evidence/experiment-20260924/README.md)
+for results, costs and numerical limitations. The earlier BF16 guard failure is
+preserved; the run proceeded using the separately passed source/cache/FP32 controls.
+There were no additional short smoke runs or paid retries. Further paid work needs
+new approval. The scope and planning estimates below describe the executed design.
 
 [CURRENT_REQUEST.md](CURRENT_REQUEST.md) is authoritative for the latest model,
 threshold, first-token and sanity-cost instructions. [REQUEST.md](REQUEST.md)

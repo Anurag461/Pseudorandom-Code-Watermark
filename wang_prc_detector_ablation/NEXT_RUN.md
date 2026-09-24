@@ -1,6 +1,8 @@
 # Next run: finish the detector comparison
 
-Prepared September 24, 2026; **awaiting explicit paid-run approval**. The user
+Prepared and approved September 24, 2026; **executed successfully**. See the
+[completed report](evidence/experiment-20260924/README.md). The quote and execution
+instructions below are retained as the record of the approved package. The user
 asked to prioritize the important results. Proceed directly to the existing
 ten-key, five-temperature experiment, using the completed source and cache/FP32
 checks. Do not spend another run on the remaining short T=1.8 smoke.

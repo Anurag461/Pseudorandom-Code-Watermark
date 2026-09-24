@@ -1,25 +1,27 @@
 # Wang-channel detector ablation on Qwen3-8B-Base
 
-**Initial sanity attempted: source check passed; GPU numerical check failed.**
-See [the attempt report](evidence/sanity-20260923/README.md) for the 159/160 source
-result, 111-second GPU runtime, saved traces and separately gated next diagnostic.
-A separately approved [numerical diagnostic](evidence/numerical-20260923/README.md)
-then passed exact cache and FP32-reference controls. The original BF16 guard
-remains failed; its tolerance and the production precision have not changed.
-**Next: the complete ten-key experiment, without another short smoke test.**
-The prepared [run package](NEXT_RUN.md) includes preparation, five H100 workers
-and scoring/reporting for $12–$25, pending approval. It uses the completed
-source/cache/FP32 controls and preserves the BF16 discrepancy in the report.
-The full experiment has not launched. This is a controlled detector
-comparison on fresh Wang-channel generations from the cached Base model. It is
-not a reproduction of DeepSeek Figure 5. The earlier saved-sweep preflight and
-its missing-key findings are preserved in `../cryptoanalysis_redetect/`.
+**Full experiment completed September 24, 2026.** See the
+[final report](evidence/experiment-20260924/README.md),
+[results CSV](evidence/experiment-20260924/results_summary.csv), and
+[matched-FPR figure](evidence/experiment-20260924/tpr_matched_fpr_vs_temperature.pdf).
 
-The user approved code setup with “go ahead and set up.” Each paid run still
-requires a separate workload/cost quote and explicit approval under the repository
-`AGENTS.md`. A setup approval, a quote file, or the $5 sanity ceiling is not paid
-execution approval. The archived first-attempt approval is spent; no additional
-paid run is authorized.
+At matched FPR, MAP gains 11.25 percentage points at T=1.0 and 8.75 points at
+T=1.2; both paired 95% intervals exclude zero. At T=1.4 both matched detectors
+reach 100%. T=1.0 remains difficult: matched MAP TPR is only 11.25%.
+All 1600 generation/replay traces are saved. The run took 41.28 minutes and cost
+approximately $4.48 from observed runtimes; provider billing is pending.
+
+This is the requested controlled detector comparison on fresh Wang-channel
+samples from the cached Base model. It is not a DeepSeek Figure 5 replication.
+The [original source check](evidence/sanity-20260923/README.md) passed all 160
+individual detector comparisons. Its BF16 prefix check failed; subsequent
+[numerical controls](evidence/numerical-20260923/README.md) passed exact cache and
+FP32-reference comparisons. The full run used those completed controls, with the
+BF16 discrepancy preserved as a limitation. No extra short smoke was run.
+The earlier saved-sweep preflight is preserved in `../cryptoanalysis_redetect/`.
+
+All seven approved preparation/GPU/scoring calls finished, with no retries.
+The app has stopped. Any further paid work requires a new explicit approval.
 
 ## Frozen experiment
 
@@ -99,11 +101,12 @@ fast sampling under identical variates, bit ordering, OTP/permutation convention
 tail masses, abstention, no-evidence handling, inclusive ties, deterministic stream
 separation, corrupted caches, prompt-free input capture with canned logits,
 cluster resampling and tied AUC. The source and checkpoint checks have since passed in the first approved attempt;
-its GPU prefix check failed. Production and full report validation remain unrun.
+its GPU prefix check failed. The full experiment subsequently completed using the
+separately passed cache/FP32 controls; the generated figures were visually checked.
 
 ## Exact run commands
 
-The next run is the single explicitly quoted `experiment` package in
+The completed run used the explicitly quoted `experiment` package in
 [NEXT_RUN.md](NEXT_RUN.md). Its approval must enumerate preparation, all five GPU
 workers, and scoring; this avoids pauses between already approved component runs.
 The individual-stage commands below remain available for separately requested work.
