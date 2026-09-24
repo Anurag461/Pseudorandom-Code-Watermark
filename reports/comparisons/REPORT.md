@@ -31,7 +31,7 @@ Repeat fallback is **ON for SynthID, TextSeal and Gumbel** in this table. Detect
 
 PRC's lower Self-BLEU relative to TextSeal and Gumbel persists after matching repeat handling. Against SynthID depth 2, the estimated difference is small and uncertain, while PRC detection is lower, especially at 400 tokens. With fallback ON, all available paired PRC-versus-baseline repetition intervals at 1,024 tokens include zero.
 
-SynthID depth 30 has Distinct-3 = **0.9589**. Its repetition metrics are means over the same 100 saved responses; no new confidence intervals or paired repetition contrasts were calculated. [Updated table with repeat fallback on/off](tables/repeat_fallback_1024.pdf) · [LaTeX](tables/repeat_fallback_1024.tex) · [Depth-30 metric provenance](../../outputs/self_bleu_depth/depth2_30_v1/repetition_1024.json).
+SynthID depth 30 has Distinct-3 = **0.9589**. Its repetition metrics are means over the same 100 saved responses; the companion uncertainty table supplies their bootstrap intervals and paired comparisons from saved metric values. [Table with repeat fallback on/off](tables/repeat_fallback_1024.pdf) · [Second version with uncertainty and significance highlighting](tables/repeat_fallback_1024_uncertainty.pdf) · [LaTeX](tables/repeat_fallback_1024.tex) · [Depth-30 metric provenance](../../outputs/self_bleu_depth/depth2_30_v1/repetition_1024.json).
 
 [Full 1,024-token metrics](tables/05_8b_full_1024.csv) · [400-token metrics](tables/05_8b_full_400.csv) · [Paired differences](tables/06_8b_contrasts_1024.csv)
 

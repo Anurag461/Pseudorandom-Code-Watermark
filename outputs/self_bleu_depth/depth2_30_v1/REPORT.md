@@ -25,7 +25,7 @@ Each entry contains the mean and its 95% prompt-bootstrap interval. Detection is
 
 The same 100 saved SynthID depth-30 responses have **2.30% repeated token 4-grams** and **Distinct-3 = 0.9589**. These are arithmetic means across two responses for each of 50 prompts, with repeat fallback on. Repeated 4-grams counts occurrences after the first, divided by all contiguous four-token sequences; Distinct-3 divides the number of distinct contiguous three-token sequences by all such sequences.
 
-These two point estimates were added on 25 September 2026. No new responses, detector scores, bootstrap intervals, or paired contrasts were computed. [Full-precision results, response-level counts, and source hashes](repetition_1024.json) · [Calculation script](calculate_repetition_1024.py).
+These two point estimates were added on 25 September 2026. No new responses or detector scores were computed. The [companion uncertainty table](../../../reports/comparisons/tables/repeat_fallback_1024_uncertainty.pdf) adds 95% bootstrap intervals and paired comparisons from the saved metric values. [Full-precision results, response-level counts, and source hashes](repetition_1024.json) · [Calculation script](calculate_repetition_1024.py).
 
 ## Direct paired PRC-minus-SynthID contrasts
 

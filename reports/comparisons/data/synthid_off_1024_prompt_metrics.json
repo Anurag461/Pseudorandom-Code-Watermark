@@ -1,0 +1,502 @@
+[
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 0,
+    "self_bleu": 0.048224481578097785
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 1,
+    "self_bleu": 0.01105606085190133
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 2,
+    "self_bleu": 0.059639822481880406
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 3,
+    "self_bleu": 0.009117108453469391
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 4,
+    "self_bleu": 0.011968227676141183
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 5,
+    "self_bleu": 0.07095274643818651
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 6,
+    "self_bleu": 0.015357640462487722
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 7,
+    "self_bleu": 0.012479517822539072
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 8,
+    "self_bleu": 0.03457091320677748
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 9,
+    "self_bleu": 0.028682736298837868
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 10,
+    "self_bleu": 0.01253063180801008
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 11,
+    "self_bleu": 0.015402893133913633
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 12,
+    "self_bleu": 0.031584295540216266
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 13,
+    "self_bleu": 0.02236504750026915
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 14,
+    "self_bleu": 0.006083263182689433
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 15,
+    "self_bleu": 0.031461414099643495
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 16,
+    "self_bleu": 0.017140843265825018
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 17,
+    "self_bleu": 0.012765921745923853
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 18,
+    "self_bleu": 0.030987236027514742
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 19,
+    "self_bleu": 0.03224028164913581
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 20,
+    "self_bleu": 0.0208416649904327
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 21,
+    "self_bleu": 0.010142807918702989
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 22,
+    "self_bleu": 0.039984751921317147
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 23,
+    "self_bleu": 0.016397575000797738
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 24,
+    "self_bleu": 0.019499864628077998
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 25,
+    "self_bleu": 0.02449724030332198
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 26,
+    "self_bleu": 0.028235722774366038
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 27,
+    "self_bleu": 0.011196233433381332
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 28,
+    "self_bleu": 0.00991903003004898
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 29,
+    "self_bleu": 0.019796266985955956
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 30,
+    "self_bleu": 0.021826743080970587
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 31,
+    "self_bleu": 0.01691238754805584
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 32,
+    "self_bleu": 0.0045369243618957455
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 33,
+    "self_bleu": 0.012826524600697125
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 34,
+    "self_bleu": 0.004860436484609997
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 35,
+    "self_bleu": 0.02569505718218566
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 36,
+    "self_bleu": 0.02203829375823967
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 37,
+    "self_bleu": 0.044519556391355464
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 38,
+    "self_bleu": 0.012521174206478468
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 39,
+    "self_bleu": 0.009753179810673631
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 40,
+    "self_bleu": 0.006434511635504276
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 41,
+    "self_bleu": 0.008436710974934668
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 42,
+    "self_bleu": 0.021832548957305596
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 43,
+    "self_bleu": 0.0192483329558834
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 44,
+    "self_bleu": 0.04557428242540068
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 45,
+    "self_bleu": 0.014096006422445342
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 46,
+    "self_bleu": 0.01860810925562336
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 47,
+    "self_bleu": 0.021982886841052353
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 48,
+    "self_bleu": 0.012739425341037745
+  },
+  {
+    "arm": "synthid_off",
+    "detected": [
+      true,
+      true
+    ],
+    "length": 1024,
+    "prompt_index": 49,
+    "self_bleu": 0.009661831467495174
+  }
+]
