@@ -137,6 +137,7 @@ def generate_prc(prompt_ids, n, max_new, seed_mode="fresh", first_document=0, ba
     elif seed_mode == "prompt":
         prompt_doc = int.from_bytes(hashlib.sha256(bytes(json.dumps(prompt_ids), "utf8")).digest()[:6], "big")
         documents = [prompt_doc] * n
+        batch = 1  # the encoder rejects repeated seeds within a batch; a server reuses them across requests
     else:
         raise ValueError("seed_mode must be fresh or prompt")
     seeds = [derive_document_seed(BBD_SEED, d) for d in documents]
