@@ -31,8 +31,6 @@ REPORT.md is maintained separately. The asset builder preserves it and regenerat
 
 ## Table catalogue
 
-- [Repeat fallback on/off with uncertainty](tables/repeat_fallback_1024_uncertainty.pdf): 95% interval limits in upper/lower scripts; bold comparator values have paired intervals excluding zero. [LaTeX](tables/repeat_fallback_1024_uncertainty.tex).
-
 - [Repeat fallback on/off at 1,024 tokens](tables/repeat_fallback_1024.pdf): revised paper table, including depth-30 repetition metrics; [LaTeX](tables/repeat_fallback_1024.tex).
 
 - [01_experiment_ledger](tables/01_experiment_ledger.tex): Completed experiments and their non-overlapping roles

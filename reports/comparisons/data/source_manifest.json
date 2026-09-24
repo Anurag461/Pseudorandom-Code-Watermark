@@ -1,5 +1,5 @@
 {
-  "builder_sha256": "d66c7bf93da76b34f1c96fe46fdd21939fdfa6b78b17a838151b39486893f832",
+  "builder_sha256": "9aa227e0914b82a0847e7e68c55ea959e3f7d75a2ec7b6911ba5cf41a898e273",
   "figures": [
     {
       "caption": "Historical 500-response-per-setting comparison after completion-only correction. Left: each cutoff is a separate one-shot detection test; coincident baseline curves are retained. Right: 1,024-token repetition under the native mixed policies, with TextSeal/Gumbel fallback OFF. These repetition gaps are not the matched-policy result.",
@@ -219,14 +219,6 @@
       "name": "16_all_contrasts_8b_t07_400"
     }
   ],
-  "uncertainty_table": {
-    "builder": "build_uncertainty_table.py",
-    "cells": "data/uncertainty_table_cells.json",
-    "paired_intervals": "marginal 95%, no multiple-comparison correction",
-    "point_estimate_table_preserved": true,
-    "supplement": "data/uncertainty_supplement.json",
-    "table": "tables/repeat_fallback_1024_uncertainty.tex"
-  },
   "verification": {
     "absolute_rows": 50,
     "cohorts_not_pooled": true,
