@@ -1,0 +1,196 @@
+"""Black-box watermark detection tests (Gloaguen, Jovanovic, Staab, Vechev, ICLR 2025) against PRC.
+
+Reimplements the paper's three tests from its algorithms and released code
+(github.com/eth-sri/watermark-detection @ d4ca66f, which has no licence file, so
+nothing is copied verbatim except the prompts):
+  * Red-Green      - chat prompt 'Complete the sentence "{prefix} {d*H}" ...' over
+                     10 prefixes x 9 digits, <=65 new tokens, answer parsed by
+                     identify_fruit (exactly one listed fruit, appearing once);
+  * Fixed-Sampling - raw prompt "This is the story of", 100 new tokens,
+                     count distinct completions (rarefaction + Mann-Whitney U);
+  * Cache          - not applicable to any scheme here (no cache); omitted.
+Victim: Qwen3-0.6B (chat model), thinking disabled, temperature 1, full vocabulary.
+Responses are generated to a fixed length and cut at the first end-of-turn token,
+which equals stopping there because generation is causal.
+
+Schemes: unwatermarked, online PRC (eta=0.05 key), KGW-2.0, SynthID-Text, EXP with
+the random key offset. Online PRC draws its sampling randomness from a per-document
+seed; `seed_mode="fresh"` gives every response its own document id (a correct
+deployment), `seed_mode="prompt"` ties the seed to the prompt (a flawed one).
+"""
+import hashlib
+import json
+from pathlib import Path
+
+import modal
+
+from kth_baselines import EOS, base_image, _cpu_kgw_processor, synthid_processor
+from modal_run import fixed_image
+
+OUT = "bbd_v1"
+CHAT_MODEL = "Qwen/Qwen3-0.6B"
+IM_END = 151645
+STOP = (IM_END, EOS)
+PRC_ONLINE_ARTIFACT = ("online_causal_prc_v1/qwen3_0p6b_base/"
+                       "n400_T400_t3_eta0.05_rr99of100_sampler-poscdf-v1/artifacts.pt")
+BBD_SEED = 20260924
+EXP_KEY_SEED, EXP_KEY_LENGTH = 42, 256
+
+# Red-Green probe (paper's released code; Qwen2-7B-Instruct word list as the starting point)
+FRUITS = ["peaches", "plums", "cherries", "apricots"]
+EXAMPLE, FORMAT = "strawberries", ""
+PREFIXES = ["I ate", "I chose", "I picked", "I selected", "I took", "I went for", "I settled on", "I got",
+            "I gathered", "I harvested"]
+RG_MAX_NEW = 65
+FS_PROMPT, FS_MAX_NEW = "This is the story of", 100
+
+hf_image = base_image.env({"HF_HUB_CACHE": "/cache"}).add_local_python_source(
+    "attacks", "kth_baselines", "modal_run", "online_prc")
+prc_image = fixed_image.add_local_python_source("attacks", "kth_baselines")
+app = modal.App("prc-bbd")
+hf_cache = modal.Volume.from_name("prc-hf-cache", create_if_missing=False)
+data_vol = modal.Volume.from_name("prc-data", create_if_missing=False)
+results = modal.Volume.from_name("prc-attacks", create_if_missing=True)
+
+
+def rg_prompt(prefix, digit, H):
+    k = str(digit) * H
+    return (f'Complete the sentence "{prefix} {k}" using only and exacty a random word from the list: {FRUITS}.  '
+            f'Answer in this speific format: {FORMAT} {prefix} {k} {EXAMPLE}. (here I chose an other fruit for '
+            f'the sake of the example, you have to choose among {FRUITS})')
+
+
+def identify_fruit(text, candidates=FRUITS):
+    """Index of the single listed fruit that appears exactly once, else None (paper's parser)."""
+    found = [(i, text.count(c)) for i, c in enumerate(candidates) if text.count(c) > 0]
+    return found[0][0] if len(found) == 1 and found[0][1] == 1 else None
+
+
+def chat_ids(tokenizer, prompt):
+    return tokenizer.apply_chat_template([{"role": "user", "content": prompt}], add_generation_prompt=True,
+                                         enable_thinking=False, tokenize=True)
+
+
+def cut(tokens):
+    """Completion up to (not including) the first end-of-turn / end-of-text token."""
+    tokens = [int(t) for t in tokens]
+    ends = [i for i, t in enumerate(tokens) if t in STOP]
+    return tokens[:ends[0]] if ends else tokens
+
+
+@app.function(image=hf_image, gpu="A10G", memory=32768, timeout=3600, max_containers=10,
+              retries=modal.Retries(max_retries=2), volumes={"/cache": hf_cache})
+def generate_hf(scheme, prompt_ids, n, max_new, batch=50, seed=0):
+    """n completions of one prompt under an HF-side scheme: none, kgw2, synthid or exp (random offset)."""
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer, LogitsProcessorList
+    tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL)
+    model = AutoModelForCausalLM.from_pretrained(CHAT_MODEL, torch_dtype=torch.float32).cuda().eval()
+    torch.manual_seed(seed)
+    outputs = []
+    for b in range(0, n, batch):
+        rows = min(batch, n - b)
+        ids = torch.tensor([prompt_ids] * rows)
+        if scheme == "exp":
+            from watermarking.generation import generate
+            from watermarking.gumbel.key import gumbel_key_func
+            from watermarking.gumbel.sampler import gumbel_sampling
+            vocab = model.get_output_embeddings().weight.shape[0]
+            out = generate(model, ids, vocab, EXP_KEY_LENGTH, max_new, torch.full((rows,), EXP_KEY_SEED),
+                           gumbel_key_func, gumbel_sampling, random_offset=True)
+        else:
+            processors = {"none": [], "kgw2": [_cpu_kgw_processor(list(tokenizer.get_vocab().values()))],
+                          "synthid": [synthid_processor(torch.device("cuda"))]}[scheme]
+            # Explicit sampling settings: the chat model's generation_config defaults to top-k 20, T 0.6.
+            out = model.generate(ids.cuda(), attention_mask=torch.ones_like(ids).cuda(), do_sample=True,
+                                 max_new_tokens=max_new, top_k=0, top_p=1.0, temperature=1.0,
+                                 eos_token_id=list(STOP), pad_token_id=EOS,
+                                 logits_processor=LogitsProcessorList(processors)).cpu()
+        outputs += [cut(row[len(prompt_ids):]) for row in out]
+    return outputs
+
+
+@app.function(image=prc_image, gpu="A10G", memory=32768, timeout=3600, max_containers=10,
+              retries=modal.Retries(max_retries=2), volumes={"/cache": hf_cache, "/data": data_vol})
+def generate_prc(prompt_ids, n, max_new, seed_mode="fresh", first_document=0, batch=50):
+    """n online-PRC completions of one prompt with the chat model and the eta=0.05 online key."""
+    import os
+    import torch
+    os.environ["PRC_MODEL_SIZE"], os.environ["PRC_MODEL_VARIANT"] = "0.6B", "instruct"
+    from modal_run import _redetect_load
+    from online_prc import OnlinePRCKey, derive_document_seed
+    import watermark_expt as we
+    hf_cache.commit()  # the first import downloads the chat weights into /cache/models/Qwen3-0.6B
+    artifact = _redetect_load(Path("/data") / PRC_ONLINE_ARTIFACT)
+    key = OnlinePRCKey.from_dict(artifact["online_key"])
+    we.partition = artifact["partition"].to(we.device)
+    if seed_mode == "fresh":
+        documents = range(first_document, first_document + n)
+    elif seed_mode == "prompt":
+        prompt_doc = int.from_bytes(hashlib.sha256(bytes(json.dumps(prompt_ids), "utf8")).digest()[:6], "big")
+        documents = [prompt_doc] * n
+    else:
+        raise ValueError("seed_mode must be fresh or prompt")
+    seeds = [derive_document_seed(BBD_SEED, d) for d in documents]
+    outputs = []
+    for b in range(0, n, batch):
+        ids = torch.tensor([prompt_ids] * min(batch, n - b), device=we.device)
+        tokens, _ = we.generate_batch_and_collect_online(we.model, ids, max_new, key, we.partition,
+                                                         watermark=True, document_seeds=seeds[b:b + len(ids)])
+        outputs += [cut(row) for row in tokens.cpu()]
+    return outputs
+
+
+@app.function(image=hf_image, cpu=2, memory=4096, timeout=600, volumes={"/cache": hf_cache})
+def prompt_ids():
+    """Chat-templated Red-Green prompts (H=1..5) and the raw Fixed-Sampling prompt, as token ids."""
+    from transformers import AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL)
+    rg = {f"{p}|{d}|{H}": chat_ids(tokenizer, rg_prompt(p, d, H))
+          for p in PREFIXES for d in range(1, 10) for H in range(1, 6)}
+    return {"rg": rg, "fs": tokenizer.encode(FS_PROMPT)}
+
+
+@app.function(image=hf_image, cpu=2, memory=4096, timeout=600, volumes={"/cache": hf_cache})
+def decode(batches):
+    from transformers import AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL)
+    return [[tokenizer.decode(t, skip_special_tokens=True) for t in batch] for batch in batches]
+
+
+@app.local_entrypoint()
+def pilot():
+    """Small check: instruction following / parse rate, response diversity, PRC on the chat model."""
+    ids = prompt_ids.remote()
+    cells = [(p, d) for p in PREFIXES[:2] for d in (1, 5, 9)]
+    jobs, labels = [], []
+    for scheme in ("none", "prc"):
+        for p, d in cells:
+            prompt = ids["rg"][f"{p}|{d}|5"]
+            jobs.append(generate_prc.spawn(prompt, 20, RG_MAX_NEW, "fresh", 1000 * len(jobs)) if scheme == "prc"
+                        else generate_hf.spawn("none", prompt, 20, RG_MAX_NEW, 20, len(jobs)))
+            labels.append((scheme, "rg", f"{p} {str(d) * 5}"))
+    jobs.append(generate_hf.spawn("none", ids["fs"], 100, FS_MAX_NEW, 50, 999))
+    labels.append(("none", "fs", "fresh"))
+    for mode in ("fresh", "prompt"):
+        jobs.append(generate_prc.spawn(ids["fs"], 100, FS_MAX_NEW, mode, 900_000 if mode == "fresh" else 0))
+        labels.append(("prc", "fs", mode))
+    texts = decode.remote([job.get() for job in jobs])
+    report = {}
+    for (scheme, test, cell), batch in zip(labels, texts):
+        if test == "rg":
+            parsed = [identify_fruit(t) for t in batch]
+            ok = [x for x in parsed if x is not None]
+            entry = report.setdefault(f"{scheme} rg", {"n": 0, "parsed": 0, "counts": [0] * len(FRUITS)})
+            entry["n"] += len(batch)
+            entry["parsed"] += len(ok)
+            for x in ok:
+                entry["counts"][x] += 1
+            entry.setdefault("examples", []).extend(batch[:2])
+        else:
+            lengths = sorted(len(t.split()) for t in batch)
+            report[f"{scheme} fs {cell}"] = {"n": len(batch), "unique": len(set(batch)),
+                                            "median_words": lengths[len(lengths) // 2], "example": batch[0][:200]}
+    Path("outputs/attacks").mkdir(parents=True, exist_ok=True)
+    Path("outputs/attacks/bbd_pilot.json").write_text(json.dumps(report, indent=2))
+    print(json.dumps(report, indent=2))
