@@ -23,7 +23,7 @@ from pathlib import Path
 import modal
 
 from kth_baselines import (EOS, KEY_LENGTH, KEY_SEED, KGW_DELTA, KGW_GAMMA, MODEL_DIR, NUM_PROMPTS,
-                           PROMPT_TOKENS, _cpu_kgw_processor, image, key_seeds, load_prompts,
+                           PROMPT_TOKENS, _cpu_kgw_processor, base_image, key_seeds, load_prompts,
                            synthid_processor)
 from modal_run import fixed_image
 
@@ -43,7 +43,9 @@ app = modal.App("prc-kth-long")
 hf_cache = modal.Volume.from_name("prc-hf-cache", create_if_missing=True)
 data_vol = modal.Volume.from_name("prc-data", create_if_missing=True)
 results = modal.Volume.from_name("prc-attacks", create_if_missing=True)
-prc_image = fixed_image.add_local_python_source("attacks", "kth_baselines")
+image = base_image.add_local_file("prompts_10k.jsonl", "/root/prompts_10k.jsonl").add_local_python_source(
+    "attacks", "kth_baselines", "kth_long", "modal_run", "online_prc")
+prc_image = fixed_image.add_local_python_source("attacks", "kth_baselines", "kth_long")
 
 
 def attack_spec(rate, seed=0):
