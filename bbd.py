@@ -199,3 +199,53 @@ def pilot():
     Path("outputs/attacks").mkdir(parents=True, exist_ok=True)
     Path("outputs/attacks/bbd_pilot.json").write_text(json.dumps(report, indent=2))
     print(json.dumps(report, indent=2))
+
+
+@app.function(image=hf_image, cpu=2, memory=8192, timeout=600, volumes={"/cache": hf_cache})
+def debug_hf():
+    """Report how the chat model resolves from the shared cache inside hf_image."""
+    import os
+    import traceback
+    out = {k: os.environ.get(k) for k in ("HF_HOME", "HF_HUB_CACHE", "HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE")}
+    snap = "/cache/models--Qwen--Qwen3-0.6B/snapshots"
+    out["snapshots"] = {s: sorted(os.listdir(f"{snap}/{s}")) for s in os.listdir(snap)}
+    try:
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+        AutoTokenizer.from_pretrained(CHAT_MODEL)
+        out["tokenizer"] = "ok"
+        AutoModelForCausalLM.from_pretrained(CHAT_MODEL)
+        out["model"] = "ok"
+    except Exception:
+        out["traceback"] = traceback.format_exc()[-3000:]
+    return out
+
+
+CHAT_REVISION = "c1899de289a04d12100db370d81485cdf75e47ca"  # the snapshot already holding the tokenizer
+
+
+@app.function(image=hf_image, cpu=2, memory=8192, timeout=1800, volumes={"/cache": hf_cache})
+def fetch_chat_model():
+    """Complete the pinned Qwen3-0.6B hub snapshot (config, weights, chat template) in the shared cache,
+    and check its weights equal the copy the PRC loader downloaded to /cache/models/Qwen3-0.6B."""
+    import hashlib
+    import os
+    os.environ["HF_HUB_OFFLINE"] = os.environ["TRANSFORMERS_OFFLINE"] = "0"
+    from huggingface_hub import snapshot_download
+    path = snapshot_download(CHAT_MODEL, revision=CHAT_REVISION, cache_dir="/cache")
+    hf_cache.commit()
+    digest = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+    return {"files": sorted(os.listdir(path)),
+            "same_weights_as_prc_loader": digest(f"{path}/model.safetensors")
+            == digest("/cache/models/Qwen3-0.6B/model.safetensors")}
+
+
+@app.local_entrypoint()
+def fetch():
+    print(fetch_chat_model.remote())
+    print(debug_hf.remote())
+
+
+@app.local_entrypoint()
+def debug():
+    for key, value in debug_hf.remote().items():
+        print(key, ":", value)
