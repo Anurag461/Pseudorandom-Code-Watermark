@@ -291,3 +291,189 @@ def fetch():
 def debug():
     for key, value in debug_hf.remote().items():
         print(key, ":", value)
+
+
+# ================================================================ full test (E7)
+#
+# One Modal call per (scheme, H, prefix) generates the 9 digit cells of that row of the Red-Green
+# matrix, re-sampling until each cell has RG_VALID parsed answers (as the paper's rejection loop);
+# one call per scheme generates the Fixed-Sampling stories. Counts are saved to the prc-attacks volume
+# of the running workspace and analysed locally by `analyze` with the paper's released statistics.
+
+RG_LIST = "apples"          # most balanced list in the word-list pilot (max share 0.46, 93% parsed)
+RG_HS = (4, 5)              # SynthID needs H = h = 4 exactly; H = 5 is the released default
+RG_VALID, RG_FIRST, RG_TOPUP, RG_ROUNDS = 100, 115, 30, 5
+FS_N = 1000
+SCHEMES = ("none", "prc", "kgw2", "synthid", "exp")
+HF_BATCHES = {"none": 115, "kgw2": 115, "synthid": 60, "exp": 30}
+
+
+def _label_int(label):
+    return int.from_bytes(hashlib.sha256(label.encode()).digest()[:6], "big")
+
+
+class Generator:
+    """Loads one scheme's model once and generates n completions of a prompt."""
+
+    def __init__(self, scheme):
+        import torch
+        self.scheme = scheme
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        if scheme == "prc":
+            os.environ["PRC_MODEL_SIZE"], os.environ["PRC_MODEL_VARIANT"] = "0.6B", "instruct"
+            from modal_run import _redetect_load
+            from online_prc import OnlinePRCKey
+            import watermark_expt as we
+            artifact = _redetect_load(Path("/data") / PRC_ONLINE_ARTIFACT)
+            self.we, self.key = we, OnlinePRCKey.from_dict(artifact["online_key"])
+            we.partition = artifact["partition"].to(we.device)
+        else:
+            from transformers import AutoModelForCausalLM, AutoTokenizer
+            self.tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL, revision=CHAT_REVISION)
+            self.model = AutoModelForCausalLM.from_pretrained(
+                CHAT_MODEL, revision=CHAT_REVISION, torch_dtype=torch.float32).to(self.device).eval()
+
+    def __call__(self, prompt_ids, n, max_new, label):
+        """n completions (token lists cut at end of turn); `label` makes seeds and documents unique."""
+        import torch
+        if self.scheme == "prc":
+            from online_prc import derive_document_seed
+            base = _label_int(label) << 20  # fresh document per response, unique across calls
+            seeds = [derive_document_seed(BBD_SEED, base + i) for i in range(n)]
+            out = []
+            for b in range(0, n, 60):
+                ids = torch.tensor([prompt_ids] * len(seeds[b:b + 60]), device=self.we.device)
+                tokens, _ = self.we.generate_batch_and_collect_online(
+                    self.we.model, ids, max_new, self.key, self.we.partition, watermark=True,
+                    document_seeds=seeds[b:b + 60])
+                out += [cut(row) for row in tokens.cpu()]
+            return out
+        from transformers import LogitsProcessorList
+        torch.manual_seed(_label_int(label) % 2**31)
+        out, batch = [], HF_BATCHES[self.scheme]
+        for b in range(0, n, batch):
+            rows = min(batch, n - b)
+            ids = torch.tensor([prompt_ids] * rows)
+            if self.scheme == "exp":
+                from watermarking.generation import generate
+                from watermarking.gumbel.key import gumbel_key_func
+                from watermarking.gumbel.sampler import gumbel_sampling
+                vocab = self.model.get_output_embeddings().weight.shape[0]
+                gen = generate(self.model, ids, vocab, EXP_KEY_LENGTH, max_new, torch.full((rows,), EXP_KEY_SEED),
+                               gumbel_key_func, gumbel_sampling, random_offset=True)
+            else:
+                processors = {"none": [],
+                              "kgw2": [_cpu_kgw_processor(list(self.tokenizer.get_vocab().values()))],
+                              "synthid": [synthid_processor(torch.device(self.device))]}[self.scheme]
+                gen = self.model.generate(ids.to(self.device), attention_mask=torch.ones_like(ids).to(self.device),
+                                          do_sample=True, max_new_tokens=max_new, top_k=0, top_p=1.0,
+                                          temperature=1.0, eos_token_id=list(STOP), pad_token_id=EOS,
+                                          logits_processor=LogitsProcessorList(processors)).cpu()
+            out += [cut(row[len(prompt_ids):]) for row in gen]
+        return out
+
+
+def _decoder():
+    from transformers import AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL, revision=CHAT_REVISION)
+    return lambda tokens: tokenizer.decode(tokens, skip_special_tokens=True)
+
+
+def _rg_row(scheme, H, prefix, rep, ids):
+    path = Path(f"/results/{OUT}/rg/{scheme}/rep{rep}/H{H}/{prefix.replace(' ', '_')}.json")
+    if path.exists():
+        return str(path)
+    generate, decode_one = Generator(scheme), _decoder()
+    fruits = WORD_LISTS[RG_LIST][0]
+    row = {}
+    for d in range(1, 10):
+        counts, valid, drawn, examples = [0] * len(fruits), 0, 0, []
+        for attempt in range(RG_ROUNDS):
+            n = RG_FIRST if attempt == 0 else RG_TOPUP
+            texts = [decode_one(t) for t in generate(ids[str(d)], n, RG_MAX_NEW,
+                                                     f"rg|{scheme}|{H}|{prefix}|{d}|{rep}|{attempt}")]
+            drawn += n
+            examples += texts[:2] if attempt == 0 else []
+            for text in texts:
+                choice = identify_fruit(text, fruits)
+                if choice is not None and valid < RG_VALID:
+                    counts[choice] += 1
+                    valid += 1
+            if valid >= RG_VALID:
+                break
+        row[str(d)] = {"counts": counts, "valid": valid, "drawn": drawn, "examples": examples}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"scheme": scheme, "H": H, "prefix": prefix, "rep": rep, "list": RG_LIST,
+                                "fruits": fruits, "cells": row}))
+    results.commit()
+    return str(path)
+
+
+def _fs_run(scheme, rep, ids):
+    path = Path(f"/results/{OUT}/fs/{scheme}/rep{rep}.json")
+    if path.exists():
+        return str(path)
+    tokens = Generator(scheme)(ids, FS_N, FS_MAX_NEW, f"fs|{scheme}|{rep}")
+    decode_one = _decoder()
+    digests = [hashlib.sha256(json.dumps(t).encode()).hexdigest()[:16] for t in tokens]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"scheme": scheme, "rep": rep, "n": len(tokens), "digests": digests,
+                                "lengths": [len(t) for t in tokens],
+                                "examples": [decode_one(t)[:300] for t in tokens[:5]]}))
+    results.commit()
+    return str(path)
+
+
+@app.function(image=hf_image, **RESOURCES, timeout=5400, max_containers=10, retries=modal.Retries(max_retries=2),
+              volumes={"/cache": hf_cache, "/results": results})
+def rg_row_hf(scheme, H, prefix, rep, ids):
+    return _rg_row(scheme, H, prefix, rep, ids)
+
+
+@app.function(image=prc_image, **RESOURCES, timeout=5400, max_containers=10, retries=modal.Retries(max_retries=2),
+              volumes={"/cache": hf_cache, "/data": data_vol, "/results": results})
+def rg_row_prc(H, prefix, rep, ids):
+    return _rg_row("prc", H, prefix, rep, ids)
+
+
+@app.function(image=hf_image, **RESOURCES, timeout=5400, max_containers=10, retries=modal.Retries(max_retries=2),
+              volumes={"/cache": hf_cache, "/results": results})
+def fs_run_hf(scheme, rep, ids):
+    return _fs_run(scheme, rep, ids)
+
+
+@app.function(image=prc_image, **RESOURCES, timeout=5400, max_containers=10, retries=modal.Retries(max_retries=2),
+              volumes={"/cache": hf_cache, "/data": data_vol, "/results": results})
+def fs_run_prc(rep, ids):
+    return _fs_run("prc", rep, ids)
+
+
+@app.function(image=hf_image, cpu=1, memory=2048, timeout=86400, volumes={"/cache": hf_cache})
+def orchestrate_bbd(schemes: list, reps: list):
+    """Cloud-side driver (deploy the app, then spawn): all Red-Green rows and Fixed-Sampling runs."""
+    ids = list_prompt_ids.local([RG_LIST], list(RG_HS))
+    from transformers import AutoTokenizer
+    fs_ids = AutoTokenizer.from_pretrained(CHAT_MODEL, revision=CHAT_REVISION).encode(FS_PROMPT)
+    calls = []
+    for rep in reps:
+        for scheme in schemes:
+            calls.append(fs_run_prc.spawn(rep, fs_ids) if scheme == "prc" else fs_run_hf.spawn(scheme, rep, fs_ids))
+            for H in RG_HS:
+                for prefix in PREFIXES:
+                    row = {str(d): ids[f"{RG_LIST}|{prefix}|{d}|{H}"] for d in range(1, 10)}
+                    calls.append(rg_row_prc.spawn(H, prefix, rep, row) if scheme == "prc"
+                                 else rg_row_hf.spawn(scheme, H, prefix, rep, row))
+    failed = 0
+    for call in calls:
+        try:
+            call.get()
+        except Exception as error:
+            failed += 1
+            print("FAILED", repr(error)[:300], flush=True)
+    print(f"{len(calls) - failed}/{len(calls)} jobs done", flush=True)
+
+
+def launch_bbd(schemes=",".join(SCHEMES), reps="0"):
+    call = modal.Function.from_name("prc-bbd", "orchestrate_bbd").spawn(schemes.split(","),
+                                                                      [int(r) for r in reps.split(",")])
+    print("spawned", call.object_id)
