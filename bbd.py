@@ -338,7 +338,7 @@ class Generator:
         import torch
         if self.scheme == "prc":
             from online_prc import derive_document_seed
-            base = _label_int(label) << 20  # fresh document per response, unique across calls
+            base = (_label_int(label) % 2**40) << 20  # fresh document per response; fits the 64-bit document id
             seeds = [derive_document_seed(BBD_SEED, base + i) for i in range(n)]
             out = []
             for b in range(0, n, 60):
