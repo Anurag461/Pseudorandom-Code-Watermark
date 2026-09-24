@@ -526,49 +526,66 @@ def run_perplexity(schemes: str = "prc,kgw2,exp,synthid"):
         print(scheme, name, "FAILED " + repr(out)[:200] if isinstance(out, Exception) else "ok")
 
 
+def _hoeffding_p(row):
+    """PRC detector's p-value bound exp(-S^2/2V); lower = more watermarked, like the baselines' stats."""
+    import math
+    S, V = row["statistic"], row["V"]
+    return 1.0 if S is None or not V or S <= 0 else math.exp(-S * S / (2 * V))
+
+
 @app.local_entrypoint()
 def summarize_attack(schemes: str = "prc,kgw2,exp,synthid"):
-    """Spoof success at FPR 1e-3 per scheme, variant and alpha, raw and quality-filtered."""
+    """Spoof success at FPR 1e-3 per scheme, variant and alpha, raw and quality-filtered.
+
+    Every scheme gets the same empirical threshold: the 1e-3 quantile of its test statistic on
+    the 5,000 unwatermarked calibration texts (PRC's statistic is its Hoeffding p-value bound).
+    PRC is also reported at its proven Hoeffding threshold, which is at least as strict.
+    """
     import csv
+    import subprocess
+    import tempfile
     import numpy as np
+    local = Path(tempfile.mkdtemp())
+    for sub in ("scores", "ppl"):  # one bulk download instead of hundreds of single reads
+        subprocess.run(["modal", "volume", "get", "prc-attacks", f"{OUT}/{sub}", str(local)], check=True,
+                       capture_output=True)
     rows = []
-    read = lambda p: json.loads(b"".join(results.read_file(p)))
     for scheme in schemes.split(","):
         scores = {}
-        for entry in results.listdir(f"{OUT}/scores/{scheme}"):
-            payload = read(entry.path)
+        for path in (local / "scores" / scheme).glob("*.json"):
+            payload = json.loads(path.read_text())
             values = payload["rows"] if scheme == "prc" else payload["stats"]
             scores.setdefault(payload["name"], []).append((payload["start"], values))
         scores = {k: [v for _, chunk in sorted(parts) for v in chunk] for k, parts in scores.items()}
-        ppl = {}
-        try:
-            ppl_files = results.listdir(f"{OUT}/ppl/{scheme}")
-        except modal.exception.NotFoundError:  # perplexity not computed yet
-            ppl_files = []
-        for entry in ppl_files:
-            payload = read(entry.path)
-            ppl[payload["name"]] = np.array(payload["ppl"])
+        ppl = {json.loads(p.read_text())["name"]: np.array(json.loads(p.read_text())["ppl"])
+               for p in (local / "ppl" / scheme).glob("*.json")}
+        proven = None
         if scheme == "prc":
-            detected = {k: np.array([r["decision"] for r in v]) for k, v in scores.items()}
-            threshold = "Hoeffding FPR<=1e-3"
-        else:
-            calib = np.sort(scores["calib"])
-            cut = calib[int(1e-3 * len(calib)) - 1]  # 1e-3 quantile of 5,000 unwatermarked texts
-            detected = {k: np.array(v) <= cut for k, v in scores.items()}
-            threshold = f"stat<={cut:.4g} (1e-3 quantile of {len(calib)} unwatermarked)"
+            proven = {k: np.array([r["decision"] for r in v]) for k, v in scores.items()}
+            scores = {k: [_hoeffding_p(r) for r in v] for k, v in scores.items()}
+        calib = np.sort(scores["calib"])
+        cut = calib[int(1e-3 * len(calib)) - 1]  # 1e-3 quantile of 5,000 unwatermarked texts
+        detected = {k: np.array(v) <= cut for k, v in scores.items()}
         quality_cut = np.quantile(ppl["calib"], 0.95) if "calib" in ppl else np.inf
+        genuine = detected["query500"].mean()
+        rate = lambda x: f"{x.sum()}/{len(x)} ({x.mean():.1%})"
         for name in sorted(detected):
             d = detected[name][:EVAL_PROMPTS] if name == "calib" else detected[name]
             p = ppl.get(name, np.full(len(d), np.nan))[:len(d)]
             good = p <= quality_cut
             variant, _, rest = name.partition("_N")
-            rows.append({"scheme": scheme, "set": name,
-                         "variant": variant if rest else name, "n_query": rest.split("_a")[0] if rest else "",
-                         "alpha": rest.split("_a")[1] if rest else "", "texts": len(d),
-                         "detected@1e-3": f"{d.sum()}/{len(d)} ({d.mean():.1%})",
-                         "detected & ppl-ok": f"{(d & good).sum()}/{len(d)} ({(d & good).mean():.1%})",
-                         "median ppl": f"{np.nanmedian(p):.3g}", "ppl-ok cut (calib p95)": f"{quality_cut:.3g}",
-                         "threshold": threshold})
+            row = {"scheme": scheme, "set": name, "variant": variant if rest else name,
+                   "n_query": rest.split("_a")[0] if rest else "", "alpha": rest.split("_a")[1] if rest else "",
+                   "texts": len(d), "genuine TPR (query500)": f"{genuine:.1%}",
+                   "detected@1e-3": rate(d), "detected & ppl-ok": rate(d & good),
+                   "median ppl": f"{np.nanmedian(p):.3g}", "ppl-ok cut (calib p95)": f"{quality_cut:.3g}",
+                   "threshold": f"empirical 1e-3 quantile of {len(calib)} unwatermarked (stat<={cut:.4g})",
+                   "PRC proven-threshold detected": "", "PRC proven-threshold & ppl-ok": ""}
+            if proven is not None:
+                q = proven[name][:len(d)]
+                row["PRC proven-threshold detected"] = rate(q)
+                row["PRC proven-threshold & ppl-ok"] = rate(q & good)
+            rows.append(row)
     path = Path(ATTACK_CSV)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="") as handle:
@@ -577,7 +594,8 @@ def summarize_attack(schemes: str = "prc,kgw2,exp,synthid"):
         writer.writerows(rows)
     for r in rows:
         print(f"{r['scheme']:8s} {r['set']:22s} detected {r['detected@1e-3']:>16s}  "
-              f"quality-ok {r['detected & ppl-ok']:>16s}  ppl {r['median ppl']}")
+              f"quality-ok {r['detected & ppl-ok']:>16s}  ppl {r['median ppl']:>6s}  "
+              f"{r['PRC proven-threshold & ppl-ok']}")
 
 
 @app.function(image=spoof_image, cpu=4, memory=32768, timeout=7200,
