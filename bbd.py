@@ -30,6 +30,7 @@ from modal_run import fixed_image
 
 OUT = "bbd_v1"
 CHAT_MODEL = "Qwen/Qwen3-0.6B"
+CHAT_REVISION = "c1899de289a04d12100db370d81485cdf75e47ca"  # pinned; loaded by revision in every workspace
 IM_END = 151645
 STOP = (IM_END, EOS)
 PRC_ONLINE_ARTIFACT = ("online_causal_prc_v1/qwen3_0p6b_base/"
@@ -52,8 +53,10 @@ app = modal.App("prc-bbd")
 # BBD_GPU=cpu runs generation on CPU containers (small pilots while other jobs hold the GPU quota).
 DEVICE = os.environ.get("BBD_GPU", "A10G")
 RESOURCES = dict(cpu=8, memory=32768) if DEVICE == "cpu" else dict(gpu=DEVICE, memory=32768)
-hf_cache = modal.Volume.from_name("prc-hf-cache", create_if_missing=False)
-data_vol = modal.Volume.from_name("prc-data", create_if_missing=False)
+# Created on first use so the tests can run in any workspace; the online PRC artifact is copied into
+# prc-data with `modal volume put` and the chat model is fetched by `fetch_chat_model`.
+hf_cache = modal.Volume.from_name("prc-hf-cache", create_if_missing=True)
+data_vol = modal.Volume.from_name("prc-data", create_if_missing=True)
 results = modal.Volume.from_name("prc-attacks", create_if_missing=True)
 
 
@@ -88,9 +91,9 @@ def generate_hf(scheme, prompt_ids, n, max_new, batch=50, seed=0):
     """n completions of one prompt under an HF-side scheme: none, kgw2, synthid or exp (random offset)."""
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer, LogitsProcessorList
-    tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL)
+    tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL, revision=CHAT_REVISION)
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    model = AutoModelForCausalLM.from_pretrained(CHAT_MODEL, torch_dtype=torch.float32).to(device).eval()
+    model = AutoModelForCausalLM.from_pretrained(CHAT_MODEL, revision=CHAT_REVISION, torch_dtype=torch.float32).to(device).eval()
     torch.manual_seed(seed)
     outputs = []
     for b in range(0, n, batch):
@@ -150,7 +153,7 @@ def generate_prc(prompt_ids, n, max_new, seed_mode="fresh", first_document=0, ba
 def prompt_ids():
     """Chat-templated Red-Green prompts (H=1..5) and the raw Fixed-Sampling prompt, as token ids."""
     from transformers import AutoTokenizer
-    tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL)
+    tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL, revision=CHAT_REVISION)
     rg = {f"{p}|{d}|{H}": chat_ids(tokenizer, rg_prompt(p, d, H))
           for p in PREFIXES for d in range(1, 10) for H in range(1, 6)}
     return {"rg": rg, "fs": tokenizer.encode(FS_PROMPT)}
@@ -159,7 +162,7 @@ def prompt_ids():
 @app.function(image=hf_image, cpu=2, memory=4096, timeout=600, volumes={"/cache": hf_cache})
 def decode(batches):
     from transformers import AutoTokenizer
-    tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL)
+    tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL, revision=CHAT_REVISION)
     return [[tokenizer.decode(t, skip_special_tokens=True) for t in batch] for batch in batches]
 
 
@@ -211,16 +214,13 @@ def debug_hf():
     out["snapshots"] = {s: sorted(os.listdir(f"{snap}/{s}")) for s in os.listdir(snap)}
     try:
         from transformers import AutoModelForCausalLM, AutoTokenizer
-        AutoTokenizer.from_pretrained(CHAT_MODEL)
+        AutoTokenizer.from_pretrained(CHAT_MODEL, revision=CHAT_REVISION)
         out["tokenizer"] = "ok"
-        AutoModelForCausalLM.from_pretrained(CHAT_MODEL)
+        AutoModelForCausalLM.from_pretrained(CHAT_MODEL, revision=CHAT_REVISION)
         out["model"] = "ok"
     except Exception:
         out["traceback"] = traceback.format_exc()[-3000:]
     return out
-
-
-CHAT_REVISION = "c1899de289a04d12100db370d81485cdf75e47ca"  # the snapshot already holding the tokenizer
 
 
 @app.function(image=hf_image, cpu=2, memory=8192, timeout=1800, volumes={"/cache": hf_cache})
@@ -234,9 +234,10 @@ def fetch_chat_model():
     path = snapshot_download(CHAT_MODEL, revision=CHAT_REVISION, cache_dir="/cache")
     hf_cache.commit()
     digest = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
-    return {"files": sorted(os.listdir(path)),
-            "same_weights_as_prc_loader": digest(f"{path}/model.safetensors")
-            == digest("/cache/models/Qwen3-0.6B/model.safetensors")}
+    prc_copy = Path("/cache/models/Qwen3-0.6B/model.safetensors")
+    return {"files": sorted(os.listdir(path)), "sha256": digest(f"{path}/model.safetensors"),
+            "same_weights_as_prc_loader": digest(prc_copy) == digest(f"{path}/model.safetensors")
+            if prc_copy.exists() else "PRC loader copy not downloaded yet"}
 
 
 @app.local_entrypoint()
