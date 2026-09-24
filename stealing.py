@@ -504,6 +504,47 @@ def orchestrate_attack(schemes: list, variants: list, n_query: int, alphas: list
     print("perplexity done", flush=True)
 
 
+# E4: spoof success vs number of attacker queries, at each scheme's best E3 setting.
+E4_QUERIES = (1_000, 3_000, 10_000, 30_000)
+E4_CELLS = [("kgw2", "ctx1", 4.5), ("exp", "pos", 2.0), ("synthid", "ctx3", 8.0), ("synthid", "ctx4", 8.0),
+            ("prc", "ctx1", 8.0), ("prc", "ctx2", 8.0), ("prc", "ctx3", 8.0), ("prc", "ctx4", 8.0),
+            ("prc", "pos", 4.5)]
+
+
+def _score_and_ppl(schemes):
+    """Score every text set of each scheme, then compute perplexity (both cached per file)."""
+    results.reload()
+    jobs = []
+    for scheme in schemes:
+        for name, tokens in _text_sets(scheme).items():
+            step = 500 if scheme == "prc" else 100
+            jobs += [(scheme, name, s, min(s + step, len(tokens))) for s in range(0, len(tokens), step)]
+    calls = [score_prc.spawn(*j[1:]) if j[0] == "prc" else score_hf.spawn(*j) for j in jobs]
+    names = [(scheme, name) for scheme in schemes for name in _text_sets(scheme)]
+    calls += [perplexity.spawn(*n) for n in names]
+    failed = 0
+    for call in calls:
+        try:
+            call.get()
+        except Exception as error:
+            failed += 1
+            print("FAILED", repr(error)[:300], flush=True)
+    print(f"scored and perplexity: {len(calls) - failed}/{len(calls)}", flush=True)
+
+
+@app.function(image=spoof_image, cpu=1, memory=4096, timeout=86400, volumes={"/results": results})
+def orchestrate_e4():
+    """E4 in the cloud: extend queries to 30k, spoof every cell at each N, then score and perplexity."""
+    print(orchestrate.remote(list(SCHEMES), max(E4_QUERIES)), flush=True)
+    calls = [spoof.spawn(s, v, n, [a]) for s, v, a in E4_CELLS for n in E4_QUERIES if n != 10_000]
+    for call in calls:
+        try:
+            print(call.get(), flush=True)
+        except Exception as error:
+            print("FAILED spoof", repr(error)[:300], flush=True)
+    _score_and_ppl(sorted({s for s, _, _ in E4_CELLS}))
+
+
 def launch_attack(schemes="prc,kgw2,exp,synthid", variants="ctx1,pos", n_query=10_000, alphas=SPOOF_ALPHAS):
     call = modal.Function.from_name("prc-stealing", "orchestrate_attack").spawn(
         schemes.split(","), variants.split(","), n_query, list(alphas))
@@ -655,3 +696,8 @@ def recovery(n_query: int = 10_000):
                                   return_exceptions=True)
     for result in out:
         print(json.dumps(result) if isinstance(result, dict) else f"FAILED {result!r}")
+
+
+def launch_e4():
+    call = modal.Function.from_name("prc-stealing", "orchestrate_e4").spawn()
+    print("spawned", call.object_id)
