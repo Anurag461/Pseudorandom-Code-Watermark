@@ -5,9 +5,19 @@
 [results CSV](evidence/experiment-20260924/results_summary.csv), and
 [matched-FPR figure](evidence/experiment-20260924/tpr_matched_fpr_vs_temperature.pdf).
 
-At matched FPR, MAP gains 11.25 percentage points at T=1.0 and 8.75 points at
-T=1.2; both paired 95% intervals exclude zero. At T=1.4 both matched detectors
-reach 100%. T=1.0 remains difficult: matched MAP TPR is only 11.25%.
+**Main finding: at T=1.2, prompt-free MAP raises detection from 0% to 97.5% on
+the same Qwen3-8B-Base outputs under the prescribed thresholds.** After both
+detectors are calibrated to target FPR 0.1%, hard reaches 89.38% and MAP reaches
+98.13%, a paired gain of 8.75 percentage points (95% CI 2.50–16.88).
+
+At T=1.0, calibrated MAP gains 11.25 points but absolute detection remains only
+11.25%. At T=1.4 and above, both calibrated detectors reach 100%. Standard MAP's
+pooled observed FPR is **0.0039%, not zero** (4/102400 null/key pairings from
+400 distinct held-out null texts). Equal calibration targets do not imply equal
+realized FPR. The [main takeaways](evidence/experiment-20260924/README.md#main-takeaways)
+and [comparison with Wang's results](evidence/experiment-20260924/README.md#comparison-with-wangs-original-results)
+separate threshold effects, scoring gains, and model differences.
+
 All 1600 generation/replay traces are saved. The run took 41.28 minutes and cost
 approximately $4.48 from observed runtimes; provider billing is pending.
 
