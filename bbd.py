@@ -38,9 +38,15 @@ PRC_ONLINE_ARTIFACT = ("online_causal_prc_v1/qwen3_0p6b_base/"
 BBD_SEED = 20260924
 EXP_KEY_SEED, EXP_KEY_LENGTH = 42, 256
 
-# Red-Green probe (paper's released code; Qwen2-7B-Instruct word list as the starting point)
-FRUITS = ["peaches", "plums", "cherries", "apricots"]
-EXAMPLE, FORMAT = "strawberries", ""
+# Red-Green probe word lists from the paper's released code (per-model lists); FORMAT "" as for Qwen2.
+WORD_LISTS = {
+    "peaches": (["peaches", "plums", "cherries", "apricots"], "strawberries"),
+    "mangoes": (["mangoes", "pineapples", "papayas", "kiwis"], "strawberries"),
+    "berries": (["strawberries", "blueberries", "raspberries", "blackberries"], "apples"),
+    "apples": (["apples", "bananas", "oranges", "pears"], "strawberries"),
+}
+FRUITS, EXAMPLE = WORD_LISTS["peaches"]
+FORMAT = ""
 PREFIXES = ["I ate", "I chose", "I picked", "I selected", "I took", "I went for", "I settled on", "I got",
             "I gathered", "I harvested"]
 RG_MAX_NEW = 65
@@ -60,11 +66,12 @@ data_vol = modal.Volume.from_name("prc-data", create_if_missing=True)
 results = modal.Volume.from_name("prc-attacks", create_if_missing=True)
 
 
-def rg_prompt(prefix, digit, H):
+def rg_prompt(prefix, digit, H, fruits=None, example=None):
+    fruits, example = fruits or FRUITS, example or EXAMPLE
     k = str(digit) * H
-    return (f'Complete the sentence "{prefix} {k}" using only and exacty a random word from the list: {FRUITS}.  '
-            f'Answer in this speific format: {FORMAT} {prefix} {k} {EXAMPLE}. (here I chose an other fruit for '
-            f'the sake of the example, you have to choose among {FRUITS})')
+    return (f'Complete the sentence "{prefix} {k}" using only and exacty a random word from the list: {fruits}.  '
+            f'Answer in this speific format: {FORMAT} {prefix} {k} {example}. (here I chose an other fruit for '
+            f'the sake of the example, you have to choose among {fruits})')
 
 
 def identify_fruit(text, candidates=FRUITS):
@@ -158,6 +165,39 @@ def prompt_ids():
     rg = {f"{p}|{d}|{H}": chat_ids(tokenizer, rg_prompt(p, d, H))
           for p in PREFIXES for d in range(1, 10) for H in range(1, 6)}
     return {"rg": rg, "fs": tokenizer.encode(FS_PROMPT)}
+
+
+@app.function(image=hf_image, cpu=2, memory=4096, timeout=600, volumes={"/cache": hf_cache})
+def list_prompt_ids(lists, Hs):
+    """Chat-templated Red-Green prompts keyed 'list|prefix|digit|H'."""
+    from transformers import AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained(CHAT_MODEL, revision=CHAT_REVISION)
+    return {f"{name}|{p}|{d}|{H}": chat_ids(tokenizer, rg_prompt(p, d, H, *WORD_LISTS[name]))
+            for name in lists for p in PREFIXES for d in range(1, 10) for H in Hs}
+
+
+@app.local_entrypoint()
+def wordlists():
+    """Unwatermarked choice balance and parse rate per candidate word list (2 prefixes x 3 digits x 20)."""
+    ids = list_prompt_ids.remote(list(WORD_LISTS), [5])
+    cells = [(name, p, d) for name in WORD_LISTS for p in PREFIXES[:2] for d in (1, 5, 9)]
+    calls = [generate_hf.spawn("none", ids[f"{n}|{p}|{d}|5"], 20, RG_MAX_NEW, 20, i) for i, (n, p, d) in
+             enumerate(cells)]
+    texts = decode.remote([c.get() for c in calls])
+    report = {}
+    for (name, _, _), batch in zip(cells, texts):
+        fruits = WORD_LISTS[name][0]
+        entry = report.setdefault(name, {"n": 0, "parsed": 0, "counts": dict.fromkeys(fruits, 0)})
+        entry["n"] += len(batch)
+        for text in batch:
+            choice = identify_fruit(text, fruits)
+            if choice is not None:
+                entry["parsed"] += 1
+                entry["counts"][fruits[choice]] += 1
+    for entry in report.values():
+        entry["max_share"] = round(max(entry["counts"].values()) / max(entry["parsed"], 1), 3)
+    Path("outputs/attacks/bbd_wordlists.json").write_text(json.dumps(report, indent=2))
+    print(json.dumps(report, indent=2))
 
 
 @app.function(image=hf_image, cpu=2, memory=4096, timeout=600, volumes={"/cache": hf_cache})
