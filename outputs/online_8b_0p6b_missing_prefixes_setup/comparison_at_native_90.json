@@ -1,0 +1,117 @@
+{
+  "definition": "For each eta, shortest recorded length where native 8B posterior TPR >=90%, N=500; both detector weights compared at that same length.",
+  "points": [
+    {
+      "eta": 0.05,
+      "T": 864,
+      "native_counts": {
+        "map": {
+          "detected": 450,
+          "count": 500
+        },
+        "entropy": {
+          "detected": 397,
+          "count": 500
+        }
+      },
+      "small_counts": {
+        "map": {
+          "detected": 416,
+          "count": 500
+        },
+        "entropy": {
+          "detected": 380,
+          "count": 500
+        }
+      },
+      "posterior_drop_pp": 6.8,
+      "entropy_drop_pp": 3.4
+    },
+    {
+      "eta": 0.1,
+      "T": 1664,
+      "native_counts": {
+        "map": {
+          "detected": 451,
+          "count": 500
+        },
+        "entropy": {
+          "detected": 408,
+          "count": 500
+        }
+      },
+      "small_counts": {
+        "map": {
+          "detected": 423,
+          "count": 500
+        },
+        "entropy": {
+          "detected": 383,
+          "count": 500
+        }
+      },
+      "posterior_drop_pp": 5.6,
+      "entropy_drop_pp": 5
+    },
+    {
+      "eta": 0.15,
+      "T": 4672,
+      "native_counts": {
+        "map": {
+          "detected": 450,
+          "count": 500
+        },
+        "entropy": {
+          "detected": 429,
+          "count": 500
+        }
+      },
+      "small_counts": {
+        "map": {
+          "detected": 429,
+          "count": 500
+        },
+        "entropy": {
+          "detected": 404,
+          "count": 500
+        }
+      },
+      "posterior_drop_pp": 4.2,
+      "entropy_drop_pp": 5
+    },
+    {
+      "eta": 0.2,
+      "T": 11856,
+      "native_counts": {
+        "map": {
+          "detected": 450,
+          "count": 500
+        },
+        "entropy": {
+          "detected": 429,
+          "count": 500
+        }
+      },
+      "small_counts": {
+        "map": {
+          "detected": 430,
+          "count": 500
+        },
+        "entropy": {
+          "detected": 411,
+          "count": 500
+        }
+      },
+      "posterior_drop_pp": 4,
+      "entropy_drop_pp": 3.6
+    }
+  ],
+  "posterior": {
+    "average_drop_pp": 5.15,
+    "max_drop_pp": 6.8
+  },
+  "entropy": {
+    "average_drop_pp": 4.25,
+    "max_drop_pp": 5
+  }
+}

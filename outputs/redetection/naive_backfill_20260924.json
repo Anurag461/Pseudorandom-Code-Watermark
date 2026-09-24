@@ -1,0 +1,1245 @@
+{
+  "as_of": "2026-09-24",
+  "definition": "Standard naive: signed partition bits at every coordinate, including coordinate 1; independent of model probabilities. Posterior/entropy retain their existing coordinate-1 abstention.",
+  "method": "Read and aggregate previously saved counts/decisions only; no detector rescoring, model execution, cloud compute, or pushes.",
+  "source_csv_sha256": "2f147109f7b7e64cb90292bcddab34a5069a2a3f10a4f130928efda009d71245",
+  "updated_csv_sha256": "a7f1378af01d2ca9ff846e8354c6bf83770e9ad68204bf0dfd123899f7ccd43a",
+  "rows": 949,
+  "filled_rows": 33,
+  "remaining_rows": 916,
+  "sources": {
+    "s01": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n1024/audit.json",
+      "sha256": "cb8d2edcf2d44081a70a2c6c8e98009f32503672eae711c97fe3ed2763e3f0ef",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 463,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n1024/prepared.json",
+        "prepared_sha256": "8360cd166dfb053ec2c6056e0a8ab01ed765a4d441d4a45c15633d532a6447ce",
+        "key_partition_semantic_sha256": "d2a2ba289bb51e1182bf3b81cba9f6f295caccac9b19ffe2e6cb696f5716fb05"
+      }
+    },
+    "s02": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n2048/audit.json",
+      "sha256": "1667b9bcda133b61d46c03eee535e7e119709955406b3a0f37c88f73d6d37d37",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 495,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n2048/prepared.json",
+        "prepared_sha256": "4428b62e823b1a801dc83e8a633be0066d72e12dab02d35a4f821010247be159",
+        "key_partition_semantic_sha256": "f8b8e530c88083cfe853096a21c2ed55c468ccfb69e91fba9b98525c46cf4d5f"
+      }
+    },
+    "s03": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n256/audit.json",
+      "sha256": "d5d0bac751b9a4c6b38bbcec2f9758b7e46ef11e5447660b02af9d24c698614e",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 126,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n256/prepared.json",
+        "prepared_sha256": "b78c0f1415ecf16298adac6c36ff0128b54984dc00c38eae23e11da8bd69d8dd",
+        "key_partition_semantic_sha256": "b2e3fade5e37ad2147ba60c6a883b40d66741e60643fb70aad1adebbf6469753"
+      }
+    },
+    "s04": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n256_seed54321/audit.json",
+      "sha256": "04026a0eeea9cf31649a9e4e4bf22526ee7b1ad74d9255f89bf07f9bc9d58af8",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 134,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n256_seed54321/prepared.json",
+        "prepared_sha256": "277e058b5b279dbf0c1063b4baa3c43d44e433701e7a49f591bab777998cd976",
+        "key_partition_semantic_sha256": "9e9aeebdf9178e861e8872842a930549fd10193f7278838df302fc21e10b8902"
+      }
+    },
+    "s05": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n256_seed67890/audit.json",
+      "sha256": "b848ec7d268fb936d9ad922224ae4b1bebb885ecb1043d3acb065a72333e9a18",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 136,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n256_seed67890/prepared.json",
+        "prepared_sha256": "e2fd342ec2192f4ed6373e580db001481a9537466306dbe25e6a0c9ba67e198e",
+        "key_partition_semantic_sha256": "d858dd340dac19d17cdfdcf096e8960a2e050f47c4077efb9697045c8b94972d"
+      }
+    },
+    "s06": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n416/audit.json",
+      "sha256": "3c77ce1bad98ba4f9b4a6e45e367e245b93f5abd8bcec143418177cb35861bf0",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 255,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n416/prepared.json",
+        "prepared_sha256": "20a3be8ec45162879646cda050479aff6877f7652e296fb0e0d14c300e3887cf",
+        "key_partition_semantic_sha256": "e5856ac5ee43f37fe20d6a69ccb9a38bb1d521c4d4fc86658dbf038860ff1955"
+      }
+    },
+    "s07": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n512/audit.json",
+      "sha256": "a5c6261090b3287027eafd115f20037978dbce3ffc887f4034ae5b011face553",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 344,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta005_n512/prepared.json",
+        "prepared_sha256": "f69283b95efc82d8f9db159bbbd6850722740a8051d56a026e4146e85b8822f3",
+        "key_partition_semantic_sha256": "294734a4a44cbd167b9cf07a26eabc5e11c71b2ed02630d5e7d19a103cc266a9"
+      }
+    },
+    "s08": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta010_n1024/audit.json",
+      "sha256": "fdc311d677a1ec93a292a13890fa5aa8081d1281cd7587a74f4a3347ec00c94a",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 385,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta010_n1024/prepared.json",
+        "prepared_sha256": "00a854dddac6dbed5719d328dc8512bbf16fd05358a98e591715b8905f977942",
+        "key_partition_semantic_sha256": "2c2ead9076cd19fdea570b8169d0559bba1aa3f13f7e794b7544ec18631aaf6f"
+      }
+    },
+    "s09": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta010_n256/audit.json",
+      "sha256": "72a35f6e54d6ba26a1427e5105ffa1e0b1fe37677e38311e74902e539c6e7e21",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 47,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta010_n256/prepared.json",
+        "prepared_sha256": "ef8a34a995b1a138b55a8fca3b47fda1c3f58685d7866f1d96b165dbd371ac4a",
+        "key_partition_semantic_sha256": "c062f57cc1ef9527358f1bd88d57a68c10d51b8e1c7c6c35397d6d515260b102"
+      }
+    },
+    "s10": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta010_n400/audit.json",
+      "sha256": "fc3fa0af0086f26384b7593c2ffc406b60e615f45c2e6e85e94d8c437885772d",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 120,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta010_n400/prepared.json",
+        "prepared_sha256": "06341b4303e117d370a9938e318adcc790098bcf77b694d97fef760f459a5b94",
+        "key_partition_semantic_sha256": "e21b035e2570b250d03c31320dbc5ed62f909868968791e99ea0feb226683da0"
+      }
+    },
+    "s11": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta010_n512/audit.json",
+      "sha256": "8e4295e0f44543abe81d6d7f2a5084a9988a4e2855445d81c764788a12110983",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 168,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta010_n512/prepared.json",
+        "prepared_sha256": "1d41ebd6415e9d4286ce6e8af071db057d3fb07a6648943a2c5d4ae8d945615e",
+        "key_partition_semantic_sha256": "fc7d962fbc71abdb4832c7f63d91c01e7a7aa4819dc1f12cc7ba159447bbd491"
+      }
+    },
+    "s12": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta010_n768/audit.json",
+      "sha256": "cf8acde143659d465cb0426769c99873a90d1325e8d0e8d6e105ae90ac104c04",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 283,
+          "count": 500
+        },
+        "null": {
+          "detected": 1,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta010_n768/prepared.json",
+        "prepared_sha256": "5084c8ae682a34be86cf6593ab0cd4830e018ccd6211d75d02e7dd845fae5e64",
+        "key_partition_semantic_sha256": "f69690c9fc4429337bd9da2cfc4ef674a14fbd322958c9a2439feb1587b60a29"
+      }
+    },
+    "s13": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n1024/audit.json",
+      "sha256": "1c476d675430988c0e806739bed624271125c743bd8b2abaf94e36b3cac15e79",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 201,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n1024/prepared.json",
+        "prepared_sha256": "25cd71133ded776c2671684d4507450701270afcc20a75bd1d68c1f2302ff594",
+        "key_partition_semantic_sha256": "7d9892c9daf647d49fc1cbd3ab525aa3704abc329fa2ba7faa1202b92ee86209"
+      }
+    },
+    "s14": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n1504/audit.json",
+      "sha256": "e494064f5b2a909f499a8acc61453aaa0688fb9679f449becaeeb6cbbea184b0",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 341,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n1504/prepared.json",
+        "prepared_sha256": "2ce12ebd5494f85945b8b3dc72a3e6813cf5111b7ea073ae2b5b1415153a5f0d",
+        "key_partition_semantic_sha256": "6d4535bc1061009712931069ffbc1c2fa94b8f2ecec48f538dffa4bfde7c0c7d"
+      }
+    },
+    "s15": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n2048/audit.json",
+      "sha256": "da4b3d8fa78b8b8119409c971e29f678efb273911781e03df70e8812a301332d",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 441,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n2048/prepared.json",
+        "prepared_sha256": "f40e86bbca519d696ddfae5a1ae9dacd3e20cb477bfa2834259aacc774451578",
+        "key_partition_semantic_sha256": "fc8e47a3ac84fd7bdc764a32cd26e9e80b3dd7b5eeadb0be5105f7633fb274e6"
+      }
+    },
+    "s16": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n256/audit.json",
+      "sha256": "575fc4861f305df6767e450b699d24ed67627b4d19217d9455c9ddf16ee664f1",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 12,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n256/prepared.json",
+        "prepared_sha256": "d9291733ec0511dbab62bd088079ad8100c6edf1e791f6a16cf1545983e38a7f",
+        "key_partition_semantic_sha256": "4603220d9e9184ef21b5615aa4148004ebcd5907fb58ed6f28184dd2e2564c40"
+      }
+    },
+    "s17": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n400/audit.json",
+      "sha256": "5017c32f7c392fa3cb2fe88293040a27ac46f71a80c825b6cf77fb0111c24aa9",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 29,
+          "count": 500
+        },
+        "null": {
+          "detected": 1,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n400/prepared.json",
+        "prepared_sha256": "6820d23f5ec0191e75f156ced97d74f77282b9fb967cce2737141742ab26b7fb",
+        "key_partition_semantic_sha256": "988560fab18c95daa0787c7e1d36e05c70d6cf3f1e27a28ab42a9b61923ae331"
+      }
+    },
+    "s18": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n512/audit.json",
+      "sha256": "9dfcec3709dce7452d7d13757b6aec18d79db9113e8e6367e912b0754781229b",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 56,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta015_n512/prepared.json",
+        "prepared_sha256": "7f3c8a79ab880ab3618499d5abea965700c10a48e1879f3a65199eff44eda37b",
+        "key_partition_semantic_sha256": "654eef37f6b2abc538293b8f3d810619a14a64869d3ce35deefd6d80f8ed7db4"
+      }
+    },
+    "s19": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta020_n2048/audit.json",
+      "sha256": "9a25d912ba4a843fc5a9fab2a52d32dd66cbca4b90f2510ee1a1ba8c934dc3da",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 229,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta020_n2048/prepared.json",
+        "prepared_sha256": "afcaffa506e35c15fcce67d916f7802b2c8a40d8d0a291148849ca321a847f14",
+        "key_partition_semantic_sha256": "abd1b9c5bf262cfa2c4d86de66111929e334ab641d5ac3b699445528663c2a14"
+      }
+    },
+    "s20": {
+      "path": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta020_n4096/audit.json",
+      "sha256": "6c912249775828fe203f824417dc2dc2c83cc30fce4bab508b894992059733d6",
+      "json_pointer": "/original_counts_reproduced/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 447,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved passed preparation audit reproduces all three historical weights on the exact frozen 500 watermarked and 500 null candidates.",
+        "Audit semantic hash equals the prepared manifest old_tpr evidence hash; original posterior and entropy counts match this CSV row."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/fixed_0p6b_redetect_setup/cases/fixed_0p6b_eta020_n4096/prepared.json",
+        "prepared_sha256": "21c8935f3a87d396393ac7d94c24a2b10100cd316cc6091a0425b9ec15734a8a",
+        "key_partition_semantic_sha256": "e1a7d98be74d1eb2af10092bd3e97bb58782d9213a7b14f2cb496d3b9b1ce872"
+      }
+    },
+    "s21": {
+      "path": "outputs/redetection/diagnostics/n400_eot_bf16/full.json",
+      "sha256": "d6ec83a2cb5dfc71339aea9b30a84c2b99408ec31580f0f6879fd7972b4b615f",
+      "json_pointer": "/counts/{wm,null}/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 260,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Raw-completion report references this exact diagnostic file hash and verifies identical candidates, key, partition and parity checks.",
+        "The saved naive results retain coordinate 1 and do not depend on the probability replay."
+      ],
+      "additional_evidence": {
+        "raw_report": "outputs/redetection/current/same_0p6b_eta005_n400/summary.json",
+        "raw_report_sha256": "ccbe2e72460acbafb8257c286abae82cbe0ca5e3d8d689f5006a60acb45b75a9"
+      }
+    },
+    "s22": {
+      "path": "outputs/redetection/diagnostics/n640_eot_bf16/full.json",
+      "sha256": "5ae8eec604f11e05b3b8f45fb7fcd021080418d4fb09445eda04704a9e5b8815",
+      "json_pointer": "/counts/{wm,null}/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 195,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Raw-completion report references this exact diagnostic file hash and verifies identical candidates, key, partition and parity checks.",
+        "The saved naive results retain coordinate 1 and do not depend on the probability replay."
+      ],
+      "additional_evidence": {
+        "raw_report": "outputs/redetection/current/cross_8b_0p6b_eta005_n640/summary.json",
+        "raw_report_sha256": "500f5d17896ef010f96267767fe96ee0d0842d3f390a9c9717760abc6190551d"
+      }
+    },
+    "s23": {
+      "path": "outputs/redetection/.archive/runs/5ad734125aae7a2f57392331/same_0p6b_eta005_n448/old_results.json",
+      "sha256": "3ca1b7366af19d59447f26f082f7080e53cc992788d4e99276dc84d79acfdf89",
+      "json_pointer": "/records/*/decision_naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 291,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Aggregated already-saved naive decisions; no detector scoring.",
+        "All 1,000 ordered source/prompt identities and token-prefix hashes match the redetection prepared manifest; target FPR .001."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/redetection/.archive/runs/5ad734125aae7a2f57392331/same_0p6b_eta005_n448/prepared.json",
+        "prepared_sha256": "9ae39abb5932de046e6375060433ade0bc8045a227a068e77b2ab824a9af4a9c"
+      }
+    },
+    "s24": {
+      "path": "outputs/online_causal_n256_t3_eta0.05_prompts500_sampler-poscdf-v1_from_n400.json",
+      "sha256": "3beb6632bafe922c7bbb41abc56fe88c766e89b6f1d19163c9531e87c65fe4f7",
+      "json_pointer": "/counts/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 113,
+          "count": 500
+        },
+        "null": {
+          "detected": 1,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved preparation audit explicitly checks this historical full-audit length and reproduces posterior/entropy counts for both 500-candidate cohorts.",
+        "Matched the canonical poscdf source lineage, t=3, one-shot target FPR .001, and the exact historical null source paths.",
+        "The n256/n400 source lineage was verified against the longer n512 tokens during saved preparation."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta005_n512/prepared.json",
+        "prepared_sha256": "7c4c1e2ca9c3d38254b0df9e9185d2956e02c8c3b529378b7f09108bb2b51dc9",
+        "audit": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta005_n512/audit.json",
+        "audit_sha256": "a11841c400a6ee6412292cc3bfa6a8694982e98d4a43106366a159f60ad1ee20",
+        "historical_null_T": 512
+      }
+    },
+    "s25": {
+      "path": "outputs/online_causal_n400_t3_eta0.05_prompts500_sampler-poscdf-v1.json",
+      "sha256": "85ea18e1419bcdae9def9643d2f703273c28aff320d7a4094f2e15a0c4df6384",
+      "json_pointer": "/counts/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 234,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved preparation audit explicitly checks this historical full-audit length and reproduces posterior/entropy counts for both 500-candidate cohorts.",
+        "Matched the canonical poscdf source lineage, t=3, one-shot target FPR .001, and the exact historical null source paths.",
+        "The n256/n400 source lineage was verified against the longer n512 tokens during saved preparation."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta005_n512/prepared.json",
+        "prepared_sha256": "7c4c1e2ca9c3d38254b0df9e9185d2956e02c8c3b529378b7f09108bb2b51dc9",
+        "audit": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta005_n512/audit.json",
+        "audit_sha256": "a11841c400a6ee6412292cc3bfa6a8694982e98d4a43106366a159f60ad1ee20",
+        "historical_null_T": 512
+      }
+    },
+    "s26": {
+      "path": "outputs/online_map_sweep_n512_to400_step16_t3_eta0.05_prompts500_sampler-poscdf-v1.json",
+      "sha256": "6528106b04d1b2974534630aaedede0e8a8d23d71cdbab3f7a6e1f435bcbf884",
+      "json_pointer": "/final_audit/counts/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 260,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved preparation audit explicitly checks this historical full-audit length and reproduces posterior/entropy counts for both 500-candidate cohorts.",
+        "Matched the canonical poscdf source lineage, t=3, one-shot target FPR .001, and the exact historical null source paths.",
+        "Original causal key and prefix schedule are retained."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta005_n512/prepared.json",
+        "prepared_sha256": "7c4c1e2ca9c3d38254b0df9e9185d2956e02c8c3b529378b7f09108bb2b51dc9",
+        "audit": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta005_n512/audit.json",
+        "audit_sha256": "a11841c400a6ee6412292cc3bfa6a8694982e98d4a43106366a159f60ad1ee20",
+        "historical_null_T": 512
+      }
+    },
+    "s27": {
+      "path": "outputs/online_causal_n800_t3_eta0.10_prompts500_sampler-poscdf-v1_kvcache-static-v1_from_n1024.json",
+      "sha256": "fb1c36f0a46f5845d191743546f2652eb9fb4c3e7ef05de5cc659e63ca1fecdd",
+      "json_pointer": "/counts/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 259,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved preparation audit explicitly checks this historical full-audit length and reproduces posterior/entropy counts for both 500-candidate cohorts.",
+        "Matched the canonical poscdf source lineage, t=3, one-shot target FPR .001, and the exact historical null source paths.",
+        "Original causal key and prefix schedule are retained."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta010_n1024/prepared.json",
+        "prepared_sha256": "f1947e6ba18c67be4d5b268040490b36186eba17c2c91437fd8dc9a6a902d872",
+        "audit": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta010_n1024/audit.json",
+        "audit_sha256": "29b9a7444fce3df6660594ddabd5393ff92fb097bf035a5f543baa7bf0d90ae3",
+        "historical_null_T": 1024
+      }
+    },
+    "s28": {
+      "path": "outputs/online_map_sweep_n2048_to1024_step16_t3_eta0.15_prompts500_sampler-poscdf-v1.json",
+      "sha256": "28b9bc7c1575c4563587168e3750825cbeb8027931bdf6123aa0fade8604d76b",
+      "json_pointer": "/final_audit/counts/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 279,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved preparation audit explicitly checks this historical full-audit length and reproduces posterior/entropy counts for both 500-candidate cohorts.",
+        "Matched the canonical poscdf source lineage, t=3, one-shot target FPR .001, and the exact historical null source paths.",
+        "Original causal key and prefix schedule are retained."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta015_n2048/prepared.json",
+        "prepared_sha256": "922548a491955d8e2c0866907337f23314a6582fa257c434f490ee66abdc8d5f",
+        "audit": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta015_n2048/audit.json",
+        "audit_sha256": "da563b1b265a7677379ab8c4d583a939c51315bf15f1d52f8bf777f1e6629d8e",
+        "historical_null_T": 8192
+      }
+    },
+    "s29": {
+      "path": "outputs/online_causal_n3104_t3_eta0.20_prompts500_sampler-poscdf-v1_kvcache-static-v1_from_n4096.json",
+      "sha256": "0b03c1efb28835259dce64232bc4994105e419dd6dda825d06545b0545e3d60d",
+      "json_pointer": "/counts/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 328,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Saved preparation audit explicitly checks this historical full-audit length and reproduces posterior/entropy counts for both 500-candidate cohorts.",
+        "Matched the canonical poscdf source lineage, t=3, one-shot target FPR .001, and the exact historical null source paths.",
+        "Original causal key and prefix schedule are retained."
+      ],
+      "additional_evidence": {
+        "prepared": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta020_n4096/prepared.json",
+        "prepared_sha256": "daa390df363c0d6530001f8ab4d0190381270090e2e4ffb74bd98b678c112436",
+        "audit": "outputs/online_0p6b_redetect_setup/cases/online_0p6b_eta020_n4096/audit.json",
+        "audit_sha256": "29236474c0a0868c6ca524ace85dcc87c8105aa1261c091e995898c1593f038d",
+        "historical_null_T": 8192,
+        "same_cohort_audit": "outputs/online_0p6b_redetect_setup/n3104_consistency.json"
+      }
+    },
+    "s30": {
+      "path": "outputs/online_causal_n4096_t3_eta0.15_prompts500_gen-qwen3_8b_base_sampler-poscdf-v1.json",
+      "sha256": "d68cd3d76adbc833149c86625bfb807dd1dbf43c265b422d94d6ce7e8bb62c62",
+      "json_pointer": "/counts/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 335,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Historical report is explicitly referenced and checked by the saved preparation audit for this 4096-token cohort.",
+        "Original key, threshold, 500 watermarked candidates and null source paths are preserved."
+      ],
+      "additional_evidence": {
+        "audit": "outputs/online_8b_redetect_setup/cases/online_8b_eta015_n4096/audit.json",
+        "audit_sha256": "e920cbf4eca0ebfde4af8e17eb96fe7e769ffbeaf9ae5ac7e57ee95e8dfa5db5",
+        "prepared": "outputs/online_8b_redetect_setup/cases/online_8b_eta015_n4096/prepared.json",
+        "prepared_sha256": "ea46a62c8af398c8a9951f2f164770a2777ce6d509133544097007a6d43e8079"
+      }
+    },
+    "s31": {
+      "path": "outputs/online_causal_n13088_t3_eta0.20_prompts500_gen-qwen3_8b_base_sampler-poscdf-v1_kvcache-static-v1_from_n14336.json",
+      "sha256": "a83f3b8f0a8f70fa72c06c62b515d7183dd3219793c0897755f9d3540cdabfda",
+      "json_pointer": "/counts/naive",
+      "naive_counts": {
+        "wm": {
+          "detected": 385,
+          "count": 500
+        },
+        "null": {
+          "detected": 0,
+          "count": 500
+        }
+      },
+      "verification": [
+        "Historical source artifact fingerprint and causal-key hash match the completed small-detector setup.",
+        "Both target rows use the same original 14336-token artifact and 500 watermarked token hashes, truncated at 13088 with one-shot alpha=.001.",
+        "Naive FPR uses the historical 500 native-8B nulls at T13088, the cohort reused by the completed shared-null run.",
+        "Shared-null setup lists exactly null_0000..null_0499 from the historical T13088 directory, with saved file hashes."
+      ],
+      "additional_evidence": {
+        "prefix_prepared": "outputs/online_8b_eta020_prefixes_setup/cache/results/online_8b_eta020_N500_prefixes_v1/8B/prepared.json",
+        "prefix_prepared_sha256": "36c450f91e048d37b2d606f2aeb479a10f640053f49e5c4d4bb0686948ddda60",
+        "shared_null_prepared": "outputs/online_8b_shared_null_T13088_setup/cache/results/online_8b_shared_null_T13088_N500_v1/eta020/prepared.json",
+        "shared_null_prepared_sha256": "1ae60b0db1ea0a5fdee8c8de2b035b520112533d0fe738d926aee3fbbf4c438e",
+        "setup": "outputs/online_8b_eta020_0p6b_setup/setup.json",
+        "setup_sha256": "0b11cf8c450c5a89b00355abd963fecddac0f8dda1aa7f76ec285b3dab18b2b4",
+        "historical_null_T": 13088,
+        "shared_null_setup": "outputs/online_8b_shared_null_T13088_setup/setup.json",
+        "shared_null_setup_sha256": "cc7d699355532e340a93e36483053900b194933f6367068eeb61ffd608be4286",
+        "historical_null_hash_evidence": {
+          "volume": "results",
+          "path": "completion_only_raw_abstain_v1/integrated/433db57896e26ee35997f7cf/manifest.json",
+          "bytes": 434875,
+          "sha256": "ca2467ae5d1eb0c86034018bdfd7b3c12f0835252f0516797a2f1bc16812262b"
+        }
+      }
+    }
+  },
+  "updates": [
+    {
+      "csv_line": 2,
+      "run": "completion_only_raw_abstain_v1/integrated/ee9a3eba4ec1f197fe0600ec",
+      "eta": "0.05",
+      "T": "256",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "126/500 (25.2%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s03"
+    },
+    {
+      "csv_line": 3,
+      "run": "completion_only_raw_abstain_v1/integrated/8de0404063bd16fd26ed466a",
+      "eta": "0.05",
+      "T": "256",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "134/500 (26.8%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s04"
+    },
+    {
+      "csv_line": 4,
+      "run": "completion_only_raw_abstain_v1/integrated/86f8d0b4824e9fef7c09e669",
+      "eta": "0.05",
+      "T": "256",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "136/500 (27.2%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s05"
+    },
+    {
+      "csv_line": 5,
+      "run": "completion_only_raw_abstain_v1/n400/n400-raw-95bc787414afab13",
+      "eta": "0.05",
+      "T": "400",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "260/500 (52.0%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s21"
+    },
+    {
+      "csv_line": 6,
+      "run": "completion_only_raw_abstain_v1/integrated/f9827a8cc9d3501b8a13b17e",
+      "eta": "0.05",
+      "T": "416",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "255/500 (51.0%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s06"
+    },
+    {
+      "csv_line": 7,
+      "run": "completion_only_raw_abstain_v1/integrated/ae6ee26cba45acb62b60acf3",
+      "eta": "0.05",
+      "T": "448",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "291/500 (58.2%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s23"
+    },
+    {
+      "csv_line": 8,
+      "run": "completion_only_raw_abstain_v1/integrated/72585f241bc0f4cfc1b2c092",
+      "eta": "0.05",
+      "T": "512",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "344/500 (68.8%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s07"
+    },
+    {
+      "csv_line": 9,
+      "run": "completion_only_raw_abstain_v1/integrated/55deff00968e8a1c6ac6213d",
+      "eta": "0.05",
+      "T": "1024",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "463/500 (92.6%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s01"
+    },
+    {
+      "csv_line": 10,
+      "run": "completion_only_raw_abstain_v1/integrated/26edf5193e6061745ea46c9e",
+      "eta": "0.05",
+      "T": "2048",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "495/500 (99.0%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s02"
+    },
+    {
+      "csv_line": 11,
+      "run": "completion_only_raw_abstain_v1/integrated/65150c8d400d82e5bbd80a5d",
+      "eta": "0.1",
+      "T": "256",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "47/500 (9.4%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s09"
+    },
+    {
+      "csv_line": 12,
+      "run": "completion_only_raw_abstain_v1/integrated/5f593e793ca390fc4c26b3a5",
+      "eta": "0.1",
+      "T": "400",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "120/500 (24.0%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s10"
+    },
+    {
+      "csv_line": 13,
+      "run": "completion_only_raw_abstain_v1/integrated/03b3c9dbb5a7c8b26273b5f0",
+      "eta": "0.1",
+      "T": "512",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "168/500 (33.6%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s11"
+    },
+    {
+      "csv_line": 14,
+      "run": "completion_only_raw_abstain_v1/integrated/ff4048f366d743b14c75d446",
+      "eta": "0.1",
+      "T": "768",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "283/500 (56.6%)",
+      "naive_fpr": "1/500 (0.2%)",
+      "source_id": "s12"
+    },
+    {
+      "csv_line": 15,
+      "run": "completion_only_raw_abstain_v1/integrated/1c593a51d22e269031a2477b",
+      "eta": "0.1",
+      "T": "1024",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "385/500 (77.0%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s08"
+    },
+    {
+      "csv_line": 16,
+      "run": "completion_only_raw_abstain_v1/integrated/17cee94b237e8fd8f9467eac",
+      "eta": "0.15",
+      "T": "256",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "12/500 (2.4%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s16"
+    },
+    {
+      "csv_line": 17,
+      "run": "completion_only_raw_abstain_v1/integrated/0f46e12aff1fecf2147659b8",
+      "eta": "0.15",
+      "T": "400",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "29/500 (5.8%)",
+      "naive_fpr": "1/500 (0.2%)",
+      "source_id": "s17"
+    },
+    {
+      "csv_line": 18,
+      "run": "completion_only_raw_abstain_v1/integrated/4abea76949f58a98644e215e",
+      "eta": "0.15",
+      "T": "512",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "56/500 (11.2%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s18"
+    },
+    {
+      "csv_line": 19,
+      "run": "completion_only_raw_abstain_v1/integrated/f79139b4509d956cbf385dd1",
+      "eta": "0.15",
+      "T": "1024",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "201/500 (40.2%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s13"
+    },
+    {
+      "csv_line": 20,
+      "run": "completion_only_raw_abstain_v1/integrated/8f73908289279692c83162d3",
+      "eta": "0.15",
+      "T": "1504",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "341/500 (68.2%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s14"
+    },
+    {
+      "csv_line": 21,
+      "run": "completion_only_raw_abstain_v1/integrated/35c77b8597ae7f8cc90e2f6b",
+      "eta": "0.15",
+      "T": "2048",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "441/500 (88.2%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s15"
+    },
+    {
+      "csv_line": 22,
+      "run": "completion_only_raw_abstain_v1/integrated/060095c0af4fac4cfc9cae17",
+      "eta": "0.2",
+      "T": "2048",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "229/500 (45.8%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s19"
+    },
+    {
+      "csv_line": 23,
+      "run": "completion_only_raw_abstain_v1/integrated/7f27b4cc6f12b39b35f6ac0a",
+      "eta": "0.2",
+      "T": "4096",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "447/500 (89.4%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s20"
+    },
+    {
+      "csv_line": 24,
+      "run": "completion_only_raw_abstain_v1/integrated/5ed80c3468e45f456dcb3a72",
+      "eta": "0.05",
+      "T": "256",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "113/500 (22.6%)",
+      "naive_fpr": "1/500 (0.2%)",
+      "source_id": "s24"
+    },
+    {
+      "csv_line": 25,
+      "run": "completion_only_raw_abstain_v1/integrated/5ed80c3468e45f456dcb3a72",
+      "eta": "0.05",
+      "T": "400",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "234/500 (46.8%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s25"
+    },
+    {
+      "csv_line": 28,
+      "run": "completion_only_raw_abstain_v1/integrated/5ed80c3468e45f456dcb3a72",
+      "eta": "0.05",
+      "T": "448",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "260/500 (52.0%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s26"
+    },
+    {
+      "csv_line": 34,
+      "run": "completion_only_raw_abstain_v1/n640/n640-raw-69d2e3b80f3483ff",
+      "eta": "0.05",
+      "T": "640",
+      "generation_model": "Qwen3-8B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "195/500 (39.0%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s22"
+    },
+    {
+      "csv_line": 64,
+      "run": "completion_only_raw_abstain_v1/integrated/f4dec6f7f6d747d166e633bb",
+      "eta": "0.1",
+      "T": "800",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "259/500 (51.8%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s27"
+    },
+    {
+      "csv_line": 199,
+      "run": "completion_only_raw_abstain_v1/integrated/d699e18bca296a5064fc7875",
+      "eta": "0.15",
+      "T": "1504",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "279/500 (55.8%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s28"
+    },
+    {
+      "csv_line": 234,
+      "run": "completion_only_raw_abstain_v1/integrated/a4399f104a2e5d74084d11f1",
+      "eta": "0.15",
+      "T": "4096",
+      "generation_model": "Qwen3-8B-Base",
+      "detector_model": "Qwen3-8B-Base",
+      "naive_tpr": "335/500 (67.0%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s30"
+    },
+    {
+      "csv_line": 237,
+      "run": "completion_only_raw_abstain_v1/integrated/9bef8259fa1a4bf1ceb817fd",
+      "eta": "0.2",
+      "T": "3104",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "328/500 (65.6%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s29"
+    },
+    {
+      "csv_line": 238,
+      "run": "completion_only_raw_abstain_v1/same_0p6b_eta020_n3104/6f8742eed26d10e74c40c324",
+      "eta": "0.2",
+      "T": "3104",
+      "generation_model": "Qwen3-0.6B-Base",
+      "detector_model": "Qwen3-0.6B-Base",
+      "naive_tpr": "328/500 (65.6%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s29"
+    },
+    {
+      "csv_line": 698,
+      "run": "online_8b_eta020_N500_prefixes_v1/8B",
+      "eta": "0.2",
+      "T": "13088",
+      "generation_model": "Qwen3-8B-Base",
+      "detector_model": "Qwen3-8B-Base",
+      "naive_tpr": "385/500 (77.0%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s31"
+    },
+    {
+      "csv_line": 872,
+      "run": "online_8b_shared_null_T13088_N500_v1/eta020",
+      "eta": "0.2",
+      "T": "13088",
+      "generation_model": "Qwen3-8B-Base",
+      "detector_model": "Qwen3-8B-Base",
+      "naive_tpr": "385/500 (77.0%)",
+      "naive_fpr": "0/500 (0.0%)",
+      "source_id": "s31"
+    }
+  ],
+  "coverage_search": "Matched current rows against fixed preparation audits, original main/replicate ledgers, saved diagnostic reports, top-level online full audits and final-audit sections of prefix sweeps. Current redetection report summaries contain only posterior and entropy results.",
+  "backfill_csv_sha256": "5b6eae8b5fbf3788fe80bdf3c6dbea2608e274d1ac7b7e09b1c02c205bf04f75",
+  "scope_decision": {
+    "date": "2026-09-24",
+    "user_instruction": "agreed, skip.",
+    "excluded": "Naive FPR for 80 8B-generation rows with T>13088; no new longer null generation. Existing TPR results are retained.",
+    "excluded_fpr_csv_lines": [
+      619,
+      620,
+      621,
+      622,
+      623,
+      624,
+      625,
+      626,
+      627,
+      628,
+      629,
+      630,
+      631,
+      632,
+      633,
+      634,
+      635,
+      636,
+      637,
+      638,
+      639,
+      640,
+      641,
+      642,
+      643,
+      644,
+      645,
+      646,
+      647,
+      648,
+      649,
+      650,
+      651,
+      652,
+      653,
+      654,
+      655,
+      656,
+      657,
+      658,
+      659,
+      660,
+      661,
+      662,
+      663,
+      664,
+      665,
+      666,
+      667,
+      668,
+      669,
+      670,
+      671,
+      672,
+      673,
+      674,
+      675,
+      676,
+      677,
+      678,
+      679,
+      680,
+      681,
+      682,
+      683,
+      684,
+      685,
+      686,
+      687,
+      688,
+      689,
+      690,
+      691,
+      692,
+      693,
+      694,
+      695,
+      696,
+      697,
+      777
+    ],
+    "pending_online_naive_tpr_rows": 910,
+    "pending_online_naive_fpr_rows": 830,
+    "fixed_4b_rows_outside_requested_scope": 6,
+    "paid_compute_launched": false
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "explicit_user_approval": true,
+  "authorized_spend_usd": 0.1,
+  "plan_sha256": "f564493d6d1fb9dffbbc55edc38b7ee6532231fc124ecc93d86c9f37ca215fde",
+  "approval_reference": "user_20260924_go_ahead_cpu_prefixes",
+  "user_message": "go ahead",
+  "recorded_utc": "2026-09-24T01:14:06.239567+00:00",
+  "scope": "One CPU-only scoring attempt for the frozen 157-row plan; maximum $0.10; no automatic paid retry; main CSV update; do not push"
+}

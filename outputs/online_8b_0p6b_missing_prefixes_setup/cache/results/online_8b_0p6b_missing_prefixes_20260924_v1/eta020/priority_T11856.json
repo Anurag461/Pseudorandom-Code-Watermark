@@ -1,0 +1,26 @@
+{
+  "eta": 0.2,
+  "T": 11856,
+  "counts": {
+    "map": {
+      "wm": {
+        "detected": 430,
+        "count": 500
+      },
+      "null": {
+        "detected": 0,
+        "count": 0
+      }
+    },
+    "entropy": {
+      "wm": {
+        "detected": 411,
+        "count": 500
+      },
+      "null": {
+        "detected": 0,
+        "count": 0
+      }
+    }
+  }
+}

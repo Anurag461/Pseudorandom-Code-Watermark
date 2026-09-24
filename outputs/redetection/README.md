@@ -1,5 +1,32 @@
 # Redetection results
 
+Updated September 24, 2026: the CSV now contains **1,106 rows**. Added **157 posterior/entropy rows** so the 0.6B detector covers every length already scored by native 8B for the full N=500 cohorts: eta .20 at T11840–14320, step 16, and eta .15 at T4096. The approved CPU-only job reused saved traces, took 35.82 worker seconds and cost **$0.00351665**. All 949 earlier rows and their order are preserved. See the [completed run and comparison](../online_8b_0p6b_missing_prefixes_setup/RESULTS.md).
+
+At each eta's first recorded native posterior TPR of at least 90%, switching detection from 8B to 0.6B reduces posterior TPR by **5.15 percentage points on average**, at most **6.8 points**. Entropy TPR drops by **4.25 points on average**, at most **5.0 points**, at those same lengths. Eta .20/T11856 is now included: posterior 90.0% → 86.0%, entropy 85.8% → 82.2%. Empirical posterior/entropy FPR was not evaluated for the added rows.
+
+**35 rows have naive TPR and FPR**, restored from verified saved historical results without naive detector rescoring: the original 33-row backfill plus two new matching 8B→0.6B rows. The remaining 1,071 naive TPR cells retain `skipped` because matching saved counts were not found. Of the remaining naive FPR cells, 914 retain `skipped` and 157 are explicitly labeled not measured by user choice.
+
+**Naive means the standard hard-bit detector over all token positions, including coordinate 1.** It uses no language-model probabilities, so removing prompt context does not invalidate its historical scores. Posterior and entropy results retain their existing completion-only protocol and coordinate-1 abstention. Filled rows explicitly distinguish these policies in `Notes`; the existing scoring code was not changed.
+
+| Construction / generator → detector | Naive rows filled | Naive rows still missing |
+|---|---:|---:|
+| Fixed 0.6B → 0.6B | 22 | 0 |
+| Fixed 4B → 4B / 0.6B | 0 | 6 |
+| Online 0.6B → 0.6B | 7 | 149 |
+| Online 8B → 8B | 3 | 542 |
+| Online 8B → 0.6B | 3 | 374 |
+| **Total** | **35** | **1,071** |
+
+The filled online settings are 0.6B generation at (eta,T)=(.05,256/400/448), (.10,800), (.15,1504), and (.20,3104); 8B generation at (.05,640), (.15,4096), and (.20,13088). The original 3104 and 13088 settings each appear in two preserved records; the new 0.6B detection rows at eta .15/T4096 and eta .20/T13088 reuse the matching native naive counts. Fixed 4B gaps are T=256/512/1024 with both detectors; the other gaps are online prefixes, pilots and later cohorts. These are CSV-row counts, not independent experiments.
+
+One previously TPR-only native-8B row at eta=.20/T13088 now includes the measured historical naive FPR on the same saved 500-null cohort used by its later shared-null counterpart. Its posterior/entropy FPR cells remain unchanged; the null provenance is explicit in the row's notes. Other missing FPR entries may have usable cached nulls, but this update does not assign new cohorts or infer unmeasured rates.
+
+**Scope confirmed September 24:** intentionally omit naive FPR above T13088; do not generate longer nulls merely to fill those 157 cells (80 earlier cells plus 77 new prefix rows). Retain the existing T14336 TPR results. Excluding the six fixed-4B rows, 1,065 naive TPR cells and 908 naive FPR cells remain unfilled within that scope. Naive scoring remains separate from the completed posterior/entropy CPU job; no new naive scoring ran.
+
+[Original backfill source counts and hashes](naive_backfill_20260924.json) · [Two additional naive count reuses](../online_8b_0p6b_missing_prefixes_setup/naive_reuse.json) · [Exact remaining rows and null-evaluation status](naive_missing_20260924.csv)
+
+The earlier campaign summaries below are preserved as historical reports.
+
 The **online PRC 8B → 0.6B comparison is complete** at eta=.05/.10/.15, T=1280/3072/6144 and N=500/500/100, respectively. MAP TPR is **92.6%, 90.8%, 92.0%**; entropy TPR is **86.8%, 88.0%, 84.0%**. All 124 agreed eta/length points are reported, with shorter lengths scored from the same saved traces. Each completion was replayed once; eta=.15 used two parallel A100 workers with disjoint batches of 50. No new generation, nulls, independent reference pass, benchmark or retry ran. All apps are stopped. Provider-reported spending was **$2.70079218**. See the [results, paired 8B comparison and cache provenance](../online_8b_to_0p6b_redetect_setup/RESULTS.md).
 
 The **fixed PRC 4B → {4B, 0.6B} comparisons at eta=.05, n=T=512 and 256 are complete**, with N=100 at each length. At n512, MAP/entropy TPR is **83%/67%** with 4B detection and **78%/64%** with 0.6B. At n256, it is **46%/27%** with 4B and **35%/25%** with 0.6B. Each cohort was generated once and reused by both detectors. No nulls or empirical FPR were included. The twelve approved stages cost **$0.50338169**. See the [results and provenance](../fixed_4b_eta005_n512_n256_N100_setup/RESULTS.md).

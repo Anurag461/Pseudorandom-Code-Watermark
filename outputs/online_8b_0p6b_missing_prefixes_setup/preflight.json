@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "kind": "Local metadata and syntax checks only; no scoring or model execution",
+  "coverage_missing_rows": 157,
+  "matching_native_prompt_ids_and_full_token_hashes": true,
+  "cached_batches": 20,
+  "batch_size": 50,
+  "scope_guard_rejected": [
+    "null_N",
+    "model_replay_count",
+    "gpu_count",
+    "automatic_retries",
+    "branch",
+    "extra_length",
+    "priority_order"
+  ],
+  "approval_file_exists": false,
+  "launched": false
+}
