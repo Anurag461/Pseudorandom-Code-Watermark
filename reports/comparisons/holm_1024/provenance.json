@@ -1,0 +1,73 @@
+{
+  "input_payload_sha256": "912c58144126b4d3714bd195b536b5bb87210de2dca7a30f07d9b31b48824ad9",
+  "canonical_payload_encoding": "JSON sort_keys=True, separators=(comma,colon), UTF-8",
+  "analysis_source_sha256": "6d9d7e8df70ce540fc1bb221baa068e846a98245d054684673feaf05002b4556",
+  "original_metric_source_hashes": {
+    "paired": {
+      "filename": "prompt_metrics.json",
+      "bytes": 468447,
+      "sha256": "e56f69d6a3126c6c766479457f1a6364a6860ceb5603177ca14c75f7d1726d95"
+    },
+    "responses": {
+      "filename": "response_metrics.json",
+      "bytes": 753253,
+      "sha256": "cca2fa05b1d658a69148cca1c0504b94001b73b7584ec447014d4baad2e9fea0"
+    },
+    "depth": {
+      "filename": "prompt_metrics.json",
+      "bytes": 186131,
+      "sha256": "2c7f11529b09f6ca5f811401ac04f056e86272bb0510f42681f22ca067c8c09a"
+    },
+    "depth30": {
+      "filename": "repetition_1024.json",
+      "bytes": 41832,
+      "sha256": "8bd50e41ca62c1ce4b27f95140c736b64932b7c0c0ef639e1281e1af57171f02"
+    },
+    "temperature": {
+      "filename": "prompt_metrics.json",
+      "bytes": 379149,
+      "sha256": "5b0dd7cd543744199a8c36de3da39e6d1ad0f8516b88009abb7ba2b2b0bd3391"
+    },
+    "synthid_off": {
+      "filename": "synthid_off_1024_prompt_metrics.json",
+      "bytes": 8227,
+      "sha256": "a7b740b0742099888acb7e4bd91a458e87912a06139fbe1d7f65a1b45d515cc9"
+    },
+    "old_cells": {
+      "filename": "uncertainty_table_cells.json",
+      "bytes": 13091,
+      "sha256": "f207e50bf0a00ec3e6c07ab3f0edcfed9316cd6203e65d814f9d1267a6bbd17e"
+    },
+    "absolute_results": {
+      "filename": "absolute_results.csv",
+      "bytes": 34392,
+      "sha256": "57b209a5af6a9629fb4cd2e6f1c3010f7364b0a67d12f279c8b4dcd4087a76a2"
+    },
+    "supplement": {
+      "filename": "uncertainty_supplement.json",
+      "bytes": 2883,
+      "sha256": "aeb1d22dc1c0e43a3fa242d9f15500f681436a8f173bf8a31d7b9ab1b7e8333b"
+    }
+  },
+  "input_verification": {
+    "all_39_table_means_reproduced": true,
+    "paired_prompt_vectors": 35,
+    "diversity_comparisons": 27,
+    "detection_comparisons": 8,
+    "original_response_ids_matched_across_reused_sources": true,
+    "original_supplement_source_hashes_matched": true,
+    "new_response_generation": 0,
+    "new_text_or_detector_scoring": 0,
+    "statistical_tests_run_locally": 0
+  },
+  "cohort": "50 shared prompts, two responses per prompt, 1024 generated tokens, fixed watermark keys",
+  "source_assembly": {
+    "paired": "PRC, unwatermarked, TextSeal and Gumbel-Max, SynthID depth 10 with repeat handling",
+    "responses": "Response-slot repetition metrics for SynthID depth 10 without handling",
+    "depth": "Self-BLEU and detection for SynthID depths 2, 10 and 30, with shared response-ID checks",
+    "temperature": "Only the saved temperature-1 rows, including depth-2 repetition; response IDs checked against depth study",
+    "depth30": "Saved depth-30 response-slot repetition metrics from the same 100 completions",
+    "synthid_off": "Saved Self-BLEU and detection for SynthID depth 10 without handling"
+  },
+  "portable_inputs": "paired_inputs.json contains all 39 prompt-level metric vectors and all 35 PRC-minus-comparator vectors; no completions, prompts, watermark keys or model traces are required to reproduce the tests."
+}
