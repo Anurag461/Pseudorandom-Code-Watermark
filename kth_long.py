@@ -395,10 +395,12 @@ def summarize():
             add(scheme, 0.0 if attack is None else attack["rate"], sum(wm), len(wm), sum(null), len(null),
                 methods[scheme])
     for outcome in read(f"{OUT}/prc_redetection.json"):
-        counts = outcome["counts"][str(M)]["map"]
         rate = 0.0 if outcome["attack"] is None else outcome["attack"]["rate"]
-        add("prc_map", rate, counts["wm"]["detected"], counts["wm"]["count"], counts["null"]["detected"],
-            counts["null"]["count"], f"proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run={outcome['root']}")
+        for weight in ("map", "entropy"):
+            counts = outcome["counts"][str(M)][weight]
+            add(f"prc_{weight}", rate, counts["wm"]["detected"], counts["wm"]["count"], counts["null"]["detected"],
+                counts["null"]["count"],
+                f"proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run={outcome['root']}")
     rows.sort(key=lambda r: (r["substitution rate"], r["scheme"]))
     with Path(RESULTS_CSV).open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
