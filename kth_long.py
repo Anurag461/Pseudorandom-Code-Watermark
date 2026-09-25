@@ -245,3 +245,104 @@ def prc_manifest():
     print("detector checkpoint identical to the frozen pilots manifest:", manifest["model"] == reference)
     Path(MANIFEST).write_text(json.dumps(manifest, indent=1))
     print("wrote", MANIFEST, len(manifest["cases"][0]["records"]), "records")
+
+
+# ================================================================ cloud orchestration
+#
+# Everything below runs inside Modal, so the run survives the local client going away:
+#   modal deploy modal_run.py     (provides FixedGenerationModel and the redetection functions)
+#   modal deploy kth_long.py
+#   python -c 'import kth_long; kth_long.launch()'
+# Every work item is cached per file (wm_XXXX.pt, generation chunks, score chunks, redetection
+# traces), so relaunching resumes.
+
+PRC_APP = "prc-watermark"
+PRC_BATCH = 16          # 4096-token PRC generation fits 16 rows on an A10G (64 ran out of memory)
+REDETECT_GPU = "A100-80GB"
+
+
+def _wait(calls, label):
+    failed = 0
+    for call in calls:
+        try:
+            call.get()
+        except Exception as error:  # failed after retries; relaunching resumes from the caches
+            failed += 1
+            print(f"FAILED {label}: {error!r}"[:400], flush=True)
+    print(f"{label}: {len(calls) - failed}/{len(calls)} done", flush=True)
+    return failed
+
+
+def _redetect_attacked(manifest, attack, execution):
+    """modal_run.py::redetect for one case, run cloud-side (preparation, validated replay, scoring)."""
+    import json as _json
+    from modal_run import model_cls_options
+    prepare = modal.Function.from_name(PRC_APP, "prepare_redetection")
+    finish = modal.Function.from_name(PRC_APP, "finish_redetection")
+    spec, case = manifest["model"], dict(manifest["cases"][0])
+    if attack is not None:
+        case = {**case, "id": f"{case['id']}__{attack_id(attack)}", "attack": attack}
+    prepared = prepare.remote(case, spec, execution)
+    worker = modal.Cls.from_name(PRC_APP, "RedetectionModel").with_options(
+        **{**model_cls_options("0.6B", REDETECT_GPU, 10), "memory": 8192, "scaledown_window": 2})(
+        entropy_model_size="0.6B", generation_model_size="0.6B", trace_kv_cache_implementation="static",
+        completion_model=_json.dumps(spec, sort_keys=True))
+    representatives = {}
+    for batch in prepared["batches"]:
+        representatives.setdefault(batch["identity"]["count"], batch)
+    for batch in representatives.values():  # one independent reference replay per batch shape
+        worker.redetect_batch.remote(batch, validate=True)
+    list(worker.redetect_batch.map(prepared["batches"]))
+    result = finish.remote(prepared)
+    return {"case": case["id"], "attack": attack, "root": prepared["root"], "counts": result["counts"]}
+
+
+@app.function(image=image, cpu=1, memory=4096, timeout=86400,
+              volumes={"/data": data_vol, "/results": results})
+def orchestrate_long(code_fingerprint: str, execution: dict, schemes: list):
+    """PRC generation + baseline generation in parallel, then baseline scoring and PRC redetection."""
+    import os
+    # 1. Generation: remaining PRC watermarked texts and all baseline chunks, concurrently.
+    data_vol.reload()
+    wm_dir = Path(f"/data/{PRC_TAG}/wm")
+    missing = [i for i in range(NUM_PROMPTS) if not (wm_dir / f"wm_{i:04d}.pt").exists()]
+    prc_model = modal.Cls.from_name(PRC_APP, "FixedGenerationModel").with_options(gpu="A10G", max_containers=5)(
+        tag=PRC_TAG, model_size="0.6B", code_fingerprint_sha256=code_fingerprint)
+    prc_calls = [prc_model.generate_wm.spawn(missing[i:i + PRC_BATCH]) for i in range(0, len(missing), PRC_BATCH)]
+    gen_calls = [generate_chunk.spawn(s, st) for s in schemes for st in range(0, NUM_PROMPTS, CHUNK)]
+    _wait(gen_calls, "baseline generation")
+    # 2. Baseline scoring (CPU) while PRC generation finishes.
+    attacks = [None] + [attack_spec(r) for r in RATES]
+    score_calls = [score_chunk.spawn(s, a, st) for s in schemes for a in attacks
+                   for st in range(0, NUM_PROMPTS, CHUNK)]
+    if _wait(prc_calls, "PRC generation"):
+        raise RuntimeError("PRC generation incomplete; relaunch to resume")
+    # 3. PRC: frozen manifest, then attacked redetection per setting (sequential; each uses up to 10 GPUs).
+    manifest = prc_manifest_case.remote()
+    Path(f"/results/{OUT}/prc_manifest.json").parent.mkdir(parents=True, exist_ok=True)
+    Path(f"/results/{OUT}/prc_manifest.json").write_text(json.dumps(manifest))
+    results.commit()
+    outcomes = []
+    for attack in attacks:
+        outcomes.append(_redetect_attacked(manifest, attack, execution))
+        print(json.dumps(outcomes[-1]), flush=True)
+        Path(f"/results/{OUT}/prc_redetection.json").write_text(json.dumps(outcomes, indent=1))
+        results.commit()
+    _wait(score_calls, "baseline scoring")
+    return outcomes
+
+
+def launch(schemes=",".join(SCHEMES)):
+    """Local launcher: records the committed code identity, then spawns the deployed orchestrator."""
+    import subprocess
+    import modal_run
+    commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    for name in modal_run.EXECUTION_FILES:
+        if subprocess.check_output(["git", "show", f"{commit}:{name}"]) != Path(name).read_bytes():
+            raise ValueError(f"commit execution code before running: {name}")
+    execution = {"git_commit": commit, "files": {p: modal_run._redetect_sha(p) for p in modal_run.EXECUTION_FILES},
+                 "gpu": REDETECT_GPU, "allocator": "expandable_segments:True"}
+    fingerprint = modal_run._fixed_local_code_fingerprint()["sha256"]
+    call = modal.Function.from_name("prc-kth-long", "orchestrate_long").spawn(fingerprint, execution,
+                                                                           schemes.split(","))
+    print("spawned", call.object_id)
