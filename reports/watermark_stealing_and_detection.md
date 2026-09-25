@@ -18,12 +18,14 @@ model with thinking disabled for black-box detection). Temperature 1, full vocab
   p = 2e-124), and neither test detects online PRC (Red-Green p = 0.22 after Bonferroni; 1000/1000
   distinct outputs, same as the unwatermarked model). A PRC deployment that ties the sampling seed to the
   prompt is trivially detectable (1/100 distinct outputs), so every request needs a fresh seed.
-- **Substitution robustness (Kuditipudi et al. attack), 400 tokens.** PRC is far less robust than all three
-  baselines: 64.6% detection at 5% substitutions and 2.6% at 30%, while EXP and KGW-2.0 stay at 100% and
-  SynthID-Text at ≥89%. A 4096-token repetition is running (see §4).
+- **Substitution robustness (Kuditipudi et al. attack).** Robustness depends strongly on length. At
+  **400 tokens** PRC is far less robust than all three baselines: 64.6% detection at 5% substitutions and
+  2.6% at 30%, while EXP and KGW-2.0 stay at 100% and SynthID-Text at ≥89%. At **4096 tokens** (fixed
+  PRC n = T = 4096) PRC keeps **98.2% [96.6%, 99.1%] detection at 20% substitutions** (MAP; 0/500 false
+  positives), close to the baselines' 99–100% (200 texts each).
 
-The paper can therefore claim resistance to stealing-based spoofing and to black-box detection, but not
-robustness to token edits.
+The paper can therefore claim resistance to stealing-based spoofing and to black-box detection. Robustness to
+random token substitution holds for long texts (4096 tokens) but not for short ones (400 tokens).
 
 ## 1. Common setup
 
@@ -144,10 +146,26 @@ False positives at 1e-3 (500 unwatermarked texts per cell): PRC 0/500; SynthID 3
 SynthID's false-positive rate on unwatermarked model text exceeds the nominal 0.1% because its null
 reference is human text.
 
-**4096-token repetition (in progress).** Fixed PRC n = T = 4096, η = 0.05 on **all 500 prompts**, and each
-baseline on **the first 200 prompts only** (200 watermarked + 200 unwatermarked texts), at substitution
-rates 0.05, 0.10, 0.15 and 0.20. Baselines use analytic p-values (human text is too short for a 4096-token
-null). Results will be added to `outputs/attacks/kth_long_results.csv`.
+### 4096-token texts
+
+Code: `kth_long.py`. Fixed PRC n = T = 4096, η = 0.05 on **all 500 prompts** (500 watermarked + 500
+unwatermarked texts), redetected with the same `modal_run.py::redetect --attack` pipeline (completion-only
+BF16 replay, 0.6B detector) as `main`. Each baseline uses **the first 200 prompts only** (200 watermarked +
+200 unwatermarked texts). Baselines use analytic p-values (human text is too short for a 4096-token null):
+EXP a Gamma tail with Bonferroni over its 256 key shifts, KGW-2.0 a one-sided z-test, SynthID-Text its
+mean-score z-test. Same substitution procedure as above. Detection at FPR 1e-3, [95% Wilson CI]:
+
+| Substitution rate | PRC MAP (n = 500) | PRC entropy (n = 500) | EXP (n = 200) | KGW-2.0 (n = 200) | SynthID-Text (n = 200) |
+|---|---|---|---|---|---|
+| 0 | 100.0% [99.2%, 100.0%] | 99.6% [98.6%, 99.9%] | 100.0% [98.1%, 100.0%] | 100.0% [98.1%, 100.0%] | 100.0% [98.1%, 100.0%] |
+| 0.05 | 99.6% [98.6%, 99.9%] | 99.4% [98.3%, 99.8%] | 100.0% [98.1%, 100.0%] | 100.0% [98.1%, 100.0%] | 100.0% [98.1%, 100.0%] |
+| 0.1 | 98.8% [97.4%, 99.4%] | 98.8% [97.4%, 99.4%] | 100.0% [98.1%, 100.0%] | 100.0% [98.1%, 100.0%] | 99.5% [97.2%, 99.9%] |
+| 0.15 | 98.6% [97.1%, 99.3%] | 98.8% [97.4%, 99.4%] | 100.0% [98.1%, 100.0%] | 100.0% [98.1%, 100.0%] | 99.5% [97.2%, 99.9%] |
+| 0.2 | 98.2% [96.6%, 99.1%] | 97.2% [95.4%, 98.3%] | 100.0% [98.1%, 100.0%] | 100.0% [98.1%, 100.0%] | 99.0% [96.4%, 99.7%] |
+
+False positives: PRC 0/500 at every rate (both detectors); EXP 0/200; KGW-2.0 2/200, 2/200, 1/200, 1/200,
+1/200; SynthID-Text 0/200, 0/200, 1/200, 1/200, 0/200 (rates 0 to 0.2). Results:
+`outputs/attacks/kth_long_results.csv`.
 
 ## 5. Reproducibility and cost
 
@@ -157,8 +175,10 @@ null). Results will be added to `outputs/attacks/kth_long_results.csv`.
 | `outputs/attacks/stealing_signal_recovery.jsonl` | `modal run stealing.py::recovery` |
 | `outputs/attacks/bbd_results.csv`, `bbd_pilot.json`, `bbd_wordlists.json` | `bbd.py` |
 | `outputs/attacks/kth_baseline_results.csv`, `kth_attack_results.csv` | `kth_baselines.py::summarize`, `modal_run.py::redetect --attack` |
+| `outputs/attacks/kth_long_results.csv` | `modal run kth_long.py::summarize` (profile `anurag461`) |
 
 Raw generations, scores and traces are in the Modal volume `prc-attacks` (workspaces `new-prc-watermark`
 for stealing and the 400-token study, `anurag461` for black-box detection and the 4096-token study).
-Total Modal spend for these experiments is about $125 of a $200 budget, plus the running 4096-token study
-(estimated $24–28).
+Total Modal spend for these experiments is about $166 of a $200 budget (provider billing: $49.18 on
+Sep 23 and $61.24 on Sep 24 in `new-prc-watermark`; $15.10 on Sep 24 and $40.27 on Sep 25 in `anurag461`,
+of which the 4096-token study was about $41).

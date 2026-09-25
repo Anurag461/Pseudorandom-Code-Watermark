@@ -1,0 +1,26 @@
+scheme,substitution rate,T,watermarked texts,unwatermarked texts,TPR@1e-3,TPR 95% CI,FPR@1e-3,FPR 95% CI,threshold
+exp,0.0,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",0/200 (0.0%),"[0.0%, 1.9%]",analytic: Gamma tail x 256 shifts (Bonferroni) <= 1e-3
+kgw2,0.0,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",2/200 (1.0%),"[0.3%, 3.6%]",analytic: KGW one-sided z-test p <= 1e-3
+prc_entropy,0.0,4096,500,500,498/500 (99.6%),"[98.6%, 99.9%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/8166cf2ac8dae8bc588fae3a"
+prc_map,0.0,4096,500,500,500/500 (100.0%),"[99.2%, 100.0%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/8166cf2ac8dae8bc588fae3a"
+synthid,0.0,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",0/200 (0.0%),"[0.0%, 1.9%]",analytic: mean g-value z-test p <= 1e-3
+exp,0.05,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",0/200 (0.0%),"[0.0%, 1.9%]",analytic: Gamma tail x 256 shifts (Bonferroni) <= 1e-3
+kgw2,0.05,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",2/200 (1.0%),"[0.3%, 3.6%]",analytic: KGW one-sided z-test p <= 1e-3
+prc_entropy,0.05,4096,500,500,497/500 (99.4%),"[98.3%, 99.8%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/d51829eb31c7cdd66f45b809"
+prc_map,0.05,4096,500,500,498/500 (99.6%),"[98.6%, 99.9%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/d51829eb31c7cdd66f45b809"
+synthid,0.05,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",0/200 (0.0%),"[0.0%, 1.9%]",analytic: mean g-value z-test p <= 1e-3
+exp,0.1,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",0/200 (0.0%),"[0.0%, 1.9%]",analytic: Gamma tail x 256 shifts (Bonferroni) <= 1e-3
+kgw2,0.1,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",1/200 (0.5%),"[0.1%, 2.8%]",analytic: KGW one-sided z-test p <= 1e-3
+prc_entropy,0.1,4096,500,500,494/500 (98.8%),"[97.4%, 99.4%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/d4e2ae981f9b0bfa8fffe6db"
+prc_map,0.1,4096,500,500,494/500 (98.8%),"[97.4%, 99.4%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/d4e2ae981f9b0bfa8fffe6db"
+synthid,0.1,4096,200,200,199/200 (99.5%),"[97.2%, 99.9%]",1/200 (0.5%),"[0.1%, 2.8%]",analytic: mean g-value z-test p <= 1e-3
+exp,0.15,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",0/200 (0.0%),"[0.0%, 1.9%]",analytic: Gamma tail x 256 shifts (Bonferroni) <= 1e-3
+kgw2,0.15,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",1/200 (0.5%),"[0.1%, 2.8%]",analytic: KGW one-sided z-test p <= 1e-3
+prc_entropy,0.15,4096,500,500,494/500 (98.8%),"[97.4%, 99.4%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/6c2578383819f38fa637c705"
+prc_map,0.15,4096,500,500,493/500 (98.6%),"[97.1%, 99.3%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/6c2578383819f38fa637c705"
+synthid,0.15,4096,200,200,199/200 (99.5%),"[97.2%, 99.9%]",1/200 (0.5%),"[0.1%, 2.8%]",analytic: mean g-value z-test p <= 1e-3
+exp,0.2,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",0/200 (0.0%),"[0.0%, 1.9%]",analytic: Gamma tail x 256 shifts (Bonferroni) <= 1e-3
+kgw2,0.2,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",1/200 (0.5%),"[0.1%, 2.8%]",analytic: KGW one-sided z-test p <= 1e-3
+prc_entropy,0.2,4096,500,500,486/500 (97.2%),"[95.4%, 98.3%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/ad0a0a1d6fb5170e7a3db301"
+prc_map,0.2,4096,500,500,491/500 (98.2%),"[96.6%, 99.1%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/ad0a0a1d6fb5170e7a3db301"
+synthid,0.2,4096,200,200,198/200 (99.0%),"[96.4%, 99.7%]",0/200 (0.0%),"[0.0%, 1.9%]",analytic: mean g-value z-test p <= 1e-3
