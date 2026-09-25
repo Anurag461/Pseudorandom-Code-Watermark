@@ -31,6 +31,8 @@ REPORT.md is maintained separately. The asset builder preserves it and regenerat
 
 ## Table catalogue
 
+- [Response diversity with uncertainty and Holm-adjusted significance](tables/repeat_fallback_1024_uncertainty.tex): current inference for the 1,024-token table; [protocol, paired inputs and corrected results](holm_1024/README.md). All 11 previously flagged comparator cells survive correction across 35 tests.
+
 - [Repeat fallback on/off at 1,024 tokens](tables/repeat_fallback_1024.pdf): revised paper table, including depth-30 repetition metrics; [LaTeX](tables/repeat_fallback_1024.tex).
 
 - [01_experiment_ledger](tables/01_experiment_ledger.tex): Completed experiments and their non-overlapping roles

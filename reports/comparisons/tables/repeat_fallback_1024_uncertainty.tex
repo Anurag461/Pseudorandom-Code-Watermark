@@ -1,0 +1,97 @@
+% Requires \usepackage{booktabs}
+% CI arguments: estimate, lower bound, upper bound.
+\providecommand{\wmci}[3]{\ensuremath{\mbox{#1}\;{}^{\mbox{\scriptsize #3}}_{\mbox{\scriptsize #2}}}}
+\providecommand{\wmcibf}[3]{\ensuremath{\mbox{\bfseries #1}\;{}^{\mbox{\scriptsize #3}}_{\mbox{\scriptsize #2}}}}
+\begin{table*}[t]
+\centering
+\small
+\setlength{\belowcaptionskip}{6pt}
+\caption{\textbf{Response diversity across watermarking methods.}
+(1) Responses sampled with our PRC watermark show no statistically significant
+differences from unwatermarked responses on any of the three diversity metrics.
+(2) Our PRC watermark provides greater diversity between responses (lower Self-BLEU)
+than TextSeal, Gumbel-Max, or SynthID depth 30, even when these methods
+use repeat handling. SynthID at depths 2 and 10
+shows no statistically significant differences from our PRC watermark
+on any of the three diversity metrics.
+(3) Without repeat handling, responses sampled with SynthID depth 10,
+TextSeal, or Gumbel-Max have significantly more repetition within each
+response than those sampled with our PRC watermark.
+Shared settings: Qwen3-8B-Base, temperature 1, full vocabulary;
+50 shared prompts with two 1,024-token responses each;
+target FPR $0.1\%$.
+PRC watermark: online, $\eta=0.05$, $t=3$,
+$r=0.99n$, posterior-mean detection.}
+\label{tab:matched-selfbleu-uncertainty}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.3}
+
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc@{}}
+\toprule
+Method
+& TPR (\%) $\uparrow$
+& Self-BLEU $\downarrow$
+& Repeated 4-grams (\%) $\downarrow$
+& Distinct-3 $\uparrow$ \\
+\midrule
+
+Unwatermarked
+& -- & \wmci{0.01928}{0.01649}{0.02229} & \wmci{2.92}{1.96}{4.33} & \wmci{0.9514}{0.9379}{0.9620} \\
+
+\textbf{PRC (ours)}
+& \wmcibf{97}{93}{100} & \wmcibf{0.01890}{0.01581}{0.02227} & \wmcibf{2.38}{1.68}{3.16} & \wmcibf{0.9561}{0.9462}{0.9651} \\
+
+\midrule
+\multicolumn{5}{l}{\textit{With repeat handling}} \\
+SynthID depth 2
+& \wmci{100}{100}{100} & \wmci{0.01987}{0.01592}{0.02418} & \wmci{3.28}{2.32}{4.39} & \wmci{0.9462}{0.9326}{0.9587} \\
+
+SynthID depth 10
+& \wmci{100}{100}{100} & \wmci{0.02206}{0.01909}{0.02518} & \wmci{2.42}{1.83}{3.14} & \wmci{0.9554}{0.9463}{0.9635} \\
+
+SynthID depth 30
+& \wmci{100}{100}{100} & \wmcibf{0.02890}{0.02412}{0.03392} & \wmci{2.30}{1.58}{3.09} & \wmci{0.9589}{0.9489}{0.9683} \\
+
+TextSeal $\alpha=.1$
+& \wmci{100}{100}{100} & \wmcibf{0.04727}{0.04082}{0.05421} & \wmci{2.74}{2.14}{3.35} & \wmci{0.9464}{0.9380}{0.9551} \\
+
+Gumbel-Max
+& \wmci{100}{100}{100} & \wmcibf{0.20718}{0.18343}{0.23097} & \wmci{2.81}{2.05}{3.71} & \wmci{0.9456}{0.9341}{0.9557} \\
+
+\midrule
+\multicolumn{5}{l}{\textit{Without repeat handling}} \\
+SynthID depth 10
+& \wmci{100}{100}{100} & \wmci{0.02138}{0.01775}{0.02534} & \wmcibf{9.35}{6.07}{12.91} & \wmcibf{0.8880}{0.8528}{0.9211} \\
+
+TextSeal $\alpha=.1$
+& \wmci{100}{100}{100} & \wmcibf{0.03770}{0.03157}{0.04440} & \wmcibf{32.17}{27.15}{36.95} & \wmcibf{0.6603}{0.6139}{0.7092} \\
+
+Gumbel-Max
+& \wmci{100}{100}{100} & \wmcibf{1.00000}{1.00000}{1.00000} & \wmcibf{51.73}{44.12}{59.43} & \wmcibf{0.4720}{0.3978}{0.5460} \\
+
+\bottomrule
+\end{tabular*}
+\par\smallskip
+\begin{minipage}{\textwidth}
+\footnotesize
+\textit{Notes.} Self-BLEU measures average overlap between the two responses to each prompt.
+Repeated 4-grams is the percentage of contiguous four-token sequences
+occurring after their first appearance within a response.
+Distinct-3 is the number of unique contiguous three-token sequences
+divided by their total count. Both within-response metrics include
+overlapping sequences and are averaged over 100 responses.
+With repeat handling, unwatermarked sampling is used at positions where
+the watermarking context repeats within a response. Without repeat
+handling, the watermarking rule is still applied at those positions.
+The two responses to each prompt use different sampling seeds;
+each method's watermark keys are held fixed across responses.
+Subscripts and superscripts give the lower and upper 95\% confidence
+limits from 2,000 bootstrap resamples of prompts, keeping responses
+and methods paired. Comparator estimates are bold for differences from PRC that remain
+significant after Holm correction across all 35 two-sided paired
+permutation tests ($\alpha=0.05$). Method labels are swapped within
+prompts, keeping both responses together; tests use 100,000 permutations
+or exact enumeration when feasible. The displayed confidence intervals
+are unadjusted.
+\end{minipage}
+\end{table*}
