@@ -336,16 +336,47 @@ def orchestrate_long(code_fingerprint: str, execution: dict, schemes: list, n_ba
     return outcomes
 
 
-def launch(schemes=",".join(SCHEMES)):
-    """Local launcher: records the committed code identity, then spawns the deployed orchestrator."""
+@app.function(image=image, cpu=1, memory=4096, timeout=86400, volumes={"/results": results})
+def orchestrate_prc_rates(execution: dict, rates: list):
+    """Extra PRC-only substitution rates on the same frozen manifest, appended to prc_redetection.json."""
+    results.reload()
+    manifest = json.loads(Path(f"/results/{OUT}/prc_manifest.json").read_text())
+    path = Path(f"/results/{OUT}/prc_redetection.json")
+    outcomes = json.loads(path.read_text())
+    done = {None if o["attack"] is None else o["attack"]["rate"] for o in outcomes}
+    for rate in rates:
+        if rate in done:
+            continue
+        outcomes.append(_redetect_attacked(manifest, attack_spec(rate), execution))
+        print(json.dumps(outcomes[-1]), flush=True)
+        path.write_text(json.dumps(outcomes, indent=1))
+        results.commit()
+    return outcomes
+
+
+def _execution():
+    """Committed code identity recorded with every redetection run."""
     import subprocess
     import modal_run
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     for name in modal_run.EXECUTION_FILES:
         if subprocess.check_output(["git", "show", f"{commit}:{name}"]) != Path(name).read_bytes():
             raise ValueError(f"commit execution code before running: {name}")
-    execution = {"git_commit": commit, "files": {p: modal_run._redetect_sha(p) for p in modal_run.EXECUTION_FILES},
-                 "gpu": REDETECT_GPU, "allocator": "expandable_segments:True"}
+    return {"git_commit": commit, "files": {p: modal_run._redetect_sha(p) for p in modal_run.EXECUTION_FILES},
+            "gpu": REDETECT_GPU, "allocator": "expandable_segments:True"}
+
+
+def launch_prc_rates(rates="0.3"):
+    """PRC-only extra rates (baselines were not run at these rates)."""
+    call = modal.Function.from_name("prc-kth-long", "orchestrate_prc_rates").spawn(
+        _execution(), [float(r) for r in rates.split(",")])
+    print("spawned", call.object_id)
+
+
+def launch(schemes=",".join(SCHEMES)):
+    """Local launcher: records the committed code identity, then spawns the deployed orchestrator."""
+    import modal_run
+    execution = _execution()
     fingerprint = modal_run._fixed_local_code_fingerprint()["sha256"]
     call = modal.Function.from_name("prc-kth-long", "orchestrate_long").spawn(fingerprint, execution,
                                                                            schemes.split(","), BASELINE_PROMPTS)
