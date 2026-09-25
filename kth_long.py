@@ -1,6 +1,9 @@
 """Substitution robustness at 4096 tokens: PRC (fixed n=T=4096, eta=0.05) vs EXP, KGW-2.0, SynthID-Text.
 
-Same design as kth_baselines.py (Qwen3-0.6B-Base, the first 500 C4 RealNewsLike prompts, paper
+Sample sizes: PRC uses all 500 prompts (500 watermarked + 500 unwatermarked texts); each baseline
+uses the first 200 prompts (200 watermarked + 200 unwatermarked texts), to fit the budget.
+
+Same design as kth_baselines.py (Qwen3-0.6B-Base, C4 RealNewsLike prompts from prompts.jsonl, paper
 code for EXP/KGW, transformers SynthID, identical seeded substitutions for every scheme via
 attacks.apply_attack), with three changes forced by the length:
   * completions are M=4096 tokens;
@@ -33,6 +36,7 @@ SCHEMES = ("exp", "kgw2", "synthid")
 ATTACK_VOCAB = 151665
 OUT = "kth_long_v1"
 CHUNK = 10
+BASELINE_PROMPTS = 200   # baselines use prompts 0..199; PRC uses all 500 (prompts 0..499)
 PRC_TAG = "n4096_t3_eta0.05_T4096_r4055"
 NULL_DIR = "_nulls/T4096"  # the null cohort the fixed-run planner selected for T=4096
 MANIFEST = "outputs/attacks/prc_fixed_n4096_eta005_manifest.json"
@@ -183,7 +187,7 @@ def score_chunk(scheme, attack, start):
 def run(stage: str = "smoke", schemes: str = ",".join(SCHEMES)):
     """smoke: one generation chunk per scheme scored clean and at the strongest rate; full: all."""
     chosen = schemes.split(",")
-    starts = [0] if stage == "smoke" else list(range(0, NUM_PROMPTS, CHUNK))
+    starts = [0] if stage == "smoke" else list(range(0, BASELINE_PROMPTS, CHUNK))
     attacks = [None, attack_spec(max(RATES))] if stage == "smoke" else [None] + [attack_spec(r) for r in RATES]
     for out in generate_chunk.starmap([(s, st) for s in chosen for st in starts], return_exceptions=True):
         print("generated", out if not isinstance(out, Exception) else f"FAILED {out!r}"[:300], flush=True)
@@ -299,7 +303,7 @@ def _redetect_attacked(manifest, attack, execution):
 
 @app.function(image=image, cpu=1, memory=4096, timeout=86400,
               volumes={"/data": data_vol, "/results": results})
-def orchestrate_long(code_fingerprint: str, execution: dict, schemes: list):
+def orchestrate_long(code_fingerprint: str, execution: dict, schemes: list, n_baseline: int = BASELINE_PROMPTS):
     """PRC generation + baseline generation in parallel, then baseline scoring and PRC redetection."""
     import os
     # 1. Generation: remaining PRC watermarked texts and all baseline chunks, concurrently.
@@ -309,12 +313,12 @@ def orchestrate_long(code_fingerprint: str, execution: dict, schemes: list):
     prc_model = modal.Cls.from_name(PRC_APP, "FixedGenerationModel").with_options(gpu="A10G", max_containers=5)(
         tag=PRC_TAG, model_size="0.6B", code_fingerprint_sha256=code_fingerprint)
     prc_calls = [prc_model.generate_wm.spawn(missing[i:i + PRC_BATCH]) for i in range(0, len(missing), PRC_BATCH)]
-    gen_calls = [generate_chunk.spawn(s, st) for s in schemes for st in range(0, NUM_PROMPTS, CHUNK)]
+    gen_calls = [generate_chunk.spawn(s, st) for s in schemes for st in range(0, n_baseline, CHUNK)]
     _wait(gen_calls, "baseline generation")
     # 2. Baseline scoring (CPU) while PRC generation finishes.
     attacks = [None] + [attack_spec(r) for r in RATES]
     score_calls = [score_chunk.spawn(s, a, st) for s in schemes for a in attacks
-                   for st in range(0, NUM_PROMPTS, CHUNK)]
+                   for st in range(0, n_baseline, CHUNK)]
     if _wait(prc_calls, "PRC generation"):
         raise RuntimeError("PRC generation incomplete; relaunch to resume")
     # 3. PRC: frozen manifest, then attacked redetection per setting (sequential; each uses up to 10 GPUs).
@@ -344,5 +348,62 @@ def launch(schemes=",".join(SCHEMES)):
                  "gpu": REDETECT_GPU, "allocator": "expandable_segments:True"}
     fingerprint = modal_run._fixed_local_code_fingerprint()["sha256"]
     call = modal.Function.from_name("prc-kth-long", "orchestrate_long").spawn(fingerprint, execution,
-                                                                           schemes.split(","))
+                                                                           schemes.split(","), BASELINE_PROMPTS)
     print("spawned", call.object_id)
+
+
+# ================================================================ summary
+
+def wilson(k, n, z=1.959964):
+    """95% Wilson score interval for k successes in n trials."""
+    import math
+    if n == 0:
+        return (float("nan"), float("nan"))
+    p = k / n
+    centre, half = (p + z * z / (2 * n)) / (1 + z * z / n), z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / (1 + z * z / n)
+    return (max(0.0, centre - half), min(1.0, centre + half))
+
+
+@app.local_entrypoint()
+def summarize():
+    """Detection rates at FPR 1e-3 with 95% Wilson intervals; baselines n=200 per cohort, PRC n=500."""
+    import csv
+    read = lambda p: json.loads(b"".join(results.read_file(p)))
+    rows = []
+
+    def add(scheme, rate, wm_hits, wm_n, null_hits, null_n, method):
+        lo, hi = wilson(wm_hits, wm_n)
+        flo, fhi = wilson(null_hits, null_n)
+        rows.append({"scheme": scheme, "substitution rate": rate, "T": M,
+                     "watermarked texts": wm_n, "unwatermarked texts": null_n,
+                     "TPR@1e-3": f"{wm_hits}/{wm_n} ({wm_hits / wm_n:.1%})", "TPR 95% CI": f"[{lo:.1%}, {hi:.1%}]",
+                     "FPR@1e-3": f"{null_hits}/{null_n} ({null_hits / null_n:.1%})", "FPR 95% CI": f"[{flo:.1%}, {fhi:.1%}]",
+                     "threshold": method})
+
+    methods = {"exp": "analytic: Gamma tail x 256 shifts (Bonferroni) <= 1e-3",
+               "kgw2": "analytic: KGW one-sided z-test p <= 1e-3",
+               "synthid": "analytic: mean g-value z-test p <= 1e-3"}
+    for scheme in SCHEMES:
+        for attack in [None] + [attack_spec(r) for r in RATES]:
+            recs = []
+            for st in range(0, BASELINE_PROMPTS, CHUNK):
+                recs += read(f"{OUT}/scores/{scheme}/{attack_id(attack)}_{st:04d}.json")["rows"]
+            wm = [r["p"] <= ALPHA for r in recs if r["source"] == "wm"]
+            null = [r["p"] <= ALPHA for r in recs if r["source"] == "null"]
+            if len(wm) != BASELINE_PROMPTS or len(null) != BASELINE_PROMPTS:
+                raise ValueError(f"{scheme} {attack_id(attack)}: expected {BASELINE_PROMPTS} texts per cohort")
+            add(scheme, 0.0 if attack is None else attack["rate"], sum(wm), len(wm), sum(null), len(null),
+                methods[scheme])
+    for outcome in read(f"{OUT}/prc_redetection.json"):
+        counts = outcome["counts"][str(M)]["map"]
+        rate = 0.0 if outcome["attack"] is None else outcome["attack"]["rate"]
+        add("prc_map", rate, counts["wm"]["detected"], counts["wm"]["count"], counts["null"]["detected"],
+            counts["null"]["count"], f"proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run={outcome['root']}")
+    rows.sort(key=lambda r: (r["substitution rate"], r["scheme"]))
+    with Path(RESULTS_CSV).open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+    for r in rows:
+        print(f"{r['scheme']:8s} rate {r['substitution rate']:<5g} TPR {r['TPR@1e-3']:>16s} {r['TPR 95% CI']:>17s}  "
+              f"FPR {r['FPR@1e-3']:>14s} {r['FPR 95% CI']}")
