@@ -1,4 +1,7 @@
 scheme,test,setting,rep,p,statistic,detail
+exp,red-green,H4,rep0,0.6503,2,top fruit share 0.44; parse rate 84.0%
+exp,red-green,H5,rep0,0.6928,2,top fruit share 0.38; parse rate 82.9%
+exp,red-green,"Bonferroni H=4,5",rep0,1.0,,
 kgw2,red-green,H4,rep0,0.0,10,top fruit share 0.43; parse rate 80.0%
 kgw2,red-green,H5,rep0,0.0,10,top fruit share 0.40; parse rate 76.7%
 kgw2,red-green,"Bonferroni H=4,5",rep0,0.0,,
