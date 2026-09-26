@@ -15,7 +15,7 @@ The execution environments and baseline source revisions are specified in [exper
 
 | Directory | Experiments |
 | --- | --- |
-| [detection](experiments/detection/README.md) | Detection power, model size, detector portability, fixed versus online, entropy, comparison with Wang et al.’s PRC implementation |
+| [detection](experiments/detection/README.md) | Detection power, model size, cross-model detection, fixed versus online, entropy, comparison with Wang et al.’s PRC implementation |
 | [benchmarks](experiments/benchmarks/README.md) | ARC-Easy, GSM8K, HellaSwag, MMLU, IFEval |
 | [diversity](experiments/diversity/README.md) | Self-BLEU, repeated 4-grams, Distinct-3, detection, repeat handling |
 | [attacks](experiments/attacks/README.md) | Black-box tests, token substitution, watermark stealing |

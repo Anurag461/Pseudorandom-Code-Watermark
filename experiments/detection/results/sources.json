@@ -26,12 +26,12 @@
     "sha256": "0684f670e21728f82c8f984e852b6a39210200e9c02347c42c27148ab67653e4"
   },
   {
-    "data": "portability_tests.csv",
+    "data": "cross_model_detection_tests.csv",
     "file": "output/table4_detector_portability_20260925/paired_mcnemar_results.csv",
     "sha256": "3369a4344ec5307857922eb88af12c95797e63d20967da52c964b67218f8630a"
   },
   {
-    "data": "portability_outcomes.csv",
+    "data": "cross_model_detection_outcomes.csv",
     "file": "output/table4_detector_portability_20260925/paired_detection_outcomes.csv",
     "sha256": "ccca6efbb12bfec11e1b1a9a140faad27f458d7848cd45c925f190a9fb7e0a7b"
   },

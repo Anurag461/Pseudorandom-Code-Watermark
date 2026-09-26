@@ -26,10 +26,10 @@
   "experiments": {
     "fixed": "results/fixed_results.csv",
     "detection_and_model_scale": "results/figure_results.csv",
-    "detector_portability": [
+    "cross_model_detection": [
       "results/figure_results.csv",
-      "results/portability_tests.csv",
-      "results/portability_outcomes.csv"
+      "results/cross_model_detection_tests.csv",
+      "results/cross_model_detection_outcomes.csv"
     ],
     "fixed_vs_online": [
       "results/figure_results.csv",
