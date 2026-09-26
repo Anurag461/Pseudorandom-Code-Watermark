@@ -22,7 +22,7 @@ TEXTSEAL_KEY_B = TEXTSEAL_KEY_A + 12345
 TEXTSEAL_COMMIT = "c60d0d1da2e59f09a698438e218a07ee779b4616"
 
 PROTOCOL = "completion_only_raw_abstain_v1"
-AUDIT_PATH = Path(__file__).with_name("textseal_source.json")
+AUDIT_PATH = Path(__file__).with_name("sources") / "textseal.json"
 _IMPORT_LOCK = threading.RLock()
 
 

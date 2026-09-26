@@ -29,4 +29,4 @@ include = ["prc_watermark*", "baselines*", "experiments*"]
 
 "experiments.benchmarks.tasks.ifeval_lib" = ["NOTICE", "LICENSE"]
 
-"baselines" = ["textseal_source.json", "wangetal_source.json", "wangetal_LICENSE"]
+"baselines" = ["sources/*.json", "sources/*_LICENSE"]

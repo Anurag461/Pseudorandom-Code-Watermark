@@ -59,7 +59,7 @@ DESIGN = dict(
     backend="qwen-static-bf16",
     primary_context="completion-only-first-token-abstain",
     probability_arithmetic="fp32-log-softmax-fp64-positive-mass-tree",
-    source=json.loads((HERE.parents[1] / "baselines/wangetal_source.json").read_text()),
+    source=json.loads((HERE.parents[1] / "baselines/sources/wangetal.json").read_text()),
 )
 
 
