@@ -9,7 +9,7 @@ python -m pip install -e '.[benchmarks,analysis]'
 python -m unittest discover -s tests
 ```
 
-The execution environments and baseline source revisions are specified in [experiments/environments.json](experiments/environments.json). Diversity generation and TextSeal detection use their own pinned environments.
+Dependency versions and installation commands for each experiment are listed in [experiments/environments.json](experiments/environments.json).
 
 ## Experiments
 
