@@ -26,7 +26,6 @@ Each experiment directory contains its settings, numerical result tables, and so
 .
 ├── README.md
 ├── pyproject.toml
-├── THIRD_PARTY.txt
 ├── prc_watermark/
 ├── baselines/
 ├── experiments/

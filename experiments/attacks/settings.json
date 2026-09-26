@@ -60,6 +60,7 @@
     "prc_prompt_count": 500
   },
   "stealing": {
+    "upstream_repository": "https://github.com/eth-sri/watermark-stealing",
     "upstream_commit": "b8d207deb2b4ba758638a41d3a77891993acd351",
     "arithmetic": "float32",
     "minimum_count": 2,
