@@ -158,10 +158,45 @@ class ResultsTests(unittest.TestCase):
                 )
             )
         )
+        settings = json.loads((ROOT / "experiments/attacks/settings.json").read_text())[
+            "substitution"
+        ]
+        expected = set()
+        for scheme in ("exp", "kgw2", "synthid", "prc_map", "prc_entropy"):
+            for length in settings["lengths"]:
+                rates = (
+                    settings["short_rates"]
+                    if length == 400
+                    else settings[
+                        (
+                            "long_prc_rates"
+                            if scheme.startswith("prc")
+                            else "long_baseline_rates"
+                        )
+                    ]
+                )
+                expected.update((scheme, length, rate) for rate in rates)
+        actual = [
+            (r["scheme"], int(r["tokens"]), float(r["substitution_rate"])) for r in rows
+        ]
+        self.assertEqual(len(actual), len(set(actual)))
+        self.assertEqual(set(actual), expected)
         for row in rows:
-            self.assertLessEqual(int(row["true_positives"]), int(row["n_watermarked"]))
-            if int(row["tokens"]) == 4096 and float(row["substitution_rate"]) == 0.3:
-                self.assertTrue(row["scheme"].startswith("prc"))
+            count = (
+                settings["prc_prompt_count"]
+                if row["scheme"].startswith("prc")
+                else settings["baseline_prompt_counts"][row["tokens"]]
+            )
+            self.assertEqual(int(row["n_watermarked"]), count)
+            self.assertEqual(int(row["n_unwatermarked"]), count)
+            self.assertLessEqual(int(row["true_positives"]), count)
+            self.assertLessEqual(int(row["false_positives"]), count)
+            self.assertAlmostEqual(
+                float(row["tpr"]), int(row["true_positives"]) / count
+            )
+            self.assertAlmostEqual(
+                float(row["fpr"]), int(row["false_positives"]) / count
+            )
 
 
 if __name__ == "__main__":
