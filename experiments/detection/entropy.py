@@ -44,7 +44,7 @@ def main():
         complement = np.clip(1 - p, np.finfo(np.float64).tiny, 1.0)
         bucket = -(p * np.log2(clipped) + (1 - p) * np.log2(complement))
         bucket[(p == 0) | (p == 1)] = 0
-        token_sum += float(entropy.double().sum())
+        token_sum += float(entropy.double().sum()) / np.log(2)
         bucket_sum += float(bucket.sum())
         below += int((bucket < 0.1).sum())
         count += bucket.size

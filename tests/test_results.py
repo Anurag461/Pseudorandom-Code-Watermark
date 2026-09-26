@@ -2,12 +2,74 @@ import csv
 import io
 import json
 import unittest
+import tempfile
 from pathlib import Path
+from unittest.mock import patch
+import numpy as np
+import torch
+from experiments.detection import entropy
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class ResultsTests(unittest.TestCase):
+
+    def test_entropy_runner_reports_bits(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            prompts = root / "prompts.jsonl"
+            prompts.write_text(json.dumps({"prompt_tokens": [0]}) + "\n")
+            completions = root / "completions.jsonl"
+            completions.write_text(
+                json.dumps(
+                    {"source": "unwatermarked", "prompt_index": 0, "tokens": [0, 1]}
+                )
+                + "\n"
+            )
+            settings = root / "settings.json"
+            settings.write_text(
+                json.dumps(
+                    {
+                        "model_directory": "unused",
+                        "model_size": "test",
+                        "artifact": "unused",
+                        "prompts": str(prompts),
+                        "completions": str(completions),
+                        "batch_size": 1,
+                    }
+                )
+            )
+            output = root / "entropy.csv"
+            partition = torch.tensor([[1, 0], [0, 1]])
+            probabilities = torch.full((1, 2), 0.5, dtype=torch.float64)
+            entropies = torch.full((1, 2), np.log(2), dtype=torch.float64)
+            tensor = torch.tensor
+
+            def cpu_tensor(data, **kwargs):
+                kwargs.pop("device", None)
+                return tensor(data, **kwargs)
+
+            with (
+                patch(
+                    "sys.argv",
+                    ["entropy", "--settings", str(settings), "--output", str(output)],
+                ),
+                patch.object(entropy, "load_model", return_value=(None, None)),
+                patch.object(
+                    entropy,
+                    "teacher_force_partition_entropy_trace_batch",
+                    return_value=(probabilities, entropies),
+                ),
+                patch.object(
+                    entropy.torch, "load", return_value={"partition": partition}
+                ),
+                patch.object(entropy.torch, "tensor", side_effect=cpu_tensor),
+            ):
+                entropy.main()
+            with output.open() as handle:
+                row = next(csv.DictReader(handle))
+            self.assertAlmostEqual(float(row["token_entropy_bits"]), 1.0)
+            self.assertAlmostEqual(float(row["bucket_entropy_bits"]), 1.0)
 
     def test_fixed_counts_and_rates(self):
         rows = list(

@@ -146,10 +146,10 @@ def score(settings, output):
     length = settings["tokens"]
     scorer = make_scorer(scheme, 151936, tokenizer)
     reference_values = (
-        [
+        sorted(
             row["statistic"]
             for row in json.loads(Path(settings["reference"]).read_text())
-        ]
+        )
         if length == 400
         else None
     )
