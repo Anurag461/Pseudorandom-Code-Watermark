@@ -1,0 +1,12 @@
+[
+  {
+    "data": "results.csv",
+    "file": "paired_inputs.json",
+    "sha256": "86989496e4b3843ea6a13e7f54bc3003a76e0b15d2bdea7a03315c4f5239ff1a"
+  },
+  {
+    "data": "results.csv",
+    "file": "results.json",
+    "sha256": "6db9e2f0869fcacf1c51150042532a31dfa22aa2d225459e46f309a416f44f5a"
+  }
+]

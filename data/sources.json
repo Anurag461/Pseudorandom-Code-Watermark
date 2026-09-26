@@ -1,0 +1,20 @@
+{
+  "dataset": "allenai/c4",
+  "configuration": "realnewslike",
+  "split": "validation",
+  "prompt_tokens": 50,
+  "prompts": 500,
+  "tokenizer": "Qwen/Qwen3-0.6B-Base",
+  "original_file_sha256": "0bf0560438d9d4b7a85ebf8b7349d6d028aa02b11a381982742ee55b4430530c",
+  "human_reference": {
+    "dataset": "same saved C4 corpus",
+    "file": "human_reference.jsonl",
+    "document_indices": [
+      500,
+      4982
+    ],
+    "documents": 4483,
+    "source_file": "prompts_10k.jsonl",
+    "source_sha256": "b99cc116ce4fbdf8f0aef71195eaa23c68187c2634d5d75355ec436d36a8c4d4"
+  }
+}

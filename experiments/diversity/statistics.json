@@ -1,0 +1,22 @@
+{
+  "analysis": "Two-sided paired prompt-level method-label permutation tests of mean differences; Holm family-wise correction",
+  "family_size": 35,
+  "diversity_comparisons": 27,
+  "detection_comparisons": 8,
+  "length": 1024,
+  "prompts": 50,
+  "responses_per_prompt": 2,
+  "unit": "prompt; both responses kept together, within-response metrics and detection averaged over response slots",
+  "statistic": "mean PRC-minus-comparator difference across prompts",
+  "alternative": "two-sided",
+  "null_and_assumptions": "Under the null, method labels are exchangeable within each paired prompt; prompts are independent sampling units. The test is not an assumption-free test of equal means. Results condition on the fixed watermark keys and sampling configuration.",
+  "alpha": 0.05,
+  "resamples": 100000,
+  "batch": 2000,
+  "seed": 20260925,
+  "monte_carlo_p": "Twice the smaller one-sided tail probability, with (count+1)/(B+1) for randomized tests; capped at one",
+  "exact_rule": "Enumerate all effective sign assignments when 2^number_of_nonzero_prompt_differences <= 100000; zero differences can be omitted without changing exact p-values",
+  "mc_error_probability": 0.001,
+  "mc_precision": "Bonferroni simultaneous 99.9% Clopper-Pearson bounds for all simulated tails; propagate p-value bounds through Holm to flag unresolved decisions",
+  "display_intervals": "Existing unadjusted 95% marginal bootstrap intervals remain unchanged and do not determine corrected bolding"
+}

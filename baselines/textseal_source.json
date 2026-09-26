@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/facebookresearch/textseal",
+  "pinned_commit": "c60d0d1da2e59f09a698438e218a07ee779b4616",
+  "source_files_sha256": {
+    "textseal/watermarking/generator.py": "0357499f290d43a6649728a6ebd0df64b30d6c0230634ac7d041ddd737d6f285",
+    "textseal/watermarking/detector.py": "a09658aa70bc9c8f776d2372fd228783075ec1e7e9987acebfca54801c8876d7",
+    "textseal/watermarking/config.py": "7cbb3d6d140661d71c739ae178454525e38501b27aaf636d2e775a4c5e86a5eb",
+    "textseal/watermarking/core.py": "83d48939b09a8d14c65a6cffb36d3af98d5d3ee3c90fbf80402e8c4e2265db63"
+  }
+}

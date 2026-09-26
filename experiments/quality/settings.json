@@ -1,0 +1,37 @@
+{
+  "model": "Qwen/Qwen3-0.6B",
+  "variant": "reasoning",
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "n": 800,
+  "r": 792,
+  "t": 3,
+  "eta": 0.1,
+  "benchmarks": {
+    "arc_easy": {
+      "max_new_tokens": 1900,
+      "examples": 2376,
+      "runs": 1
+    },
+    "gsm8k": {
+      "max_new_tokens": 4096,
+      "examples": 1319,
+      "runs": 1
+    },
+    "hellaswag": {
+      "max_new_tokens": 2048,
+      "examples": 10042,
+      "runs": 1
+    },
+    "mmlu": {
+      "max_new_tokens": 4096,
+      "examples": 14042,
+      "runs": 1
+    },
+    "ifeval": {
+      "max_new_tokens": 8192,
+      "examples": 1082,
+      "runs": 2
+    }
+  }
+}

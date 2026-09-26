@@ -1,9 +1,0 @@
-{
-  "stage": "replay_0p6b",
-  "wall_seconds": 76.20506989399999,
-  "resources": [
-    "A100-80GB",
-    16384,
-    360
-  ]
-}

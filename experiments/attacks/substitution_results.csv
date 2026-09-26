@@ -1,0 +1,63 @@
+scheme,tokens,substitution_rate,target_fpr,true_positives,n_watermarked,tpr,false_positives,n_unwatermarked,fpr,calibration
+exp,400,0.0,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+kgw2,400,0.0,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+prc_map,400,0.0,0.001,430,500,0.86,0,500,0.0,analytical
+synthid,400,0.0,0.001,500,500,1.0,3,500,0.006,4483 human reference texts
+exp,400,0.05,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+kgw2,400,0.05,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+prc_map,400,0.05,0.001,323,500,0.646,0,500,0.0,analytical
+synthid,400,0.05,0.001,500,500,1.0,1,500,0.002,4483 human reference texts
+exp,400,0.1,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+kgw2,400,0.1,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+prc_map,400,0.1,0.001,208,500,0.416,0,500,0.0,analytical
+synthid,400,0.1,0.001,499,500,0.998,1,500,0.002,4483 human reference texts
+exp,400,0.15,0.001,500,500,1.0,1,500,0.002,4483 human reference texts
+kgw2,400,0.15,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+prc_map,400,0.15,0.001,118,500,0.236,0,500,0.0,analytical
+synthid,400,0.15,0.001,499,500,0.998,3,500,0.006,4483 human reference texts
+exp,400,0.2,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+kgw2,400,0.2,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+prc_map,400,0.2,0.001,66,500,0.132,0,500,0.0,analytical
+synthid,400,0.2,0.001,496,500,0.992,6,500,0.012,4483 human reference texts
+exp,400,0.25,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+kgw2,400,0.25,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+prc_map,400,0.25,0.001,30,500,0.06,0,500,0.0,analytical
+synthid,400,0.25,0.001,491,500,0.982,4,500,0.008,4483 human reference texts
+exp,400,0.3,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+kgw2,400,0.3,0.001,500,500,1.0,0,500,0.0,4483 human reference texts
+prc_map,400,0.3,0.001,13,500,0.026,0,500,0.0,analytical
+synthid,400,0.3,0.001,446,500,0.892,2,500,0.004,4483 human reference texts
+exp,4096,0.0,0.001,200,200,1.0,0,200,0.0,analytical
+kgw2,4096,0.0,0.001,200,200,1.0,2,200,0.01,analytical
+prc_entropy,4096,0.0,0.001,498,500,0.996,0,500,0.0,analytical
+prc_map,4096,0.0,0.001,500,500,1.0,0,500,0.0,analytical
+synthid,4096,0.0,0.001,200,200,1.0,0,200,0.0,analytical
+exp,4096,0.05,0.001,200,200,1.0,0,200,0.0,analytical
+kgw2,4096,0.05,0.001,200,200,1.0,2,200,0.01,analytical
+prc_entropy,4096,0.05,0.001,497,500,0.994,0,500,0.0,analytical
+prc_map,4096,0.05,0.001,498,500,0.996,0,500,0.0,analytical
+synthid,4096,0.05,0.001,200,200,1.0,0,200,0.0,analytical
+exp,4096,0.1,0.001,200,200,1.0,0,200,0.0,analytical
+kgw2,4096,0.1,0.001,200,200,1.0,1,200,0.005,analytical
+prc_entropy,4096,0.1,0.001,494,500,0.988,0,500,0.0,analytical
+prc_map,4096,0.1,0.001,494,500,0.988,0,500,0.0,analytical
+synthid,4096,0.1,0.001,199,200,0.995,1,200,0.005,analytical
+exp,4096,0.15,0.001,200,200,1.0,0,200,0.0,analytical
+kgw2,4096,0.15,0.001,200,200,1.0,1,200,0.005,analytical
+prc_entropy,4096,0.15,0.001,494,500,0.988,0,500,0.0,analytical
+prc_map,4096,0.15,0.001,493,500,0.986,0,500,0.0,analytical
+synthid,4096,0.15,0.001,199,200,0.995,1,200,0.005,analytical
+exp,4096,0.2,0.001,200,200,1.0,0,200,0.0,analytical
+kgw2,4096,0.2,0.001,200,200,1.0,1,200,0.005,analytical
+prc_entropy,4096,0.2,0.001,486,500,0.972,0,500,0.0,analytical
+prc_map,4096,0.2,0.001,491,500,0.982,0,500,0.0,analytical
+synthid,4096,0.2,0.001,198,200,0.99,0,200,0.0,analytical
+prc_entropy,4096,0.3,0.001,470,500,0.94,0,500,0.0,analytical
+prc_map,4096,0.3,0.001,473,500,0.946,0,500,0.0,analytical
+prc_entropy,400,0.1,0.001,167,500,0.334,0,500,0.0,analytical
+prc_entropy,400,0.15,0.001,98,500,0.196,0,500,0.0,analytical
+prc_entropy,400,0.2,0.001,56,500,0.112,0,500,0.0,analytical
+prc_entropy,400,0.25,0.001,25,500,0.05,0,500,0.0,analytical
+prc_entropy,400,0.3,0.001,7,500,0.014,0,500,0.0,analytical
+prc_entropy,400,0.05,0.001,257,500,0.514,0,500,0.0,analytical
+prc_entropy,400,0.0,0.001,354,500,0.708,0,500,0.0,analytical

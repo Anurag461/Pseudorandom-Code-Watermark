@@ -1,0 +1,68 @@
+[
+  {
+    "data": "figure_results.csv",
+    "file": "output/figure1_sparse_three_detectors_20260924/figure1_values.csv",
+    "sha256": "2a13fef2671abf6a2108b4d3d80f63a246b18a6b27917152cce35ae3138fc234"
+  },
+  {
+    "data": "figure_results.csv",
+    "file": "output/figure6_contrast_20260925/figure6_values.csv",
+    "sha256": "1af12f25c46f06c8a5b2b7856300280730a01bbee868ecf0a4055a395df5c675"
+  },
+  {
+    "data": "figure_results.csv",
+    "file": "output/online_vs_fixed_complete_shared_20260925/plot_values.csv",
+    "sha256": "5d0b29e84e393fc27bc9594ec222a4cc84aa130576f668c306bea84ad18e657c"
+  },
+  {
+    "data": "figure_results.csv",
+    "file": "output/table4_detector_portability_20260925/figure3_uncertainty_values.csv",
+    "sha256": "5967159e460075d27c21a4ff8e164e715b6f3be981c8d8a1498efe318ba097c6"
+  },
+  {
+    "data": "fixed_results.csv",
+    "file": "outputs/redetection/redetection_results_summary.csv",
+    "source": "local main working tree",
+    "sha256": "0684f670e21728f82c8f984e852b6a39210200e9c02347c42c27148ab67653e4"
+  },
+  {
+    "data": "portability_tests.csv",
+    "file": "output/table4_detector_portability_20260925/paired_mcnemar_results.csv",
+    "sha256": "3369a4344ec5307857922eb88af12c95797e63d20967da52c964b67218f8630a"
+  },
+  {
+    "data": "portability_outcomes.csv",
+    "file": "output/table4_detector_portability_20260925/paired_detection_outcomes.csv",
+    "sha256": "ccca6efbb12bfec11e1b1a9a140faad27f458d7848cd45c925f190a9fb7e0a7b"
+  },
+  {
+    "data": "construction_tests.csv",
+    "file": "output/online_vs_fixed_complete_shared_20260925/endpoint_significance.csv",
+    "sha256": "2f7d7c827f6060bdbff2bb477ffa8d2be5b74d04973c23b30b16c6202a018d36"
+  },
+  {
+    "data": "construction_outcomes.csv",
+    "file": "output/online_vs_fixed_complete_shared_20260925/endpoint_paired_decisions.csv",
+    "sha256": "1335080165d22eb52bc232758b77d999b132943f865f18699fe2fffd63a66d26"
+  },
+  {
+    "data": "entropy_results.csv",
+    "file": "outputs/entropy_projection_diagnostic/entropy_projection_T1808_prompts500_0p6b_8b_14b_summary.csv",
+    "sha256": "45c4d4002ea40a015d63b85aa246c426572b3edce064bd82fe1a54e39184b1f2"
+  },
+  {
+    "data": "wang_results.csv",
+    "file": "wang_prc_detector_ablation/evidence/experiment-20260924/primary_methods_summary.csv",
+    "sha256": "96ce6501a95e94ce6dff0ef01a3339d3624da12fb242712f6708a278add00fa9"
+  },
+  {
+    "data": "wang_matched_fpr.csv",
+    "file": "wang_prc_detector_ablation/evidence/experiment-20260924/matched_fpr_summary.csv",
+    "sha256": "8b2b849ac36604335617677097239f98a4f7370119ba8a8aadada38baf6623cb"
+  },
+  {
+    "data": "wang_paired.csv",
+    "file": "wang_prc_detector_ablation/evidence/experiment-20260924/paired_differences.csv",
+    "sha256": "4aa6f0310c53c74f152cc9bec9f2ffcd5055cce75a98875ed693b4e92ad0dadb"
+  }
+]

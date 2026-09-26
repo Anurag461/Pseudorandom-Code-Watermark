@@ -1,4 +1,0 @@
-{
-  "error": "Command '['git', 'diff', '--cached', '--check']' returned non-zero exit status 2.",
-  "recorded_utc": "2026-09-21T05:30:49.879399+00:00"
-}

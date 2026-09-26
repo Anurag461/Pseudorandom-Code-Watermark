@@ -1,0 +1,21 @@
+scheme,test,setting,rep,p,statistic
+exp,red-green,H4,rep0,0.6503,2
+exp,red-green,H5,rep0,0.6928,2
+exp,red-green,"Bonferroni H=4,5",rep0,1.0,
+kgw2,red-green,H4,rep0,0.0,10
+kgw2,red-green,H5,rep0,0.0,10
+kgw2,red-green,"Bonferroni H=4,5",rep0,0.0,
+none,red-green,H4,rep0,0.7182,2
+none,red-green,H5,rep0,0.9999,1
+none,red-green,"Bonferroni H=4,5",rep0,1.0,
+prc,red-green,H4,rep0,0.9999,1
+prc,red-green,H5,rep0,0.1119,3
+prc,red-green,"Bonferroni H=4,5",rep0,0.2238,
+synthid,red-green,H4,rep0,0.0,10
+synthid,red-green,H5,rep0,0.6239,2
+synthid,red-green,"Bonferroni H=4,5",rep0,0.0,
+exp,fixed-sampling,1000 x 100 tok,rep0,2.1768933922007226e-124,252
+kgw2,fixed-sampling,1000 x 100 tok,rep0,0.9383348554480531,1000
+none,fixed-sampling,1000 x 100 tok,rep0,0.9383348554480531,1000
+prc,fixed-sampling,1000 x 100 tok,rep0,0.9383348554480531,1000
+synthid,fixed-sampling,1000 x 100 tok,rep0,0.9383348554480531,1000

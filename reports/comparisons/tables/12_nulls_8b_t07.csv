@@ -1,7 +1,0 @@
-Detector,Cohort,Tokens,False positives,Responses
-prc,pilot,400,0,100
-prc,pilot,1024,0,100
-synthid_depth10,pilot,400,0,100
-synthid_depth10,pilot,1024,0,100
-synthid_depth2,pilot,400,0,100
-synthid_depth2,pilot,1024,0,100

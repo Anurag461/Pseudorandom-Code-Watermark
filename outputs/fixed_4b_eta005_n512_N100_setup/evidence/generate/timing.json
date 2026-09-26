@@ -1,9 +1,0 @@
-{
-  "stage": "generate",
-  "wall_seconds": 77.57155328,
-  "resources": [
-    "H100",
-    65536,
-    240
-  ]
-}

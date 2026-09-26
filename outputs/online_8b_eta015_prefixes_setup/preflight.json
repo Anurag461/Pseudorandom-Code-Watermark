@@ -1,9 +1,0 @@
-{
-  "passed": true,
-  "checks": [
-    "approved scope/resources",
-    "matching frozen source hashes",
-    "successful-run runtime isolated from stopped eta020 patch"
-  ],
-  "kind": "metadata only; no model or scoring execution"
-}

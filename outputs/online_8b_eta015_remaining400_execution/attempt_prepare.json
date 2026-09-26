@@ -1,8 +1,0 @@
-{
-  "plan_sha256": "cb2c03b3b52dc84c1c67e5ee542fc5ffcf7258f33eeb241890231156b724fb10",
-  "stage": "prepare",
-  "method": "recovered_from_interrupted_CPU_plus_read_only_cache_audit",
-  "prior_app_id": "ap-74oPtw92UaCPwKJQzaIGEo",
-  "evidence": "outputs/online_8b_eta015_remaining400_execution/preparation_recovery.json",
-  "new_paid_run": false
-}

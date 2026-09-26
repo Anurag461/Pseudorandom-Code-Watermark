@@ -1,0 +1,22 @@
+[
+  {
+    "data": "blackbox_results.csv",
+    "file": "output/attack_review_20260926/evidence/pinned/outputs/attacks/bbd_results.csv",
+    "sha256": "38ff7f56000d77ab84fb1b4f48ddca6cd8db286fa185ffe884e9b40edb02073f"
+  },
+  {
+    "data": "substitution_results.csv",
+    "file": "output/attack_review_20260926/evidence/pinned/outputs/attacks/kth_baseline_results.csv",
+    "sha256": "8afc4d169d37bee94b8436c2238b2ab26b1c20c761248f3faa012d0810c3f3eb"
+  },
+  {
+    "data": "substitution_results.csv",
+    "file": "output/attack_review_20260926/evidence/pinned/outputs/attacks/kth_long_results.csv",
+    "sha256": "b2ad737ef380ee3f9887f8f5295d8a6d0c1723bace6ae8597f8dc13ecd42d03f"
+  },
+  {
+    "data": "substitution_results.csv",
+    "file": "output/attack_review_20260926/evidence/pinned/outputs/attacks/kth_attack_results.csv",
+    "sha256": "ddb8559b9dd57cefac201e38958169ae4ffddec4abc72c45191cda89884da985"
+  }
+]

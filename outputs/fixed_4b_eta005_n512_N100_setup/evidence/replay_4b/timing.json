@@ -1,9 +1,0 @@
-{
-  "stage": "replay_4b",
-  "wall_seconds": 86.047109615,
-  "resources": [
-    "H100",
-    65536,
-    240
-  ]
-}

@@ -1,0 +1,6 @@
+benchmark,model_variant,model_size,max_new_tokens,num_examples,unwm_score,wm_score,utility_gap,len_median_wm,len_median_unwm,frac_trunc_wm,frac_trunc_unwm
+arc_easy,reasoning,0.6B,1900,2376,0.8274,0.8367,-0.0093,412,408,0.0253,0.0324
+gsm8k,reasoning,0.6B,4096,1319,0.7528,0.7475,0.0053,839,849,0.0811,0.0895
+hellaswag,reasoning,0.6B,2048,10042,0.4058,0.4042,0.0016,482,476,0.0044,0.0041
+mmlu,reasoning,0.6B,4096,14042,0.5147,0.514,0.0007,778,770,0.039,0.0395
+ifeval,reasoning,0.6B,8192,1082,0.5666,0.5592,0.0074,453,446,0.0056,0.0019

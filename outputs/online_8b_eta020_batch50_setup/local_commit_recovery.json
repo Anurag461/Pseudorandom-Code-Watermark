@@ -1,5 +1,0 @@
-{
-  "resolved": true,
-  "issue": "Git whitespace check treated blank patch-context lines as trailing whitespace; patch archive retained locally and excluded from commit. Isolated runtime patch and all task metadata committed.",
-  "cloud_compute_retried": false
-}

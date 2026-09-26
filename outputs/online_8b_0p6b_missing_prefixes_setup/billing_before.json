@@ -1,9 +1,0 @@
-{
-  "checked_utc": "2026-09-24T00:50:32.194838+00:00",
-  "run_costs": {
-    "online_8b_eta020_0p6b_setup": "25.43796444",
-    "online_8b_shared_null_T13088_setup": "55.74380810"
-  },
-  "read_only": true,
-  "account_credit_balance": "not exposed by usage API"
-}

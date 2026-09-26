@@ -1,9 +1,0 @@
-# Keep detailed exports and local archives out of Git.
-/*
-!/.gitignore
-!/README.md
-!/summary.json
-!/cache_index.json
-!/redetection_results_summary.csv
-!/naive_backfill_20260924.json
-!/naive_missing_20260924.csv

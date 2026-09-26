@@ -1,83 +1,10 @@
-.venv/
 __pycache__/
-*.pyc
-dev-ignore/
-report.md
-eval_bundle/
-
-# Secrets
-.env
-
-# Local setup
-CLAUDE.md
-wandb/
-
-# Watermark experiment outputs (large binary artifacts)
-*.pt
-*.bin
-*.safetensors
-
-# Self-BLEU validation: raw responses are archived on Modal, reports are versioned.
-outputs/self_bleu_validation/raw/
-outputs/self_bleu_validation/step3/
-outputs/self_bleu_validation/step3-v1/
-outputs/self_bleu_validation/step3-v2/
-
-# Pilot raw text, traces, and row-level evidence are archived separately.
-outputs/self_bleu_pilot/*/raw/
-outputs/self_bleu_pilot/*/inputs.json
-outputs/self_bleu_pilot/*/reused_textseal.json
-outputs/self_bleu_pilot/*/token_detection.json
-outputs/self_bleu_pilot/*/prc_report.json
-outputs/self_bleu_pilot/*/textseal_report.json
-outputs/self_bleu_pilot/stage_a_v1/
-
-# Repeat-policy generation, entropy traces and response-level scores.
-outputs/self_bleu_repeat/*/raw/
-outputs/self_bleu_repeat/*/*_report.json
-
-# SynthID depth follow-up: remote generation and reproducible CPU score records.
-outputs/self_bleu_depth/*/raw/
-
-# Matched top-100 responses, replay traces and per-response evidence.
-outputs/self_bleu_topk/*/raw/
-
-# Online prefix-sweep per-prompt manifests (large, reproducible from cache)
-outputs/online_map_sweep_*_sampler-*.json
-outputs/online_map_sweep_*_sampler-*_increments/
-
-# Local model caches (do not commit upstream model weights)
-Qwen3-*/
-.cache/
-huggingface/
-
-# Notebook scratch
-.ipynb_checkpoints/
-Untitled.ipynb
-
-# Auto-handoff / harness state
-auto_handoff*.log
-auto_handoff*.json
-
-# Runtime worker logs (noisy, large; not reproduction-relevant)
-*/worker_*.log
-*/phase_e_worker_*.log
-*/extract.log
-*/analyze.log
-
-# Claude harness (do not redistribute)
-.claude/
-
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
 .DS_Store
-.python-version
-ATTACK_SUMMARY.md
-generate_corpus.py
-modal_invert.py
-phase_f_brute_force_steal.py
-prc_visualizer.jsx
-
-# Full-vocabulary 0.6B study: raw completions/traces stay on the existing Modal volume.
-outputs/self_bleu_full_vocab/*/raw/
-
-# Temperature sensitivity raw traces and validation responses
-outputs/self_bleu_temperature/*/raw/
+runs/
+models/
+build/
+dist/

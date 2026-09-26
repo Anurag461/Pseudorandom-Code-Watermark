@@ -1,17 +1,33 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "prc-select"
+name = "prc-watermark"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
-requires-python = ">=3.13"
+description = "Pseudorandom code watermarks for language models"
+requires-python = ">=3.11"
 dependencies = [
-    "datasets>=5.0.1",
-    "galois>=0.4.10",
-    "huggingface-hub>=1.22.0",
-    "modal>=1.4.3",
-    "safetensors>=0.8.0",
-    "scipy>=1.18.0",
-    "tokenizers>=0.22.2",
-    "torch>=2.12.1",
-    "transformers>=5.13.0",
+  "numpy==1.26.0", "scipy==1.14.1", "torch==2.4.0", "galois==0.4.2",
+  "numba==0.59.1", "safetensors==0.4.5", "huggingface-hub==0.30.2",
+  "tokenizers==0.21.1", "transformers==4.51.3"
 ]
+
+[project.optional-dependencies]
+quality = ["datasets", "aiohttp", "nltk==3.9.1", "langdetect==1.0.9", "immutabledict==4.2.0", "absl-py"]
+analysis = ["sacrebleu==2.4.3", "matplotlib==3.9.2"]
+cloud = ["modal"]
+
+[tool.setuptools.packages.find]
+include = ["prc_watermark*", "baselines*", "experiments*", "execution*"]
+
+[tool.setuptools.package-data]
+"baselines.wang" = ["*.json", "LICENSE"]
+"experiments.detection" = ["*.json", "*.csv"]
+"experiments.quality" = ["*.json", "*.csv"]
+"experiments.diversity" = ["*.json", "*.csv"]
+"experiments.attacks" = ["*.json", "*.csv"]
+
+"experiments.quality.tasks.ifeval_lib" = ["NOTICE", "LICENSE"]
+
+"baselines" = ["textseal_source.json"]

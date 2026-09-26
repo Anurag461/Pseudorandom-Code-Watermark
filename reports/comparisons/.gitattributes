@@ -1,5 +1,0 @@
-# Publication PDFs are binary even when ASCII-encoded by ReportLab.
-*.pdf binary
-*.png binary
-# Preserve Matplotlib-generated SVG path formatting.
-*.svg -whitespace

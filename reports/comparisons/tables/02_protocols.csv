@@ -1,5 +1,0 @@
-Regime,Model / temperature,Sampling,Probability arithmetic,Repeat policy
-8B original + depths,Qwen3-8B-Base / 1,Full vocabulary,Ordinary FP32; PRC bucket BF16; SynthID update BF16,Native plus separate on/off ablation
-8B top-100,Qwen3-8B-Base / 1,Top-100 before watermark,Common FP32 probabilities; BF16 model,Native SynthID ON
-0.6B full vocabulary,Qwen3-0.6B-Base / 1,Full vocabulary,Common FP32 probabilities; BF16 model,All contextual baselines ON
-8B temperature follow-up,Qwen3-8B-Base / .7,Full vocabulary,Original method paths; single BF16 temperature division,Native SynthID ON

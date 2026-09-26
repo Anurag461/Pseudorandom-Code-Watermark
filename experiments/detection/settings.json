@@ -1,0 +1,55 @@
+{
+  "dataset": "C4 RealNewsLike",
+  "prompts": 500,
+  "prompt_tokens": 50,
+  "t": 3,
+  "row_rate": [
+    99,
+    100
+  ],
+  "target_fpr": 0.001,
+  "noise_rates": [
+    0.05,
+    0.1,
+    0.15,
+    0.2
+  ],
+  "models": [
+    "Qwen3-0.6B-Base",
+    "Qwen3-8B-Base"
+  ],
+  "weights": [
+    "map",
+    "entropy",
+    "naive"
+  ],
+  "experiments": {
+    "fixed": "fixed_results.csv",
+    "detection_and_model_scale": "figure_results.csv",
+    "detector_portability": [
+      "figure_results.csv",
+      "portability_tests.csv",
+      "portability_outcomes.csv"
+    ],
+    "fixed_vs_online": [
+      "figure_results.csv",
+      "construction_tests.csv",
+      "construction_outcomes.csv"
+    ],
+    "entropy": {
+      "results": "entropy_results.csv",
+      "tokens": 1808,
+      "models": [
+        "0.6B",
+        "8B",
+        "14B"
+      ]
+    },
+    "wang": [
+      "wang_results.csv",
+      "wang_matched_fpr.csv",
+      "wang_paired.csv",
+      "wang_thresholds.json"
+    ]
+  }
+}

@@ -1,0 +1,309 @@
+family,paper_ref,construction,generation_model,detector_model,detector,eta,t,block_length,tokens,detected,n_watermarked,tpr_percent,ci_lower_percent,ci_upper_percent
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,256,256,312,500,62.4,58.074917938476744,66.53599841807676
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.05,3,256,256,219,500,43.8,39.514834408666566,48.1797074130567
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,256,256,126,500,25.2,21.59338483813719,29.184782448755808
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,400,400,430,500,86.0,82.6833135055546,88.76773398121365
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.05,3,400,400,355,500,71.0,66.87451968835137,74.80525801226344
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,400,400,260,500,52.0,47.62234529552701,56.34715734262677
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,448,448,450,500,90.0,87.05780903680599,92.33224372626984
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.05,3,448,448,397,500,79.4,75.63735290819747,82.71433587266328
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,448,448,291,500,58.199999999999996,53.83026562362387,62.44469519280666
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,512,512,472,500,94.39999999999999,92.0255206353293,96.09743793168485
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.05,3,512,512,421,500,84.2,80.74376489887337,87.13473021355645
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,512,512,344,500,68.8,64.60861967117413,72.7047051274715
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,1024,1024,495,500,99.0,97.68069002442694,99.57212461034096
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.05,3,1024,1024,489,500,97.8,96.10391387886837,98.76719917300724
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,1024,1024,463,500,92.60000000000001,89.96652466777695,94.5838815248988
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,2048,2048,498,500,99.6,98.5534284784823,99.89023694773172
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.05,3,2048,2048,497,500,99.4,98.25097478959466,99.79574037280398
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,2048,2048,495,500,99.0,97.68069002442694,99.57212461034096
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,256,256,135,500,27.0,23.294853920310583,31.055865740920837
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.1,3,256,256,94,500,18.8,15.617996413496654,22.457762431304207
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,256,256,47,500,9.4,7.142640859222131,12.276455586255912
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,400,400,247,500,49.4,45.039013091903215,53.770136116650654
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.1,3,400,400,184,500,36.8,32.68845483787569,41.11282775030931
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,400,400,120,500,24.0,20.4637860033381,27.932679700662614
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,512,512,335,500,67.0,62.76256239722535,70.97821002708189
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.1,3,512,512,247,500,49.4,45.039013091903215,53.770136116650654
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,512,512,168,500,33.6,29.598800782704913,37.85127758443401
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,768,768,448,500,89.60000000000001,86.61557291243417,91.9805793230109
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.1,3,768,768,385,500,77.0,73.11377813252322,80.47450748255297
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,768,768,283,500,56.599999999999994,52.22171596922527,60.87764273668223
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,1024,1024,476,500,95.19999999999999,92.957280316411,96.75347930586469
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.1,3,1024,1024,446,500,89.2,86.17453267151934,91.62771903629498
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,1024,1024,385,500,77.0,73.11377813252322,80.47450748255297
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,256,256,47,500,9.4,7.142640859222131,12.276455586255912
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.15,3,256,256,37,500,7.3999999999999995,5.4161184751011975,10.033475332223055
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,256,256,12,500,2.4,1.3781314655496988,4.147705746390075
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,512,512,148,500,29.599999999999998,25.76653952306019,33.74453356777114
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.15,3,512,512,110,500,22.0,18.590093257162362,25.83686980868456
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,512,512,56,500,11.200000000000001,8.726280019410227,14.26536880040623
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,1024,1024,373,500,74.6,70.60690794081029,78.21797450848135
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.15,3,1024,1024,304,500,60.8,56.45405202499838,64.98126222103208
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,1024,1024,201,500,40.2,35.9928740326145,44.55656304043193
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,1504,1504,455,500,91.0,88.16905887106667,93.20574521108605
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.15,3,1504,1504,417,500,83.39999999999999,79.88646838026932,86.40422567689899
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,1504,1504,341,500,68.2,63.992500124841676,72.12997388235782
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,2048,2048,488,500,97.6,95.85229425360993,98.6218685344503
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.15,3,2048,2048,476,500,95.19999999999999,92.957280316411,96.75347930586469
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,2048,2048,441,500,88.2,85.07680121388806,90.74069917484935
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,2048,2048,361,500,72.2,68.1151400363696,75.94633924713749
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.2,3,2048,2048,297,500,59.4,55.03970661272917,63.61695578659366
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.2,3,2048,2048,229,500,45.800000000000004,41.481460977485106,50.18258348239194
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,4096,4096,484,500,96.8,94.86551309545582,98.0208486373429
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.2,3,4096,4096,475,500,95.0,92.72318388284523,96.59062547561506
+fixed_online_detection,fig:prc-detection-power,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.2,3,4096,4096,447,500,89.4,86.39490699892671,91.80429497270298
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,,520,451,500,90.2,87.27939491335182,92.50760811353939
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.05,3,,520,394,500,78.8,75.00478841824444,82.15604957117016
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,,520,306,500,61.199999999999996,56.8588177086666,65.37039706499462
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.05,3,,520,349,500,69.8,65.63723120570819,73.66084491201434
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy weighted,0.05,3,,520,269,500,53.800000000000004,49.4176845283715,58.1243704841207
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Naive,0.05,3,,520,138,500,27.6,23.863813294339813,31.677757158337744
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.05,3,,864,450,500,90.0,87.05780903680599,92.33224372626984
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy weighted,0.05,3,,864,397,500,79.4,75.63735290819747,82.71433587266328
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Naive,0.05,3,,864,276,500,55.2,50.8179738010616,59.502733058138254
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,,848,450,500,90.0,87.05780903680599,92.33224372626984
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.1,3,,848,395,500,79.0,75.21551530407024,82.34227294915975
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,,848,292,500,58.4,54.03165775956056,62.64025332068537
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.1,3,,848,331,500,66.2,61.944273803546935,70.20869756549878
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy weighted,0.1,3,,848,234,500,46.800000000000004,42.467406592197946,51.18138918675601
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Naive,0.1,3,,848,118,500,23.599999999999998,20.08812954715589,27.514435629214073
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.1,3,,1664,451,500,90.2,87.27939491335182,92.50760811353939
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy weighted,0.1,3,,1664,408,500,81.6,77.96708962064596,84.75105206218394
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Naive,0.1,3,,1664,284,500,56.8,52.42253434338132,61.073774626341546
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,,1648,450,500,90.0,87.05780903680599,92.33224372626984
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.15,3,,1648,424,500,84.8,81.38858517125614,87.68076073261983
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,,1648,307,500,61.4,57.061312708877225,65.56485232859939
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.15,3,,1648,308,500,61.6,57.26388276307123,65.75923253822077
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy weighted,0.15,3,,1648,247,500,49.4,45.039013091903215,53.770136116650654
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Naive,0.15,3,,1648,123,500,24.6,21.02809916856707,28.559217326879782
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.15,3,,4672,450,500,90.0,87.05780903680599,92.33224372626984
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy weighted,0.15,3,,4672,429,500,85.8,82.46703326752247,88.5870639554304
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Naive,0.15,3,,4672,351,500,70.19999999999999,66.04929783319653,74.04267881215677
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,,3136,450,500,90.0,87.05780903680599,92.33224372626984
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy weighted,0.2,3,,3136,403,500,80.60000000000001,76.9060370280767,83.82735333567634
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.2,3,,3136,327,500,65.4,61.127293492592116,69.43787682119209
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.2,3,,3136,295,500,59.0,54.63626881245969,63.22649305923236
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy weighted,0.2,3,,3136,216,500,43.2,38.926225373658454,47.57746565661867
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Naive,0.2,3,,3136,108,500,21.6,18.216774485419418,25.416288052796748
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.2,3,,11856,450,500,90.0,87.05780903680599,92.33224372626984
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy weighted,0.2,3,,11856,429,500,85.8,82.46703326752247,88.5870639554304
+fixed_online_detection,fig:prc-detection-power,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Naive,0.2,3,,11856,383,500,76.6,72.69485494684876,80.09953014059667
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.05,3,,520,349,500,69.8,65.63723120570819,73.66084491201434
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.05,3,,692,414,500,82.8,79.24525525008733,85.85458801563486
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.05,3,,864,450,500,90.0,87.05780903680599,92.33224372626984
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.05,3,,1280,481,500,96.2,94.1415227469356,97.55398819441696
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.05,3,,520,269,500,53.8,49.4176845283715,58.1243704841207
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.05,3,,692,358,500,71.6,67.4944056876268,75.37622280443414
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.05,3,,864,397,500,79.4,75.63735290819747,82.71433587266328
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.05,3,,1280,450,500,90.0,87.05780903680599,92.33224372626984
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.1,3,,848,331,500,66.2,61.944273803546935,70.20869756549878
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.1,3,,1256,412,500,82.4,78.818582871064,85.48735986702741
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.1,3,,1664,451,500,90.2,87.27939491335182,92.50760811353939
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.1,3,,3072,471,500,94.2,91.79438121437451,95.93162708882429
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.1,3,,848,234,500,46.8,42.467406592197946,51.18138918675601
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.1,3,,1256,356,500,71.2,67.08105507601559,74.9956728884146
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.1,3,,1664,408,500,81.6,77.96708962064596,84.75105206218394
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.1,3,,3072,455,500,91.0,88.16905887106667,93.20574521108605
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.15,3,,1648,308,500,61.6,57.26388276307123,65.75923253822077
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.15,3,,3160,435,500,87.0,83.7678638423086,89.66793496353654
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.15,3,,4672,450,500,90.0,87.05780903680599,92.33224372626984
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.15,3,,6144,465,500,93.0,90.42028101480832,94.92402570549821
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.15,3,,1648,247,500,49.4,45.039013091903215,53.770136116650654
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.15,3,,3160,401,500,80.2,76.48260209304159,83.45688774308066
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.15,3,,4672,429,500,85.8,82.46703326752247,88.5870639554304
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.15,3,,6144,436,500,87.2,83.98543146918416,89.84731760047634
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.2,3,,3136,295,500,59.0,54.63626881245969,63.22649305923236
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.2,3,,7496,433,500,86.6,83.33339846536646,89.30849981284793
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.2,3,,11856,450,500,90.0,87.05780903680599,92.33224372626984
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Posterior mean,0.2,3,,14336,452,500,90.4,87.5013037572485,92.6826495334581
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.2,3,,3136,216,500,43.2,38.926225373658454,47.57746565661867
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.2,3,,7496,403,500,80.6,76.9060370280767,83.82735333567634
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.2,3,,11856,429,500,85.8,82.46703326752247,88.5870639554304
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-8B-Base,Entropy-weighted,0.2,3,,14336,433,500,86.6,83.33339846536646,89.30849981284793
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,,520,294,500,58.8,54.43465920099858,63.0311524068781
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,,692,379,500,75.8,71.85836488729677,79.34821914488714
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,,864,416,500,83.2,79.67256709103735,86.22117670231559
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,,1280,463,500,92.6,89.96652466777695,94.5838815248988
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,,520,233,500,46.6,42.27007774569099,50.981767769447586
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,,692,323,500,64.6,60.311599778212845,68.66576948030983
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,,864,380,500,76.0,72.0673202993374,79.5362139966619
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,,1280,434,500,86.8,83.55052092686175,89.488327615168
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,,848,264,500,52.8,48.419577166421604,57.13772652699372
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,,1256,376,500,75.2,71.23215407533253,78.78357916540524
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,,1664,423,500,84.6,81.1734636678946,87.49893197216598
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,,3072,454,500,90.8,87.94612618638256,93.0317276319548
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,,848,201,500,40.2,35.9928740326145,44.55656304043193
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,,1256,324,500,64.8,60.51540371141233,68.85891581092574
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,,1664,383,500,76.6,72.69485494684876,80.09953014059667
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,,3072,440,500,88.0,84.85804013755894,90.5625099873631
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,,1648,278,500,55.6,51.218689304972585,59.89591808185805
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,,3160,410,500,82.0,78.39253300173655,85.1195092087241
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,,4672,429,500,85.8,82.46703326752247,88.5870639554304
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,,6144,438,500,87.6,84.42125871122163,90.20539088606967
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,,1648,220,500,44.0,39.7111794441699,48.38031264136874
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,,3160,380,500,76.0,72.0673202993374,79.5362139966619
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,,4672,404,500,80.8,77.1179624871567,84.0123781404117
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,,6144,416,500,83.2,79.67256709103735,86.22117670231559
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,,3136,241,500,48.2,43.850658762453506,52.576788863208094
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,,7496,406,500,81.2,77.54223756869581,84.38200358650336
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,,11856,430,500,86.0,82.6833135055546,88.76773398121365
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,,14336,437,500,87.4,84.2032282280136,90.02647110546229
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.2,3,,3136,188,500,37.6,33.464001581923256,41.925082061523256
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.2,3,,7496,392,500,78.4,74.58371194720326,81.7832255145806
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.2,3,,11856,411,500,82.2,78.60548114500956,85.30351132926648
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.2,3,,14336,418,500,83.6,80.10053635257086,86.58710796841282
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.05,3,,520,138,500,27.6,23.863813294339813,31.677757158337744
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.05,3,,692,210,500,42.0,37.75093512774023,46.371054319644614
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.05,3,,864,276,500,55.2,50.8179738010616,59.502733058138254
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.05,3,,1280,345,500,69.0,64.81416618981787,72.89610887264314
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.1,3,,848,118,500,23.6,20.08812954715589,27.514435629214073
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.1,3,,1256,208,500,41.6,37.35974667931464,45.96834224043944
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.1,3,,1664,284,500,56.8,52.42253434338132,61.073774626341546
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.1,3,,3072,385,500,77.0,73.11377813252322,80.47450748255297
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.15,3,,1648,123,500,24.6,21.02809916856707,28.559217326879782
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.15,3,,3160,289,500,57.8,53.4276977868969,62.05336250190289
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.15,3,,4672,351,500,70.2,66.04929783319653,74.04267881215677
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.15,3,,6144,364,500,72.8,68.73673929547526,76.51559077947796
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.2,3,,3136,108,500,21.6,18.216774485419418,25.416288052796748
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.2,3,,7496,347,500,69.4,65.2255219632054,73.27865362688635
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.2,3,,11856,383,500,76.6,72.69485494684876,80.09953014059667
+detector_portability,tab:app-mismatch,online_causal_prc_v1,Qwen3-8B-Base,Not required,Naive,0.2,3,,14336,393,500,78.6,74.79418772435875,81.96970000124047
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,256,256,312,500,62.4,58.074917938476744,66.53599841807676
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,256,256,219,500,43.8,39.514834408666566,48.1797074130567
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,256,256,126,500,25.2,21.593384838137187,29.184782448755808
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,256,256,135,500,27.0,23.29485392031058,31.05586574092084
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,256,256,94,500,18.8,15.617996413496654,22.457762431304207
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,256,256,47,500,9.4,7.14264085922213,12.276455586255913
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,256,256,47,500,9.4,7.14264085922213,12.276455586255913
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,256,256,37,500,7.4,5.4161184751011975,10.033475332223055
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,256,256,12,500,2.4,1.3781314655496986,4.147705746390075
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,400,400,430,500,86.0,82.6833135055546,88.76773398121365
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,400,400,355,500,71.0,66.87451968835136,74.80525801226344
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,400,400,260,500,52.0,47.62234529552701,56.34715734262677
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,400,400,247,500,49.4,45.039013091903215,53.770136116650654
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,400,400,184,500,36.8,32.68845483787568,41.11282775030931
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,400,400,120,500,24.0,20.4637860033381,27.93267970066262
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,400,400,88,500,17.6,14.51264013297259,21.181417128935994
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,400,400,49,500,9.8,7.492391886460623,12.720605086648181
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,400,400,29,500,5.8,4.06837291117572,8.205618785625498
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,512,512,472,500,94.4,92.0255206353293,96.09743793168485
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,512,512,421,500,84.2,80.74376489887337,87.13473021355645
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,512,512,344,500,68.8,64.60861967117411,72.7047051274715
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,512,512,335,500,67.0,62.76256239722534,70.9782100270819
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,512,512,247,500,49.4,45.039013091903215,53.770136116650654
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,512,512,168,500,33.6,29.598800782704913,37.85127758443401
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,512,512,148,500,29.6,25.76653952306019,33.74453356777114
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,512,512,110,500,22.0,18.590093257162362,25.836869808684565
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,512,512,56,500,11.2,8.726280019410225,14.26536880040623
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,1024,1024,495,500,99.0,97.68069002442694,99.57212461034096
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,1024,1024,489,500,97.8,96.10391387886837,98.76719917300724
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,1024,1024,463,500,92.6,89.96652466777695,94.5838815248988
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,1024,1024,476,500,95.2,92.957280316411,96.75347930586469
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,1024,1024,446,500,89.2,86.17453267151934,91.62771903629498
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,1024,1024,385,500,77.0,73.11377813252322,80.47450748255297
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,1024,1024,373,500,74.6,70.60690794081029,78.21797450848135
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,1024,1024,304,500,60.8,56.45405202499838,64.98126222103208
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,1024,1024,201,500,40.2,35.9928740326145,44.55656304043193
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,2048,2048,498,500,99.6,98.5534284784823,99.89023694773172
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,2048,2048,497,500,99.4,98.25097478959466,99.79574037280398
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,2048,2048,495,500,99.0,97.68069002442694,99.57212461034096
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,2048,2048,488,500,97.6,95.85229425360993,98.6218685344503
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,2048,2048,476,500,95.2,92.957280316411,96.75347930586469
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,2048,2048,441,500,88.2,85.07680121388806,90.74069917484935
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,2048,2048,361,500,72.2,68.1151400363696,75.94633924713749
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.2,3,2048,2048,297,500,59.4,55.039706612729155,63.616955786593664
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.2,3,2048,2048,229,500,45.8,41.481460977485106,50.18258348239194
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,4096,4096,484,500,96.8,94.86551309545582,98.0208486373429
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.2,3,4096,4096,475,500,95.0,92.72318388284523,96.59062547561506
+noise_rate,fig:noise-rate-tpr,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.2,3,4096,4096,447,500,89.4,86.39490699892671,91.80429497270298
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,256,256,312,500,62.4,58.074917938476744,66.53599841807676
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,,256,254,500,50.8,46.428581664185806,55.15921939107572
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,256,256,219,500,43.8,39.514834408666566,48.1797074130567
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,,256,185,500,37.0,32.88222637742395,41.31600647457642
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,256,256,126,500,25.2,21.593384838137187,29.184782448755808
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,,256,113,500,22.6,19.1509780865554,26.466835770737664
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,400,400,430,500,86.0,82.6833135055546,88.76773398121365
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,,400,402,500,80.4,76.69425076136407,83.64218933857356
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,400,400,355,500,71.0,66.87451968835136,74.80525801226344
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,,400,312,500,62.4,58.074917938476744,66.53599841807676
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,400,400,260,500,52.0,47.62234529552701,56.34715734262677
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,,400,234,500,46.8,42.467406592197946,51.18138918675601
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,448,448,450,500,90.0,87.05780903680599,92.33224372626984
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,,448,425,500,85.0,81.60389193683017,87.86240423086119
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,448,448,397,500,79.4,75.63735290819747,82.71433587266328
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,,448,355,500,71.0,66.87451968835136,74.80525801226344
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,448,448,291,500,58.2,53.830265623623866,62.44469519280668
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,,448,260,500,52.0,47.62234529552701,56.34715734262677
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,512,512,472,500,94.4,92.0255206353293,96.09743793168485
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.05,3,,512,447,500,89.4,86.39490699892671,91.80429497270298
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,512,512,421,500,84.2,80.74376489887337,87.13473021355645
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.05,3,,512,395,500,79.0,75.21551530407024,82.34227294915975
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,512,512,344,500,68.8,64.60861967117411,72.7047051274715
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.05,3,,512,299,500,59.8,55.44343695956807,64.0071259673855
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,256,256,135,500,27.0,23.29485392031058,31.05586574092084
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,,256,111,500,22.2,18.776935138162994,26.046978191499313
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,256,256,94,500,18.8,15.617996413496654,22.457762431304207
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,,256,69,500,13.8,11.051800889888371,17.10020135952802
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,256,256,47,500,9.4,7.14264085922213,12.276455586255913
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,,256,42,500,8.4,6.274413680383038,11.15993144601811
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,512,512,335,500,67.0,62.76256239722534,70.9782100270819
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,,512,277,500,55.4,51.01829628154826,59.699360841466984
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,512,512,247,500,49.4,45.039013091903215,53.770136116650654
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,,512,213,500,42.6,38.3382578366752,46.97458240215578
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,512,512,168,500,33.6,29.598800782704913,37.85127758443401
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,,512,146,500,29.2,25.38524938356277,33.33192317963781
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,768,768,448,500,89.6,86.61557291243417,91.9805793230109
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,,768,425,500,85.0,81.60389193683017,87.86240423086119
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,768,768,385,500,77.0,73.11377813252322,80.47450748255297
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,,768,360,500,72.0,67.90813332381924,75.75639569587244
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,768,768,283,500,56.6,52.22171596922527,60.87764273668223
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,,768,247,500,49.4,45.039013091903215,53.770136116650654
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,1024,1024,476,500,95.2,92.957280316411,96.75347930586469
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.1,3,,1024,471,500,94.2,91.7943812143745,95.93162708882429
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,1024,1024,446,500,89.2,86.17453267151934,91.62771903629498
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.1,3,,1024,429,500,85.8,82.46703326752247,88.5870639554304
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,1024,1024,385,500,77.0,73.11377813252322,80.47450748255297
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.1,3,,1024,346,500,69.2,65.01980013173227,73.08742519454412
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,256,256,47,500,9.4,7.14264085922213,12.276455586255913
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,,256,34,500,6.8,4.906650742490687,9.35209227338743
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,256,256,37,500,7.4,5.4161184751011975,10.033475332223055
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,,256,22,500,4.4,2.9233955628607178,6.571944287232845
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,256,256,12,500,2.4,1.3781314655496986,4.147705746390075
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,,256,13,500,2.6,1.5256383923327248,4.397149083422428
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,512,512,148,500,29.6,25.76653952306019,33.74453356777114
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,,512,97,500,19.4,16.172646664323683,23.09396297192332
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,512,512,110,500,22.0,18.590093257162362,25.836869808684565
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,,512,67,500,13.4,10.69150018715208,16.666601534633546
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,512,512,56,500,11.2,8.726280019410225,14.26536880040623
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,,512,47,500,9.4,7.14264085922213,12.276455586255913
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,1024,1024,373,500,74.6,70.60690794081029,78.21797450848135
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,,1024,325,500,65.0,60.719287100619525,69.05198268553391
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,1024,1024,304,500,60.8,56.45405202499838,64.98126222103208
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,,1024,245,500,49.0,44.642617474030935,53.37263120689219
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,1024,1024,201,500,40.2,35.9928740326145,44.55656304043193
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,,1024,151,500,30.2,26.339155087985656,34.36276879429182
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,1504,1504,455,500,91.0,88.16905887106667,93.20574521108605
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,,1504,441,500,88.2,85.07680121388806,90.74069917484935
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,1504,1504,417,500,83.4,79.88646838026932,86.40422567689899
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,,1504,391,500,78.2,74.3733598415673,81.59662735640116
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,1504,1504,341,500,68.2,63.992500124841676,72.12997388235782
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,,1504,279,500,55.8,51.41915296492833,60.09240468571767
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,2048,2048,488,500,97.6,95.85229425360993,98.6218685344503
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.15,3,,2048,476,500,95.2,92.957280316411,96.75347930586469
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,2048,2048,476,500,95.2,92.957280316411,96.75347930586469
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.15,3,,2048,461,500,92.2,89.51464501266115,94.24186065238385
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,2048,2048,441,500,88.2,85.07680121388806,90.74069917484935
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.15,3,,2048,392,500,78.4,74.58371194720326,81.7832255145806
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,2048,2048,361,500,72.2,68.1151400363696,75.94633924713749
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,,2048,316,500,63.2,58.8871722496907,67.31154516212433
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.2,3,2048,2048,297,500,59.4,55.039706612729155,63.616955786593664
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.2,3,,2048,251,500,50.2,45.832636322986225,54.564313940829166
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.2,3,2048,2048,229,500,45.8,41.481460977485106,50.18258348239194
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.2,3,,2048,174,500,34.8,30.755030205694755,39.07674974433644
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,4096,4096,484,500,96.8,94.86551309545582,98.0208486373429
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Posterior mean,0.2,3,,4096,475,500,95.0,92.72318388284523,96.59062547561506
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.2,3,4096,4096,475,500,95.0,92.72318388284523,96.59062547561506
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Entropy-weighted,0.2,3,,4096,457,500,91.4,88.61601885014426,93.55268575963925
+fixed_vs_online,fig:online-vs-fixed-prc,fixed_prc,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.2,3,4096,4096,447,500,89.4,86.39490699892671,91.80429497270298
+fixed_vs_online,fig:online-vs-fixed-prc,online_causal_prc_v1,Qwen3-0.6B-Base,Qwen3-0.6B-Base,Naive,0.2,3,,4096,422,500,84.4,80.95852451662971,87.31692085961551

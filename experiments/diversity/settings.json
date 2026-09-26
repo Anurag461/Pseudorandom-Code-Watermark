@@ -1,0 +1,51 @@
+{
+  "model": "Qwen/Qwen3-8B-Base",
+  "prompt_tokens": 50,
+  "prompts": 50,
+  "responses_per_prompt": 2,
+  "tokens": [
+    1024
+  ],
+  "seeds": [
+    12345,
+    67890
+  ],
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "prc": {
+    "eta": 0.05,
+    "t": 3,
+    "row_rate": [
+      99,
+      100
+    ]
+  },
+  "textseal": {
+    "alpha": [
+      0.1
+    ],
+    "context": 3
+  },
+  "synthid": {
+    "depth": [
+      2,
+      10,
+      30
+    ],
+    "context": 3
+  },
+  "gumbel": {
+    "context": 3
+  },
+  "repeat_fallback": [
+    "textseal",
+    "synthid_text",
+    "gumbel_max"
+  ],
+  "self_bleu": {
+    "tokenize": "13a",
+    "smooth_method": "exp",
+    "effective_order": true,
+    "lowercase": false
+  }
+}
