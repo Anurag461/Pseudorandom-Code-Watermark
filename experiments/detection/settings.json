@@ -24,20 +24,20 @@
     "naive"
   ],
   "experiments": {
-    "fixed": "fixed_results.csv",
-    "detection_and_model_scale": "figure_results.csv",
+    "fixed": "results/fixed_results.csv",
+    "detection_and_model_scale": "results/figure_results.csv",
     "detector_portability": [
-      "figure_results.csv",
-      "portability_tests.csv",
-      "portability_outcomes.csv"
+      "results/figure_results.csv",
+      "results/portability_tests.csv",
+      "results/portability_outcomes.csv"
     ],
     "fixed_vs_online": [
-      "figure_results.csv",
-      "construction_tests.csv",
-      "construction_outcomes.csv"
+      "results/figure_results.csv",
+      "results/construction_tests.csv",
+      "results/construction_outcomes.csv"
     ],
     "entropy": {
-      "results": "entropy_results.csv",
+      "results": "results/entropy_results.csv",
       "tokens": 1808,
       "models": [
         "0.6B",
@@ -46,10 +46,10 @@
       ]
     },
     "wangetal": [
-      "wangetal_results.csv",
-      "wangetal_matched_fpr.csv",
-      "wangetal_paired.csv",
-      "wangetal_thresholds.json"
+      "results/wangetal_results.csv",
+      "results/wangetal_matched_fpr.csv",
+      "results/wangetal_paired.csv",
+      "results/wangetal_thresholds.json"
     ]
   }
 }

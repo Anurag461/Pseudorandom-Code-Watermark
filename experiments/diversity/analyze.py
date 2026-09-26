@@ -175,7 +175,9 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--inputs", type=Path, default=Path(__file__).with_name("paired_inputs.json")
+        "--inputs",
+        type=Path,
+        default=Path(__file__).with_name("results") / "paired_inputs.json",
     )
     parser.add_argument(
         "--protocol", type=Path, default=Path(__file__).with_name("statistics.json")

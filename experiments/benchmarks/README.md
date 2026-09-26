@@ -6,4 +6,4 @@ The five benchmarks use Qwen3-0.6B with reasoning enabled, temperature 1, full-v
 python -m experiments.benchmarks.run --benchmark gsm8k --model-directory /cache/models/Qwen3-0.6B --artifact /data/artifact.pt --batch-size 8 --seed 12345 --output /results/benchmarks/gsm8k
 ```
 
-The runner saves responses, token IDs, example scores, and the sampled key. `results.csv` contains the saved benchmark aggregates, including truncation rates and median output lengths. Model and dataset downloads must be available in the execution environment; IFEval additionally requires NLTK `punkt` and `punkt_tab` data.
+The runner saves responses, token IDs, example scores, and the sampled key. `results/results.csv` contains the saved benchmark aggregates, including truncation rates and median output lengths. Model and dataset downloads must be available in the execution environment; IFEval additionally requires NLTK `punkt` and `punkt_tab` data.

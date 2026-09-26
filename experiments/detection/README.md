@@ -1,8 +1,8 @@
 # Detection
 
-`fixed_results.csv` contains the 19 fixed-block settings. `figure_results.csv` contains the detection curves, model-size comparison, detector portability, noise-rate contrast, and fixed-versus-online comparison. Counts use 500 watermarked completions per setting. `portability_*` and `construction_*` contain paired outcomes and tests.
+`results/fixed_results.csv` contains the 19 fixed-block settings. `results/figure_results.csv` contains the detection curves, model-size comparison, detector portability, noise-rate contrast, and fixed-versus-online comparison. Counts use 500 watermarked completions per setting. `results/portability_*` and `results/construction_*` contain paired outcomes and tests.
 
-`entropy_results.csv` measures vocabulary and bucket entropy on 500 unwatermarked continuations of 1,808 tokens, conditioned on the original prompt. `wangetal_*.csv` and `wangetal_thresholds.json` contain the hierarchical PRC comparison and its calibration.
+`results/entropy_results.csv` measures vocabulary and bucket entropy on 500 unwatermarked continuations of 1,808 tokens, conditioned on the original prompt. `results/wangetal_*.csv` and `results/wangetal_thresholds.json` contain the hierarchical PRC comparison and its calibration.
 
 Generation and scoring run separately:
 

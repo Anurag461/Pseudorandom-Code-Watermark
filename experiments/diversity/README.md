@@ -2,7 +2,7 @@
 
 The comparison uses Qwen3-8B-Base, 50 prompts, two 1,024-token responses per prompt, sampling seeds 12345 and 67890, and fixed watermark keys. `settings.json` specifies the methods and metric definitions.
 
-`results.csv` contains means, 95% confidence intervals, and adjusted significance tests. `paired_inputs.json` contains the prompt-level measurements. `paired_tests_holm.csv` contains all 35 paired tests; `statistics.json` specifies the permutation and Holm procedure.
+`results/results.csv` contains means, 95% confidence intervals, and adjusted significance tests. `results/paired_inputs.json` contains the prompt-level measurements. `results/paired_tests_holm.csv` contains all 35 paired tests; `statistics.json` specifies the permutation and Holm procedure.
 
 ```sh
 python -m experiments.diversity.run --setting synthid_depth30 --model-directory /cache/models/Qwen3-8B-Base --prompts data/prompts.jsonl --batch-size 50 --output /results/diversity/synthid_depth30

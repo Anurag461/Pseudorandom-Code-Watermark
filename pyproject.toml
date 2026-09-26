@@ -22,10 +22,10 @@ include = ["prc_watermark*", "baselines*", "experiments*"]
 
 [tool.setuptools.package-data]
 "experiments" = ["environments.json"]
-"experiments.detection" = ["*.json", "*.csv"]
-"experiments.benchmarks" = ["*.json", "*.csv"]
-"experiments.diversity" = ["*.json", "*.csv"]
-"experiments.attacks" = ["*.json", "*.csv"]
+"experiments.detection" = ["*.json", "results/*.json", "results/*.csv"]
+"experiments.benchmarks" = ["*.json", "results/*.json", "results/*.csv"]
+"experiments.diversity" = ["*.json", "results/*.json", "results/*.csv"]
+"experiments.attacks" = ["*.json", "results/*.json", "results/*.csv"]
 
 "experiments.benchmarks.tasks.ifeval_lib" = ["NOTICE", "LICENSE"]
 

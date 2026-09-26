@@ -1,6 +1,6 @@
 # Attacks
 
-`blackbox_results.csv` contains red-green tests at H=4 and H=5, their Bonferroni correction, and fixed-sampling tests. `substitution_results.csv` contains counts and rates at 400 and 4,096 tokens. The 4,096-token baselines use 200 texts per class; PRC uses 500. Settings and source revisions are in `settings.json`.
+`results/blackbox_results.csv` contains red-green tests at H=4 and H=5, their Bonferroni correction, and fixed-sampling tests. `results/substitution_results.csv` contains counts and rates at 400 and 4,096 tokens. The 4,096-token baselines use 200 texts per class; PRC uses 500. Settings and source revisions are in `settings.json`.
 
 ```sh
 python -m experiments.attacks.run substitute --input completions.jsonl --rate 0.1 --seed 0 --output attacked.jsonl

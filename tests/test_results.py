@@ -13,7 +13,9 @@ class ResultsTests(unittest.TestCase):
         rows = list(
             csv.DictReader(
                 io.StringIO(
-                    (ROOT / "experiments/detection/fixed_results.csv").read_text()
+                    (
+                        ROOT / "experiments/detection/results/fixed_results.csv"
+                    ).read_text()
                 )
             )
         )
@@ -34,7 +36,9 @@ class ResultsTests(unittest.TestCase):
         rows = list(
             csv.DictReader(
                 io.StringIO(
-                    (ROOT / "experiments/detection/figure_results.csv").read_text()
+                    (
+                        ROOT / "experiments/detection/results/figure_results.csv"
+                    ).read_text()
                 )
             )
         )
@@ -48,7 +52,9 @@ class ResultsTests(unittest.TestCase):
     def test_benchmark_scope(self):
         rows = list(
             csv.DictReader(
-                io.StringIO((ROOT / "experiments/benchmarks/results.csv").read_text())
+                io.StringIO(
+                    (ROOT / "experiments/benchmarks/results/results.csv").read_text()
+                )
             )
         )
         self.assertEqual(
@@ -58,7 +64,7 @@ class ResultsTests(unittest.TestCase):
 
     def test_diversity_pairing(self):
         data = json.loads(
-            (ROOT / "experiments/diversity/paired_inputs.json").read_text()
+            (ROOT / "experiments/diversity/results/paired_inputs.json").read_text()
         )
         self.assertEqual(len(data["contrasts"]), 35)
         self.assertTrue(
@@ -66,7 +72,9 @@ class ResultsTests(unittest.TestCase):
         )
         rows = list(
             csv.DictReader(
-                io.StringIO((ROOT / "experiments/diversity/results.csv").read_text())
+                io.StringIO(
+                    (ROOT / "experiments/diversity/results/results.csv").read_text()
+                )
             )
         )
         self.assertEqual(len(rows), 39)
@@ -82,7 +90,9 @@ class ResultsTests(unittest.TestCase):
         rows = list(
             csv.DictReader(
                 io.StringIO(
-                    (ROOT / "experiments/attacks/substitution_results.csv").read_text()
+                    (
+                        ROOT / "experiments/attacks/results/substitution_results.csv"
+                    ).read_text()
                 )
             )
         )

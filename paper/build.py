@@ -29,7 +29,7 @@ def table(rows, columns):
 def build_tables(output):
     specs = {
         "fixed_detection": (
-            "detection/fixed_results.csv",
+            "detection/results/fixed_results.csv",
             [
                 "eta",
                 "n",
@@ -41,15 +41,15 @@ def build_tables(output):
             ],
         ),
         "benchmarks": (
-            "benchmarks/results.csv",
+            "benchmarks/results/results.csv",
             ["benchmark", "num_examples", "unwm_score", "wm_score"],
         ),
         "diversity": (
-            "diversity/results.csv",
+            "diversity/results/results.csv",
             ["setting", "metric", "mean", "ci95_lower", "ci95_upper", "holm_p"],
         ),
         "substitution": (
-            "attacks/substitution_results.csv",
+            "attacks/results/substitution_results.csv",
             [
                 "scheme",
                 "tokens",
@@ -61,7 +61,7 @@ def build_tables(output):
             ],
         ),
         "blackbox": (
-            "attacks/blackbox_results.csv",
+            "attacks/results/blackbox_results.csv",
             ["scheme", "test", "setting", "p"],
         ),
     }
@@ -77,7 +77,7 @@ def build_plots(output):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    with (ROOT / "experiments/detection/figure_results.csv").open() as handle:
+    with (ROOT / "experiments/detection/results/figure_results.csv").open() as handle:
         rows = list(csv.DictReader(handle))
     groups = defaultdict(list)
     for row in rows:
