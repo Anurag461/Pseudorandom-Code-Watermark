@@ -32,6 +32,7 @@ from modal_run import fixed_image
 
 M = 4096
 RATES = (0.05, 0.1, 0.15, 0.2)
+EXTRA_RATES = (0.3,)  # added after the main run: PRC redetection and baseline scoring on the same texts
 SCHEMES = ("exp", "kgw2", "synthid")
 ATTACK_VOCAB = 151665
 OUT = "kth_long_v1"
@@ -354,6 +355,20 @@ def orchestrate_prc_rates(execution: dict, rates: list):
     return outcomes
 
 
+@app.function(image=image, cpu=1, memory=4096, timeout=86400, volumes={"/results": results})
+def orchestrate_baseline_rates(rates: list, schemes: list, n_baseline: int = BASELINE_PROMPTS):
+    """Score the existing baseline generations at extra substitution rates (CPU only)."""
+    calls = [score_chunk.spawn(s, attack_spec(r), st) for s in schemes for r in rates
+             for st in range(0, n_baseline, CHUNK)]
+    return _wait(calls, "baseline scoring (extra rates)")
+
+
+def launch_baseline_rates(rates="0.3", schemes=",".join(SCHEMES)):
+    call = modal.Function.from_name("prc-kth-long", "orchestrate_baseline_rates").spawn(
+        [float(r) for r in rates.split(",")], schemes.split(","), BASELINE_PROMPTS)
+    print("spawned", call.object_id)
+
+
 def _execution():
     """Committed code identity recorded with every redetection run."""
     import subprocess
@@ -415,7 +430,7 @@ def summarize():
                "kgw2": "analytic: KGW one-sided z-test p <= 1e-3",
                "synthid": "analytic: mean g-value z-test p <= 1e-3"}
     for scheme in SCHEMES:
-        for attack in [None] + [attack_spec(r) for r in RATES]:
+        for attack in [None] + [attack_spec(r) for r in RATES + EXTRA_RATES]:
             recs = []
             for st in range(0, BASELINE_PROMPTS, CHUNK):
                 recs += read(f"{OUT}/scores/{scheme}/{attack_id(attack)}_{st:04d}.json")["rows"]
