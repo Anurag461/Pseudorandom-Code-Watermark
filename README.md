@@ -7,7 +7,7 @@ Implementation and experiments for fixed-block and online pseudorandom code wate
 Use Python 3.11 and a CUDA environment for generation and model-based detection.
 
 ```sh
-python -m pip install -e '.[quality,analysis,cloud]'
+python -m pip install -e '.[benchmarks,analysis,cloud]'
 python -m unittest discover -s tests
 ```
 
@@ -18,7 +18,7 @@ The execution environments and baseline source revisions are specified in [execu
 | Directory | Experiments |
 | --- | --- |
 | [detection](experiments/detection/README.md) | Detection power, model size, detector portability, fixed versus online, entropy, Wang comparison |
-| [quality](experiments/quality/README.md) | ARC-Easy, GSM8K, HellaSwag, MMLU, IFEval |
+| [benchmarks](experiments/benchmarks/README.md) | ARC-Easy, GSM8K, HellaSwag, MMLU, IFEval |
 | [diversity](experiments/diversity/README.md) | Self-BLEU, repeated 4-grams, Distinct-3, detection, repeat handling |
 | [attacks](experiments/attacks/README.md) | Black-box tests, token substitution, watermark stealing |
 

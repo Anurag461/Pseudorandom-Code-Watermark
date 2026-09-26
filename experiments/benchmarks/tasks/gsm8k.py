@@ -1,4 +1,4 @@
-from experiments.quality.tasks.task import Task, HFDataset
+from experiments.benchmarks.tasks.task import Task, HFDataset
 import re
 
 GSM_RE = re.compile("#### (\\-?[0-9\\.\\,]+)")

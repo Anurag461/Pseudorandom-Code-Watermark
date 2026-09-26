@@ -45,10 +45,10 @@ class ResultsTests(unittest.TestCase):
             self.assertLessEqual(float(row["ci_lower_percent"]), rate + 1e-10)
             self.assertGreaterEqual(float(row["ci_upper_percent"]), rate - 1e-10)
 
-    def test_quality_scope(self):
+    def test_benchmark_scope(self):
         rows = list(
             csv.DictReader(
-                io.StringIO((ROOT / "experiments/quality/results.csv").read_text())
+                io.StringIO((ROOT / "experiments/benchmarks/results.csv").read_text())
             )
         )
         self.assertEqual(

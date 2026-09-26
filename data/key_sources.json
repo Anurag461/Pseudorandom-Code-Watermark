@@ -5,7 +5,7 @@
     "n": 1024,
     "source": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta005_n1024/cache/artifact.pt",
     "source_sha256": "c245fe1851f600d2754e37305e90d3da414e33e67201b07347801cc66e7475f1",
-    "sha256": "25a9d34c0590d27a984d625464c211123063a044e9d6aeb1a8b1241734e2df49"
+    "sha256": "6968d255d9a54f67826fa16742555c52dcef13ba323185f9769c8536a317ed1d"
   },
   {
     "file": "keys/fixed_eta010_n1024.pt",
@@ -13,7 +13,7 @@
     "n": 1024,
     "source": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta010_n1024/cache/artifact.pt",
     "source_sha256": "c4872f7ae30f11b345d045953534f6c5e79791620cff2b3e6e6065cbe6d35f90",
-    "sha256": "12c1842a649b7821907ee5970c845538a9b75688e59437db3508ca378d93d6b6"
+    "sha256": "153e07a042570aa82d0158590f8d8c79fc4eacb39a7edd6474d059567ebccc81"
   },
   {
     "file": "keys/fixed_eta010_n768.pt",
@@ -21,7 +21,7 @@
     "n": 768,
     "source": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta010_n768/cache/artifact.pt",
     "source_sha256": "5b3781830b4e491aa50df7d254195b91c9c4a9bfb14ee0a04e34b833d1ac61b4",
-    "sha256": "984cd4e77f68835cb0732933e83073d274daa54628e8c36d9a08842a1ebfa590"
+    "sha256": "6cab36c584e41decaad6194ec3c227f67b046deae9e24d927b1c346992182e2d"
   },
   {
     "file": "keys/fixed_eta015_n1024.pt",
@@ -29,7 +29,7 @@
     "n": 1024,
     "source": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta015_n1024/cache/artifact.pt",
     "source_sha256": "ac1a86bddfc478ec3e24e51f40fdb3a673bd6327e7cb186c768f5d6c48683cf8",
-    "sha256": "89396e740d828103f7988e2bd38b7e1d5066654ed9fe15fa0e3cecdc381a7715"
+    "sha256": "56562a10c4d6bedfe0fab510fa4c5f79de4481cbdd3816e5944a1c87bc4cc162"
   },
   {
     "file": "keys/fixed_eta015_n1504.pt",
@@ -37,7 +37,7 @@
     "n": 1504,
     "source": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta015_n1504/cache/artifact.pt",
     "source_sha256": "f8a83351134efe21c89ccee881afffa4dd9c70f19bce2717e6ea5ddba1cbfe2f",
-    "sha256": "e984f4f6f12624aeb1d794d9067cf395345460358dd05274d5e4e3dceec4cc16"
+    "sha256": "0f17bbd935846da64ac03b1b56046effda36a4b47151b55a12bca9d40d5edd32"
   },
   {
     "file": "keys/fixed_eta015_n2048.pt",
@@ -45,7 +45,7 @@
     "n": 2048,
     "source": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta015_n2048/cache/artifact.pt",
     "source_sha256": "b9d60d4bb41bae7344818e3b17fa4df70c12626eb5b66dedb04bb3f601a554bd",
-    "sha256": "9e9d4ab17a3541e8a019a9e2a004f7c370d99f8f762ddc93ff905fa4d3b6b759"
+    "sha256": "de4d55d02feef8bea70ba09d375d1d9f3621b3e7d08ff2ef2946e1cfbf00d9fc"
   },
   {
     "file": "keys/fixed_eta020_n2048.pt",
@@ -53,7 +53,7 @@
     "n": 2048,
     "source": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta020_n2048/cache/artifact.pt",
     "source_sha256": "970f67d264d5b2ffe1d99eece1ca8671161b89f2ca0a93fbe98fd0e8df482be2",
-    "sha256": "a9b754700f306f8cec74a966b83814799e822283edc5fcb3989a806ebd345c9e"
+    "sha256": "431ef9ff4841a7545f8305e6457b6fe8336be6998cfdcd48824e2783f13bef32"
   },
   {
     "file": "keys/fixed_eta020_n4096.pt",
@@ -61,7 +61,7 @@
     "n": 4096,
     "source": "outputs/redetection/.archive/runs/9a284e6e4234d9ddec2f38e8/fixed_0p6b_eta020_n4096/cache/artifact.pt",
     "source_sha256": "8d84d205cbcf80d226b0b5c9421886d301ff982e749cb3ec661dd1be3d8857ca",
-    "sha256": "068cafe6296de6a72c55a6f3344d0978086f93234170cd2c06fdea5303135ca0"
+    "sha256": "f2d07fcfa8efa921237243daddf71476dd022a72f6c170cf8852a1865f85e229"
   },
   {
     "file": "keys/fixed_eta005_n256.pt",
@@ -69,7 +69,7 @@
     "n": 256,
     "source": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta005_n256/cache/artifact.pt",
     "source_sha256": "645e27f79bf002b0234872b17a87c45fcd7b88556f0589d10595eb27ece5161e",
-    "sha256": "f1802fad522feaddd303b22cee4e9b718252c7fb71da2c392cefe7f7e3b7ed27"
+    "sha256": "77a80d433d29d8237345a4a35bdfd2d6c71e889c973fdc080d6bf16a8c4b011d"
   },
   {
     "file": "keys/fixed_eta005_n416.pt",
@@ -77,7 +77,7 @@
     "n": 416,
     "source": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta005_n416/cache/artifact.pt",
     "source_sha256": "167c6975a5453c5bdc1436a6ce5efa47882760f02b496e879f3adafaec1f3ad8",
-    "sha256": "e07f713cc08d1080abbc6c0f6054d3bf102904bd2630b5503d283460b9d3e821"
+    "sha256": "ff408b703f2c073caf98285492ad1383738e915a5c9e8ae0ba25837617595fbf"
   },
   {
     "file": "keys/fixed_eta005_n512.pt",
@@ -85,7 +85,7 @@
     "n": 512,
     "source": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta005_n512/cache/artifact.pt",
     "source_sha256": "62f5c9ede737653d6b45a319628e08adbfec1d404c8f1ce951f20be2193761ab",
-    "sha256": "708f80adc022fb79dee08b32491f1ef3b7d70ca5a32d68509226446bf7eda3ee"
+    "sha256": "23b37f2a0990096116b440376b3a0f599789aaf00262830162b3fa202afd6d2c"
   },
   {
     "file": "keys/fixed_eta010_n256.pt",
@@ -93,7 +93,7 @@
     "n": 256,
     "source": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta010_n256/cache/artifact.pt",
     "source_sha256": "dca9923ec1776ebaed2a7c1643f6636d7251fcb435205d24e348851dcc57ebd7",
-    "sha256": "d8ef464a2c4dbdfae69b454254ce9fe207fc0127fcd7d3e3d3aea77fbcd4aa1e"
+    "sha256": "5ae0b04d7e66649c64ca1d386c0edb1de3d6d617c182273989107d62ec8c8996"
   },
   {
     "file": "keys/fixed_eta010_n400.pt",
@@ -101,7 +101,7 @@
     "n": 400,
     "source": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta010_n400/cache/artifact.pt",
     "source_sha256": "efc4ea41353447e138c491b8942bc60013fc74eb96a2a519d61f97cfcae34786",
-    "sha256": "e2061971e38311f34763733a524a11cb66264d6f43f87cd1cd29fc07a8151c88"
+    "sha256": "51f292c0b9afe9278a4f56737e4c48f3ff84749b3223bad43633cf7d1dd9b5cf"
   },
   {
     "file": "keys/fixed_eta010_n512.pt",
@@ -109,7 +109,7 @@
     "n": 512,
     "source": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta010_n512/cache/artifact.pt",
     "source_sha256": "669544c42f0f9456f7b71e3c317901a87033461c1bc9ac1bab56c5c9324798f6",
-    "sha256": "cad590f57a3ba2e45c2f5616fa00e23802dba6f2e718e3f99303ae03071ee022"
+    "sha256": "0c7dce2ce0787fb0dbc4e7f59be57e97ed2f4b846e954422fc36400ebe6c7392"
   },
   {
     "file": "keys/fixed_eta015_n256.pt",
@@ -117,7 +117,7 @@
     "n": 256,
     "source": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta015_n256/cache/artifact.pt",
     "source_sha256": "0c66dfe8dad1f0921c3c40f97c7b9fa3b9de90bf4e86bda8556b15a0546d2e45",
-    "sha256": "14ee6f70d4b821e6f4cf0a84548414bc3411c30ec081977e55e1c7dcd7bfebd4"
+    "sha256": "de769d258684b74379202861e72740baf28dad36804cecb6bef0edcf0fe3205e"
   },
   {
     "file": "keys/fixed_eta015_n400.pt",
@@ -125,7 +125,7 @@
     "n": 400,
     "source": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta015_n400/cache/artifact.pt",
     "source_sha256": "27a9cbf48c168f038f2c6cf1a72f540dc8bd818f2f0093b3ac839727925a35bb",
-    "sha256": "a29644179a6d6e4bfd434b209d96be0995e1e259be3ac3a284e2670f60bf9dc0"
+    "sha256": "9bb0f4ee5ae3ad2cbfbe45f6944c33dabee08d04a84b70642390e3b435e33867"
   },
   {
     "file": "keys/fixed_eta015_n512.pt",
@@ -133,7 +133,7 @@
     "n": 512,
     "source": "outputs/redetection/.archive/runs/e4de61d93035b2d59704cb37/fixed_0p6b_eta015_n512/cache/artifact.pt",
     "source_sha256": "891740fa606ae6276a8725c90c80f6baf1df81d39776cfe5dc4fd5cb8838e4c7",
-    "sha256": "055f99a86f45b93d7054ac0cbdc2320622ac6352496c11f0b6a3dfb25c0fd4cb"
+    "sha256": "7775809253adc98a6c7964cd1131a2551092b12e4a0efbe98ed1eb22adad7a0b"
   },
   {
     "file": "keys/fixed_eta005_n448.pt",
@@ -141,7 +141,7 @@
     "n": 448,
     "source": "outputs/redetection/.archive/setup_fixed_0p6b_n448/artifacts.pt",
     "source_sha256": "795010db56de8f1627a07208026eca584e6a719a85962676241b51b7890ddf5c",
-    "sha256": "c60ac00e76245d30e5cc8ad3f9f6cdb71f43f2281d485621ee4748fe01af7eb2"
+    "sha256": "585fbfe9bac0ab10d16325921ca72c4070d8ffe2c7f2f9c95d605146031acbdd"
   },
   {
     "file": "keys/online_eta005.pt",
@@ -182,6 +182,6 @@
     "source_volume": "prc-research-archive",
     "source": "objects/sha256/29/29ec8adc932f6836be978f6e3ff2359c2e53024d5a4865e5c97e61a718f21af2",
     "source_sha256": "29ec8adc932f6836be978f6e3ff2359c2e53024d5a4865e5c97e61a718f21af2",
-    "sha256": "4dd2d6d3f2cc53e79889da324178e79f23ba9fae5d66fe895a016662101d5cc0"
+    "sha256": "7434d9c229f583ff1f79a754699ebdea0b6bf3e158432ab7ec159fd34ce2621f"
   }
 ]

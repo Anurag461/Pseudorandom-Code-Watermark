@@ -1,4 +1,5 @@
 import unittest
+from pathlib import Path
 import numpy as np
 import torch
 from prc_watermark.prc import (
@@ -15,6 +16,21 @@ from prc_watermark.detectors import (
 
 
 class PRCTests(unittest.TestCase):
+
+    def test_saved_keys_load(self):
+        paths = sorted((Path(__file__).resolve().parents[1] / "data/keys").glob("*.pt"))
+        self.assertEqual(len(paths), 23)
+        for path in paths:
+            with self.subTest(key=path.name):
+                artifact = torch.load(path, map_location="cpu", weights_only=False)
+                self.assertEqual(artifact["partition"].ndim, 2)
+                if "encoding_key" in artifact:
+                    self.assertEqual(
+                        artifact["encoding_key"][0].shape[0],
+                        artifact["decoding_key"][1].shape[1],
+                    )
+                else:
+                    self.assertIn("online_key", artifact)
 
     def test_fixed_key_reproducibility(self):
         a, da = KeyGen(

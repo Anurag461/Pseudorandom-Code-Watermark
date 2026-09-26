@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-quality = ["datasets", "aiohttp", "nltk==3.9.1", "langdetect==1.0.9", "immutabledict==4.2.0", "absl-py"]
+benchmarks = ["datasets", "aiohttp", "nltk==3.9.1", "langdetect==1.0.9", "immutabledict==4.2.0", "absl-py"]
 analysis = ["sacrebleu==2.4.3", "matplotlib==3.9.2"]
 cloud = ["modal"]
 
@@ -24,10 +24,10 @@ include = ["prc_watermark*", "baselines*", "experiments*", "execution*"]
 [tool.setuptools.package-data]
 "baselines.wang" = ["*.json", "LICENSE"]
 "experiments.detection" = ["*.json", "*.csv"]
-"experiments.quality" = ["*.json", "*.csv"]
+"experiments.benchmarks" = ["*.json", "*.csv"]
 "experiments.diversity" = ["*.json", "*.csv"]
 "experiments.attacks" = ["*.json", "*.csv"]
 
-"experiments.quality.tasks.ifeval_lib" = ["NOTICE", "LICENSE"]
+"experiments.benchmarks.tasks.ifeval_lib" = ["NOTICE", "LICENSE"]
 
 "baselines" = ["textseal_source.json"]

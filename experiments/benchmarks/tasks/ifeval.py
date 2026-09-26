@@ -1,6 +1,6 @@
-from experiments.quality.tasks.task import Task, HFDataset
+from experiments.benchmarks.tasks.task import Task, HFDataset
 import re
-from experiments.quality.tasks.ifeval_lib import instructions_registry as _reg
+from experiments.benchmarks.tasks.ifeval_lib import instructions_registry as _reg
 
 _THINK_BLOCK = re.compile("<think>.*?</think>", re.S)
 

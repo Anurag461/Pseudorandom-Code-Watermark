@@ -40,8 +40,8 @@ def build_tables(output):
                 "n_unwatermarked",
             ],
         ),
-        "quality": (
-            "quality/results.csv",
+        "benchmarks": (
+            "benchmarks/results.csv",
             ["benchmark", "num_examples", "unwm_score", "wm_score"],
         ),
         "diversity": (

@@ -7,7 +7,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--profile",
-        choices=["core", "quality", "diversity", "attacks", "textseal"],
+        choices=["core", "benchmarks", "diversity", "attacks", "textseal"],
         required=True,
     )
     parser.add_argument("--gpu")
