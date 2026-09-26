@@ -74,7 +74,8 @@
       "numba==0.59.1",
       "numpy==1.26.0",
       "cython==0.29.37",
-      "nltk==3.9.1"
+      "nltk==3.9.1",
+      "datasets==3.0.1"
     ],
     "commands": [
       "git clone https://github.com/jthickstun/watermark /kth",

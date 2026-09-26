@@ -61,6 +61,10 @@
     "prc_prompt_count": 500
   },
   "stealing": {
+    "model_directory": "/cache/models/Qwen3-0.6B-Base",
+    "perplexity_model_directory": "/cache/models/Qwen3-4B-Base",
+    "prompts": "data/prompts.jsonl",
+    "key": "data/keys/fixed_eta005_n400.pt",
     "upstream_repository": "https://github.com/eth-sri/watermark-stealing",
     "upstream_commit": "b8d207deb2b4ba758638a41d3a77891993acd351",
     "arithmetic": "Python float",

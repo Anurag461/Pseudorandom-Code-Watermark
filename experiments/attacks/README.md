@@ -12,4 +12,14 @@ Substitution selects a fixed number of distinct positions and samples replacemen
 
 Black-box settings contain `scheme`, `model_directory`, and, for PRC, `artifact`. The schemes are `none`, `prc`, `kgw2`, `synthid`, and `exp`.
 
-`stealing.py` implements context-count learning and logit boosts. `results/stealing_results.csv` contains spoofing results by method, context, query budget, and boost strength, including detection counts and counts passing the perplexity filter. Detection thresholds are calibrated on 5,000 unwatermarked texts; the quality cutoff is the 95th percentile of perplexity on 500 calibration texts.
+`stealing.py` prepares attacker prompts, generates query responses and spoofed texts, scores detection and perplexity, and builds the result table. `results/stealing_results.csv` contains spoofing results by method, context, query budget, and boost strength, including detection counts and counts passing the perplexity filter. Detection thresholds are calibrated on 5,000 unwatermarked texts; the quality cutoff is the 95th percentile of perplexity on 500 calibration texts.
+
+Set the model directories in the `stealing` section of `settings.json`, then run:
+
+```sh
+for stage in prepare generate spoof score perplexity summarize; do
+  python -m experiments.attacks.stealing "$stage" --settings experiments/attacks/settings.json --output runs/stealing
+done
+```
+
+The runner uses 400-token completions, 500 evaluation prompts, the full context and boost grid at 10,000 queries, and the selected attacks at 1,000, 3,000, and 30,000 queries. Individual workers can select `--scheme`, `--split`, `--start`, `--stop`, `--name`, `--variant`, `--n-query`, and `--alpha`; `--help` lists the options.
