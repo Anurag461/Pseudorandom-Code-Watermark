@@ -1,0 +1,4 @@
+{"scheme": "kgw2", "variant": "ctx1", "n_query": 10000, "contexts": 34401, "boosted_pairs": 275397, "measure": "fraction of boosted pairs that are green", "chance": 0.25, "value": 0.7465622356089573, "boost_weighted": 0.759702641785338}
+{"scheme": "exp", "variant": "pos", "n_query": 10000, "contexts": 256, "boosted_pairs": 158012, "measure": "mean key value xi[position, token] of boosted pairs", "chance": 0.5, "value": 0.8415267823888625, "boost_weighted": 0.8472032260268857}
+{"scheme": "prc", "variant": "ctx1", "n_query": 10000, "contexts": 33595, "boosted_pairs": 275581, "measure": "fraction of boosted tokens in partition 1 (codeword is fresh per text)", "chance": 0.5, "value": 0.4804540225922687}
+{"scheme": "prc", "variant": "pos", "n_query": 10000, "contexts": 400, "boosted_pairs": 332027, "measure": "fraction of boosted tokens in partition 1 (codeword is fresh per text)", "chance": 0.5, "value": 0.5080309733846946}

@@ -30,6 +30,7 @@ RETIRED_DETECTION_MESSAGE = (
 SOURCE_MODULES = (
     "modal_run",
     "prc", "online_prc", "qwen", "constants", "detectors", "watermark_expt", "proxy_8b_analysis", "benchmarks",
+    "attacks",
 )
 # Keep the original dependency requirements for each execution profile. Changing
 # generation numerics is a separate task from consolidating the runner.
@@ -7171,12 +7172,15 @@ def generate_online(num_prompts: int = CANONICAL_NUM_PROMPTS,
 # ----------------------------------------------------------------------------
 
 EXECUTION_FILES = ("qwen.py", "detectors.py", "prc.py", "online_prc.py",
-                   "modal_run.py",
+                   "modal_run.py", "attacks.py",
                    "watermark_expt.py", "constants.py")
 
 # Completion-only redetection shares this app's image, model loader and batching.
 REDETECT_PROTOCOL = "completion_only_raw_abstain_v1"
 REDETECT_CSV = "outputs/redetection/redetection_results_summary.csv"
+ATTACK_CSV = "outputs/attacks/kth_attack_results.csv"
+# Qwen3-Base tokenizer size with added tokens; embedding rows above it are padding.
+QWEN3_TOKENIZER_VOCAB = 151665
 REDETECT_CSV_COLUMNS = FIXED_CSV_COLUMNS[:5] + ["PRC Construction"] + FIXED_CSV_COLUMNS[5:9] + [
     "Old Posterior TPR", "Posterior TPR", "Old Entropy Aware TPR", "Entropy Aware TPR",
     "Naive TPR", "Posterior FPR", "Entropy FPR", "Naive FPR", "Entropy Trace Source", "Notes",
@@ -7304,6 +7308,15 @@ def _prepare_redetection(case, model, execution, roots, destination):
         return tokens  # Original prompt and generation probabilities are never exported.
     with ThreadPoolExecutor(max_workers=8) as pool:
         tokens = list(pool.map(extract, case["records"]))
+    if "attack" in case:
+        # Corrupt the frozen completions on CPU; the GPU replays only the corrupted tokens.
+        from attacks import apply_attack
+        if len(lengths) != 1:
+            raise ValueError("attacked redetection scores one completion length")
+        tokens = [apply_attack(t, case["attack"], r["source"], r["prompt_idx"])
+                  for t, r in zip(tokens, case["records"])]
+        if len({len(t) for t in tokens}) != 1 or torch.any(torch.stack(tokens) >= partition.shape[1]):
+            raise ValueError("attacked completions must share one length and stay in the partition")
     run = {"protocol": REDETECT_PROTOCOL, "schema_version": 2, "case": case, "model": model, "execution": execution}
     root = Path(destination)/REDETECT_PROTOCOL/"integrated"/semantic_sha256(run)[:24]
     _redetect_write(root/"manifest.json", run)
@@ -7313,7 +7326,7 @@ def _prepare_redetection(case, model, execution, roots, destination):
         directory = root/"batches"/f"{start:06d}"
         inputs = {"tokens": torch.stack(tokens[start:start+size]), "partition": partition}
         identity = {"protocol": REDETECT_PROTOCOL, "run": root.name, "start": start,
-                    "count": len(inputs["tokens"]), "length": maximum, "cache": case["cache"],
+                    "count": len(inputs["tokens"]), "length": inputs["tokens"].shape[1], "cache": case["cache"],
                     "input_sha256": semantic_sha256(inputs)}
         _redetect_write(directory/"inputs.pt", inputs)
         batches.append({"root": str(directory.relative_to(destination)), "identity": identity})
@@ -7448,6 +7461,10 @@ def _score_redetection(prepared, destination):
                  "r_setting": f"{key[1].shape[0]}/{key[1].shape[1]}"})
     report = {"passed": True, "protocol": REDETECT_PROTOCOL, "counts": counts, "settings": settings,
               "trace_shard_sha256": hashes, "records": records}
+    if "attack" in case:
+        # Deletion shortens completions; insertion is scored on its first `length` tokens.
+        report |= {"attack": case["attack"],
+                   "attacked_length": min(case["lengths"][0], prepared["batches"][0]["identity"]["length"])}
     _redetect_write(root/"full.json", report)
     _redetect_write(root/"summary.json", {k: v for k, v in report.items() if k != "records"})
     return report
@@ -7490,6 +7507,10 @@ def _append_redetection_csv(prepared, report, csv_out):
             row[column] = _format_rate(previous["detected"], previous["count"]) if previous else "unavailable"
         if old:
             row["Notes"] += f"; old TPR source={old['source']}; old evidence SHA256={old['evidence_sha256']}"
+        if "attack" in case:
+            attack = case["attack"]
+            row["Notes"] += (f"; attack={attack['kind']}; rate={attack['rate']:g}; seed={attack['seed']}; "
+                             f"vocab={attack['vocab_size']}; scored length={report['attacked_length']}")
         rows.append({k: str(row[k]) for k in REDETECT_CSV_COLUMNS})
     path = Path(csv_out)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -7528,8 +7549,14 @@ def finish_redetection(prepared):
 
 @app.local_entrypoint()
 def redetect(manifest: str, stage: str = "preflight", gpu: str = "A100-80GB", max_containers: int = 10,
-             csv_out: str = REDETECT_CSV):
-    """Redetect frozen completions; no text generation or original prompt input."""
+             csv_out: str = "", attack: str = "", attack_seed: int = 0,
+             attack_vocab: int = QWEN3_TOKENIZER_VOCAB, case_id: str = ""):
+    """Redetect frozen completions; no text generation or original prompt input.
+
+    --attack kind:rate (e.g. substitution:0.1) corrupts every frozen candidate,
+    watermarked and null, before replay. Results go to ATTACK_CSV by default.
+    --case-id restricts a multi-case manifest to one case.
+    """
     from pathlib import Path
     import subprocess
     from detectors import semantic_sha256
@@ -7539,6 +7566,18 @@ def redetect(manifest: str, stage: str = "preflight", gpu: str = "A100-80GB", ma
     content = json.loads(Path(manifest).read_text())
     if content["protocol"] != REDETECT_PROTOCOL or content["schema_version"] != 1 or not content["cases"]:
         raise ValueError("expected a frozen raw-completion manifest")
+    if case_id:
+        content["cases"] = [c for c in content["cases"] if c["id"] == case_id]
+        if not content["cases"]:
+            raise ValueError(f"manifest has no case {case_id!r}")
+    if attack:
+        from attacks import validate_attack
+        kind, _, rate = attack.partition(":")
+        spec_attack = {"kind": kind, "rate": float(rate), "seed": attack_seed, "vocab_size": attack_vocab}
+        validate_attack(spec_attack)
+        content["cases"] = [{**c, "id": f"{c['id']}__{kind}{float(rate):g}_s{attack_seed}", "attack": spec_attack}
+                            for c in content["cases"]]
+    csv_out = csv_out or (ATTACK_CSV if attack else REDETECT_CSV)
     spec = content["model"]
     _redetect_model_spec(spec)
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()

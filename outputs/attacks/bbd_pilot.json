@@ -1,0 +1,68 @@
+{
+  "none rg": {
+    "n": 120,
+    "parsed": 116,
+    "counts": [
+      3,
+      90,
+      21,
+      2
+    ],
+    "examples": [
+      "I ate 11111 plums.",
+      "I ate 11111 plums.",
+      "I ate 55555 plums.",
+      "I ate 55555 plums.",
+      "I ate 99999 plums.",
+      "I ate 99999 plums.",
+      "I chose 11111 plums.",
+      "I chose 11111 peaches.",
+      "I chose 55555 cherries.",
+      "I chose 55555 plums.",
+      "I chose 99999 cherries.",
+      "I chose 99999 plums."
+    ]
+  },
+  "prc rg": {
+    "n": 120,
+    "parsed": 114,
+    "counts": [
+      4,
+      83,
+      26,
+      1
+    ],
+    "examples": [
+      "I ate 11111 plums.",
+      "I ate 11111 cherries.",
+      "I ate 55555 plums.",
+      "I ate 55555 plums.",
+      "I ate 99999 cherries.",
+      "I ate 99999 peaches.",
+      "I chose 11111 plums.",
+      "I chose 11111 plums.",
+      "I chose 55555 plums.",
+      "I chose 55555 plums.",
+      "I chose 99999 cherries.",
+      "I chose 99999 cherries."
+    ]
+  },
+  "none fs fresh": {
+    "n": 100,
+    "unique": 100,
+    "median_words": 82,
+    "example": " Linlan Hung. Linlan is a cheerful both of heart and heart, having achieved something remarkable. With hand warm and wisdom to dissipate, having long enough to turn the sympathy of people. She has lea"
+  },
+  "prc fs fresh": {
+    "n": 100,
+    "unique": 100,
+    "median_words": 82,
+    "example": " Thorne, a former Asian man torn to become a boxing champion but ruled by the Europeans who reverse his will. His motivation comes back to him when he meets the new phantom who wants him to carry keyn"
+  },
+  "prc fs prompt": {
+    "n": 100,
+    "unique": 1,
+    "median_words": 78,
+    "example": " a slaver, a boy, and a woman.\n#_MY_STORY_888\nSociety in the city has a profound sense of order and control, neither loosening to allow the independence of a child. However, thanks to the efforts of s"
+  }
+}

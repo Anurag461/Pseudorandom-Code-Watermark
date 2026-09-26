@@ -1,0 +1,21 @@
+scheme,test,setting,rep,p,statistic,detail
+exp,red-green,H4,rep0,0.6503,2,top fruit share 0.44; parse rate 84.0%
+exp,red-green,H5,rep0,0.6928,2,top fruit share 0.38; parse rate 82.9%
+exp,red-green,"Bonferroni H=4,5",rep0,1.0,,
+kgw2,red-green,H4,rep0,0.0,10,top fruit share 0.43; parse rate 80.0%
+kgw2,red-green,H5,rep0,0.0,10,top fruit share 0.40; parse rate 76.7%
+kgw2,red-green,"Bonferroni H=4,5",rep0,0.0,,
+none,red-green,H4,rep0,0.7182,2,top fruit share 0.48; parse rate 82.2%
+none,red-green,H5,rep0,0.9999,1,top fruit share 0.42; parse rate 82.0%
+none,red-green,"Bonferroni H=4,5",rep0,1.0,,
+prc,red-green,H4,rep0,0.9999,1,top fruit share 0.49; parse rate 82.2%
+prc,red-green,H5,rep0,0.1119,3,top fruit share 0.43; parse rate 82.6%
+prc,red-green,"Bonferroni H=4,5",rep0,0.2238,,
+synthid,red-green,H4,rep0,0.0,10,top fruit share 0.42; parse rate 85.5%
+synthid,red-green,H5,rep0,0.6239,2,top fruit share 0.42; parse rate 82.2%
+synthid,red-green,"Bonferroni H=4,5",rep0,0.0,,
+exp,fixed-sampling,1000 x 100 tok,rep0,2.1768933922007226e-124,252,252/1000 unique
+kgw2,fixed-sampling,1000 x 100 tok,rep0,0.9383348554480531,1000,1000/1000 unique
+none,fixed-sampling,1000 x 100 tok,rep0,0.9383348554480531,1000,1000/1000 unique
+prc,fixed-sampling,1000 x 100 tok,rep0,0.9383348554480531,1000,1000/1000 unique
+synthid,fixed-sampling,1000 x 100 tok,rep0,0.9383348554480531,1000,1000/1000 unique

@@ -1,0 +1,46 @@
+{
+  "peaches": {
+    "n": 120,
+    "parsed": 116,
+    "counts": {
+      "peaches": 5,
+      "plums": 94,
+      "cherries": 16,
+      "apricots": 1
+    },
+    "max_share": 0.81
+  },
+  "mangoes": {
+    "n": 120,
+    "parsed": 114,
+    "counts": {
+      "mangoes": 2,
+      "pineapples": 10,
+      "papayas": 91,
+      "kiwis": 11
+    },
+    "max_share": 0.798
+  },
+  "berries": {
+    "n": 120,
+    "parsed": 107,
+    "counts": {
+      "strawberries": 62,
+      "blueberries": 9,
+      "raspberries": 14,
+      "blackberries": 22
+    },
+    "max_share": 0.579
+  },
+  "apples": {
+    "n": 120,
+    "parsed": 112,
+    "counts": {
+      "apples": 23,
+      "bananas": 24,
+      "oranges": 51,
+      "pears": 14
+    },
+    "max_share": 0.455
+  }
+}
