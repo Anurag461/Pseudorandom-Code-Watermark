@@ -21,8 +21,9 @@ model with thinking disabled for black-box detection). Temperature 1, full vocab
 - **Substitution robustness (Kuditipudi et al. attack).** Robustness depends strongly on length. At
   **400 tokens** PRC is far less robust than all three baselines: 64.6% detection at 5% substitutions and
   2.6% at 30%, while EXP and KGW-2.0 stay at 100% and SynthID-Text at ≥89%. At **4096 tokens** (fixed
-  PRC n = T = 4096) PRC keeps **98.2% [96.6%, 99.1%] detection at 20% substitutions** (MAP; 0/500 false
-  positives), close to the baselines' 99–100% (200 texts each).
+  PRC n = T = 4096) PRC keeps **98.2% [96.6%, 99.1%] detection at 20% substitutions** and **94.6%
+  [92.3%, 96.3%] at 30%** (MAP; 0/500 false positives), close to the baselines' 99–100% at 20% (200 texts
+  each; the baselines were not run at 30%).
 
 The paper can therefore claim resistance to stealing-based spoofing and to black-box detection. Robustness to
 random token substitution holds for long texts (4096 tokens) but not for short ones (400 tokens).
@@ -162,8 +163,10 @@ mean-score z-test. Same substitution procedure as above. Detection at FPR 1e-3, 
 | 0.1 | 98.8% [97.4%, 99.4%] | 98.8% [97.4%, 99.4%] | 100.0% [98.1%, 100.0%] | 100.0% [98.1%, 100.0%] | 99.5% [97.2%, 99.9%] |
 | 0.15 | 98.6% [97.1%, 99.3%] | 98.8% [97.4%, 99.4%] | 100.0% [98.1%, 100.0%] | 100.0% [98.1%, 100.0%] | 99.5% [97.2%, 99.9%] |
 | 0.2 | 98.2% [96.6%, 99.1%] | 97.2% [95.4%, 98.3%] | 100.0% [98.1%, 100.0%] | 100.0% [98.1%, 100.0%] | 99.0% [96.4%, 99.7%] |
+| 0.3 | 94.6% [92.3%, 96.3%] | 94.0% [91.6%, 95.8%] | not run | not run | not run |
 
-False positives: PRC 0/500 at every rate (both detectors); EXP 0/200; KGW-2.0 2/200, 2/200, 1/200, 1/200,
+Rate 0.3 was run for PRC only, on the same frozen texts and pipeline. False positives: PRC 0/500 at every
+rate (both detectors); EXP 0/200; KGW-2.0 2/200, 2/200, 1/200, 1/200,
 1/200; SynthID-Text 0/200, 0/200, 1/200, 1/200, 0/200 (rates 0 to 0.2). Results:
 `outputs/attacks/kth_long_results.csv`.
 

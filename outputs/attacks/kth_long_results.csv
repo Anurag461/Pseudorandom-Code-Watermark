@@ -24,3 +24,5 @@ kgw2,0.2,4096,200,200,200/200 (100.0%),"[98.1%, 100.0%]",1/200 (0.5%),"[0.1%, 2.
 prc_entropy,0.2,4096,500,500,486/500 (97.2%),"[95.4%, 98.3%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/ad0a0a1d6fb5170e7a3db301"
 prc_map,0.2,4096,500,500,491/500 (98.2%),"[96.6%, 99.1%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/ad0a0a1d6fb5170e7a3db301"
 synthid,0.2,4096,200,200,198/200 (99.0%),"[96.4%, 99.7%]",0/200 (0.0%),"[0.0%, 1.9%]",analytic: mean g-value z-test p <= 1e-3
+prc_entropy,0.3,4096,500,500,470/500 (94.0%),"[91.6%, 95.8%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/7936006eac5ce1935d567b20"
+prc_map,0.3,4096,500,500,473/500 (94.6%),"[92.3%, 96.3%]",0/500 (0.0%),"[0.0%, 0.8%]","proven Hoeffding FPR <= 1e-3 (fixed n=T=4096, eta=0.05); run=completion_only_raw_abstain_v1/integrated/7936006eac5ce1935d567b20"
