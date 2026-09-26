@@ -8,7 +8,7 @@ python -m experiments.attacks.run blackbox --settings blackbox.json --output /re
 python -m experiments.attacks.run analyze-blackbox --output /results/blackbox
 ```
 
-Substitution selects a fixed number of distinct positions and samples replacement IDs uniformly; a replacement may equal the original token. Score PRC outputs with the detection runner. `python -m experiments.attacks.baseline_substitution` provides the EXP, KGW, and SynthID `generate`, `reference`, and `score` stages. Each takes `--settings` and `--output`; the 400-token reference uses `data/human_reference.jsonl`.
+Substitution selects a fixed number of distinct positions and samples replacement IDs uniformly; a replacement may equal the original token. Score PRC outputs with the detection runner. `python -m experiments.attacks.substitution` provides the EXP, KGW, and SynthID `generate`, `reference`, and `score` stages. Each takes `--settings` and `--output`; the 400-token reference uses `data/human_reference.jsonl`.
 
 Black-box settings contain `scheme`, `model_directory`, and, for PRC, `artifact`. The schemes are `none`, `prc`, `kgw2`, `synthid`, and `exp`.
 

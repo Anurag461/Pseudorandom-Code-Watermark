@@ -405,7 +405,7 @@ def _text_sets(output, scheme):
 
 def score_hf(settings, output, scheme, name, start, stop):
     from transformers import AutoTokenizer
-    from .baseline_substitution import make_scorer
+    from .substitution import make_scorer
 
     path = Path(f"{output}/scores/{scheme}/{name}_{start:05d}.json")
     if path.exists():

@@ -8,8 +8,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock, call, patch
 import torch
-from experiments.attacks.baseline_substitution import score
-from experiments.attacks.substitution import apply_attack
+from experiments.attacks.substitution import apply_attack, score
 from experiments.attacks.stealing import jsv_boosts
 from experiments.attacks import stealing
 
@@ -49,11 +48,11 @@ class AttackTests(unittest.TestCase):
                     {"transformers": SimpleNamespace(AutoTokenizer=tokenizer)},
                 ),
                 patch(
-                    "experiments.attacks.baseline_substitution.make_scorer",
+                    "experiments.attacks.substitution.make_scorer",
                     return_value=lambda *args: 0.5,
                 ),
                 patch(
-                    "experiments.attacks.baseline_substitution.torch.load",
+                    "experiments.attacks.substitution.torch.load",
                     return_value=batch,
                 ),
             ):
