@@ -3,12 +3,9 @@ import csv
 import json
 from pathlib import Path
 import torch
-from baselines.official import official_gumbel_scores, synthid_processor
-from baselines.scoring import (
-    deduplicated_positions,
-    gumbel_gamma_test,
-    synthid_normal_test,
-)
+from baselines.gumbel import official_gumbel_scores, gumbel_gamma_test
+from baselines.synthid import synthid_processor, synthid_normal_test
+from baselines.scoring import deduplicated_positions
 from prc_watermark.detectors import detect_online_hoeffding
 from prc_watermark.qwen import completion_only_partition_trace_batch, load_model
 from .config import StudySetting

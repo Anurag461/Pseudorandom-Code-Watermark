@@ -22,7 +22,6 @@ include = ["prc_watermark*", "baselines*", "experiments*"]
 
 [tool.setuptools.package-data]
 "experiments" = ["environments.json"]
-"baselines.wang" = ["*.json", "LICENSE"]
 "experiments.detection" = ["*.json", "*.csv"]
 "experiments.benchmarks" = ["*.json", "*.csv"]
 "experiments.diversity" = ["*.json", "*.csv"]
@@ -30,4 +29,4 @@ include = ["prc_watermark*", "baselines*", "experiments*"]
 
 "experiments.benchmarks.tasks.ifeval_lib" = ["NOTICE", "LICENSE"]
 
-"baselines" = ["textseal_source.json"]
+"baselines" = ["textseal_source.json", "wangetal_source.json", "wangetal_LICENSE"]

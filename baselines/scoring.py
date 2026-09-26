@@ -1,7 +1,7 @@
 from __future__ import annotations
 import math
 from typing import Sequence
-import numpy as np
+import torch
 from scipy import special, stats
 
 
@@ -44,131 +44,6 @@ def gamma_threshold(shape: float, scale: float, nominal_fpr: float) -> float:
     return float(stats.gamma.ppf(1.0 - nominal_fpr, a=shape, scale=scale))
 
 
-def gumbel_gamma_test(scores: Sequence[float], nominal_fpr: float = 0.001) -> dict:
-    values = np.asarray(scores, dtype=np.float64)
-    if values.size == 0:
-        return _empty_test("exact Gamma test")
-    if not np.all(np.isfinite(values)) or np.any(values < 0):
-        raise ValueError("Gumbel scores must be finite and nonnegative")
-    statistic = float(values.sum())
-    shape = float(values.size)
-    scale = 1.0
-    p_value = gamma_survival(statistic, shape, scale)
-    threshold = gamma_threshold(shape, scale, nominal_fpr)
-    return {
-        "statistic": statistic,
-        "p_value": p_value,
-        "threshold": threshold,
-        "decision": bool(p_value < nominal_fpr),
-        "calibration_type": "exact Gamma test",
-        "intermediate": {"gamma_shape": shape, "gamma_scale": scale},
-    }
-
-
-def textseal_gamma_test(
-    fused_scores: Sequence[float],
-    entropies: Sequence[float],
-    alpha: float = 0.1,
-    nominal_fpr: float = 0.001,
-) -> dict:
-    scores = np.asarray(fused_scores, dtype=np.float64)
-    entropy = np.asarray(entropies, dtype=np.float64)
-    if scores.size == 0:
-        return _empty_test("moment-matched Gamma approximation")
-    if scores.shape != entropy.shape:
-        raise ValueError("fused scores and entropies must align")
-    if not np.all(np.isfinite(scores)) or not np.all(np.isfinite(entropy)):
-        raise ValueError("TextSeal inputs must be finite")
-    if not 0.0 <= alpha <= 1.0:
-        raise ValueError("alpha must be in [0, 1]")
-    entropy_min = float(entropy.min())
-    entropy_max = float(entropy.max())
-    if entropy_max - entropy_min < 1e-06:
-        entropy_min, entropy_max = (0.0, 5.0)
-    ratio = np.clip((entropy - entropy_min) / (entropy_max - entropy_min), 0.0, 1.0)
-    weights = 0.1 + 0.9 * ratio
-    statistic = float(np.sum(weights * scores))
-    routing_variance = float(alpha**2 + (1.0 - alpha) ** 2)
-    mean = float(weights.sum())
-    variance = float(np.sum(weights**2) * routing_variance)
-    shape = mean**2 / variance
-    scale = variance / mean
-    p_value = gamma_survival(statistic, shape, scale)
-    threshold = gamma_threshold(shape, scale, nominal_fpr)
-    return {
-        "statistic": statistic,
-        "p_value": p_value,
-        "threshold": threshold,
-        "decision": bool(p_value < nominal_fpr),
-        "calibration_type": "moment-matched Gamma approximation",
-        "intermediate": {
-            "gamma_shape": shape,
-            "gamma_scale": scale,
-            "routing_variance": routing_variance,
-            "entropy_min": entropy_min,
-            "entropy_max": entropy_max,
-            "weight_sum": mean,
-            "weight_squared_sum": float(np.sum(weights**2)),
-            "unweighted_statistic": float(scores.sum()),
-            "unweighted_p_value": gamma_survival(
-                float(scores.sum()), scores.size / routing_variance, routing_variance
-            ),
-        },
-    }
-
-
-def synthid_normal_test(
-    g_values: np.ndarray,
-    *,
-    nominal_fpr: float = 0.001,
-    weights: Sequence[float] | None = None,
-) -> dict:
-    values = np.asarray(g_values, dtype=np.float64)
-    if values.ndim != 2:
-        raise ValueError("g_values must have shape (samples, depth)")
-    samples, depth = values.shape
-    if samples == 0:
-        return _empty_test("normal approximation")
-    if not np.all((values == 0.0) | (values == 1.0)):
-        raise ValueError("SynthID g-values must be binary")
-    if weights is None:
-        layer_weights = np.linspace(10.0, 1.0, depth)
-    else:
-        layer_weights = np.asarray(weights, dtype=np.float64)
-        if layer_weights.shape != (depth,):
-            raise ValueError("weights must have one value per layer")
-    layer_weights = layer_weights * depth / layer_weights.sum()
-    per_token = values @ layer_weights
-    statistic = float(per_token.sum())
-    null_mean_per_token = 0.5 * depth
-    null_variance_per_token = 0.25 * float(np.sum(layer_weights**2))
-    z_score = float(
-        (statistic - samples * null_mean_per_token)
-        / math.sqrt(samples * null_variance_per_token)
-    )
-    p_value = float(max(special.ndtr(-z_score), 1e-300))
-    z_threshold = float(stats.norm.ppf(1.0 - nominal_fpr))
-    score_threshold = float(
-        samples * null_mean_per_token
-        + z_threshold * math.sqrt(samples * null_variance_per_token)
-    )
-    return {
-        "statistic": statistic,
-        "p_value": p_value,
-        "threshold": score_threshold,
-        "decision": bool(p_value < nominal_fpr),
-        "calibration_type": "normal approximation",
-        "intermediate": {
-            "z_score": z_score,
-            "z_threshold": z_threshold,
-            "null_mean_per_token": null_mean_per_token,
-            "null_variance_per_token": null_variance_per_token,
-            "layer_weights": layer_weights.tolist(),
-            "g_value_sum_by_depth": values.sum(axis=0).tolist(),
-        },
-    }
-
-
 def prc_hoeffding_test(
     statistic: float, variance_proxy: float, nominal_fpr: float = 0.001
 ) -> dict:
@@ -203,34 +78,26 @@ def _empty_test(calibration_type: str) -> dict:
     }
 
 
-def ngram_repetition_rate(token_ids: Sequence[int], n: int = 4) -> float:
-    grams = [tuple(token_ids[i : i + n]) for i in range(max(0, len(token_ids) - n + 1))]
-    if not grams:
-        return 0.0
-    return float(1.0 - len(set(grams)) / len(grams))
+def empirical_p(reference, stat):
+    import numpy as np
+
+    return float(np.searchsorted(reference, stat, side="right") / len(reference))
 
 
-def distinct_n(token_ids: Sequence[int], n: int) -> float:
-    grams = [tuple(token_ids[i : i + n]) for i in range(max(0, len(token_ids) - n + 1))]
-    return float(len(set(grams)) / len(grams)) if grams else 0.0
+def hoeffding_p(info):
+    import math
+
+    S, V = (info["statistic"], info["V"])
+    return 1.0 if S is None or V in (None, 0) or S <= 0 else math.exp(-S * S / (2 * V))
 
 
-def quality_metrics(
-    token_ids: Sequence[int], base_token_logprobs: Sequence[float]
-) -> dict:
-    ids = [int(x) for x in token_ids]
-    logprobs = np.asarray(base_token_logprobs, dtype=np.float64)
-    if len(ids) != logprobs.size:
-        raise ValueError("one base-model log-probability is required per token")
-    if not np.all(np.isfinite(logprobs)):
-        raise ValueError("base-model log-probabilities must be finite")
-    mean_nll = float(-logprobs.mean()) if logprobs.size else 0.0
-    return {
-        "base_model_nll": mean_nll,
-        "base_model_perplexity": float(math.exp(mean_nll)),
-        "output_length": len(ids),
-        "repetition_rate": ngram_repetition_rate(ids, 4),
-        "repetition_metric": "repeated token 4-gram fraction: 1 - unique_4grams/total_4grams",
-        "distinct_2": distinct_n(ids, 2),
-        "distinct_3": distinct_n(ids, 3),
-    }
+def _windows_targets(
+    token_ids: Sequence[int], positions: Sequence[int], context_length: int
+) -> tuple[torch.Tensor, torch.Tensor]:
+    tokens = [int(token) for token in token_ids]
+    windows = [tokens[pos - context_length : pos] for pos in positions]
+    targets = [tokens[pos] for pos in positions]
+    return (
+        torch.tensor(windows, dtype=torch.long),
+        torch.tensor(targets, dtype=torch.long),
+    )

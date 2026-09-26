@@ -45,11 +45,11 @@
         "14B"
       ]
     },
-    "wang": [
-      "wang_results.csv",
-      "wang_matched_fpr.csv",
-      "wang_paired.csv",
-      "wang_thresholds.json"
+    "wangetal": [
+      "wangetal_results.csv",
+      "wangetal_matched_fpr.csv",
+      "wangetal_paired.csv",
+      "wangetal_thresholds.json"
     ]
   }
 }

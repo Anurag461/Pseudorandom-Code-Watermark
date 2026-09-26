@@ -1,6 +1,9 @@
 import hashlib
 from types import SimpleNamespace
-from baselines.attack_methods import EOS, _cpu_kgw_processor, synthid_processor
+from baselines import exp
+from baselines.config import EOS
+from baselines.kgw import _cpu_kgw_processor
+from baselines.synthid import attack_processor as synthid_processor
 
 CHAT_MODEL = "Qwen/Qwen3-0.6B"
 CHAT_REVISION = "c1899de289a04d12100db370d81485cdf75e47ca"
@@ -121,20 +124,14 @@ class Generator:
             rows = min(batch, n - b)
             ids = torch.tensor([prompt_ids] * rows)
             if self.scheme == "exp":
-                from watermarking.generation import generate
-                from watermarking.gumbel.key import gumbel_key_func
-                from watermarking.gumbel.sampler import gumbel_sampling
-
                 vocab = self.model.get_output_embeddings().weight.shape[0]
-                gen = generate(
+                gen = exp.generate(
                     self.model,
                     ids,
                     vocab,
                     EXP_KEY_LENGTH,
                     max_new,
                     torch.full((rows,), EXP_KEY_SEED),
-                    gumbel_key_func,
-                    gumbel_sampling,
                     random_offset=True,
                 )
             else:

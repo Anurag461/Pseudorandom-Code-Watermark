@@ -2,7 +2,7 @@
 
 `fixed_results.csv` contains the 19 fixed-block settings. `figure_results.csv` contains the detection curves, model-size comparison, detector portability, noise-rate contrast, and fixed-versus-online comparison. Counts use 500 watermarked completions per setting. `portability_*` and `construction_*` contain paired outcomes and tests.
 
-`entropy_results.csv` measures vocabulary and bucket entropy on 500 unwatermarked continuations of 1,808 tokens, conditioned on the original prompt. `wang_*.csv` and `wang_thresholds.json` contain the hierarchical PRC comparison and its calibration.
+`entropy_results.csv` measures vocabulary and bucket entropy on 500 unwatermarked continuations of 1,808 tokens, conditioned on the original prompt. `wangetal_*.csv` and `wangetal_thresholds.json` contain the hierarchical PRC comparison and its calibration.
 
 Generation and scoring run separately:
 
@@ -15,4 +15,4 @@ Generation settings specify `artifact`, `prompts`, `model_directory`, `model_siz
 
 Saved keys for the fixed detection sweep and online settings are in `data/keys/`. Artifacts contain the original `partition` and either `online_key` or `encoding_key`/`decoding_key`. Model directories contain the checkpoint shards and tokenizer. Batch geometry and cache implementation are part of the numerical setup.
 
-For the comparison with Wang et al.’s PRC implementation, use `python -m experiments.detection.wang_comparison` with `prepare`, `generate`, or `analyze`; `--help` lists the arguments. Its model checksums and design are in `baselines/wang/`.
+For the comparison with Wang et al.’s PRC implementation, use `python -m experiments.detection.wangetal_comparison` with `prepare`, `generate`, or `analyze`; `--help` lists the arguments. Its model checksums and prompts are in `wangetal_model.json` and `wangetal_prompts.json`; the design is in `wangetal_comparison.py`.

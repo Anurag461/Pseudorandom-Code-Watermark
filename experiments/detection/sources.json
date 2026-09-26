@@ -51,17 +51,17 @@
     "sha256": "45c4d4002ea40a015d63b85aa246c426572b3edce064bd82fe1a54e39184b1f2"
   },
   {
-    "data": "wang_results.csv",
+    "data": "wangetal_results.csv",
     "file": "wang_prc_detector_ablation/evidence/experiment-20260924/primary_methods_summary.csv",
     "sha256": "96ce6501a95e94ce6dff0ef01a3339d3624da12fb242712f6708a278add00fa9"
   },
   {
-    "data": "wang_matched_fpr.csv",
+    "data": "wangetal_matched_fpr.csv",
     "file": "wang_prc_detector_ablation/evidence/experiment-20260924/matched_fpr_summary.csv",
     "sha256": "8b2b849ac36604335617677097239f98a4f7370119ba8a8aadada38baf6623cb"
   },
   {
-    "data": "wang_paired.csv",
+    "data": "wangetal_paired.csv",
     "file": "wang_prc_detector_ablation/evidence/experiment-20260924/paired_differences.csv",
     "sha256": "4aa6f0310c53c74f152cc9bec9f2ffcd5055cce75a98875ed693b4e92ad0dadb"
   }

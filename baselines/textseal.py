@@ -10,7 +10,16 @@ import sys
 import threading
 import types
 from typing import Sequence
-from .config import NOMINAL_FPR, TEXTSEAL_ALPHA, TEXTSEAL_COMMIT
+import numpy as np
+import torch
+from .config import CONTEXT_LENGTH, NOMINAL_FPR
+from .synthid import SYNTHID_KEYS
+from .scoring import _empty_test, gamma_survival, gamma_threshold, _windows_targets
+
+TEXTSEAL_ALPHA = 0.1
+TEXTSEAL_KEY_A = 42
+TEXTSEAL_KEY_B = TEXTSEAL_KEY_A + 12345
+TEXTSEAL_COMMIT = "c60d0d1da2e59f09a698438e218a07ee779b4616"
 
 PROTOCOL = "completion_only_raw_abstain_v1"
 AUDIT_PATH = Path(__file__).with_name("textseal_source.json")
@@ -90,7 +99,6 @@ class TextSealCompletionDetector:
         if model is None:
             raise ValueError("a model is required for completion-only entropy")
         detector_type, self.upstream_source = load_upstream_detector(source_root)
-        from .official import textseal_config
 
         model.eval()
         self._detector = detector_type(
@@ -214,3 +222,116 @@ def load_model(manifest, cache_root):
 
 def file_sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def textseal_config(*, watermark_type: str = "textseal", alpha: float = TEXTSEAL_ALPHA):
+    if not math.isfinite(alpha) or not 0 <= alpha <= 1:
+        raise ValueError("TextSeal alpha must be finite and in [0, 1]")
+    from textseal.watermarking.config import WatermarkConfig
+
+    return WatermarkConfig(
+        secret_key=TEXTSEAL_KEY_A,
+        secret_key_b=TEXTSEAL_KEY_B,
+        ngram=CONTEXT_LENGTH,
+        watermark_type=watermark_type,
+        method="uniform",
+        mixing_alpha=float(alpha),
+        scoring_method="v2",
+        depth=len(SYNTHID_KEYS),
+    )
+
+
+def textseal_generator(*, alpha: float = TEXTSEAL_ALPHA):
+    import textseal.watermarking.generator as generator_module
+    from textseal.watermarking.generator import TextSealGenerator
+
+    def eager_fast_prf_dual(w, token_ids, sk_a, sk_b):
+        from textseal.watermarking.core import _prf_dual_compiled, _weighted_sum
+
+        original = getattr(
+            _prf_dual_compiled, "_torchdynamo_orig_callable", _prf_dual_compiled
+        )
+        weighted = _weighted_sum(w)
+        key_a = torch.tensor(sk_a, dtype=torch.long, device=w.device)
+        key_b = torch.tensor(sk_b, dtype=torch.long, device=w.device)
+        return original(weighted, token_ids, key_a, key_b)
+
+    generator_module.fast_prf_dual = eager_fast_prf_dual
+    config = textseal_config(alpha=alpha)
+    generator = TextSealGenerator.__new__(TextSealGenerator)
+    generator.wm_args = config
+    generator.ngram = config.ngram
+    generator.secret_key = config.secret_key
+    generator.key_a = config.key_a
+    generator.key_b = config.key_b
+    generator.mixing_alpha = config.mixing_alpha
+    return generator
+
+
+def official_textseal_fused_scores(
+    token_ids: Sequence[int], positions: Sequence[int], *, alpha: float = TEXTSEAL_ALPHA
+) -> np.ndarray:
+    from textseal.watermarking.core import prf_dual
+
+    if not math.isfinite(alpha) or not 0 <= alpha <= 1:
+        raise ValueError("TextSeal alpha must be finite and in [0, 1]")
+    if not positions:
+        return np.empty(0, dtype=np.float64)
+    windows, targets = _windows_targets(token_ids, positions, CONTEXT_LENGTH)
+    r_a, r_b = prf_dual(windows, targets, TEXTSEAL_KEY_A, TEXTSEAL_KEY_B)
+    score_a = -torch.log1p(-r_a)
+    score_b = -torch.log1p(-r_b)
+    fused = alpha * score_a + (1.0 - alpha) * score_b
+    return fused.double().cpu().numpy()
+
+
+def textseal_gamma_test(
+    fused_scores: Sequence[float],
+    entropies: Sequence[float],
+    alpha: float = 0.1,
+    nominal_fpr: float = 0.001,
+) -> dict:
+    scores = np.asarray(fused_scores, dtype=np.float64)
+    entropy = np.asarray(entropies, dtype=np.float64)
+    if scores.size == 0:
+        return _empty_test("moment-matched Gamma approximation")
+    if scores.shape != entropy.shape:
+        raise ValueError("fused scores and entropies must align")
+    if not np.all(np.isfinite(scores)) or not np.all(np.isfinite(entropy)):
+        raise ValueError("TextSeal inputs must be finite")
+    if not 0.0 <= alpha <= 1.0:
+        raise ValueError("alpha must be in [0, 1]")
+    entropy_min = float(entropy.min())
+    entropy_max = float(entropy.max())
+    if entropy_max - entropy_min < 1e-06:
+        entropy_min, entropy_max = (0.0, 5.0)
+    ratio = np.clip((entropy - entropy_min) / (entropy_max - entropy_min), 0.0, 1.0)
+    weights = 0.1 + 0.9 * ratio
+    statistic = float(np.sum(weights * scores))
+    routing_variance = float(alpha**2 + (1.0 - alpha) ** 2)
+    mean = float(weights.sum())
+    variance = float(np.sum(weights**2) * routing_variance)
+    shape = mean**2 / variance
+    scale = variance / mean
+    p_value = gamma_survival(statistic, shape, scale)
+    threshold = gamma_threshold(shape, scale, nominal_fpr)
+    return {
+        "statistic": statistic,
+        "p_value": p_value,
+        "threshold": threshold,
+        "decision": bool(p_value < nominal_fpr),
+        "calibration_type": "moment-matched Gamma approximation",
+        "intermediate": {
+            "gamma_shape": shape,
+            "gamma_scale": scale,
+            "routing_variance": routing_variance,
+            "entropy_min": entropy_min,
+            "entropy_max": entropy_max,
+            "weight_sum": mean,
+            "weight_squared_sum": float(np.sum(weights**2)),
+            "unweighted_statistic": float(scores.sum()),
+            "unweighted_p_value": gamma_survival(
+                float(scores.sum()), scores.size / routing_variance, routing_variance
+            ),
+        },
+    }

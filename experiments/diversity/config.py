@@ -6,14 +6,13 @@ import math
 from pathlib import Path
 from baselines.config import (
     GENERATION_SETTINGS,
-    GUMBEL_KEY,
     MODEL_ID,
     PRIMARY_SEED,
     SECONDARY_SEED,
-    SYNTHID_KEYS,
-    TEXTSEAL_KEY_A,
-    TEXTSEAL_KEY_B,
 )
+from baselines.gumbel import GUMBEL_KEY
+from baselines.textseal import TEXTSEAL_KEY_A, TEXTSEAL_KEY_B
+from baselines.synthid import SYNTHID_KEYS
 
 PROTOCOL = "completion_only_raw_abstain_v1"
 REFERENCE_PATH = Path(__file__).with_name("reference.json")

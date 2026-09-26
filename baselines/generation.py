@@ -5,15 +5,12 @@ import time
 from pathlib import Path
 from typing import Sequence
 import torch
-from .config import (
-    CONTEXT_LENGTH,
-    TEMPERATURE,
-    TOP_P,
-    TEXTSEAL_ALPHA,
-    SYNTHID_KEYS,
-    MAX_NEW_TOKENS,
-)
-from .official import textseal_generator, gumbel_generator, synthid_processor
+from .config import CONTEXT_LENGTH, TEMPERATURE, TOP_P, MAX_NEW_TOKENS
+from .textseal import TEXTSEAL_ALPHA
+from .synthid import SYNTHID_KEYS
+from .textseal import textseal_generator
+from .gumbel import gumbel_generator
+from .synthid import synthid_processor
 
 MODEL_ROOT = "/cache/models/Qwen3-8B-Base"
 

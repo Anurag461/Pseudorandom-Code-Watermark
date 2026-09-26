@@ -3,7 +3,41 @@ import csv
 import json
 from pathlib import Path
 import numpy as np
-from baselines.scoring import quality_metrics
+import math
+from typing import Sequence
+
+
+def ngram_repetition_rate(token_ids: Sequence[int], n: int = 4) -> float:
+    grams = [tuple(token_ids[i : i + n]) for i in range(max(0, len(token_ids) - n + 1))]
+    if not grams:
+        return 0.0
+    return float(1.0 - len(set(grams)) / len(grams))
+
+
+def distinct_n(token_ids: Sequence[int], n: int) -> float:
+    grams = [tuple(token_ids[i : i + n]) for i in range(max(0, len(token_ids) - n + 1))]
+    return float(len(set(grams)) / len(grams)) if grams else 0.0
+
+
+def quality_metrics(
+    token_ids: Sequence[int], base_token_logprobs: Sequence[float]
+) -> dict:
+    ids = [int(x) for x in token_ids]
+    logprobs = np.asarray(base_token_logprobs, dtype=np.float64)
+    if len(ids) != logprobs.size:
+        raise ValueError("one base-model log-probability is required per token")
+    if not np.all(np.isfinite(logprobs)):
+        raise ValueError("base-model log-probabilities must be finite")
+    mean_nll = float(-logprobs.mean()) if logprobs.size else 0.0
+    return {
+        "base_model_nll": mean_nll,
+        "base_model_perplexity": float(math.exp(mean_nll)),
+        "output_length": len(ids),
+        "repetition_rate": ngram_repetition_rate(ids, 4),
+        "repetition_metric": "repeated token 4-gram fraction: 1 - unique_4grams/total_4grams",
+        "distinct_2": distinct_n(ids, 2),
+        "distinct_3": distinct_n(ids, 3),
+    }
 
 
 def score_pairs(batches, tokenizer_path):

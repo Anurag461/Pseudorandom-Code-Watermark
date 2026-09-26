@@ -4,20 +4,34 @@ from pathlib import Path
 
 import torch
 
-from baselines.attack_methods import (
-    KEY_LENGTH,
-    KTH_COMMIT,
-    EOS,
-    NULL_SEED,
-    key_seeds,
-    _cpu_kgw_processor,
-    synthid_processor,
-    Scorer,
-    exp_pvalue,
-    synthid_pvalue,
-    empirical_p,
-)
+from baselines import exp, kgw, synthid
+from baselines.exp import KEY_LENGTH, KTH_COMMIT, exp_pvalue
+from baselines.config import EOS
+from baselines.kgw import _cpu_kgw_processor
+from baselines.synthid import attack_processor as synthid_processor, synthid_pvalue
+from baselines.scoring import empirical_p
+
 from .substitution import apply_attack
+
+
+NULL_SEED = 2
+KEY_SEED = 1
+NUM_PROMPTS = 500
+
+
+def key_seeds():
+    import torch
+
+    torch.manual_seed(KEY_SEED)
+    return torch.randint(2**32, (NUM_PROMPTS,))
+
+
+def make_scorer(scheme, vocab_size, tokenizer):
+    if scheme == "kgw2":
+        return kgw.Scorer(tokenizer)
+    if scheme == "synthid":
+        return synthid.Scorer()
+    return exp.Scorer(vocab_size)
 
 
 def generate(settings, output):
@@ -51,19 +65,13 @@ def generate(settings, output):
         seeds = key_seeds()[indices]
         torch.manual_seed(1000 + start)
         if scheme == "exp":
-            from watermarking.generation import generate as exp_generate
-            from watermarking.gumbel.key import gumbel_key_func
-            from watermarking.gumbel.sampler import gumbel_sampling
-
-            generated = exp_generate(
+            generated = exp.generate(
                 model,
                 ids,
                 vocab,
                 KEY_LENGTH,
                 length,
                 seeds,
-                gumbel_key_func,
-                gumbel_sampling,
                 random_offset=False,
             )
         else:
@@ -106,7 +114,7 @@ def reference(settings, output):
     tokenizer = AutoTokenizer.from_pretrained(
         settings["model_directory"], local_files_only=True
     )
-    scorer = Scorer(settings["scheme"], 151936, tokenizer)
+    scorer = make_scorer(settings["scheme"], 151936, tokenizer)
     records = [
         json.loads(line)
         for line in Path(settings["human_reference"]).read_text().splitlines()
@@ -136,7 +144,7 @@ def score(settings, output):
     )
     scheme = settings["scheme"]
     length = settings["tokens"]
-    scorer = Scorer(scheme, 151936, tokenizer)
+    scorer = make_scorer(scheme, 151936, tokenizer)
     reference_values = (
         [
             row["statistic"]
