@@ -1,6 +1,4 @@
-# Pseudorandom Code Watermarks
-
-Implementation and experiments for fixed-block and online pseudorandom code watermarks for language models.
+# A practical and undetectable watermark for language models using pseudorandom codes
 
 ## Setup
 
@@ -17,14 +15,30 @@ The execution environments and baseline source revisions are specified in [execu
 
 | Directory | Experiments |
 | --- | --- |
-| [detection](experiments/detection/README.md) | Detection power, model size, detector portability, fixed versus online, entropy, Wang comparison |
+| [detection](experiments/detection/README.md) | Detection power, model size, detector portability, fixed versus online, entropy, baseline detector comparison |
 | [benchmarks](experiments/benchmarks/README.md) | ARC-Easy, GSM8K, HellaSwag, MMLU, IFEval |
 | [diversity](experiments/diversity/README.md) | Self-BLEU, repeated 4-grams, Distinct-3, detection, repeat handling |
 | [attacks](experiments/attacks/README.md) | Black-box tests, token substitution, watermark stealing |
 
-Each experiment directory contains its settings, numerical result tables, and source checksums. Rates retain their sample counts where available; diversity tables include confidence intervals and Holm-adjusted p-values.
+Each experiment directory contains its settings, numerical result tables, and source checksums.
 
-`prc_watermark/` contains the constructions, generation, detectors, and Qwen implementation. `baselines/` contains comparison methods. `data/` contains the tokenized prompts, reference texts, and saved PRC keys.
+```text
+.
+├── README.md
+├── pyproject.toml
+├── THIRD_PARTY.txt
+├── prc_watermark/
+├── baselines/
+├── experiments/
+│   ├── detection/
+│   ├── benchmarks/
+│   ├── diversity/
+│   └── attacks/
+├── data/
+├── paper/
+├── execution/
+└── tests/
+```
 
 Generate LaTeX tables from the saved results:
 
