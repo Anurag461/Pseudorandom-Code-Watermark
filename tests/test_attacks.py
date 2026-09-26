@@ -69,13 +69,14 @@ class AttackTests(unittest.TestCase):
         self.assertTrue(torch.equal(tokens, torch.arange(30)))
         self.assertLessEqual(int((a != tokens).sum()), 6)
 
-    def test_float32_boost_threshold(self):
+    def test_stealing_boost_threshold(self):
         wm = Counter({1: 2, 2: 2, 3: 1})
         base = Counter({1: 2, 2: 1, 4: 2})
         boosts = jsv_boosts(wm, base, False)
         self.assertNotIn(3, boosts)
         self.assertGreater(boosts[2], boosts[1])
         self.assertEqual(max(boosts.values()), 1.0)
+        self.assertEqual(jsv_boosts({1: 4, 2: 8}, {1: 8, 2: 16}, False), {})
 
 
 if __name__ == "__main__":

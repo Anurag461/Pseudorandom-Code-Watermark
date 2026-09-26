@@ -12,4 +12,4 @@ Substitution selects a fixed number of distinct positions and samples replacemen
 
 Black-box settings contain `scheme`, `model_directory`, and, for PRC, `artifact`. The schemes are `none`, `prc`, `kgw2`, `synthid`, and `exp`.
 
-`stealing.py` implements context-count learning and the released float32 boost calculation. A validated experiment result table for this implementation is not available.
+`stealing.py` implements context-count learning and logit boosts. `results/stealing_results.csv` contains spoofing results by method, context, query budget, and boost strength, including detection counts and counts passing the perplexity filter. Detection thresholds are calibrated on 5,000 unwatermarked texts; the quality cutoff is the 95th percentile of perplexity on 500 calibration texts.

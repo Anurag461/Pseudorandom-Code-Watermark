@@ -63,9 +63,10 @@
   "stealing": {
     "upstream_repository": "https://github.com/eth-sri/watermark-stealing",
     "upstream_commit": "b8d207deb2b4ba758638a41d3a77891993acd351",
-    "arithmetic": "float32",
+    "arithmetic": "Python float",
     "minimum_count": 2,
     "clip_at": 2.0,
-    "validated_experiment_results": null
+    "boost_tensor_dtype": "float32",
+    "results": "results/stealing_results.csv"
   }
 }

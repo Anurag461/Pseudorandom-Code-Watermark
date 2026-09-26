@@ -56,40 +56,28 @@ JSV = dict(min_wm_count_nonempty=2, min_wm_mass_empty=7e-05, clip_at=2.0)
 
 
 def jsv_boosts(wm, base, empty):
-    import torch
-
-    if torch.get_default_dtype() != torch.float32:
-        raise ValueError("The released attack's arithmetic requires default float32")
+    total_wm, total_base = sum(wm.values()) + 1e-6, sum(base.values()) + 1e-6
     threshold = (
         round(JSV["min_wm_mass_empty"] * sum(base.values()))
         if empty
         else JSV["min_wm_count_nonempty"]
     )
-    if threshold < 1:
-        raise ValueError(
-            "A zero count threshold needs an explicit full vocabulary; the evaluated nonempty-context attack never uses it"
-        )
-    tokens = [t for t, c in wm.items() if c >= threshold]
-    if not tokens:
-        return {}
-    wm_counts = torch.tensor([wm[t] for t in tokens], dtype=torch.int64)
-    base_counts = torch.tensor([base.get(t, 0) for t in tokens], dtype=torch.int64)
-    mass_wm = wm_counts / (torch.tensor(sum(wm.values()), dtype=torch.int64) + 1e-06)
-    mass_base = base_counts / (
-        torch.tensor(sum(base.values()), dtype=torch.int64) + 1e-06
-    )
-    ratios = torch.zeros(len(tokens), dtype=torch.float32)
-    core = base_counts != 0
-    ratios[core] = mass_wm[core] / mass_base[core]
-    ratios[~core] = max(1, ratios.max().item()) + 0.001
-    ratios[ratios < 1] = 0
-    ratios[ratios > JSV["clip_at"]] = JSV["clip_at"]
-    ratios /= JSV["clip_at"]
-    positive = ratios > 0
-    if positive.any():
-        ratios[positive] += wm_counts[positive] / wm_counts[positive].max() * 0.0001
-        ratios = ratios / ratios.max()
-    return {t: b for t, b in zip(tokens, ratios.tolist()) if b > 0}
+    enough = [t for t, c in wm.items() if c >= threshold]
+    ratios = {
+        t: (wm[t] / total_wm) / (base[t] / total_base)
+        for t in enough
+        if base.get(t, 0) > 0
+    }
+    top = max(1.0, max(ratios.values(), default=0.0)) + 1e-3
+    ratios.update({t: top for t in enough if base.get(t, 0) == 0})
+    clip = JSV["clip_at"]
+    boosts = {t: min(r, clip) / clip for t, r in ratios.items() if r >= 1}
+    if boosts:
+        most = max(wm[t] for t in boosts)
+        boosts = {t: b + wm[t] / most * 1e-4 for t, b in boosts.items()}
+        peak = max(boosts.values())
+        boosts = {t: b / peak for t, b in boosts.items()}
+    return boosts
 
 
 def learn_table(watermarked, unwatermarked, prompts, variant, period=400):
