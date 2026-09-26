@@ -1,6 +1,6 @@
 import hashlib
 from types import SimpleNamespace
-from baselines.kuditipudi import EOS, _cpu_kgw_processor, synthid_processor
+from baselines.attack_methods import EOS, _cpu_kgw_processor, synthid_processor
 
 CHAT_MODEL = "Qwen/Qwen3-0.6B"
 CHAT_REVISION = "c1899de289a04d12100db370d81485cdf75e47ca"

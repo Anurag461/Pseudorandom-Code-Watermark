@@ -4,7 +4,7 @@ from pathlib import Path
 
 import torch
 
-from baselines.kuditipudi import (
+from baselines.attack_methods import (
     KEY_LENGTH,
     KTH_COMMIT,
     EOS,

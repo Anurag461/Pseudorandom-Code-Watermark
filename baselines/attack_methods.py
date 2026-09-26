@@ -205,7 +205,7 @@ def exp_pvalue(tokens, seed, vocab_size=151936):
 def synthid_pvalue(processor, tokens):
     import math
     from scipy.stats import norm
-    from .kuditipudi import SYNTHID
+    from .attack_methods import SYNTHID
 
     ids = tokens.unsqueeze(0)
     g = processor.compute_g_values(ids).float()
