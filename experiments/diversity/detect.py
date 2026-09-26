@@ -31,7 +31,7 @@ def detect(
         )
 
         root = Path(__file__).resolve().parents[2]
-        environments = json.loads((root / "execution/environments.json").read_text())
+        environments = json.loads((root / "experiments/environments.json").read_text())
         request = {
             "model": json.loads(Path(__file__).with_name("model.json").read_text()),
             "runtime": {"dependencies": environments["textseal"]["packages"]},

@@ -16,12 +16,12 @@ dependencies = [
 [project.optional-dependencies]
 benchmarks = ["datasets", "aiohttp", "nltk==3.9.1", "langdetect==1.0.9", "immutabledict==4.2.0", "absl-py"]
 analysis = ["sacrebleu==2.4.3", "matplotlib==3.9.2"]
-cloud = ["modal"]
 
 [tool.setuptools.packages.find]
-include = ["prc_watermark*", "baselines*", "experiments*", "execution*"]
+include = ["prc_watermark*", "baselines*", "experiments*"]
 
 [tool.setuptools.package-data]
+"experiments" = ["environments.json"]
 "baselines.wang" = ["*.json", "LICENSE"]
 "experiments.detection" = ["*.json", "*.csv"]
 "experiments.benchmarks" = ["*.json", "*.csv"]

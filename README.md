@@ -5,11 +5,11 @@
 Use Python 3.11 and a CUDA environment for generation and model-based detection.
 
 ```sh
-python -m pip install -e '.[benchmarks,analysis,cloud]'
+python -m pip install -e '.[benchmarks,analysis]'
 python -m unittest discover -s tests
 ```
 
-The execution environments and baseline source revisions are specified in [execution/environments.json](execution/environments.json). Diversity generation and TextSeal detection use their own pinned environments.
+The execution environments and baseline source revisions are specified in [experiments/environments.json](experiments/environments.json). Diversity generation and TextSeal detection use their own pinned environments.
 
 ## Experiments
 
@@ -35,7 +35,6 @@ Each experiment directory contains its settings, numerical result tables, and so
 │   └── attacks/
 ├── data/
 ├── paper/
-├── execution/
 └── tests/
 ```
 
@@ -46,5 +45,3 @@ python paper/build.py --output runs/paper
 ```
 
 The figures used in the manuscript are in `paper/figs/`. Add `--plots` to render detection curves from the saved counts.
-
-Use `python -m execution.cloud --help` for the cloud runner.
