@@ -87,27 +87,6 @@ def synthid_processor(
     return processor
 
 
-def official_synthid_g_values(
-    token_ids: Sequence[int],
-    positions: Sequence[int],
-    *,
-    device: str = "cpu",
-    keys: Sequence[int] = SYNTHID_KEYS,
-) -> np.ndarray:
-    keys = _synthid_keys(keys)
-    if not positions:
-        return np.empty((0, len(keys)), dtype=np.int64)
-    processor = synthid_processor(device, keys=keys)
-    ids = torch.tensor([list(map(int, token_ids))], dtype=torch.long, device=device)
-    values = processor.compute_g_values(ids)[0]
-    rows = torch.tensor(
-        [int(position) - CONTEXT_LENGTH for position in positions],
-        dtype=torch.long,
-        device=values.device,
-    )
-    return values.index_select(0, rows).long().cpu().numpy()
-
-
 def attack_processor(device):
     from transformers.generation.logits_process import (
         SynthIDTextWatermarkLogitsProcessor,

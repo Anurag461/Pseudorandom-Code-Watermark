@@ -8,7 +8,6 @@ from baselines.config import (
     GENERATION_SETTINGS,
     MODEL_ID,
     PRIMARY_SEED,
-    SECONDARY_SEED,
 )
 from baselines.gumbel import GUMBEL_KEY
 from baselines.textseal import TEXTSEAL_KEY_A, TEXTSEAL_KEY_B
@@ -27,7 +26,6 @@ SYNTHID_KEY_BANK = SYNTHID_KEYS + tuple(
     )
 )
 assert len(set(SYNTHID_KEY_BANK)) == 30
-SAMPLING_SEEDS = (PRIMARY_SEED, SECONDARY_SEED)
 
 
 def digest(value):

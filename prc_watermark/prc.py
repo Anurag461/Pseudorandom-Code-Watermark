@@ -351,59 +351,6 @@ def otp_prefix(length: int, key: OnlinePRCKey) -> np.ndarray:
     )
 
 
-def support_sha256(length: int, key: OnlinePRCKey) -> str:
-    rows = materialize_supports(length, key)
-    header = f"{rows.dtype}:{rows.shape}:".encode("utf-8")
-    return hashlib.sha256(header + rows.tobytes()).hexdigest()
-
-
-def parity_check_dense(length: int, key: OnlinePRCKey) -> np.ndarray:
-    rows = materialize_supports(length, key)
-    matrix = np.zeros((rows.shape[0], int(length)), dtype=np.uint8)
-    if rows.size:
-        matrix[np.arange(rows.shape[0])[:, None], rows] = 1
-    return matrix
-
-
-def reconstruct_generator(
-    length: int, key: OnlinePRCKey
-) -> tuple[np.ndarray, np.ndarray]:
-    length = int(length)
-    free = np.asarray(
-        [i for i in range(length) if not is_parity_coordinate(i, key)], dtype=np.int64
-    )
-    free_column = {int(position): column for column, position in enumerate(free)}
-    generator = np.zeros((length, free.shape[0]), dtype=np.uint8)
-    for position in range(length):
-        if position in free_column:
-            generator[position, free_column[position]] = 1
-        else:
-            generator[position] = np.bitwise_xor.reduce(
-                generator[parent_indices(position, key)], axis=0
-            )
-    return (generator, free)
-
-
-def gf2_rank(matrix: np.ndarray) -> int:
-    array = np.asarray(matrix, dtype=np.uint8).copy() % 2
-    rows, columns = array.shape
-    rank = 0
-    for column in range(columns):
-        candidates = np.flatnonzero(array[rank:, column])
-        if candidates.size == 0:
-            continue
-        pivot = rank + int(candidates[0])
-        if pivot != rank:
-            array[[rank, pivot]] = array[[pivot, rank]]
-        for row in np.flatnonzero(array[:, column]):
-            if row != rank:
-                array[row] ^= array[rank]
-        rank += 1
-        if rank == rows:
-            break
-    return rank
-
-
 def derive_document_seed(seed: int | bytes | bytearray | str, document_id: int) -> int:
     digest = _expand(_seed_key(seed), b"online-prc/document/v1", int(document_id))
     return int.from_bytes(digest[:16], "big")
@@ -501,32 +448,3 @@ class OnlinePRCEncoder:
         while np.any(self.lengths < length):
             self.next_bits(self.lengths < length)
         return np.asarray(self.noisy_history, dtype=np.uint8)
-
-    def clean_array(self) -> np.ndarray:
-        lengths = self.lengths
-        if not np.all(lengths == lengths[0]):
-            raise ValueError("batch members have different realized lengths")
-        return np.asarray(self.clean_history, dtype=np.uint8)
-
-    def error_array(self) -> np.ndarray:
-        lengths = self.lengths
-        if not np.all(lengths == lengths[0]):
-            raise ValueError("batch members have different realized lengths")
-        return np.asarray(self.error_history, dtype=np.uint8)
-
-
-def validate_online_word(
-    key: OnlinePRCKey, clean: Sequence[int], noisy: Sequence[int], error: Sequence[int]
-) -> None:
-    clean_array = np.asarray(clean, dtype=np.uint8).reshape(-1)
-    noisy_array = np.asarray(noisy, dtype=np.uint8).reshape(-1)
-    error_array = np.asarray(error, dtype=np.uint8).reshape(-1)
-    if not clean_array.shape == noisy_array.shape == error_array.shape:
-        raise ValueError("clean, noisy, and error arrays must have equal lengths")
-    length = clean_array.shape[0]
-    matrix = parity_check_dense(length, key)
-    if np.any(matrix @ clean_array % 2):
-        raise AssertionError("clean online word violates a parity check")
-    unpadded = noisy_array ^ otp_prefix(length, key)
-    if not np.array_equal(matrix @ unpadded % 2, matrix @ error_array % 2):
-        raise AssertionError("noisy/OTP syndrome does not equal error syndrome")

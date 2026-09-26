@@ -151,41 +151,6 @@ def decisions(hard, soft, r, thresholds):
     )
 
 
-def reference_path(probabilities, observed):
-    p = np.asarray(probabilities, dtype=np.float64)
-    width = (len(p) - 1).bit_length()
-    lo, hi, out = (0, 2**width, [])
-    for shift in range(width - 1, -1, -1):
-        mid = (lo + hi) // 2
-        den = p[lo : min(hi, len(p))].sum()
-        if den <= 0:
-            raise ValueError("Observed zero-probability prefix")
-        out.append(p[mid : min(hi, len(p))].sum() / den)
-        lo, hi = (mid, hi) if observed >> shift & 1 else (lo, mid)
-    return np.array(out)
-
-
-def reference_sample(probabilities, uniforms, codeword=None):
-    p = np.asarray(probabilities, dtype=np.float64)
-    width = (len(p) - 1).bit_length()
-    lo, hi, ps = (0, 2**width, [])
-    for depth in range(width):
-        mid = (lo + hi) // 2
-        prob = p[mid : min(hi, len(p))].sum() / p[lo : min(hi, len(p))].sum()
-        ps.append(prob)
-        q = (
-            prob
-            if codeword is None
-            else (
-                2 * prob * codeword[depth]
-                if prob <= 0.5
-                else 1 - 2 * (1 - prob) * (1 - codeword[depth])
-            )
-        )
-        lo, hi = (mid, hi) if uniforms[depth] < q else (lo, mid)
-    return (lo, np.array(ps))
-
-
 def probabilities(logits, temperature):
     import torch
 

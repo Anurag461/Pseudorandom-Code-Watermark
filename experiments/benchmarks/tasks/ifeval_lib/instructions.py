@@ -19,23 +19,6 @@ _CONSTRAINED_RESPONSE_OPTIONS = (
     "My answer is no.",
     "My answer is maybe.",
 )
-_STARTER_OPTIONS = (
-    "I would say",
-    "My answer is",
-    "I believe",
-    "In my opinion",
-    "I think",
-    "I reckon",
-    "I feel",
-    "From my perspective",
-    "As I see it",
-    "According to me",
-    "As far as I'm concerned",
-    "To my understanding",
-    "In my view",
-    "My take on it is",
-    "As per my perception",
-)
 _ENDING_OPTIONS = ("Any other questions?", "Is there anything else I can help with?")
 _NUM_HIGHLIGHTED_SECTIONS = 4
 _SECTION_SPLITER = ("Section", "SECTION")
@@ -210,32 +193,6 @@ class ConstrainedResponseChecker(Instruction):
         return False
 
 
-class ConstrainedStartChecker(Instruction):
-
-    def build_description(self, *, starter=None):
-        self._starter = starter.strip() if isinstance(starter, str) else starter
-        if self._starter is None:
-            self._starter = random.choice(_STARTER_OPTIONS)
-        self._description_pattern = (
-            "During the conversation, when it is your turn, "
-            + "please always start with {starter}"
-        )
-        return self._description_pattern.format(starter=self._starter)
-
-    def get_instruction_args(self):
-        return {"starter": self._starter}
-
-    def get_instruction_args_keys(self):
-        return ["starter"]
-
-    def check_following(self, value):
-        response_pattern = "^\\s*" + self._starter + ".*$"
-        response_with_constrained_start = re.search(
-            response_pattern, value, flags=re.MULTILINE
-        )
-        return True if response_with_constrained_start else False
-
-
 class HighlightSectionChecker(Instruction):
 
     def build_description(self, *, num_highlights=None):
@@ -370,43 +327,6 @@ class PostscriptChecker(Instruction):
             postscript_pattern = "\\s*" + self._postscript_marker.lower() + ".*$"
         postscript = re.findall(postscript_pattern, value, flags=re.MULTILINE)
         return True if postscript else False
-
-
-class RephraseChecker(Instruction):
-
-    def build_description(self, *, original_message):
-        if not self.is_change(original_message):
-            raise ValueError(
-                f"Message {original_message} does not contain changes in the form of *change me*."
-            )
-        self._reference_without_change = original_message
-        self._description = (
-            "Rephrasing: Your rephrased response should only"
-            + "change the words/sentences in between two asterisks"
-            + "such as *change me*."
-        )
-        return self._description
-
-    def get_instruction_args(self):
-        return {"original_message": self._reference_without_change}
-
-    def get_instruction_args_keys(self):
-        return ["original_message"]
-
-    def check_following(self, value):
-        if not self.is_change(value):
-            raise ValueError(
-                f"value {value} does not contain changes in the form of *change me*."
-            )
-        response_without_changes = self.strip_changes(value)
-        reference_without_changes = self.strip_changes(self._reference_without_change)
-        return response_without_changes == reference_without_changes
-
-    def is_change(self, response):
-        return re.search("\\*.*\\*", response)
-
-    def strip_changes(self, response):
-        return re.sub("\\*.*\\*", "", response)
 
 
 class KeywordChecker(Instruction):
@@ -610,42 +530,6 @@ class ParagraphFirstWordCheck(Instruction):
         return num_paragraphs == self._num_paragraphs and first_word == self._first_word
 
 
-class KeySentenceChecker(Instruction):
-
-    def build_description(self, key_sentences=None, num_sentences=None):
-        if not key_sentences:
-            self._key_sentences = set(["For now, this is fine."])
-        else:
-            self._key_sentences = key_sentences
-        if not num_sentences:
-            self._num_sentences = random.randint(1, len(self._key_sentences))
-        else:
-            self._num_sentences = num_sentences
-        self._description_pattern = (
-            "Include {num_sentences} of the following sentences {key_sentences}"
-        )
-        return self._description_pattern.format(
-            num_sentences=self._num_sentences, key_sentences=self._key_sentences
-        )
-
-    def get_instruction_args(self):
-        return {
-            "num_sentences": self._num_sentences,
-            "key_sentences": list(self._key_sentences),
-        }
-
-    def get_instruction_args_keys(self):
-        return ["num_sentences", "key_sentences"]
-
-    def check_following(self, value):
-        count = 0
-        sentences = instructions_util.split_into_sentences(value)
-        for sentence in self._key_sentences:
-            if sentence in sentences:
-                count += 1
-        return count == self._num_sentences
-
-
 class ForbiddenWords(Instruction):
 
     def build_description(self, forbidden_words=None):
@@ -672,46 +556,6 @@ class ForbiddenWords(Instruction):
             if re.search("\\b" + word + "\\b", value, flags=re.IGNORECASE):
                 return False
         return True
-
-
-class RephraseParagraph(Instruction):
-
-    def build_description(self, *, original_paragraph, low, high):
-        self._original_paragraph = original_paragraph
-        self._low = low
-        self._high = high
-        self._description = (
-            "Rephrase the following paragraph: "
-            + "{original_paragraph}\nYour response should have "
-            + "between {low} and {high} of the same words. "
-            + "Words are the same if and only if all of the "
-            + "letters, ignoring cases, are the same. For "
-            + "example, 'run' is the same as 'Run' but different "
-            + "to 'ran'."
-        )
-        return self._description.format(
-            original_paragraph=original_paragraph, low=self._low, high=self._high
-        )
-
-    def get_instruction_args(self):
-        return {
-            "original_paragraph": self._original_paragraph,
-            "low": self._low,
-            "high": self._high,
-        }
-
-    def get_instruction_args_keys(self):
-        return ["original_paragraph", "low", "high"]
-
-    def check_following(self, value):
-        val_words = re.findall("\\w+", value.lower())
-        original_words = re.findall("\\w+", self._original_paragraph.lower())
-        similar_words = 0
-        dict_val = collections.Counter(val_words)
-        dict_original = collections.Counter(original_words)
-        for word in dict_original:
-            similar_words += min(dict_original[word], dict_val[word])
-        return similar_words >= self._low and similar_words <= self._high
 
 
 class TwoResponsesChecker(Instruction):

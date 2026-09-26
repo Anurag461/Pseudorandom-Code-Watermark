@@ -47,27 +47,17 @@ class GSM(Task):
     def load(self):
         self.ds = HFDataset("openai/gsm8k", "main", split="test")
 
-    def few_shot_examples(self):
-        base_instr = "Here are 2 examples for how you should answer:"
-        question1 = "Question1:\nNatalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?"
-        answer1 = "Solution:\nNatalia sold 48/2 = 48/2=24 clips in May.\nNatalia sold 48+24 = 48+24=72 clips altogether in April and May.\n#### 72"
-        question2 = "Question2:\nWeng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?"
-        answer2 = "Solution:\nWeng earns 12/60 = $12/60=0.2 per minute.\nWorking 50 minutes, she earned 0.2 x 50 = $0.2*50=10.\n#### 10"
-        return "\n".join([base_instr, question1, answer1, question2, answer2, ""])
-
     def num_examples(self):
         return len(self.ds)
 
-    def create_prompt(self, row, fewshot=False):
+    def create_prompt(self, row):
         ls = [self.system_instr]
-        if fewshot:
-            ls.append(self.few_shot_examples())
         ls += ["Question:", row["question"]]
         return "\n".join(ls)
 
-    def get_example(self, idx: int, fewshot=False):
+    def get_example(self, idx: int):
         row = self.ds[idx]
-        prompt = self.create_prompt(row, fewshot=fewshot)
+        prompt = self.create_prompt(row)
         messages = [{"role": "user", "content": prompt}]
         return {"messages": messages}
 

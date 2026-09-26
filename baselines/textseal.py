@@ -10,11 +10,9 @@ import sys
 import threading
 import types
 from typing import Sequence
-import numpy as np
 import torch
 from .config import CONTEXT_LENGTH, NOMINAL_FPR
 from .synthid import SYNTHID_KEYS
-from .scoring import _empty_test, gamma_survival, gamma_threshold, _windows_targets
 
 TEXTSEAL_ALPHA = 0.1
 TEXTSEAL_KEY_A = 42
@@ -266,72 +264,3 @@ def textseal_generator(*, alpha: float = TEXTSEAL_ALPHA):
     generator.key_b = config.key_b
     generator.mixing_alpha = config.mixing_alpha
     return generator
-
-
-def official_textseal_fused_scores(
-    token_ids: Sequence[int], positions: Sequence[int], *, alpha: float = TEXTSEAL_ALPHA
-) -> np.ndarray:
-    from textseal.watermarking.core import prf_dual
-
-    if not math.isfinite(alpha) or not 0 <= alpha <= 1:
-        raise ValueError("TextSeal alpha must be finite and in [0, 1]")
-    if not positions:
-        return np.empty(0, dtype=np.float64)
-    windows, targets = _windows_targets(token_ids, positions, CONTEXT_LENGTH)
-    r_a, r_b = prf_dual(windows, targets, TEXTSEAL_KEY_A, TEXTSEAL_KEY_B)
-    score_a = -torch.log1p(-r_a)
-    score_b = -torch.log1p(-r_b)
-    fused = alpha * score_a + (1.0 - alpha) * score_b
-    return fused.double().cpu().numpy()
-
-
-def textseal_gamma_test(
-    fused_scores: Sequence[float],
-    entropies: Sequence[float],
-    alpha: float = 0.1,
-    nominal_fpr: float = 0.001,
-) -> dict:
-    scores = np.asarray(fused_scores, dtype=np.float64)
-    entropy = np.asarray(entropies, dtype=np.float64)
-    if scores.size == 0:
-        return _empty_test("moment-matched Gamma approximation")
-    if scores.shape != entropy.shape:
-        raise ValueError("fused scores and entropies must align")
-    if not np.all(np.isfinite(scores)) or not np.all(np.isfinite(entropy)):
-        raise ValueError("TextSeal inputs must be finite")
-    if not 0.0 <= alpha <= 1.0:
-        raise ValueError("alpha must be in [0, 1]")
-    entropy_min = float(entropy.min())
-    entropy_max = float(entropy.max())
-    if entropy_max - entropy_min < 1e-06:
-        entropy_min, entropy_max = (0.0, 5.0)
-    ratio = np.clip((entropy - entropy_min) / (entropy_max - entropy_min), 0.0, 1.0)
-    weights = 0.1 + 0.9 * ratio
-    statistic = float(np.sum(weights * scores))
-    routing_variance = float(alpha**2 + (1.0 - alpha) ** 2)
-    mean = float(weights.sum())
-    variance = float(np.sum(weights**2) * routing_variance)
-    shape = mean**2 / variance
-    scale = variance / mean
-    p_value = gamma_survival(statistic, shape, scale)
-    threshold = gamma_threshold(shape, scale, nominal_fpr)
-    return {
-        "statistic": statistic,
-        "p_value": p_value,
-        "threshold": threshold,
-        "decision": bool(p_value < nominal_fpr),
-        "calibration_type": "moment-matched Gamma approximation",
-        "intermediate": {
-            "gamma_shape": shape,
-            "gamma_scale": scale,
-            "routing_variance": routing_variance,
-            "entropy_min": entropy_min,
-            "entropy_max": entropy_max,
-            "weight_sum": mean,
-            "weight_squared_sum": float(np.sum(weights**2)),
-            "unweighted_statistic": float(scores.sum()),
-            "unweighted_p_value": gamma_survival(
-                float(scores.sum()), scores.size / routing_variance, routing_variance
-            ),
-        },
-    }

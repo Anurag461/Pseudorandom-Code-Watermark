@@ -20,7 +20,7 @@ The execution environments and baseline source revisions are specified in [exper
 | [diversity](experiments/diversity/README.md) | Self-BLEU, repeated 4-grams, Distinct-3, detection, repeat handling |
 | [attacks](experiments/attacks/README.md) | Black-box tests, token substitution, watermark stealing |
 
-Each experiment directory contains its settings and a `results/` folder with numerical tables and source checksums.
+Each experiment directory contains its settings and a `results/` folder with numerical tables.
 
 ```text
 .

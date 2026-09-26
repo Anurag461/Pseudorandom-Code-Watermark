@@ -29,8 +29,10 @@ def detect(
 
         root = Path(__file__).resolve().parents[2]
         environments = json.loads((root / "experiments/environments.json").read_text())
+        checkpoint = json.loads((root / "data/models.json").read_text())["8B-Base"]
+        checkpoint["weight_files"] = dict(sorted(checkpoint["weight_files"].items()))
         request = {
-            "model": json.loads(Path(__file__).with_name("model.json").read_text()),
+            "model": checkpoint,
             "runtime": {"dependencies": environments["textseal"]["packages"]},
         }
         runtime_identity(request)

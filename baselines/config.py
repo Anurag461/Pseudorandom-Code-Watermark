@@ -5,7 +5,6 @@ TOP_P = 1.0
 REASONING = False
 CONTEXT_LENGTH = 3
 PRIMARY_SEED = 12345
-SECONDARY_SEED = 67890
 GENERATION_SETTINGS = {
     "max_new_tokens": MAX_NEW_TOKENS,
     "forced_length": True,

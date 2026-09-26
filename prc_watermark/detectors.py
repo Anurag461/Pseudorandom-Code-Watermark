@@ -19,49 +19,6 @@ def tensor_sha256(value) -> str:
     return hashlib.sha256(header + raw).hexdigest()
 
 
-def semantic_sha256(value) -> str:
-    digest = hashlib.sha256()
-
-    def update(item):
-        if item is None or isinstance(item, (str, int, float, bool)):
-            digest.update(type(item).__name__.encode())
-            digest.update(repr(item).encode())
-        elif isinstance(item, dict):
-            digest.update(b"dict")
-            for key in sorted(item, key=lambda key: str(key)):
-                update(str(key))
-                update(item[key])
-        elif isinstance(item, (list, tuple)):
-            digest.update(type(item).__name__.encode())
-            for child in item:
-                update(child)
-        elif torch is not None and torch.is_tensor(item):
-            tensor = item.detach().cpu().contiguous()
-            digest.update(b"tensor")
-            digest.update(str(tensor.dtype).encode())
-            digest.update(repr(tuple(tensor.shape)).encode())
-            digest.update(tensor.view(torch.uint8).numpy().tobytes())
-        elif hasattr(item, "tocsr"):
-            sparse = item.tocsr()
-            digest.update(b"sparse-csr")
-            update(np.asarray(sparse.shape))
-            update(np.asarray(sparse.indptr))
-            update(np.asarray(sparse.indices))
-            update(np.asarray(sparse.data))
-        elif isinstance(item, np.ndarray):
-            array = np.ascontiguousarray(np.asarray(item))
-            digest.update(b"ndarray")
-            digest.update(str(array.dtype).encode())
-            digest.update(repr(array.shape).encode())
-            digest.update(array.tobytes())
-        else:
-            digest.update(type(item).__name__.encode())
-            digest.update(repr(item).encode())
-
-    update(value)
-    return digest.hexdigest()
-
-
 def binary_entropy(p):
     p = np.clip(np.asarray(p, dtype=np.float64), 1e-12, 1.0 - 1e-12)
     return -(p * np.log(p) + (1.0 - p) * np.log1p(-p))

@@ -29,7 +29,13 @@ HERE = Path(__file__).resolve().parent
 TEMPERATURES = (1.0, 1.2, 1.4, 1.6, 1.8)
 
 
-MODEL = json.loads((HERE / "wangetal_model.json").read_text())
+MODEL = {
+    name: value
+    for name, value in json.loads((HERE.parents[1] / "data/models.json").read_text())[
+        "8B-Base"
+    ].items()
+    if name != "config_sha256"
+}
 
 
 PROMPTS = json.loads((HERE / "wangetal_prompts.json").read_text())
@@ -59,7 +65,9 @@ DESIGN = dict(
     backend="qwen-static-bf16",
     primary_context="completion-only-first-token-abstain",
     probability_arithmetic="fp32-log-softmax-fp64-positive-mass-tree",
-    source=json.loads((HERE.parents[1] / "baselines/sources/wangetal.json").read_text()),
+    source=json.loads(
+        (HERE.parents[1] / "baselines/sources/wangetal.json").read_text()
+    ),
 )
 
 
@@ -95,10 +103,6 @@ def fingerprint():
     return digest_json({"design": DESIGN, "implementation": implementation_hashes()})[
         :24
     ]
-
-
-def relative_root():
-    return f"wangetal/qwen3_8b_base/{fingerprint()}"
 
 
 def sample_id(source, group, prompt, temperature):
@@ -362,7 +366,7 @@ def generate(model, prompt_ids, pad_id, specs, codewords):
     return result
 
 
-def replay(model, completion_ids, temperature, *, capture=None, cache_factory=None):
+def replay(model, completion_ids, temperature, *, cache_factory=None):
     import torch
 
     if cache_factory is None:
@@ -380,8 +384,6 @@ def replay(model, completion_ids, temperature, *, capture=None, cache_factory=No
     with torch.inference_mode():
         for i in range(1, length):
             model_input = tokens[:, i - 1 : i]
-            if capture is not None:
-                capture.append(model_input.cpu().numpy().copy())
             logits = model(model_input, cache=cache)[:, -1]
             p = hierarchy.probabilities(logits, temperature)
             _, path = hierarchy.walk(p, observed=tokens[:, i])
@@ -479,14 +481,7 @@ def run_temperature(
                 words,
             )
             generation_seconds = time.monotonic() - batch_start
-            capture = None
-            out.update(replay(model, out["tokens"], temperature, capture=capture))
-            if False and (
-                not np.array_equal(
-                    np.concatenate(capture, axis=1), out["tokens"][:, :-1]
-                )
-            ):
-                raise ValueError("Prompt-free replay input capture failed")
+            out.update(replay(model, out["tokens"], temperature))
             validate_trace(out, batch[0]["tokens"])
             for i, s in enumerate(batch):
                 arrays = {k: v[i] for k, v in out.items()}
@@ -858,28 +853,6 @@ def run(root, provenance):
         row["posterior_no_evidence_N"] = sum((r["no_evidence"] for r in rows))
         mechanism.append(row)
     csv_write(root / "mechanism_summary.csv", mechanism)
-    discussion = [
-        "# Low-temperature detector comparison",
-        "",
-        "Paired differences below are posterior minus hard, in percentage points. ",
-        "Intervals resample key groups and prompts; matched thresholds stay frozen. ",
-        "The primary comparison measures actual methods at different operating points. ",
-        "Matched-FPR results and held-out ROC/AUC assess scoring quality separately.",
-        "",
-    ]
-    for p in paired:
-        if p["temperature"] > 1.4:
-            continue
-        discussion.append(
-            f"- T={p['temperature']:.1f}, {p['comparison']}: {100 * p['posterior_minus_hard']:+.2f} pp (95% CI {100 * p['CI_low']:+.2f} to {100 * p['CI_high']:+.2f})."
-        )
-    discussion += [
-        "",
-        "Consult both realized FPR columns and AUC in results_summary.csv before interpreting a TPR gain. ",
-        "A gain confined to published thresholds does not establish superior posterior information; ",
-        "a matched-FPR gain supported by ROC is stronger evidence. Oracle results cannot support the headline.",
-    ]
-    (root / "interpretation.md").write_text("\n".join(discussion) + "\n")
     for role, filename in [
         ("primary", "primary_methods_summary.csv"),
         ("matched-FPR", "matched_fpr_summary.csv"),
@@ -946,13 +919,6 @@ def run(root, provenance):
         evaluation_pairs=102400,
     )
     write_json(root / "scoring_timing.json", timing)
-    (root / "README.md").write_text(
-        "# Comparison with Wang et al.’s PRC implementation\n\n"
-        "`results_summary.csv` contains detection rates, false-positive rates, "
-        "confidence intervals, and AUCs. `paired_differences.csv` contains paired "
-        "detector comparisons. `threshold_calibration.json` records the calibrated thresholds.\n\n"
-        f"Configuration: `{fingerprint()}`.\n"
-    )
     return dict(summary=summary, paired=paired, timing=timing)
 
 

@@ -44,29 +44,6 @@ def gamma_threshold(shape: float, scale: float, nominal_fpr: float) -> float:
     return float(stats.gamma.ppf(1.0 - nominal_fpr, a=shape, scale=scale))
 
 
-def prc_hoeffding_test(
-    statistic: float, variance_proxy: float, nominal_fpr: float = 0.001
-) -> dict:
-    statistic = float(statistic)
-    variance_proxy = float(variance_proxy)
-    if variance_proxy <= 0.0:
-        return _empty_test("Hoeffding p-value upper bound")
-    p_upper = (
-        1.0
-        if statistic <= 0.0
-        else float(min(1.0, math.exp(-(statistic**2) / (2.0 * variance_proxy))))
-    )
-    threshold = float(math.sqrt(2.0 * variance_proxy * math.log(1.0 / nominal_fpr)))
-    return {
-        "statistic": statistic,
-        "p_value": p_upper,
-        "threshold": threshold,
-        "decision": bool(p_upper < nominal_fpr),
-        "calibration_type": "Hoeffding p-value upper bound",
-        "intermediate": {"variance_proxy": variance_proxy},
-    }
-
-
 def _empty_test(calibration_type: str) -> dict:
     return {
         "statistic": 0.0,
@@ -82,13 +59,6 @@ def empirical_p(reference, stat):
     import numpy as np
 
     return float(np.searchsorted(reference, stat, side="right") / len(reference))
-
-
-def hoeffding_p(info):
-    import math
-
-    S, V = (info["statistic"], info["V"])
-    return 1.0 if S is None or V in (None, 0) or S <= 0 else math.exp(-S * S / (2 * V))
 
 
 def _windows_targets(

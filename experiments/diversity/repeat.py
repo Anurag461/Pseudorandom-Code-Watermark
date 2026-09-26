@@ -230,10 +230,6 @@ def generate_repeat_batch(
                 (j for (j, value) in enumerate(applied) if value), None
             ),
         )
-    if "synthid_official_smoke_reference" in batch["telemetry"]:
-        batch["telemetry"]["same_policy_single_row_reference"] = batch["telemetry"].pop(
-            "synthid_official_smoke_reference"
-        )
     batch["manifest"][
         "namespace"
     ] = f"self_bleu_repeat_v1/{batch['manifest']['batch_id']}"

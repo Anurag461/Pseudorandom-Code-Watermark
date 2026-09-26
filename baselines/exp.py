@@ -1,6 +1,5 @@
 KEY_LENGTH = 256
 KTH_COMMIT = "80d4ec8f4280da2a2cada03adfc8940593d1964c"
-KTH_REPO = "https://github.com/jthickstun/watermark"
 
 
 def generate(model, prompts, vocab_size, key_length, length, seeds, *, random_offset):

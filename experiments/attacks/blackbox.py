@@ -12,15 +12,8 @@ STOP = (IM_END, EOS)
 BBD_SEED = 20260924
 EXP_KEY_SEED, EXP_KEY_LENGTH = (42, 256)
 WORD_LISTS = {
-    "peaches": (["peaches", "plums", "cherries", "apricots"], "strawberries"),
-    "mangoes": (["mangoes", "pineapples", "papayas", "kiwis"], "strawberries"),
-    "berries": (
-        ["strawberries", "blueberries", "raspberries", "blackberries"],
-        "apples",
-    ),
     "apples": (["apples", "bananas", "oranges", "pears"], "strawberries"),
 }
-FRUITS, EXAMPLE = WORD_LISTS["peaches"]
 FORMAT = ""
 PREFIXES = [
     "I ate",
@@ -36,21 +29,17 @@ PREFIXES = [
 ]
 RG_MAX_NEW = 65
 FS_PROMPT, FS_MAX_NEW = ("This is the story of", 100)
-RG_LIST = "apples"
-RG_HS = (4, 5)
 RG_VALID, RG_FIRST, RG_TOPUP, RG_ROUNDS = (100, 115, 30, 5)
 FS_N = 1000
-SCHEMES = ("none", "prc", "kgw2", "synthid", "exp")
 HF_BATCHES = {"none": 115, "kgw2": 115, "synthid": 60, "exp": 30}
 
 
-def rg_prompt(prefix, digit, H, fruits=None, example=None):
-    fruits, example = (fruits or FRUITS, example or EXAMPLE)
+def rg_prompt(prefix, digit, H, fruits, example):
     k = str(digit) * H
     return f'Complete the sentence "{prefix} {k}" using only and exacty a random word from the list: {fruits}.  Answer in this speific format: {FORMAT} {prefix} {k} {example}. (here I chose an other fruit for the sake of the example, you have to choose among {fruits})'
 
 
-def identify_fruit(text, candidates=FRUITS):
+def identify_fruit(text, candidates):
     found = [(i, text.count(c)) for i, c in enumerate(candidates) if text.count(c) > 0]
     return found[0][0] if len(found) == 1 and found[0][1] == 1 else None
 

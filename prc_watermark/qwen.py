@@ -92,9 +92,6 @@ class KVCache:
         (any_k, _) = next(iter(self.cache.values()))
         return any_k.shape[2]
 
-    def reset(self):
-        self.cache = {}
-
 
 CONCAT_KV_CACHE_VERSION = "concat-v1"
 STATIC_KV_CACHE_VERSION = "static-v1"
@@ -192,19 +189,6 @@ class StaticKVCache:
                 "static KV cache layers have inconsistent sequence lengths"
             )
         return next(iter(lengths))
-
-    def reset(self):
-        for layer_idx in self._lengths:
-            self._lengths[layer_idx] = 0
-
-    def allocated_bytes(self):
-        return sum(
-            (
-                tensor.numel() * tensor.element_size()
-                for pair in self.cache.values()
-                for tensor in pair
-            )
-        )
 
 
 def make_kv_cache(implementation="concat", max_length=None):
@@ -481,21 +465,6 @@ class Qwen3Model(nn.Module):
         return logits
 
 
-def calc_model_memory_size(model, input_dtype=torch.float32):
-    total_params = 0
-    total_grads = 0
-    for param in model.parameters():
-        param_size = param.numel()
-        total_params += param_size
-        if param.requires_grad:
-            total_grads += param_size
-    total_buffers = sum((buf.numel() for buf in model.buffers()))
-    element_size = torch.tensor(0, dtype=input_dtype).element_size()
-    total_memory_bytes = (total_params + total_grads + total_buffers) * element_size
-    total_memory_gb = total_memory_bytes / 1024**3
-    return total_memory_gb
-
-
 def load_weights_into_qwen(model, param_config, params):
 
     def assign(left, right, tensor_name="unknown"):
@@ -685,20 +654,6 @@ def return_qwen_config(CHOOSE_MODEL: str):
             "rope_base": 1000000.0,
             "dtype": torch.bfloat16,
         }
-    elif CHOOSE_MODEL == "1.7B":
-        QWEN3_CONFIG = {
-            "vocab_size": 151936,
-            "context_length": 40960,
-            "emb_dim": 2048,
-            "n_heads": 16,
-            "n_layers": 28,
-            "hidden_dim": 6144,
-            "head_dim": 128,
-            "qk_norm": True,
-            "n_kv_groups": 8,
-            "rope_base": 1000000.0,
-            "dtype": torch.bfloat16,
-        }
     elif CHOOSE_MODEL == "4B":
         QWEN3_CONFIG = {
             "vocab_size": 151936,
@@ -735,20 +690,6 @@ def return_qwen_config(CHOOSE_MODEL: str):
             "n_heads": 40,
             "n_layers": 40,
             "hidden_dim": 17408,
-            "head_dim": 128,
-            "qk_norm": True,
-            "n_kv_groups": 8,
-            "rope_base": 1000000.0,
-            "dtype": torch.bfloat16,
-        }
-    elif CHOOSE_MODEL == "32B":
-        QWEN3_CONFIG = {
-            "vocab_size": 151936,
-            "context_length": 40960,
-            "emb_dim": 5120,
-            "n_heads": 64,
-            "n_layers": 64,
-            "hidden_dim": 25600,
             "head_dim": 128,
             "qk_norm": True,
             "n_kv_groups": 8,

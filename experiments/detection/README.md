@@ -15,4 +15,4 @@ Generation settings specify `artifact`, `prompts`, `model_directory`, `model_siz
 
 Saved keys for the fixed detection sweep and online settings are in `data/keys/`. Artifacts contain the original `partition` and either `online_key` or `encoding_key`/`decoding_key`. Model directories contain the checkpoint shards and tokenizer. Batch geometry and cache implementation are part of the numerical setup.
 
-For the comparison with Wang et al.’s PRC implementation, use `python -m experiments.detection.wangetal_comparison` with `prepare`, `generate`, or `analyze`; `--help` lists the arguments. Its model checksums and prompts are in `wangetal_model.json` and `wangetal_prompts.json`; the design is in `wangetal_comparison.py`.
+For the comparison with Wang et al.’s PRC implementation, use `python -m experiments.detection.wangetal_comparison` with `prepare`, `generate`, or `analyze`; `--help` lists the arguments. Model checkpoints are listed in `data/models.json`; the comparison prompts are in `wangetal_prompts.json` and the design is in `wangetal_comparison.py`.
