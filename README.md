@@ -38,14 +38,5 @@ Each experiment directory contains its settings and a `results/` folder with num
 │   └── attacks/
 │       └── results/
 ├── data/
-├── paper/
 └── tests/
 ```
-
-Generate LaTeX tables from the saved results:
-
-```sh
-python paper/build.py --output runs/paper
-```
-
-The figures used in the manuscript are in `paper/figs/`. Add `--plots` to render detection curves from the saved counts.
